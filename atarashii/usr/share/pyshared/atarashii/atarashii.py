@@ -771,6 +771,7 @@ class Atarashii:
 		button.connect("clicked", lambda *a: dialog.hide())
 		dialog.show_all()
 	
+	
 	def warning(self, limit):
 		glade = gtk.glade.XML(os.path.join(self.resources, "warning.glade"))
 		dialog = glade.get_widget("warningdialog")

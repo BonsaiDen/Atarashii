@@ -77,7 +77,10 @@ class HTML():
 		self.newestID = -1
 		self.newTweets = False
 		self.loadOld = False
-		self.createView()	
+		
+		if self.view == None:
+			self.createView()
+		
 		if splash:
 			self.splash()
 	

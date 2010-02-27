@@ -46,6 +46,7 @@ class Login(threading.Thread):
  			self.atarashii.updater.started = False
  			self.atarashii.html.tweets = []
  			self.atarashii.list = []
+ 			self.atarashii.connected = False
  			self.atarashii.connecting = True
 			self.atarashii.scroll.hide()
 			self.atarashii.progress.set_fraction(0.0)

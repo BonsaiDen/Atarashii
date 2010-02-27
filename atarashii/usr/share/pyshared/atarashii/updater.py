@@ -164,7 +164,8 @@ class Updater(threading.Thread):
 				gobject.idle_add(lambda: self.atarashii.error(detail))
 				self.atarashii.typing = False
 				self.atarashii.sizeInput()
-				gobject.idle_add(lambda: self.atarashii.html.render())
+				gobject.idle_add(lambda: self.atarashii.html.splash())
+				self.atarashii.setStatus(lang.statusLogout)
 				self.error = True
 				return
 				
