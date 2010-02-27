@@ -726,12 +726,9 @@ class Atarashii:
 			
 		return self.waitForReconnect
 	
- 	def error(self, detail):
- 		try:
- 			code = int(detail.reason.split("=")[1].strip())
-		except:
-			code = 0
-
+ 	def error(self, error):
+ 		code = error.response.status
+		
 		# Ratelimit error
  		if code == 400:
  			limit = self.api.rate_limit_status()

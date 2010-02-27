@@ -18,7 +18,16 @@
 # ------------------------------------------------------------------------------
 import gobject
 import threading
-import tweepy
+import sys
+
+# Import local Tweepy
+sys.path.insert(0, __file__[:__file__.rfind('/')])
+try:
+	import tweepy
+	
+finally:
+	sys.path.pop(0)
+
 import locale
 import time
 from lang import lang
