@@ -386,7 +386,7 @@ class Atarashii:
 		f, l = buf.get_bounds()
 		text = buf.get_text(f, l)
 		self.change = True
-		text = "RT: @%s: %s" % (tweet.user.screen_name, tweet.text)
+		text = "RT @%s: %s" % (tweet.user.screen_name, tweet.text)
 		self.retweet_user = tweet.user.screen_name
 		buf.set_text(text)
 		
