@@ -224,6 +224,9 @@ a, a:hover, a:active {
 	border-bottom: 2px solid #ffffc8;
 }
 
+.spacer6 {
+	border-bottom: 2px solid #c7deed;
+}
 
 a {
 	outline: none;

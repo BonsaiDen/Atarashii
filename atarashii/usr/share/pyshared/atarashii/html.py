@@ -238,6 +238,9 @@ class HTML():
 				elif hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
 					renderTweets.insert(0, '<div class="spacer5"></div>')
 					
+				elif highlight:
+					renderTweets.insert(0, '<div class="spacer6"></div>')
+					
 				elif tweet.id > self.atarashii.updater.initID:
 					renderTweets.insert(0, '<div class="spacer4"></div>')
 					
