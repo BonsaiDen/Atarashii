@@ -8,7 +8,7 @@ for the libraries.
 
 Installtion
 -----------
-Run "python make.py" to create the debian packager, after that just install it.
+Run "python make.py" to create the debian package, after that just install it.
 
 Contributing
 ------------

@@ -29,12 +29,12 @@ import sys
 if sys.path[0] == "/usr/share/pyshared": 
 	sys.path.pop(0)
 
-from atarashii import Atarashii
-
 def start():
+	from atarashii import Atarashii
 	Atarashii(__version__).main()
 	
 def debug(path):
+	from atarashii import Atarashii
 	Atarashii(__version__, path).main()
 	
 

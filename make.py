@@ -35,11 +35,11 @@ Section: misc
 Priority: optional
 Architecture: all
 Installed-Size: """ + str(size / 1024) + """
-Depends: python-webkit, python-gtk2, python-glade2, python-gconf, python-gobject, python-dbus, python-notify, mplayer-nogui, python-gnome2-desktop
+Depends: python, python-webkit, python-gtk2, python-glade2, python-gconf, python-gobject, python-dbus, python-notify, mplayer-nogui, python-gnome2-desktop
 Maintainer: Ivo Wetzel <ivo.wetzel@googlemail.com>
-Description: Twitter Client for the Gnome Desktop
+Description: Twitter Client for the GNOME Desktop
  Atarashii(Japanese for "New") is a Twitter Client specificly designed for the 
- Gnome Desktop. It uses GTK and webkit to archive a slim and functional design.
+ GNOME Desktop. It uses GTK+ and webkit to archive a slim and functional design.
  The code itself is written in Python and uses the correspong Python bindings
  for the libraries.
 """)
@@ -48,8 +48,8 @@ c.close()
 
 # Create package
 print "Building package..."
-subprocess.call(["dpkg-deb", "--build", "atarashii"])
-shutil.move(os.path.join(sys.path[0], "atarashii.deb"), os.path.join(sys.path[0], "atarashii_%s_all.deb" % atarashii.__version__))
+subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"])
+shutil.move(os.path.join(sys.path[0], "atarashii.deb"), os.path.join(sys.path[0], "atarashii_%s-1_all.deb" % atarashii.__version__))
 print "Build complete!"
 
 
