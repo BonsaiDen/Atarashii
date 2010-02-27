@@ -14,6 +14,15 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 # TODO direct messages by a toggle button
+#		- rework the html class
+#		- use only one instance!
+#		- toggle button
+#		- calculate new update timer, use only one update thread and check every 7th or so update for new dms
+#		- self.updater.ratelimit = limit / (2.0 + (1 / 7.0))
+#		- save first/last dm id
+#		- somehow show a new dm counter
+#		- save scroll positions for both views
+
 # TODO Use of streaming API?
 # TODO Fix random crashes(maybe webkit) X Error/GDK Error due to clipping
 # TODO Cleanup access to the html widget

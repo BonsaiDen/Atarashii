@@ -1,6 +1,6 @@
 Atarashii                               
 ---------
-Atarashii(Japanese for "New") is a Twitter Client specificly designed for the 
+Atarashii(Japanese for "New") is a Twitter Client specifically designed for the 
 GNOME Desktop. It uses GTK+ and webkit to archive a slim and functional design.
 The code itself is written in Python and uses the corresponding Python bindings
 for the GTK+ libraries.

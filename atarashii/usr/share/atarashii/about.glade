@@ -54,7 +54,7 @@
                         <property name="visible">True</property>
                         <property name="xalign">0.10000000149011612</property>
                         <property name="yalign">0.10000000149011612</property>
-                        <property name="label" translatable="yes">Atarashii is a Twitter Client specificly designed for the GNOME Desktop.</property>
+                        <property name="label" translatable="yes">Atarashii is a Twitter Client specifically designed for the GNOME Desktop.</property>
                         <property name="wrap">True</property>
                         <property name="max_width_chars">20</property>
                       </widget>
