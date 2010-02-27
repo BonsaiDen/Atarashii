@@ -558,7 +558,11 @@ class Atarashii:
 			self.readButton.set_sensitive(False)
 			self.updater.initID = int(self.settings['lasttweet_' + self.username])
 			if not self.html.historyLoaded:
-				self.html.tweets = self.html.tweets[len(self.html.tweets) - self.loadTweets:]
+				pos = len(self.html.tweets) - self.loadTweets
+				if pos < 0:
+					pos = 0
+				
+				self.html.tweets = self.html.tweets[pos:]
 			
 			self.html.render()
 	

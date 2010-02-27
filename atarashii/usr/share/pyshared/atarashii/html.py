@@ -52,7 +52,7 @@ class HTML():
 		self.scroll.set_property("hscrollbar-policy",gtk.POLICY_AUTOMATIC)
 		self.scroll.set_shadow_type(gtk.SHADOW_IN)
 		self.view = None
-		self.init()
+		self.init(True)
 		
 	def createView(self):
 		self.view = webkit.WebView()
@@ -77,7 +77,7 @@ class HTML():
 		self.newestID = -1
 		self.newTweets = False
 		self.loadOld = False
-		self.createView()		
+		self.createView()	
 		if splash:
 			self.splash()
 	
