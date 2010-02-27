@@ -1,0 +1,15 @@
+#!/usr/bin/python
+
+# Wrap arround crazy random GDK and XOrg Erros ^.^"
+import subprocess
+error = 0
+while error == 0:
+	error = subprocess.call(["atarashiimain"])
+	if error == 0:
+		print "Atarashii crashed, restarting"
+		
+	elif error == 2:
+		print "Atarashii is already running"
+		
+	elif error == 3:
+		print "Importing Atarashii failed"

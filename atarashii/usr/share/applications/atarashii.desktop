@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Atarashii
+GenericName=Twitter Client
+Comment=Use Twitter on your Gnome Desktop
+Comment[de]=Twitter auf deinem Gnome Desktop
+Exec=atarashii
+Icon=atarashii.png
+StartupNotify=true
+Terminal=false
+Encoding=UTF-8
+Type=Application
+Categories=Network;GTK;

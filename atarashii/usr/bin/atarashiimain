@@ -1,0 +1,18 @@
+#!/usr/bin/python
+import sys
+
+sys.path.insert(0, "/usr/share/pyshared")
+try:
+	import atarashii
+
+except:
+	if sys.path[0] == "/usr/share/pyshared": 
+		sys.path.pop(0)
+	
+	sys.exit(3)
+
+try:
+	atarashii.start()
+
+except:
+	sys.exit(3)
