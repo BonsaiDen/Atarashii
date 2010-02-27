@@ -323,10 +323,10 @@ class HTML():
 						
 						<div class="actions">
 							<div class="doreply">
-								<a href="reply:%s:%d:%d" title="''' + (lang.htmlReply % tweet.user.screen_name) + '''"><b>@</b></a>
+								<a href="reply:%s:%d:%d" title="''' + (lang.htmlReply % tweet.user.screen_name) + '''"> </a>
 							</div>
 							<div class="doretweet">
-								<a href="retweet:%d" title="''' + (lang.htmlRetweet % tweet.user.screen_name) + '''">RT</a>
+								<a href="retweet:%d" title="''' + (lang.htmlRetweet % tweet.user.screen_name) + '''"> </a>
 							</div>
 						</div>
 						

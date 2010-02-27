@@ -159,18 +159,24 @@ a, a:hover, a:active {
 
 /* Reply */
 .tweet:hover .doreply a, .highlight:hover .doreply a, .mentioned:hover .doreply a, .oldtweet:hover .doreply a{
-	color: #a5a5a5;
+	background-image: url("file:///usr/share/atarashii/at.png");
 	display: block;
 }
 
 .doreply a{
+	margin-top: 4px;
 	color: transparent;
 	text-decoration: none;
 	font-size: 12px;
+	background-repeat: no-repeat;
+	width: 12px;
+	height: 12px;
+	display: block;
+	margin-bottom: 4px;
 }
 
 .doreply a:hover{
-	color: #101010 !important;
+	background-position: -12px 0px;
 	text-decoration: none;
 	font-size: 12px;
 }
@@ -178,7 +184,7 @@ a, a:hover, a:active {
 	
 /* Retweet */
 .tweet:hover .doretweet a, .highlight:hover .doretweet a, .mentioned:hover .doretweet a, .oldtweet:hover .doretweet a{
-	color: #a5a5a5;
+	background-image: url("file:///usr/share/atarashii/rt.png")
 }
 
 
@@ -186,10 +192,14 @@ a, a:hover, a:active {
 	color: transparent;
 	text-decoration: none;
 	font-size: 10px;
+	background-repeat: no-repeat;
+	width: 12px;
+	height: 12px;
+	display: block;
 }
 
 .doretweet a:hover{
-	color: #101010 !important;
+	background-position: -12px 0px;
 	text-decoration: none;
 	font-size: 10px;
 }
