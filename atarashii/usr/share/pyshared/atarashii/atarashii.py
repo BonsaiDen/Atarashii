@@ -96,8 +96,8 @@ class Atarashii:
 		
 		# Debugging
 		if debug != None:
-			self.img = os.path.join(debug, '/usr/share/icons/atarashii.png')
-			self.resources = os.path.join(debug, "/usr/share/atarashii")
+			self.img = os.path.join(debug, 'atarashii/usr/share/icons/atarashii.png')
+			self.resources = os.path.join(debug, "atarashii/usr/share/atarashii")
 			
 		else:
 			self.img = '/usr/share/icons/atarashii.png'
