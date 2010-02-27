@@ -1,15 +1,35 @@
 #!/usr/bin/python
+import sys
+if len(sys.argv) == 2:
+	if sys.argv[1] == "main":
+		sys.path.insert(0, "/usr/share/pyshared")
+		try:
+			import atarashii
 
-# Wrap arround crazy random GDK and XOrg Erros ^.^"
-import subprocess
-error = 0
-while error == 0:
-	error = subprocess.call(["atarashiimain"])
-	if error == 0:
-		print "Atarashii crashed, restarting"
+		except:
+			if sys.path[0] == "/usr/share/pyshared": 
+				sys.path.pop(0)
+	
+			sys.exit(3)
+
+		try:
+			atarashii.start()
+
+		except:
+			sys.exit(3)
+
+else:
+	# Wrap arround crazy random GDK and XOrg Erros ^.^"
+	import subprocess
+	error = 0
+	while error == 0:
+		print "Starting Atarashii..."
+		error = subprocess.call(["atarashii", "main"])
+		if error == 0:
+			print "Atarashii crashed, restarting"
 		
-	elif error == 2:
-		print "Atarashii is already running"
+		elif error == 2:
+			print "Atarashii is already running"
 		
-	elif error == 3:
-		print "Importing Atarashii failed"
+		elif error == 3:
+			print "Importing Atarashii failed"

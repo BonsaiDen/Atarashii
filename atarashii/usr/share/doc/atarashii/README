@@ -1,6 +1,5 @@
 Atarashii                               
 ---------
-
 Atarashii(Japanese for "New") is a Twitter Client specificly designed for the 
 Gnome Desktop. It uses GTK and webkit to archive a slim and functional design.
 The code itself is written in Python and uses the corresponding Python bindings
@@ -8,12 +7,10 @@ for the libraries.
 
 Contributing
 ------------
-
 The source is available on GitHub <http://github.com/BonsaiDen/Atarashii>, to
 contribute to the project, fork it on GitHub and send a pull request.
 Everyone is welcome to make improvements to Atarashii!
 
 Copyright
 ---------
-
 Copyright (c) 2010 Ivo Wetzel
