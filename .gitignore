@@ -1,2 +1,5 @@
 *~
 *.pyc
+atarashii/DEBIAN/control
+atarashii/DEBIAN/md5sums
+*.deb

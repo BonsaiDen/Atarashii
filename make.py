@@ -1,4 +1,17 @@
-import sys, os, shutil, subprocess
+import sys, os, shutil, subprocess, hashlib
+
+def getFileMD5(file):
+	f = open(file, "rb")
+	md5 = hashlib.md5()
+	while True:
+		data = f.read(8192)
+		if not data:
+			break
+			
+		md5.update(data)
+	
+	f.close()
+	return md5.hexdigest()
 
 # Gather Information about the project
 sys.path.insert(0, os.path.join(sys.path[0], "atarashii/usr/share/pyshared"))
@@ -7,7 +20,10 @@ try:
 
 finally:
 	sys.path.pop(0)
-	
+
+
+# Check all files
+m = open(os.path.join(sys.path[0], "atarashii/DEBIAN/md5sums"), "w")
 size = 0
 cur = os.path.join(sys.path[0], "atarashii/usr")
 dirs = os.walk(cur)
@@ -22,7 +38,11 @@ for i in dirs:
 		
 		else:
 			size += os.stat(file).st_size
-
+			cf = file[len(cur)-3:]
+			m.write("%s  %s\n" % (getFileMD5(file), cf))
+			
+			
+m.close()
 print "Current Version is %s" % atarashii.__version__
 print "Complete size is %d KB" % (size / 1024)
 
