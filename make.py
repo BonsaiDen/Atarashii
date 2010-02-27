@@ -21,6 +21,10 @@ try:
 finally:
 	sys.path.pop(0)
 
+# Create DEBIAN directory
+debDir = os.path.join(sys.path[0], "atarashii/DEBIAN")
+if not os.path.exists(debDir):
+	os.mkdir(debDir)
 
 # Check all files
 m = open(os.path.join(sys.path[0], "atarashii/DEBIAN/md5sums"), "w")
