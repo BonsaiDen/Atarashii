@@ -33,3 +33,8 @@ from atarashii import Atarashii
 
 def start():
 	Atarashii(__version__).main()
+	
+def debug(path):
+	Atarashii(__version__, path).main()
+	
+

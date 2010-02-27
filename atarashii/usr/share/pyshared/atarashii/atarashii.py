@@ -84,7 +84,7 @@ class Atarashii:
 			self.minimized = event.new_window_state & gtk.gdk.WINDOW_STATE_ICONIFIED
 	
 	# Initiate
-	def __init__(self, version):		
+	def __init__(self, version, debug = None):		
 		# Version
 		self.version = version
 	
@@ -93,8 +93,16 @@ class Atarashii:
 	
 		# Stuff
 		self.minimized = False
-		self.img = '/usr/share/icons/atarashii.png'
-		self.resources = "/usr/share/atarashii"
+		
+		# Debugging
+		if debug != None:
+			self.img = os.path.join(debug, '/usr/share/icons/atarashii.png')
+			self.resources = os.path.join(debug, "/usr/share/atarashii")
+			
+		else:
+			self.img = '/usr/share/icons/atarashii.png'
+			self.resources = "/usr/share/atarashii"
+		
 		self.update = -1
 		self.replyRegex = re.compile('@([^\s]+)\s.*')
 		self.loadTweets = 20

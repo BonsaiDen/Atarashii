@@ -16,7 +16,7 @@ for i in dirs:
 	path = os.path.join(cur, i[0])
 	for f in files:
 		file = os.path.join(path, f)
-		if f.endswith("~"):
+		if f.endswith("~") or f.endswith(".pyc"):
 			os.remove(file)
 			print "deleting %s" % file
 		
