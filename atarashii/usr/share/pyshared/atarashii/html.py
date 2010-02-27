@@ -302,7 +302,7 @@ class HTML():
 			else:
 				clas = 'tweet'
 			
-			# HTML
+			# Source
 			by = ""
 			source = tweet.source
 			if source != "web":
@@ -314,7 +314,15 @@ class HTML():
 					pass
 			
 				by = lang.htmlBy % source
-					
+			
+			# Protected
+			locked = ""
+			if hasattr(tweet, "protected") and tweet.protected:
+				locked = '<div class="protected"></div>'
+			else:
+				locked = '<div class="space">&nbsp;</div>'
+			
+			# HTML
 			html = '''
 					<div class="%s">
 						<div class="avatar">
@@ -334,7 +342,7 @@ class HTML():
 							<div>
 								<a class="name" href="http://twitter.com/%s" title="''' + (lang.htmlProfile % lang.htmlProfile) + '''">
 									<b>%s</b>
-								</a> %s
+								</a> ''' + locked + ''' %s
 							</div>
 							<div class="time">
 								<a href="http://twitter.com/%s/statuses/%d" title="''' + (self.absolute_time(tweet.created_at)) + '''">%s</a>

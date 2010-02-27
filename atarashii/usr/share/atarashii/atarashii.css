@@ -68,6 +68,21 @@ a, a:hover, a:active {
 	text-decoration: none;
 }
 
+.protected {
+	vertical-align: bottom;
+	margin-left: 3px;
+	margin-right: 3px;
+	width: 7px;
+	height: 10px;
+	background-position: 0px 1px;
+	float: left;
+	background-repeat: no-repeat;
+	background-image: url("file:///usr/share/atarashii/lock.png");
+}
+
+.space {
+	float: left;
+}
 
 /* Tweets ------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -100,7 +115,7 @@ a, a:hover, a:active {
 /* Tweet Information -------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 .name {
-
+	float: left;
 }
 .name a {
 	text-decoration: none;
