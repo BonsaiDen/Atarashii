@@ -65,7 +65,7 @@ class LangDE:
 		self.statusSend = "Aktualisiere Status..."
 		self.statusLeft = "Noch %d Zeichen."
 		self.statusMore = "%d Zeichen zu viel."
-		self.statusLoadOlder = "Lade Tweets..."
+		self.statusLoadHistory = "Lade Tweets..."
 		
 		self.statusReconnectSeconds = "Automatischer Reconnect in %d Sekunden."
 		self.statusReconnectMinute = "Automatischer Reconnect in einer Minute."
@@ -92,6 +92,7 @@ class LangDE:
 		self.aboutOKButton = "OK"
 		
 		# Error
+		self.errorButton = "OK"
 		self.errorTitle = "Fehler"
  		self.errorLogin = "Falscher Benutzername oder Passwort."
  		self.errorRatelimit = "Ratelimit erreicht. Automatisches Update in %d Minute(n)."
@@ -102,6 +103,7 @@ class LangDE:
  		self.errorInternal = "Atarashii Fehler: %s"
 		
 		# Warning
+		self.warningButton = "OK"
 		self.warningTitle = "Warnung"
 		self.warningText = "Twitter hat das Ratelimit auf %d Requests pro Stunde reduziert, das Updateinterval wurde entsprechend angepasst."
 		
@@ -165,7 +167,7 @@ class LangEN:
 		self.statusSend = "Sending status..."
 		self.statusLeft = "%d chars left."
 		self.statusMore = "%d chars too much."
-		self.statusLoadOlder = "Loading tweets..."
+		self.statusLoadHistory = "Loading tweets..."
 		
 		self.statusReconnectSeconds = "Automatic reconnect in %d seconds."
 		self.statusReconnectMinute = "Automatic reconnect in one minute."
@@ -193,6 +195,7 @@ class LangEN:
 		self.aboutOKButton = "OK"
 		
 		# Error
+		self.errorButton = "OK"
 		self.errorTitle = "Error"
  		self.errorLogin = "Wrong Username oder Password."
  		self.errorRatelimit = "Reached ratelimit. Automatic update in %d minute(s)."
@@ -203,6 +206,8 @@ class LangEN:
  		self.errorOverload = "Twitter is over capacity."
  		self.errorInternal = "Atarashii error: %s"
 		
+		# Warning
+		self.warningButton = "OK"
 		self.warningTitle = "Warnung"
 		self.warningText = "Twitter has lowered the ratelimit to %d requests per hour, the update interval has been adjusted accordingly."
 		

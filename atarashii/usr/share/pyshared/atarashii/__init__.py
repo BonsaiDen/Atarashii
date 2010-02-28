@@ -21,7 +21,7 @@
 """
 Atarashii Twitter Client
 """
-__version__ = '0.93'
+__version__ = '0.94'
 __author__ = 'Ivo Wetzel <ivo.wetzel@googlemail.com>'
 __license__ = 'GPL3'
 
@@ -31,10 +31,10 @@ if sys.path[0] == "/usr/share/pyshared":
 
 def start():
 	from atarashii import Atarashii
-	Atarashii(__version__).main()
+	Atarashii(__version__).start()
 	
 def debug(path):
 	from atarashii import Atarashii
-	Atarashii(__version__, path).main()
+	Atarashii(__version__, path).start()
 	
 

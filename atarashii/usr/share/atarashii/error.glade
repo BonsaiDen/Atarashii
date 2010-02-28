@@ -2,7 +2,7 @@
 <glade-interface>
   <!-- interface-requires gtk+ 2.16 -->
   <!-- interface-naming-policy project-wide -->
-  <widget class="GtkDialog" id="errordialog">
+  <widget class="GtkDialog" id="dialog">
     <property name="border_width">5</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>
@@ -55,7 +55,7 @@
               <placeholder/>
             </child>
             <child>
-              <widget class="GtkButton" id="okbutton">
+              <widget class="GtkButton" id="closebutton">
                 <property name="label" translatable="yes">OK</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>

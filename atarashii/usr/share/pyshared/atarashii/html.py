@@ -1,17 +1,17 @@
-#  This file is part of  Atarashii.
+#  This file is part of  main.
 #
-#   Atarashii is free software: you can redistribute it and/or 
+#  main is free software: you can redistribute it and/or 
 #  modify it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#   Atarashii is distributed in the hope that it will be useful,
+#  main is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 # 
 #  You should have received a copy of the GNU General Public License along with
-#  Atarashii. If not, see <http://www.gnu.org/licenses/>.
+#  main. If not, see <http://www.gnu.org/licenses/>.
 
 
 # HTML View --------------------------------------------------------------------
@@ -34,6 +34,8 @@ import datetime
 
 from lang import lang
 
+
+# Import the webbrowser open method
 try:
 	import gnome as web
 	
@@ -45,29 +47,56 @@ except:
 		web = None
 
 
-class HTML():
-	def __init__(self, atarashii):
-		self.atarashii = atarashii
-		self.scroll = gtk.ScrolledWindow()
-		self.scroll.set_property("hscrollbar-policy",gtk.POLICY_AUTOMATIC)
-		self.scroll.set_shadow_type(gtk.SHADOW_IN)
-		self.view = None
-		self.init(True)
+class HTML(webkit.WebView):
+	def __init__(self, main, gui):
+		self.main = main
+		self.gui = gui
 		
-	def createView(self):
-		self.view = webkit.WebView()
-		self.view.connect("button-press-event", self.open_context)
-		self.view.connect("navigation-requested", self.open_link)
-		self.view.connect("load-finished", self.loaded)
-		self.view.connect("focus-in-event", self.atarashii.htmlfocus)
-		self.view.set_maintains_back_forward_list(False)
-		self.scroll.add(self.view)
-		self.view.show()
+		webkit.WebView.__init__(self)
+		self.connect("button-press-event", self.openContextMenu)
+		self.connect("navigation-requested", self.openLink)
+		self.connect("load-finished", self.loaded)
+		self.connect("focus-in-event", self.gui.text.htmlFocus)
+		self.scroll = self.gui.htmlScroll
+		self.set_maintains_back_forward_list(False)
+		self.init(True)
 	
-	# Initiate a empty timeline
+	
+	# Screens ------------------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def start(self):
+		self.offsetCount = 0
+		self.load_string("""
+		<html>
+			<head>
+				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
+			</head>
+			<body class="unloaded">
+				<div class="loading"><b>%s</b></div>
+			</body>
+		</html>""" % (self.main.getResource("atarashii.css"), lang.htmlLoading), "text/html", "UTF-8", "file:///main/")
+	
+	def splash(self):
+		self.offsetCount = 0
+		self.load_string("""
+		<html>
+			<head>
+				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
+			</head>
+			<body class="unloaded">
+				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
+			</body>
+		</html>""" % (self.main.getResource("atarashii.css"), self.main.getImage(), lang.htmlWelcome), "text/html", "UTF-8", "file:///main/")
+	
+	
+	
+	# Initiate a empty timeline ------------------------------------------------
+	# --------------------------------------------------------------------------
 	def init(self, splash = False):
 		self.tweets = []
-		self.list = []
+		self.updateList = []
 		self.position = 0
 		self.offsetCount = 0
 		self.historyLoaded = False
@@ -76,20 +105,17 @@ class HTML():
 		self.firstLoad = True
 		self.newestID = -1
 		self.newTweets = False
-		self.loadOld = False
-		
-		if self.view == None:
-			self.createView()
+		self.loadHistory = False
 		
 		if splash:
 			self.splash()
 	
 	# Fix scrolling isses on page load
 	def loaded(self, *args):
-		if len(self.tweets) > 0 and self.newTweets and not self.loadOld:
+		if len(self.tweets) > 0 and self.newTweets and not self.loadHistory:
 			try:
-				self.view.execute_script('document.title=document.getElementById("newcontainer").offsetHeight;')
-				offset = int(self.view.get_main_frame().get_title())
+				self.execute_script('document.title=document.getElementById("newcontainer").offsetHeight;')
+				offset = int(self.get_main_frame().get_title())
 			
 			except:
 				offset = 0
@@ -103,59 +129,48 @@ class HTML():
 		if len(self.tweets) > 0:
 			self.firstLoad = False
 		
-		self.loadOld = False
+		self.loadHistory = False
 		self.newTweets = False
 	
-	# Display "loading" info
-	def start(self):
-		self.offsetCount = 0
-		self.view.load_string("""
-		<html>
-			<head>
-				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-				<link rel="stylesheet" type="text/css" media="screen" href="file://%s/atarashii.css" />
-			</head>
-			<body class="unloaded">
-				<div class="loading"><b>%s</b></div>
-			</body>
-		</html>""" % (self.atarashii.resources, lang.htmlLoading), "text/html", "UTF-8", "file:///atarashii/")
-	
-	# Display the splash screen
-	def splash(self):
-		self.offsetCount = 0
-		self.view.load_string("""
-		<html>
-			<head>
-				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-				<link rel="stylesheet" type="text/css" media="screen" href="file://%s/atarashii.css" />
-			</head>
-			<body class="unloaded">
-				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
-			</body>
-		</html>""" % (self.atarashii.resources, self.atarashii.img, lang.htmlWelcome), "text/html", "UTF-8", "file:///atarashii/")
-	
+
 	# Clear the History
 	def clear(self):
 		self.historyLoaded = False
 		self.tweets = self.tweets[self.historyCount:]
-		self.atarashii.maxTweets -= self.historyCount
+		self.main.maxTweetCount -= self.historyCount
 		self.historyCount = 0
-		self.atarashii.clearButton.set_sensitive(False)
+		self.main.gui.historyButton.set_sensitive(False)
 		self.render()
 	
-	# Push Tweets to the View
-	def push(self):
-		while len(self.list) > 0:
-			self.add(self.list.pop(0))
+	
+	def read(self):
+		if self.main.updater.initID != self.main.getLatestID():
+			self.main.gui.readButton.set_sensitive(False)
+			self.main.updater.initID = self.main.getLatestID()
+			if not self.historyLoaded:
+				pos = len(self.tweets) - self.main.loadTweetCount
+				if pos < 0:
+					pos = 0
+				
+				self.tweets = self.tweets[pos:]
+			
+			self.render()
+	
+	
+	# Add Tweets ---------------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def pushUpdates(self):
+		while len(self.updateList) > 0:
+			self.add(self.updateList.pop(0))
 	
 		self.render()
 
 	# Add Tweets to the internal List
-	def add(self, tweet):
-		id = tweet[0].id
+	def add(self, tweet):		
+		tweetid = tweet[0].id
 		found = False
 		for i in self.tweets:
-			if i[0].id == id:
+			if i[0].id == tweetid:
 				found = True
 				break
 		
@@ -167,7 +182,7 @@ class HTML():
 				self.tweets.append(tweet)
 			
 			self.newTweets = True
-			if len(self.tweets) > self.atarashii.maxTweets:
+			if len(self.tweets) > self.main.maxTweetCount:
 				self.tweets.pop(0)
 	
 	def compare(self, x, y):
@@ -180,18 +195,19 @@ class HTML():
 		else:
 			return 0
 
-	# Render the Timeline
+	# Render the Timeline ------------------------------------------------------
+	# --------------------------------------------------------------------------
 	def render(self):	
-		# Sort Tweets
 		self.tweets.sort(self.compare)
 		
 		# Set the latest tweet for reloading on startup
+		self.username = self.main.settings['username']
 		if len(self.tweets) > 0:
-			id = len(self.tweets) - self.atarashii.loadTweets
+			id = len(self.tweets) - self.main.loadTweetCount
 			if id < 0:
 				id = 0
 			
-			self.atarashii.settings['firsttweet_' + self.atarashii.username] = str(self.tweets[id][0].id - 1)
+			self.main.settings['firsttweet_' + self.username] = str(self.tweets[id][0].id - 1)
 		
 		# Regex
 		urlRegex = re.compile("((mailto\:|(news|(ht|f)tp(s?))\://){1}\S+)")
@@ -205,18 +221,20 @@ class HTML():
 				
 		# Newest Stuff
 		if self.newestID == -1:
-			self.newestID = self.atarashii.updater.initID
+			self.newestID = self.main.updater.initID
 		
 		newest = False
 		newestAvatar = False
 		container = False
 		lastHighlight = False
+		
+		# Do the rendering!
 		for num, obj in enumerate(self.tweets):
 			tweet, img, mode = obj
 			
 			# Fix some stuff for the seperation of continous new/old tweets
-			newTimeline = tweet.id > self.atarashii.updater.initID
-			if newest or self.atarashii.updater.initID == 0:
+			newTimeline = tweet.id > self.main.updater.initID
+			if newest or self.main.updater.initID == 0:
 				newTimeline = False
 			
 			if newTimeline:
@@ -244,7 +262,7 @@ class HTML():
 				elif highlight:
 					renderTweets.insert(0, '<div class="spacer6"></div>')
 					
-				elif tweet.id > self.atarashii.updater.initID:
+				elif tweet.id > self.main.updater.initID:
 					renderTweets.insert(0, '<div class="spacer4"></div>')
 					
 				else:
@@ -269,14 +287,14 @@ class HTML():
 			
 			# Display Avatar?
 			if num < len(self.tweets) - 1:
-				newAvatar = self.tweets[num + 1][0].id > self.atarashii.updater.initID
+				newAvatar = self.tweets[num + 1][0].id > self.main.updater.initID
 			else:
 				newAvatar = False
 				
-			if num > 0 and self.tweets[num - 1][0].id <= self.atarashii.updater.initID:
+			if num > 0 and self.tweets[num - 1][0].id <= self.main.updater.initID:
 				newTimeline = False
 			
-			if newestAvatar or self.atarashii.updater.initID == 0:
+			if newestAvatar or self.main.updater.initID == 0:
 				newAvatar = False
 			
 			if newAvatar:
@@ -296,7 +314,7 @@ class HTML():
 			elif self.atUser:
 				clas = 'highlight'
 				
-			elif tweet.id <= self.atarashii.updater.initID:
+			elif tweet.id <= self.main.updater.initID:
 				clas = 'oldtweet'
 				
 			else:
@@ -383,32 +401,34 @@ class HTML():
 			<html>
 				<head>
 					<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-					<link rel="stylesheet" type="text/css" media="screen" href="file://%s/atarashii.css" />
+					<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
 				</head>
 				<body>
 					<div><div id="newcontainer">%s</div>
 					<div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
 				</body>
-			</html>""" % (self.atarashii.resources, "".join(renderTweets), self.tweets[0][0].id, lang.htmlLoadMore)
+			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderTweets), self.tweets[0][0].id, lang.htmlLoadMore)
 		
 		else:
 			html = """
 			<html>
 				<head>
 					<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-					<link rel="stylesheet" type="text/css" media="screen" href="file://%s/atarashii.css" />
+					<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
 				</head>
 				<body class="unloaded">
 					<div class="loading"><b>%s</b></div>
 				</body>
-			</html>""" % (self.atarashii.resources, lang.htmlEmpty)
+			</html>""" % (self.main.getResource("atarashii.css"), lang.htmlEmpty)
 		
 		#f = open("debug.html", "wb")
 		#f.write(html)
 		#f.close()
-		self.view.load_string(html, "text/html", "UTF-8", "file:///atarashii/")
+		self.load_string(html, "text/html", "UTF-8", "file:///main/")
 	
-	# Create the relative time description
+	
+	# Helpers ------------------------------------------------------------------
+	# --------------------------------------------------------------------------
 	def relative_time(self, t):
 		delta = long(calendar.timegm(time.gmtime())) - long(calendar.timegm(t.timetuple()))
 		if delta <= 1:
@@ -445,29 +465,27 @@ class HTML():
 			return time.strftime(lang.htmlTimeDay, t)
 	
 	# Open a Link
-	def open_link(self, view, frame, req):
+	def openLink(self, view, frame, req):
 		uri = req.get_uri()
 		if uri.startswith("file:///"):
 			return False
 		
 		if uri.startswith("more:"):
-			self.atarashii.updater.loadOlder = int(uri.split(":")[1]) - 1
-			if self.atarashii.updater.loadOlder != -1:
-				self.atarashii.scroll.hide()
-				self.atarashii.progress.set_fraction(0.0)
-				self.atarashii.progress.show()
-				self.atarashii.setStatus(lang.statusLoadOlder)
-				gobject.timeout_add(100, lambda: self.atarashii.showProgess())
+			self.main.updater.loadHistoryID = int(uri.split(":")[1]) - 1
+			if self.main.updater.loadHistoryID != -1:
+				self.main.isLoadingHistory = True
+				self.gui.showProgress()
+				gobject.idle_add(lambda: self.main.gui.updateStatus(True))
 		
 		elif uri.startswith("reply:"):
-			if not self.atarashii.updater.error:
-				foo, self.atarashii.reply_user, self.atarashii.reply_id, num = uri.split(":")
-				gobject.idle_add(lambda: self.atarashii.reply(int(num)))
+			if not self.main.updater.error:
+				foo, self.main.replyUser, self.main.replyID, num = uri.split(":")
+				gobject.idle_add(lambda: self.main.reply(int(num)))
 		
 		elif uri.startswith("retweet:"):
-			if not self.atarashii.updater.error:
-				self.atarashii.retweet_num = int(uri.split(":")[1])
-				gobject.idle_add(lambda: self.atarashii.retweet())
+			if not self.main.updater.error:
+				self.main.retweetNum = int(uri.split(":")[1])
+				gobject.idle_add(lambda: self.main.retweet())
 		
 		else:
 			if web != None:
@@ -480,7 +498,7 @@ class HTML():
 		return True
 	
 	# Block the Context Menu
-	def open_context(self, html, e):
+	def openContextMenu(self, html, e):
 		if e.button == 3:
 			return True
 		
@@ -507,7 +525,7 @@ class HTML():
 	
 	def atlink(self, match):
 		at = match.group()[1:]
-		if at == self.atarashii.username:
+		if at == self.username:
 			self.atUser = True
 	
 		return '<a href="http://twitter.com/%s">@%s</a>' % (at, at)

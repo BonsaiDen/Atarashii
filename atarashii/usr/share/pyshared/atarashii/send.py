@@ -1,79 +1,89 @@
-#  This file is part of  Atarashii.
+#  This file is part of  main.
 #
-#   Atarashii is free software: you can redistribute it and/or 
+#  main is free software: you can redistribute it and/or 
 #  modify it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#   Atarashii is distributed in the hope that it will be useful,
+#  main is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 # 
 #  You should have received a copy of the GNU General Public License along with
-#  Atarashii. If not, see <http://www.gnu.org/licenses/>.
+#  main. If not, see <http://www.gnu.org/licenses/>.
 
 
-# Send Thread ------------------------------------------------------------------
+# Sender Thread ------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import gobject
 import threading
 
 class Send(threading.Thread):
-	def __init__(self, atarashii, text):
+	def __init__(self, main):
 		threading.Thread.__init__(self)
-		self.atarashii = atarashii
-		self.text = text
+		self.main = main
 
 	def run(self):
-		buf = self.atarashii.input.get_buffer()
-		if self.atarashii.reply_id != -1:
-			try:
-				update = self.atarashii.api.update_status(self.text, in_reply_to_status_id = self.atarashii.reply_id)
-				self.atarashii.settings['lasttweet'] = str(update.id)
-				self.atarashii.updater.setLast(update.id)
-				self.atarashii.readButton.set_sensitive(True)
-				
-				file = self.atarashii.updater.getImage(update.user.profile_image_url, update.user.id)
-				self.atarashii.html.list.append((update, file, False))
-				gobject.idle_add(lambda: self.atarashii.html.push())
-				self.atarashii.reply_user = ""
-				self.atarashii.reply_text = ""
-				self.atarashii.reply_id = -1
-				buf.set_text("")
-				self.atarashii.progress.hide()
-				self.atarashii.scroll.show()
-				self.atarashii.html.view.grab_focus()
-				self.atarashii.textFocus = False
-			
-			except Exception, detail:
-				self.atarashii.error(detail)
-				self.atarashii.progress.hide()
-				self.atarashii.scroll.show()
-				gobject.idle_add(lambda: self.atarashii.input.grab_focus())
+		text = self.main.gui.text.getText()
 		
+		# Reply
+		if self.main.replyID!= -1:
+			try:
+				# Send Tweet
+				update = self.main.api.update_status(text, in_reply_to_status_id = self.main.replyID)
+				self.main.updater.setLast(update.id)
+				self.main.gui.readButton.set_sensitive(True)
+				
+				# Insert temporary tweet
+				imgfile = self.main.updater.getImage(update.user.profile_image_url, update.user.id)
+				self.main.gui.html.updateList.append((update, file, False))
+				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
+				
+				# Reset
+				self.main.replyUser = ""
+				self.main.replyText = ""
+				self.main.replyID = -1
+				self.main.gui.text.setText("")
+				
+				# Focus HTML
+				self.main.gui.text.hasFocus = False
+				self.main.gui.showInput()
+				self.main.gui.html.grab_focus()
+			
+			except Exception, error:
+				print error
+				self.main.gui.showError(error)
+				self.main.gui.showInput()
+				gobject.idle_add(lambda: self.main.gui.text.grab_focus())
+		
+		# Normal Tweet / Retweet
 		else:
 			try:
-				update = self.atarashii.api.update_status(self.text)
-				self.atarashii.updater.setLast(update.id)
-				self.atarashii.readButton.set_sensitive(True)
+				# Send Tweet
+				update = self.main.api.update_status(text)
+				self.main.updater.setLast(update.id)
+				self.main.gui.readButton.set_sensitive(True)
 				
-				file = self.atarashii.updater.getImage(update.user.profile_image_url, update.user.id)
-				self.atarashii.html.list.append((update, file, False))
-				gobject.idle_add(lambda: self.atarashii.html.push())
-				buf.set_text("")
-				self.atarashii.progress.hide()
-				self.atarashii.scroll.show()
-				self.atarashii.html.view.grab_focus()
-				self.atarashii.textFocus = False
+				# Insert temporary tweet
+				imgfile = self.main.updater.getImage(update.user.profile_image_url, update.user.id)
+				self.main.gui.html.updateList.append((update, imgfile, False))
+				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
+				
+				# Reset
+				self.main.gui.text.setText("")
+				
+				# Focus HTML
+				self.main.gui.text.hasFocus = False
+				self.main.gui.showInput()
+				self.main.gui.html.grab_focus()
 			
-			except Exception, detail:
-				self.atarashii.error(detail)
-				self.atarashii.progress.hide()
-				self.atarashii.scroll.show()
-				gobject.idle_add(lambda: self.atarashii.input.grab_focus())
+			except Exception, error:
+				print error
+				self.main.gui.showError(error)
+				self.main.gui.showInput()
+				gobject.idle_add(lambda: self.main.gui.text.grab_focus())
 		
-		self.atarashii.sending = False
-		gobject.idle_add(lambda: self.atarashii.sizeInput())
-		self.atarashii.input.set_sensitive(True)
+		self.main.isSending = False
+		self.main.gui.text.set_sensitive(True)
 

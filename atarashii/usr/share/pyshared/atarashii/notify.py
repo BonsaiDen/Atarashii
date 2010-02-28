@@ -35,8 +35,8 @@ try:
 
 	pynotify.init("Atarashii")
 	class Notifier:
-		def __init__(self, atarashii):
-			self.atarashii = atarashii
+		def __init__(self, main):
+			self.main = main
 	
 		def show(self, objs, sound = False):
 			if sound:
@@ -54,7 +54,7 @@ try:
 			return notification.show()
 	
 		def sound(self):
-			snd = NotifierSound(self.atarashii.settings['soundfile'])
+			snd = NotifierSound(self.main.settings['soundfile'])
 			snd.setDaemon(True)
 			snd.start()
 	
@@ -62,14 +62,11 @@ try:
 	
 except:
 	class Notifier():
-		def __init__(self, atarashii):
-			self.atarashii = atarashii
+		def __init__(self, main):
+			pass
 		
 		def show(self, objs, sound = False):
 			pass
 			
 	canNotify = False
 
-if __name__ == '__main__':
-	n = Notifier()
-	n.show([("Foo", "Test", None, None)], True)

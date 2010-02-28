@@ -2,7 +2,7 @@
 <glade-interface>
   <!-- interface-requires gtk+ 2.16 -->
   <!-- interface-naming-policy project-wide -->
-  <widget class="GtkDialog" id="aboutdialog">
+  <widget class="GtkDialog" id="dialog">
     <property name="width_request">320</property>
     <property name="height_request">204</property>
     <property name="border_width">5</property>
@@ -166,7 +166,7 @@ If not, see &lt;http://www.gnu.org/licenses/&gt;.</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="okbutton">
+              <widget class="GtkButton" id="closebutton">
                 <property name="label" translatable="yes">OK</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
