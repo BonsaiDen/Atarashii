@@ -131,7 +131,6 @@ class HTML(webkit.WebView):
 		self.main.gui.historyButton.set_sensitive(False)
 		self.render()
 	
-	
 	def read(self):
 		if self.main.updater.initID != self.main.getLatestID():
 			self.main.gui.readButton.set_sensitive(False)

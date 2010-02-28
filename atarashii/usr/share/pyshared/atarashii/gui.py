@@ -167,7 +167,10 @@ class GUI(gtk.Window):
 	
 	# Update Statusbar
 	def updateStatus(self, once = False):
-		if self.main.isLoadingHistory:
+		if self.text.hasTyped:
+			pass
+	
+		elif self.main.isLoadingHistory:
 			self.setStatus(lang.statusLoadHistory)
 	
 		elif self.main.isConnecting:
