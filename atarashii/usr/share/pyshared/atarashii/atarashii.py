@@ -79,7 +79,7 @@ class Atarashii:
 		
 		self.retweetNum = -1
 		self.retweetUser = ""	
-		self.retweetUser = ""
+		self.retweetText = ""
 		
 		self.loadTweetCount = 20
 		self.maxTweetCount = 200

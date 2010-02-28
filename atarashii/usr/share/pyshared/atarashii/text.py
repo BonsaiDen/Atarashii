@@ -183,6 +183,8 @@ class TextInput(gtk.TextView):
 		# Cancel Retweet
 		if self.main.retweetNum > -1:
 			self.main.retweetNum = -1
+			self.main.retweetText = ""
+			self.main.retweetUser = ""
 			text = ""
 		
 		# Check for already existing reply
@@ -201,26 +203,24 @@ class TextInput(gtk.TextView):
 		self.checkColor(len(text))
 		self.changed()
 		self.modify_text(gtk.STATE_NORMAL, self.defaultFG)
+		self.resize()
 	
-	def retweet(self):
+	def retweet(self):	
 		self.grab_focus()
 		
 		# Cancel reply
 		self.main.replyUser = ""
 		self.main.replyID = -1
-		
-		tweet = self.gui.html.tweets[self.main.retweetNum][0]
-		text = self.getText()
-		
+
 		self.isChanging = True
-		text = "RT @%s: %s" % (tweet.user.screen_name, tweet.text)
-		self.main.retweetUser = tweet.user.screen_name
+		text = "RT @%s: %s" % (self.main.retweetUser, self.main.retweetText)
 		self.setText(text)
 		
 		self.isChanging = False
 		self.checkColor(len(text))
 		self.changed()
 		self.modify_text(gtk.STATE_NORMAL, self.defaultFG)
+		self.resize()
 	
 	
 	# Sizing -------------------------------------------------------------------
