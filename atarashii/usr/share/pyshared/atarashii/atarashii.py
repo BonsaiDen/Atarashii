@@ -14,6 +14,18 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
+# DBUS Integration -------------------------------------------------------------
+# ------------------------------------------------------------------------------
+import dbus, dbus.service
+import sys
+
+if 'org.Atarashii' in dbus.Interface(dbus.SessionBus().get_object("org.freedesktop.DBus", "/org/freedesktop/DBus"), "org.freedesktop.DBus").ListNames():
+	sys.exit(2)
+
+DBUS = dbus.SessionBus()
+DBUSNAME = dbus.service.BusName('org.Atarashii', bus = DBUS)
+
+
 # Atarashii --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import pygtk
