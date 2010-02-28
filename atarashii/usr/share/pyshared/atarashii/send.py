@@ -37,7 +37,7 @@ class Send(threading.Thread):
 				
 				# Insert temporary tweet
 				imgfile = self.main.updater.getImage(update.user.profile_image_url, update.user.id)
-				self.main.gui.html.updateList.append((update, file, False))
+				self.main.gui.html.updateList.append((update, imgfile, False))
 				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
 				
 				# Reset
