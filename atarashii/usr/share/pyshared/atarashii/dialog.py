@@ -110,8 +110,8 @@ class SettingsDialog(Dialog):
 		username = self.get("username")
 		password = self.get("password")
 		
-		username.set_text(self.settings['username'])
-		password.set_text(self.settings['password'])
+		username.set_text(self.settings['username'] or "")
+		password.set_text(self.settings['password'] or "")
 			
 		oldusername = self.settings['username']
 		oldpassword = self.settings['password']

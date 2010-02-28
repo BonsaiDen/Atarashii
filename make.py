@@ -59,7 +59,7 @@ Section: misc
 Priority: optional
 Architecture: all
 Installed-Size: """ + str(size / 1024) + """
-Depends: python (>= 2.6), python-webkit, python-gtk2, python-gconf, python-gobject, python-dbus, python-notify, mplayer-nogui, python-gnome2-desktop
+Depends: python (>= 2.6), python-webkit, python-gtk2, python-gconf, python-gobject, python-dbus, python-notify, mplayer-nogui
 Maintainer: Ivo Wetzel <ivo.wetzel@googlemail.com>
 Description: Twitter Client for the GNOME Desktop
  Atarashii(Japanese for "New") is a Twitter Client specifically designed for the 

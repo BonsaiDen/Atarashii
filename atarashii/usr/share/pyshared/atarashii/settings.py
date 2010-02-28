@@ -16,58 +16,83 @@
 
 # Settings ---------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-try:
-	import gconf
-
-except:
-	from gnome import gconf
-
-GCONF = gconf.client_get_default()
+import os
 
 class Settings:
 	def __init__(self):
-		self.path = ("/" + "/".join(("apps", "atarashii"))) + "/SETTINGS"
+		self.dir = os.path.join(os.path.expanduser('~'), ".atarashii")
+		if not os.path.exists(self.dir):
+			os.mkdir(self.dir)
 
+		self.values = {}
+		self.load()
+	
+	# Load ---------------------------------------------------------------------
+	def load(self):
+		try:
+			f = open(os.path.join(self.dir, 'atarashii.conf'), "r")
+			lines = f.read().split('\n')
+			for i in lines:
+				name = i[:i.find(' ')]
+				i = i[len(name)+1:]
+				t = i[:i.find(' ')]
+				value = i[len(t)+1:]
+				
+				try:
+					if t == 'long':
+						value = long(value)
+					
+					elif t == 'bool':
+						value = True if value == "True" else False
+					
+					if name != "":
+						self.values[name] = value
+					
+				except Exception, detail:
+					print detail
+			
+			f.close()
+			
+		except Exception, detail:
+			self.values = {}
+	
+	# Save ---------------------------------------------------------------------
+	def save(self):
+		f = open(os.path.join(self.dir, 'atarashii.conf'), "w")
+		for name in self.values.keys():
+			value = self.values[name]
+			c = type(value)
+			if c == int or c == long:
+				t = "long"
+			
+			elif c == bool:
+				t = "bool"
+			
+			else:
+				t = "str"
+			
+			f.write("%s %s %s\n" % (name, t, value))
+		
+		f.close()
+		
+	# Get / Set ----------------------------------------------------------------
 	def __getitem__(self, key):
-		value = GCONF.get("%s/%s" % (self.path, key))
-		if value:
-			return {
-				"string": value.get_string,
-				"int": value.get_int,
-				"float": value.get_float,
-				"bool": value.get_bool,
-				"list": value.get_list}[value.type.value_nick]()
-
+		if self.values.has_key(key):
+			return self.values[key]
 		else:
 			return None
+	
+	def __setitem__(self, key, value):
+		self.values[key] = value
+	
 
 	def isset(self, key):
 		return self[key] != None and self[key].strip() != ""
-
-
+	
 	def isTrue(self, key, default = True):
 		if self[key] == None:
 			return default
 			
 		else:
 			return self[key]
-
-	def __setitem__(self, key, value):
-		if type(value).__name__ == "list":
-			GCONF.set_list("%s/%s" % (self.path, key), gconf.VALUE_INT, value)
-
-		else:
-			{ "str": GCONF.set_string,
-			"String": GCONF.set_string,
-			"int": GCONF.set_int,
-			"float": GCONF.set_float,
-			"bool": GCONF.set_bool}[type(value).__name__](
-			  "%s/%s" % (self.path, key), value)
-
-		def bind(self, widget, key, **args):
-			gwp.create_persistency_link(widget, "%s/%s" % (self.path, key), **args)
-			return widget
-		
-		def notify(self, key, method):
-			GCONF.notify_add("%s/%s" % (self.path, key), method)
 

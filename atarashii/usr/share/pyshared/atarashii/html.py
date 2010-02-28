@@ -31,20 +31,9 @@ import math
 
 import time
 import datetime
+import webbrowser
 
 from lang import lang
-
-
-# Import the webbrowser open method
-try:
-	import gnome as web
-	
-except:
-	try:
-		import webbrowser as web
-		
-	except:
-		web = None
 
 
 class HTML(webkit.WebView):
@@ -488,12 +477,7 @@ class HTML(webkit.WebView):
 				gobject.idle_add(lambda: self.main.retweet())
 		
 		else:
-			if web != None:
-				try:
-					web.url_show(uri)
-					
-				except:
-					web.open(url)
+			webbrowser.open(uri)
 		
 		return True
 	

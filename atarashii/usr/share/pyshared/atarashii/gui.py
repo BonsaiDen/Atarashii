@@ -127,6 +127,7 @@ class GUI(gtk.Window):
 		self.minimized = False
 				
 		# Statusbar Updater
+		self.updateStatus()
 		gobject.timeout_add(1000, lambda: self.updateStatus())
 				
 		# Show

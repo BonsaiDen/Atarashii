@@ -90,6 +90,7 @@ class Atarashii:
 		self.reconnectTime = -1
 		
 		# State
+		self.loginError = False
 		self.loginStatus = False
 		self.isSending = False
 		self.isConnecting = False
@@ -136,7 +137,7 @@ class Atarashii:
 	
 	def login(self):
 		# Only login with username and pasword
- 		if self.settings["username"] == "" or self.settings["password"] == "":
+ 		if not self.settings.isset("username") or not self.settings.isset("password"):
  			# TODO self.html.splash()
  			return
  		
@@ -261,6 +262,7 @@ class Atarashii:
  		self.settings['position'] = str(self.gui.get_position())
  		size = self.gui.get_allocation()
 		self.settings['size'] = str((size[2], size[3]))
+		self.settings.save()
  		gtk.main_quit()
  		sys.exit(1)
 
