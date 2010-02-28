@@ -19,7 +19,6 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gtk.glade
 import gobject
 
 from lang import lang
@@ -35,11 +34,12 @@ class Dialog:
 		self.settings = gui.main.settings
 		
 		if self.__class__.instance == None:
-			self.gl = gtk.glade.XML(gui.main.getResource(self.__class__.resource))
+			self.gt = gtk.Builder()
+			self.gt.add_from_file(gui.main.getResource(self.__class__.resource))
 			self.dlg = self.get("dialog")
 			self.dlg.set_property("skip-taskbar-hint", True)
 			self.dlg.set_transient_for(gui)		
-						
+			
 			self.dlg.connect("delete_event", self.onClose)
 			self.closeButton = self.get("closebutton")
 			self.closeButton.connect("clicked", self.onClose)
@@ -58,7 +58,7 @@ class Dialog:
 		self.dlg.hide()
 		
 	def get(self, widget):
-		return self.gl.get_widget(widget)
+		return self.gt.get_object(widget)
 		
 		
 	

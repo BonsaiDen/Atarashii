@@ -19,7 +19,6 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import gtk.glade
 import pango
 import gobject
 
@@ -43,43 +42,44 @@ class GUI(gtk.Window):
 		self.set_border_width(2)
 		self.set_size_request(280, 400)
 		self.set_icon_from_file(main.getImage())
-	
-	
+		
+		
 		# Load Components
-		gl = gtk.glade.XML(main.getResource("main.glade"))
-		frame = gl.get_widget("frame")
+		gt = gtk.Builder()
+		gt.add_from_file(main.getResource("main.glade"))
+		frame = gt.get_object("frame")
 		self.add(frame)
-
+		
 		
 		# Link Components
-		self.refreshButton = gl.get_widget("refresh")
+		self.refreshButton = gt.get_object("refresh")
 		self.refreshButton.connect("clicked", self.onRefresh)
 		self.refreshButton.set_tooltip_text(lang.toolRefresh)
 		
-		self.historyButton = gl.get_widget("history")
+		self.historyButton = gt.get_object("history")
 		self.historyButton.connect("clicked", self.onHistory)
 		self.historyButton.set_tooltip_text(lang.toolHistory)
 		
-		self.readButton = gl.get_widget("read")
+		self.readButton = gt.get_object("read")
 		self.readButton.connect("clicked", self.onRead)
 		self.readButton.set_tooltip_text(lang.toolRefresh)
 		
-		self.settingsButton = gl.get_widget("settings")
+		self.settingsButton = gt.get_object("settings")
 		self.settingsButton.connect("clicked", self.onSettings)
 		self.settingsButton.set_tooltip_text(lang.toolSettings)
 		
-		self.aboutButton = gl.get_widget("about")
+		self.aboutButton = gt.get_object("about")
 		self.aboutButton.connect("clicked", self.onAbout)
 		self.aboutButton.set_tooltip_text(lang.toolAbout)
 		
-		self.quitButton = gl.get_widget("quit")
+		self.quitButton = gt.get_object("quit")
 		self.quitButton.connect("clicked", self.onQuit)
 		self.quitButton.set_tooltip_text(lang.toolQuit)
 		
-		self.infoLabel = gl.get_widget("label")
+		self.infoLabel = gt.get_object("label")
 		
-		self.htmlScroll = gl.get_widget("htmlscroll")		
-		self.textScroll = gl.get_widget("textscroll")
+		self.htmlScroll = gt.get_object("htmlscroll")		
+		self.textScroll = gt.get_object("textscroll")
 		
 		self.text = text.TextInput(self)
 		self.textScroll.add(self.text)
@@ -88,15 +88,15 @@ class GUI(gtk.Window):
 		self.htmlScroll.add(self.html)
 		self.htmlScroll.set_shadow_type(gtk.SHADOW_IN)
 		
-		self.content = gl.get_widget("content")
+		self.content = gt.get_object("content")
 		self.content.set_border_width(2)
 		
-		self.toolbar = gl.get_widget("toolbar")
+		self.toolbar = gt.get_object("toolbar")
 		self.toolbar.set_icon_size(gtk.ICON_SIZE_SMALL_TOOLBAR)
 		
 		
-		self.progress = gl.get_widget("progressbar")
-		self.status = gl.get_widget("statusbar")
+		self.progress = gt.get_object("progressbar")
+		self.status = gt.get_object("statusbar")
 		
 		
 		# Restore Position & Size
