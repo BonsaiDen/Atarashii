@@ -92,6 +92,11 @@ class AboutDialog(Dialog):
 		text.hide()
 		license.connect("toggled", toggle)
 		
+	def onClose(self, *args):
+		self.__class__.instance = None
+		self.gui.aboutDialog = None
+		self.gui.aboutButton.set_active(False)
+		self.dlg.hide()
 
 
 # Settings Dialog --------------------------------------------------------------
@@ -175,6 +180,12 @@ class SettingsDialog(Dialog):
 			self.onClose()
 		
 		self.closeButton.connect("clicked", save)
+		
+	def onClose(self, *args):
+		self.__class__.instance = None
+		self.gui.settingsDialog = None
+		self.gui.settingsButton.set_active(False)
+		self.dlg.hide()
 		
 		
 # Error Dialog -----------------------------------------------------------------

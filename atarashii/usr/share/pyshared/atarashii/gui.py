@@ -65,11 +65,11 @@ class GUI(gtk.Window):
 		self.readButton.set_tooltip_text(lang.toolRead)
 		
 		self.settingsButton = gt.get_object("settings")
-		self.settingsButton.connect("clicked", self.onSettings)
+		self.settingsButton.connect("toggled", self.onSettings)
 		self.settingsButton.set_tooltip_text(lang.toolSettings)
 		
 		self.aboutButton = gt.get_object("about")
-		self.aboutButton.connect("clicked", self.onAbout)
+		self.aboutButton.connect("toggled", self.onAbout)
 		self.aboutButton.set_tooltip_text(lang.toolAbout)
 		
 		self.quitButton = gt.get_object("quit")
@@ -121,6 +121,10 @@ class GUI(gtk.Window):
 		self.connect("window-state-event", self.stateEvent)
 		self.initEvent = self.connect("expose-event", self.drawEvent)
 		
+		
+		# Dialogs
+		self.aboutDialog = None
+		self.settingsDialog = None
 		
 		# Variables
 		self.windowPosition = None
@@ -318,10 +322,18 @@ class GUI(gtk.Window):
 		gobject.idle_add(lambda: self.html.read())
 		
 	def onSettings(self, *args):
-		dialog.SettingsDialog(self)
+		if self.settingsButton.get_active() and not self.settingsDialog:
+			self.settingsDialog = dialog.SettingsDialog(self)
+		
+		elif self.settingsDialog:
+			self.settingsDialog.onClose()
 		
 	def onAbout(self, *args):
-		dialog.AboutDialog(self)
+		if self.aboutButton.get_active() and not self.aboutDialog:
+			self.aboutDialog = dialog.AboutDialog(self)
+		
+		elif self.aboutDialog:
+			self.aboutDialog.onClose()
 		
 	def onQuit(self, widget = None, data = None):
  		if data:

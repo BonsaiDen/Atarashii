@@ -52,7 +52,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkToolButton" id="settings">
+          <object class="GtkToggleToolButton" id="settings">
             <property name="visible">True</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-properties</property>
@@ -63,7 +63,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkToolButton" id="about">
+          <object class="GtkToggleToolButton" id="about">
             <property name="visible">True</property>
             <property name="use_underline">True</property>
             <property name="stock_id">gtk-about</property>
