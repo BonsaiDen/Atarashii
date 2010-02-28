@@ -158,8 +158,10 @@ class GUI(gtk.Window):
 		self.textScroll.hide()
 		gobject.timeout_add(100, lambda: progressActivity())
 	
-	def hideAll(self):
-		self.progress.hide()
+	def hideAll(self, progress = True):
+		if progress:
+			self.progress.hide()
+		
 		self.textScroll.hide()
 		self.refreshButton.set_sensitive(False)
 		self.readButton.set_sensitive(False)

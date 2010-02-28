@@ -142,7 +142,7 @@ class Atarashii:
  			time.sleep(0.1)
 		
 		# Progress
-		self.gui.hideAll()
+		self.gui.hideAll(False)
 		self.gui.showProgress()
 		
 		# Connect
