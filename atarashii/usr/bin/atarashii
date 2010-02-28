@@ -11,12 +11,9 @@ if len(sys.argv) == 2:
 				sys.path.pop(0)
 	
 			sys.exit(3)
-
-		try:
-			atarashii.start()
-
-		except:
-			sys.exit(3)
+		
+		# Launch
+		atarashii.start()
 
 else:
 	# Wrap arround crazy random GDK and XOrg Erros ^.^"
