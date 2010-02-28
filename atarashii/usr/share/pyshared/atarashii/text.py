@@ -181,7 +181,7 @@ class TextInput(gtk.TextView):
 			self.main.replyText = self.gui.html.tweets[num][0].text
 	
 		# Cancel Retweet
-		if self.main.retweetNum > -1:
+		if self.main.retweetNum > -1 or self.main.retweetText != "":
 			self.main.retweetNum = -1
 			self.main.retweetText = ""
 			self.main.retweetUser = ""
@@ -206,13 +206,12 @@ class TextInput(gtk.TextView):
 		self.resize()
 	
 	def retweet(self):	
+		self.isChanging = True
 		self.grab_focus()
 		
 		# Cancel reply
 		self.main.replyUser = ""
 		self.main.replyID = -1
-
-		self.isChanging = True
 		text = "RT @%s: %s" % (self.main.retweetUser, self.main.retweetText)
 		self.setText(text)
 		

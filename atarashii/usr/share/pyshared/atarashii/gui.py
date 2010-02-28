@@ -303,6 +303,7 @@ class GUI(gtk.Window):
 	def showWarning(self, limit):
 		dialog.WarningDialog(self, lang.warningText % limit)
 	
+	
 	# Helpers ------------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def getHeight(self, widget):
@@ -334,7 +335,7 @@ class GUI(gtk.Window):
 		
 		elif self.aboutDialog:
 			self.aboutDialog.onClose()
-		
+	
 	def onQuit(self, widget = None, data = None):
  		if data:
  			data.set_visible(False)
