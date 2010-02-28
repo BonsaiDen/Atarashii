@@ -62,7 +62,7 @@ class GUI(gtk.Window):
 		
 		self.readButton = gt.get_object("read")
 		self.readButton.connect("clicked", self.onRead)
-		self.readButton.set_tooltip_text(lang.toolRefresh)
+		self.readButton.set_tooltip_text(lang.toolRead)
 		
 		self.settingsButton = gt.get_object("settings")
 		self.settingsButton.connect("clicked", self.onSettings)
