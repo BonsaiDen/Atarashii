@@ -170,6 +170,7 @@ class Atarashii:
 		self.isConnecting = False
 		self.gui.hideAll()
 		self.gui.showError(error)
+		self.gui.updateStatus()
 		gobject.idle_add(lambda: self.gui.html.init(True))
 	
 	def logout(self):

@@ -109,6 +109,7 @@ class Updater(threading.Thread):
 							self.main.isUpdating = True
 							self.updateTweets()
 							self.main.isUpdating = False
+							gobject.idle_add(lambda: self.main.gui.updateStatus(True))
 		
 				else:
 					self.loadHistory()
