@@ -136,7 +136,7 @@ class Atarashii:
 		self.login()
 	
 	def login(self):
-		# Only login with username and pasword
+		# Only login with username and password
  		if not self.settings.isset("username") or not self.settings.isset("password"):
  			# TODO self.html.splash()
  			return
@@ -160,6 +160,7 @@ class Atarashii:
 		# Reset
 		self.gui.updateStatus()
 		self.gui.html.init(False)
+		self.gui.html.start()
 
 		# Do it!
 		auth = tweepy.BasicAuthHandler(self.settings["username"], self.settings["password"])
