@@ -55,10 +55,6 @@ try:
 finally:
 	sys.path.pop(0)
 
-# Fix local bug with tweepy
-import locale
-locale.setlocale(locale.LC_ALL, 'C')
-
 
 class Atarashii:
 	def __init__(self, version, debug = None):
