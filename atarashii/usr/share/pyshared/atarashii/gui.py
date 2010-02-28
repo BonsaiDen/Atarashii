@@ -92,7 +92,7 @@ class GUI(gtk.Window):
 		self.content.set_border_width(2)
 		
 		self.toolbar = gt.get_object("toolbar")
-		self.toolbar.set_icon_size(gtk.ICON_SIZE_SMALL_TOOLBAR)
+	#	self.toolbar.set_icon_size(gtk.ICON_SIZE_SMALL_TOOLBAR)
 		
 		
 		self.progress = gt.get_object("progressbar")

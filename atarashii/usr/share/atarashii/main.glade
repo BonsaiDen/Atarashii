@@ -42,11 +42,13 @@
           </packing>
         </child>
         <child>
-          <object class="GtkSeparatorToolItem" id="separator">
+          <object class="GtkSeparatorToolItem" id="separator1">
             <property name="visible">True</property>
+            <property name="draw">False</property>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
+            <property name="homogeneous">True</property>
           </packing>
         </child>
         <child>
