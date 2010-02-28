@@ -54,21 +54,27 @@ class GUI(gtk.Window):
 		# Link Components
 		self.refreshButton = gl.get_widget("refresh")
 		self.refreshButton.connect("clicked", self.onRefresh)
+		self.refreshButton.set_tooltip_text(lang.toolRefresh)
 		
 		self.historyButton = gl.get_widget("history")
 		self.historyButton.connect("clicked", self.onHistory)
+		self.historyButton.set_tooltip_text(lang.toolHistory)
 		
 		self.readButton = gl.get_widget("read")
 		self.readButton.connect("clicked", self.onRead)
+		self.readButton.set_tooltip_text(lang.toolRefresh)
 		
 		self.settingsButton = gl.get_widget("settings")
 		self.settingsButton.connect("clicked", self.onSettings)
+		self.settingsButton.set_tooltip_text(lang.toolSettings)
 		
 		self.aboutButton = gl.get_widget("about")
 		self.aboutButton.connect("clicked", self.onAbout)
+		self.aboutButton.set_tooltip_text(lang.toolAbout)
 		
 		self.quitButton = gl.get_widget("quit")
 		self.quitButton.connect("clicked", self.onQuit)
+		self.quitButton.set_tooltip_text(lang.toolQuit)
 		
 		self.infoLabel = gl.get_widget("label")
 		

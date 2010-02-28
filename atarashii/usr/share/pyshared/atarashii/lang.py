@@ -114,12 +114,12 @@ class LangDE:
 		self.menuExit = "Beenden"
 		
 		# Toolbar
-		self.toolUpdate = "Tweets aktualisieren"
-		self.toolClear = "Ältere Tweets leeren"
+		self.toolRefresh = "Tweets aktualisieren"
+		self.toolHistory = "Ältere Tweets leeren"
 		self.toolRead = "Alle Tweets als gelesen makieren"
 		self.toolSettings = "Einstellungen öffnen"
 		self.toolAbout = "Atarashii Info einblenden"
-		self.toolExit = "Atarashii beenden"
+		self.toolQuit = "Atarashii beenden"
 		
 
 class LangEN:
@@ -212,8 +212,8 @@ class LangEN:
 		self.warningText = "Twitter has lowered the ratelimit to %d requests per hour, the update interval has been adjusted accordingly."
 		
 		# Toolbar
-		self.toolUpdate = "Update tweets"
-		self.toolClear = "Remove history"
+		self.toolRefresh = "Update tweets"
+		self.toolHistory = "Remove history"
 		self.toolRead = "Mark all tweets as read"
 		self.toolSettings = "Open settings"
 		self.toolAbout = "Information about Atarashii"
@@ -223,7 +223,7 @@ class LangEN:
 		self.menuUpdate = "Update tweets"
 		self.menuSettings = "Settings"
 		self.menuAbout = "About Atarashii"
-		self.menuExit = "Quit"
+		self.menuQuit = "Quit"
 		
 # Select Language
 langs = {
