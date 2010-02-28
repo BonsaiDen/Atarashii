@@ -460,11 +460,12 @@ class HTML(webkit.WebView):
 			return False
 		
 		if uri.startswith("more:"):
-			self.main.updater.loadHistoryID = int(uri.split(":")[1]) - 1
-			if self.main.updater.loadHistoryID != -1:
-				self.main.isLoadingHistory = True
-				self.gui.showProgress()
-				gobject.idle_add(lambda: self.main.gui.updateStatus(True))
+			if not self.main.isLoadingHistory:
+				self.main.updater.loadHistoryID = int(uri.split(":")[1]) - 1
+				if self.main.updater.loadHistoryID != -1:
+					self.main.isLoadingHistory = True
+					self.gui.showProgress()
+					gobject.idle_add(lambda: self.main.gui.updateStatus(True))
 		
 		elif uri.startswith("reply:"):
 			if not self.main.updater.error:
