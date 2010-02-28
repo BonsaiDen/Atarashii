@@ -106,6 +106,7 @@ class HTML(webkit.WebView):
 	
 	# Fix scrolling isses on page load
 	def loaded(self, *args):
+		self.isRendering = False
 		if len(self.tweets) > 0 and self.newTweets and not self.loadHistory:
 			try:
 				self.execute_script('document.title=document.getElementById("newcontainer").offsetHeight;')
@@ -502,6 +503,8 @@ class HTML(webkit.WebView):
 			
 			elif self.mode == "splash":
 				self.splash()
+				
+			return True
 				
 	
 	# Regex stuff
