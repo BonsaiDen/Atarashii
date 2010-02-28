@@ -215,9 +215,9 @@ class LangEN:
 		self.toolRefresh = "Update tweets"
 		self.toolHistory = "Remove history"
 		self.toolRead = "Mark all tweets as read"
-		self.toolSettings = "Open settings"
+		self.toolSettings = "Open preferences"
 		self.toolAbout = "Information about Atarashii"
-		self.toolExit = "Exit Atarashii"
+		self.toolExit = "Quit Atarashii"
 		
 		# Menu
 		self.menuUpdate = "Update tweets"

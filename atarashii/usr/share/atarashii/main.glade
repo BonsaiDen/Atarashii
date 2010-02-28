@@ -55,7 +55,7 @@
           <object class="GtkToolButton" id="settings">
             <property name="visible">True</property>
             <property name="use_underline">True</property>
-            <property name="stock_id">gtk-preferences</property>
+            <property name="stock_id">gtk-properties</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -70,6 +70,7 @@
           </object>
           <packing>
             <property name="expand">False</property>
+            <property name="homogeneous">True</property>
           </packing>
         </child>
         <child>
