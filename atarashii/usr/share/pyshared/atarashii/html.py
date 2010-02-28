@@ -42,18 +42,20 @@ class HTML(webkit.WebView):
 		self.gui = gui
 		
 		webkit.WebView.__init__(self)
-		self.connect("button-press-event", self.openContextMenu)
 		self.connect("navigation-requested", self.openLink)
 		self.connect("load-finished", self.loaded)
+		self.connect("load-started", self.onLoading)
 		self.connect("focus-in-event", self.gui.text.htmlFocus)
 		self.scroll = self.gui.htmlScroll
 		self.set_maintains_back_forward_list(False)
+		self.mode = ""
 		self.init(True)
 	
 	
 	# Screens ------------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def start(self):
+		self.isRendering = True
 		self.offsetCount = 0
 		self.load_string("""
 		<html>
@@ -65,8 +67,10 @@ class HTML(webkit.WebView):
 				<div class="loading"><b>%s</b></div>
 			</body>
 		</html>""" % (self.main.getResource("atarashii.css"), lang.htmlLoading), "text/html", "UTF-8", "file:///main/")
+		self.mode = "start"
 	
 	def splash(self):
+		self.isRendering = True
 		self.offsetCount = 0
 		self.load_string("""
 		<html>
@@ -78,12 +82,13 @@ class HTML(webkit.WebView):
 				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
 			</body>
 		</html>""" % (self.main.getResource("atarashii.css"), self.main.getImage(), lang.htmlWelcome), "text/html", "UTF-8", "file:///main/")
-	
+		self.mode = "splash"
 	
 	
 	# Initiate a empty timeline ------------------------------------------------
 	# --------------------------------------------------------------------------
 	def init(self, splash = False):
+		self.isRendering = False
 		self.tweets = []
 		self.updateList = []
 		self.position = 0
@@ -186,6 +191,8 @@ class HTML(webkit.WebView):
 	# Render the Timeline ------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def render(self):	
+		self.isRendering = True
+		self.mode = "render"
 		self.tweets.sort(self.compare)
 		
 		# Set the latest tweet for reloading on startup
@@ -483,12 +490,19 @@ class HTML(webkit.WebView):
 		
 		return True
 	
-	# Block the Context Menu
-	def openContextMenu(self, html, e):
-		if e.button == 3:
-			return True
-		
-		return False
+	
+	# Fix Reloading
+	def onLoading(self, *args):
+		if not self.isRendering:
+			if self.mode == "render":
+				self.render()
+	
+			elif self.mode == "start":
+				self.start()
+			
+			elif self.mode == "splash":
+				self.splash()
+				
 	
 	# Regex stuff
 	def escape(self, text):
