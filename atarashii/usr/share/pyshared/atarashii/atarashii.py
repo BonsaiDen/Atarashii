@@ -159,8 +159,6 @@ class Atarashii:
 		
 		# Reset
 		self.gui.updateStatus()
-	 	self.gui.set_title("Atarashii | %s" % self.settings["username"])
-		
 		self.gui.html.init(False)
 
 		# Do it!
@@ -174,6 +172,7 @@ class Atarashii:
 		self.loginError = False
 		self.loginStatus = True
 		self.isConnecting = False
+		self.gui.set_title("Atarashii | %s" % self.settings["username"])
 		self.gui.updateStatus()
 		self.gui.showInput()
 		
@@ -181,6 +180,7 @@ class Atarashii:
 		self.loginError = True
 		self.loginStatus = False
 		self.isConnecting = False
+		self.gui.set_title("Atarashii")
 		self.gui.hideAll()
 		self.gui.showError(error)
 		self.gui.updateStatus()
@@ -193,6 +193,7 @@ class Atarashii:
 		self.isConnecting = False
 		self.isReconnecting = False
 		self.isUpdating = False
+		self.gui.set_title("Atarashii")
 		self.gui.hideAll()
 		gobject.idle_add(lambda: self.gui.html.init(True))
 	
