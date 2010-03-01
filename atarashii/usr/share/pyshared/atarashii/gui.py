@@ -64,13 +64,17 @@ class GUI(gtk.Window):
 		self.readButton.connect("clicked", self.onRead)
 		self.readButton.set_tooltip_text(lang.toolRead)
 		
+		# Settings Button
 		self.settingsButton = gt.get_object("settings")
-		self.settingsButton.connect("toggled", self.onSettings)
+		self.settingsButton.connect("toggled", lambda *args: self.onSettings(False))
 		self.settingsButton.set_tooltip_text(lang.toolSettings)
+		self.settingsToggle = False
 		
+		# About Button
 		self.aboutButton = gt.get_object("about")
-		self.aboutButton.connect("toggled", self.onAbout)
+		self.aboutButton.connect("toggled", lambda *args: self.onAbout(False))
 		self.aboutButton.set_tooltip_text(lang.toolAbout)
+		self.aboutToggle = False
 		
 		self.quitButton = gt.get_object("quit")
 		self.quitButton.connect("clicked", self.onQuit)
@@ -81,9 +85,11 @@ class GUI(gtk.Window):
 		self.htmlScroll = gt.get_object("htmlscroll")		
 		self.textScroll = gt.get_object("textscroll")
 		
+		# Text Input
 		self.text = text.TextInput(self)
 		self.textScroll.add(self.text)
 		
+		# HTML
 		self.html = html.HTML(self.main, self)
 		self.htmlScroll.add(self.html)
 		self.htmlScroll.set_shadow_type(gtk.SHADOW_IN)
@@ -91,10 +97,8 @@ class GUI(gtk.Window):
 		self.content = gt.get_object("content")
 		self.content.set_border_width(2)
 		
+		# BArs
 		self.toolbar = gt.get_object("toolbar")
-	#	self.toolbar.set_icon_size(gtk.ICON_SIZE_SMALL_TOOLBAR)
-		
-		
 		self.progress = gt.get_object("progressbar")
 		self.status = gt.get_object("statusbar")
 		
@@ -327,19 +331,44 @@ class GUI(gtk.Window):
 	def onRead(self, *args):
 		gobject.idle_add(lambda: self.html.read())
 		
-	def onSettings(self, *args):
-		if self.settingsButton.get_active() and not self.settingsDialog:
-			self.settingsDialog = dialog.SettingsDialog(self)
+	def onSettings(self, menu):
+		if not self.settingsToggle:
+			self.settingsToggle = True
+			if self.settingsButton.get_active() and not self.settingsDialog:
+				self.settingsDialog = dialog.SettingsDialog(self)
 		
-		elif self.settingsDialog:
-			self.settingsDialog.onClose()
+			elif menu and not self.settingsDialog:
+				self.settingsDialog = dialog.SettingsDialog(self)
+				self.settingsButton.set_active(True)
+			
 		
-	def onAbout(self, *args):
-		if self.aboutButton.get_active() and not self.aboutDialog:
-			self.aboutDialog = dialog.AboutDialog(self)
+			elif menu and self.settingsDialog:
+				self.settingsDialog.onClose()
+				self.settingsButton.set_active(False)
 		
-		elif self.aboutDialog:
-			self.aboutDialog.onClose()
+			elif self.settingsDialog:
+				self.settingsDialog.onClose()
+				
+			self.settingsToggle = False
+		
+	def onAbout(self, menu):
+		if not self.aboutToggle:
+			self.aboutToggle = True
+			if self.aboutButton.get_active() and not self.aboutDialog:
+				self.aboutDialog = dialog.AboutDialog(self)
+		
+			elif menu and not self.aboutDialog:
+				self.aboutDialog = dialog.AboutDialog(self)
+				self.aboutButton.set_active(True)
+		
+			elif menu and self.aboutDialog:
+				self.aboutDialog.onClose()
+				self.aboutButton.set_active(False)		
+		
+			elif self.aboutDialog:
+				self.aboutDialog.onClose()
+			
+			self.aboutToggle = False
 	
 	def onQuit(self, widget = None, data = None):
  		if data:

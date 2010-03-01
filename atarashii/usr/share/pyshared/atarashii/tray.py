@@ -48,13 +48,13 @@ class TrayIcon(gtk.StatusIcon):
 		# Settings
 		menuItem = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
 		menuItem.set_label(lang.menuSettings)
-		menuItem.connect('activate', self.gui.onSettings, self)	
+		menuItem.connect('activate', lambda *args: self.gui.onSettings(True), self)	
 		menu.append(menuItem)
 		
 		# Abvout
 		menuItem = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
 		menuItem.set_label(lang.menuAbout)
-		menuItem.connect('activate', self.gui.onAbout, self)	
+		menuItem.connect('activate', lambda *args: self.gui.onAbout(True), self)	
 		menu.append(menuItem)
 		
 		# Separator
