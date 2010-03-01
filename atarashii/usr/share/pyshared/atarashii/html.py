@@ -123,6 +123,10 @@ class HTML(webkit.WebView):
 		if not self.firstLoad and self.position > 0:
 			self.scroll.get_vscrollbar().set_value(self.position + offset)
 		
+		elif self.firstLoad:
+			height = self.gui.getHeight(self)
+			self.scroll.get_vscrollbar().set_value(offset - height)
+		
 		if len(self.tweets) > 0:
 			self.firstLoad = False
 		
