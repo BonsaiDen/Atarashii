@@ -82,13 +82,12 @@ class HTML(view.HTMLView):
 		self.tweets.sort(self.compare)
 		
 		# Set the latest tweet for reloading on startup
-		self.username = self.main.settings['username']
 		if len(self.tweets) > 0:
 			id = len(self.tweets) - self.main.loadMessageCount
 			if id < 0:
 				id = 0
 			
-			self.main.settings['firstmessage_' + self.username] = str(self.tweets[id][0].id - 1)
+			self.main.settings['firstmessage_' + self.main.username] = str(self.tweets[id][0].id - 1)
 		
 		# Render
 		renderTweets = []
@@ -169,7 +168,7 @@ class HTML(view.HTMLView):
 				clas = 'tweet'
 			
 			# HTML
-			if tweet.recipient_screen_name != self.username:
+			if tweet.recipient_screen_name != self.main.username:
 				mode = "An"
 				name = tweet.recipient_screen_name
 				reply = "display: none;"

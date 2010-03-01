@@ -15,6 +15,7 @@
 
 
 # TODO check usernames in lower case
+# TODO use gtk dialogs for question/warning/error so we get systemsounds
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -104,8 +105,10 @@ class Atarashii:
 		self.isUpdating = False
 		self.isLoadingHistory = False
 		self.wasSending = False
-		
 		self.rateWarningShown = False
+		
+		# Current Username
+		self.username = self.settings['username'] or ""
 		
 		# Updater
 		self.updater = updater.Updater(self)
@@ -150,19 +153,16 @@ class Atarashii:
 	# --------------------------------------------------------------------------
 	def onInit(self):
 		self.login()
+		#self.gui.settingsButton.set_active(True)
 	
 	def login(self):
-		# Only login with username and password
- 		if not self.settings.isset("username") or not self.settings.isset("password"):
- 			# TODO self.html.splash()
- 			return
- 		
+
  		# Wait until the last update is complete
  		while self.isUpdating:
  			time.sleep(0.1)
 		
 		# Progress
-		self.gui.hideAll(False)
+		#self.gui.hideAll(False)
 		self.gui.showProgress()
 		
 		# Connect
@@ -189,7 +189,7 @@ class Atarashii:
 			self.gui.message.start()
 		
 		# Do it!
-		auth = tweepy.BasicAuthHandler(self.settings["username"], self.settings["password"])
+		auth = tweepy.BasicAuthHandler(self.username, self.settings["password_" + self.username])
 		self.api = tweepy.API(auth)
 	
 		# Init
@@ -200,7 +200,7 @@ class Atarashii:
 		self.loginStatus = True
 		self.isConnecting = False
 		self.gui.settingsButton.set_sensitive(True)
-		self.gui.set_title("Atarashii | %s" % self.settings["username"])
+		self.gui.set_title("Atarashii | %s" % self.username)
 		self.gui.updateStatus()
 		self.gui.showInput()
 		
@@ -211,8 +211,8 @@ class Atarashii:
 		self.gui.settingsButton.set_sensitive(True)
 		self.gui.set_title("Atarashii")
 		self.gui.hideAll()
-		self.gui.showError(error)
 		self.gui.updateStatus()
+		self.gui.showError(error)
 		gobject.idle_add(lambda: self.gui.html.init(True))
 	
 	def logout(self):
@@ -275,29 +275,29 @@ class Atarashii:
 			return os.path.join(self.debug, "atarashii/usr/share/atarashii", res)
 	
 	def getLatestID(self):
-		if self.settings.isset('lasttweet_' + self.settings['username']):
-			return long(self.settings['lasttweet_' + self.settings['username']])
+		if self.settings.isset('lasttweet_' + self.username):
+			return long(self.settings['lasttweet_' + self.username])
 		
 		else:
 			return -1
 			
 	def getFirstID(self):
-		if self.settings.isset('firsttweet_' + self.settings['username']):
-			return long(self.settings['firsttweet_' + self.settings['username']])
+		if self.settings.isset('firsttweet_' + self.username):
+			return long(self.settings['firsttweet_' + self.username])
 		
 		else:
 			return -1
 
 	def getLatestMessageID(self):
-		if self.settings.isset('lastmessage_' + self.settings['username']):
-			return long(self.settings['lastmessage_' + self.settings['username']])
+		if self.settings.isset('lastmessage_' + self.username):
+			return long(self.settings['lastmessage_' + self.username])
 		
 		else:
 			return -1
 	
 	def getFirstMessageID(self):
-		if self.settings.isset('firstmessage_' + self.settings['username']):
-			return long(self.settings['firstmessage_' + self.settings['username']])
+		if self.settings.isset('firstmessage_' + self.username):
+			return long(self.settings['firstmessage_' + self.username])
 		
 		else:
 			return -1
@@ -313,6 +313,7 @@ class Atarashii:
  		size = self.gui.get_allocation()
 		self.settings['size'] = str((size[2], size[3]))
 		self.settings['mode'] = self.gui.mode
+		self.settings['username'] = self.username
 		self.settings.save()
  		gtk.main_quit()
  		sys.exit(1)

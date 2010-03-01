@@ -41,13 +41,12 @@ class HTML(view.HTMLView):
 		self.tweets.sort(self.compare)
 		
 		# Set the latest tweet for reloading on startup
-		self.username = self.main.settings['username']
 		if len(self.tweets) > 0:
 			id = len(self.tweets) - self.main.loadTweetCount
 			if id < 0:
 				id = 0
 			
-			self.main.settings['firsttweet_' + self.username] = str(self.tweets[id][0].id - 1)
+			self.main.settings['firsttweet_' + self.main.username] = str(self.tweets[id][0].id - 1)
 		
 		# Render
 		renderTweets = []
@@ -76,7 +75,7 @@ class HTML(view.HTMLView):
 			
 			# Create Tweet HTML
 			text = self.formatter.parse(tweet.text)
-			self.atUser = self.username in self.formatter.users
+			self.atUser = self.main.username in self.formatter.users
 			highlight = hasattr(tweet, "is_mentioned") and tweet.is_mentioned or self.atUser
 			
 			# Spacer
