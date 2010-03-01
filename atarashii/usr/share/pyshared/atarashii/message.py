@@ -25,13 +25,54 @@ import view
 
 from lang import lang
 
-
 class HTML(view.HTMLView):
 	def __init__(self, main, gui):
 		self.main = main
 		self.gui = gui
-		view.HTMLView.__init__(self, main, gui, self.gui.htmlScroll)
+		view.HTMLView.__init__(self, main, gui, self.gui.messageScroll)
 
+
+	# Screens ------------------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def start(self):
+		self.mode = "start"
+		self.isRendering = True
+		self.offsetCount = 0
+		self.load_string("""
+		<html>
+			<head>
+				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
+			</head>
+			<body class="unloaded">
+				<div class="loading"><b>%s</b></div>
+			</body>
+		</html>""" % (self.main.getResource("atarashii.css"), lang.messageLoading), "text/html", "UTF-8", "file:///main/")
+	
+	# Clear the History
+	def clear(self):
+		self.historyLoaded = False
+		self.tweets = self.tweets[self.historyCount:]
+		self.main.maxMessageCount -= self.historyCount
+		self.historyCount = 0
+		self.main.gui.historyButton.set_sensitive(False)
+		self.render()
+	
+	def read(self):
+		if self.main.updater.initMessageID != self.main.getLatestMessageID():
+			self.main.gui.readButton.set_sensitive(False)
+			self.main.updater.initMessageID = self.main.getLatestMessageID()
+			if not self.historyLoaded:
+				pos = len(self.tweets) - self.main.loadMessageCount
+				if pos < 0:
+					pos = 0
+				
+				self.tweets = self.tweets[pos:]
+			
+			self.render()
+	
+	
+	
 	# Render the Timeline ------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def render(self):	
@@ -43,11 +84,11 @@ class HTML(view.HTMLView):
 		# Set the latest tweet for reloading on startup
 		self.username = self.main.settings['username']
 		if len(self.tweets) > 0:
-			id = len(self.tweets) - self.main.loadTweetCount
+			id = len(self.tweets) - self.main.loadMessageCount
 			if id < 0:
 				id = 0
 			
-			self.main.settings['firsttweet_' + self.username] = str(self.tweets[id][0].id - 1)
+			self.main.settings['firstmessage_' + self.username] = str(self.tweets[id][0].id - 1)
 		
 		# Render
 		renderTweets = []
@@ -55,7 +96,7 @@ class HTML(view.HTMLView):
 				
 		# Newest Stuff
 		if self.newestID == -1:
-			self.newestID = self.main.updater.initID
+			self.newestID = self.main.updater.initMessageID
 		
 		newest = False
 		newestAvatar = False
@@ -67,8 +108,8 @@ class HTML(view.HTMLView):
 			tweet, img, mode = obj
 			
 			# Fix some stuff for the seperation of continous new/old tweets
-			newTimeline = tweet.id > self.main.updater.initID
-			if newest or self.main.updater.initID == 0:
+			newTimeline = tweet.id > self.main.updater.initMessageID
+			if newest or self.main.updater.initMessageID == 0:
 				newTimeline = False
 			
 			if newTimeline:
@@ -76,41 +117,23 @@ class HTML(view.HTMLView):
 			
 			# Create Tweet HTML
 			text = self.formatter.parse(tweet.text)
-			self.atUser = self.username in self.formatter.users
-			highlight = hasattr(tweet, "is_mentioned") and tweet.is_mentioned or self.atUser
 			
 			# Spacer
 			if num > 0:
-				if lastname != tweet.user.screen_name or newTimeline:
+				if lastname != tweet.sender.screen_name or newTimeline:
 					renderTweets.insert(0, '<div class="spacer"></div>')
 				
-				elif highlight != lastHighlight:
-					renderTweets.insert(0, '<div class="spacer3"></div>')
-					
-				elif hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
-					renderTweets.insert(0, '<div class="spacer5"></div>')
-					
-				elif highlight:
-					renderTweets.insert(0, '<div class="spacer6"></div>')
-					
-				elif tweet.id > self.main.updater.initID:
+				elif tweet.id > self.main.updater.initMessageID:
 					renderTweets.insert(0, '<div class="spacer4"></div>')
-					
+				
 				else:
 					renderTweets.insert(0, '<div class="spacer2"></div>')
 			
-			lastname = tweet.user.screen_name
-			lastHighlight = highlight
-			
-			# Is this tweet a reply?
-			reply = ""
-			if tweet.in_reply_to_screen_name and tweet.in_reply_to_status_id:
-				reply = ('<a href="http://twitter.com/%s/statuses/%d">' + lang.htmlInReply + '</a>') 
-				reply = reply % (tweet.in_reply_to_screen_name, tweet.in_reply_to_status_id, tweet.in_reply_to_screen_name)
+			lastname = tweet.sender.screen_name
 			
 			# Realname
-			profilename = tweet.user.name.strip()
-			if not tweet.user.name.endswith('s') and not tweet.user.name.endswith('x'):
+			profilename = tweet.sender.name.strip()
+			if not tweet.sender.name.endswith('s') and not tweet.sender.name.endswith('x'):
 				profilename += "'s"
 				
 			else:
@@ -118,60 +141,44 @@ class HTML(view.HTMLView):
 			
 			# Display Avatar?
 			if num < len(self.tweets) - 1:
-				newAvatar = self.tweets[num + 1][0].id > self.main.updater.initID
+				newAvatar = self.tweets[num + 1][0].id > self.main.updater.initMessageID
 			else:
 				newAvatar = False
 				
-			if num > 0 and self.tweets[num - 1][0].id <= self.main.updater.initID:
+			if num > 0 and self.tweets[num - 1][0].id <= self.main.updater.initMessageID:
 				newTimeline = False
 			
-			if newestAvatar or self.main.updater.initID == 0:
+			if newestAvatar or self.main.updater.initMessageID == 0:
 				newAvatar = False
 			
 			if newAvatar:
 				newestAvatar = True
 			
-			if (num < len(self.tweets) - 1 and (tweet.user.screen_name != self.tweets[num + 1][0].user.screen_name or newAvatar)) or num == len(self.tweets) - 1 or newTimeline:
+			if (num < len(self.tweets) - 1 and (tweet.sender.screen_name != self.tweets[num + 1][0].sender.screen_name or newAvatar)) or num == len(self.tweets) - 1 or newTimeline:
 				avatar = ('<a href="http://twitter.com/%s"><img width="32" src="file://%s" title="' + lang.htmlInfo + '"/></a>') 
-				avatar = avatar % (tweet.user.screen_name, img, tweet.user.name, tweet.user.followers_count, tweet.user.friends_count, tweet.user.statuses_count)
+				avatar = avatar % (tweet.sender.screen_name, img, tweet.sender.name, tweet.sender.followers_count, tweet.sender.friends_count, tweet.sender.statuses_count)
 			
 			else:
 				avatar = ""
 			
 			# At?
-			if hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
-				clas = 'mentioned'
-				
-			elif self.atUser:
-				clas = 'highlight'
-				
-			elif tweet.id <= self.main.updater.initID:
+			if tweet.id <= self.main.updater.initMessageID:
 				clas = 'oldtweet'
 				
 			else:
 				clas = 'tweet'
 			
-			# Source
-			by = ""
-			source = tweet.source
-			if source != "web":
-				try:
-					if tweet.source_url != "":
-						source = '<a href="%s" title="%s">%s</a>' % (tweet.source_url, tweet.source_url, tweet.source)
-			
-				except:
-					pass
-			
-				by = lang.htmlBy % source
-			
-			# Protected
-			locked = ""
-			if hasattr(tweet, "protected") and tweet.protected:
-				locked = '<div class="protected"></div>'
-			else:
-				locked = '<div class="space">&nbsp;</div>'
-			
 			# HTML
+			if tweet.recipient_screen_name != self.username:
+				mode = "An"
+				name = tweet.recipient_screen_name
+				reply = "display: none;"
+			
+			else:
+				mode = "Von"
+				name = tweet.sender.screen_name
+				reply = ""
+			
 			html = '''
 					<div class="%s">
 						<div class="avatar">
@@ -179,27 +186,20 @@ class HTML(view.HTMLView):
 						</div>
 						
 						<div class="actions">
-							<div class="doreply">
-								<a href="reply:%s:%d:%d" title="''' + (lang.htmlReply % tweet.user.screen_name) + '''"> </a>
-							</div>
-							<div class="doretweet">
-								<a href="retweet:%d" title="''' + (lang.htmlRetweet % tweet.user.screen_name) + '''"> </a>
+							<div class="doretweet" style="''' + reply + '''">
+								<a href="message:%s:%d:%d" title="''' + (lang.htmlReply % tweet.sender.screen_name) + '''"> </a>
 							</div>
 						</div>
 						
 						<div class="inner-text">
 							<div>
-								<a class="name" href="http://twitter.com/%s" title="''' + lang.htmlProfile + '''">
-									<b>%s</b>
-								</a> ''' + locked + ''' %s
+								<span class="name"><b>''' + mode + ''' <a href="http://twitter.com/%s" title="''' + lang.htmlProfile + '''">%s</a></b></span> <div class="space">&nbsp;</div> %s
 							</div>
 							<div class="time">
 								<a href="http://twitter.com/%s/statuses/%d" title="''' + (self.absolute_time(tweet.created_at)) + '''">%s</a>
-								''' + by + '''
 							</div>
-							<div class="reply">%s</div>
 						</div>
-					</div>'''	
+					</div>'''
 			
 			
 			html = html % (
@@ -207,18 +207,16 @@ class HTML(view.HTMLView):
 					avatar,
 					
 					# Actions
-					tweet.user.screen_name, tweet.id, num, 
-					num,		
+					tweet.sender.screen_name, tweet.sender.id, num, 	
 					
 					# Text
-					tweet.user.screen_name, 
+					tweet.sender.screen_name, 
 					profilename, 
-					tweet.user.screen_name, 
+					name, 
 					text, 	
 					
 					# Time
-					tweet.user.screen_name, tweet.id, self.relative_time(tweet.created_at), 
-					reply)
+					tweet.sender.screen_name, tweet.id, self.relative_time(tweet.created_at))
 			
 			if tweet.id == self.newestID:
 				html = '</div>' + html
@@ -236,7 +234,7 @@ class HTML(view.HTMLView):
 				</head>
 				<body>
 					<div><div id="newcontainer">%s</div>
-					<div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
+					<div class="loadmore"><a href="moremessages:%d"><b>%s</b></a></div>
 				</body>
 			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderTweets), self.tweets[0][0].id, lang.htmlLoadMore)
 		
