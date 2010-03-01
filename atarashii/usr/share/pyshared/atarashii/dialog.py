@@ -28,7 +28,7 @@ class Dialog:
 	resource = ""
 	instance = None
 
-	def __init__(self, gui):
+	def __init__(self, gui, close = True):
 		self.gui = gui
 		self.main = gui.main
 		self.settings = gui.main.settings
@@ -42,10 +42,15 @@ class Dialog:
 			
 			self.dlg.connect("delete_event", self.onClose)
 			self.closeButton = self.get("closebutton")
-			self.closeButton.connect("clicked", self.onClose)
+			
+			if close:
+				self.closeButton.connect("clicked", self.onClose)
+			
 			self.__class__.instance = self.dlg
 			self.dlg.show_all()
 			self.onInit()
+			
+			self.closeButton.grab_focus()
 			
 		else:
 			gobject.idle_add(lambda: self.__class__.instance.present())
@@ -108,21 +113,70 @@ class SettingsDialog(Dialog):
 	def onInit(self):
 		self.dlg.set_title(lang.settingsTitle)
 		self.closeButton.set_label(lang.settingsButton)
+		cancelButton = self.get("cancelbutton")
+		cancelButton.set_label(lang.settingsButtonCancel)
 
 		# Username / Password
-		self.get("usernamelabel").set_text(lang.settingsUsername)
-		self.get("passwordlabel").set_text(lang.settingsPassword)
-		username = self.get("username")
-		password = self.get("password")
+	#	self.get("user").set_text(lang.settingsUsername)
+	#	self.get("pass").set_text(lang.settingsPassword)
+	#	username = self.get("username")
+	#	password = self.get("password")
 		
-		username.set_text(self.settings['username'] or "")
-		password.set_text(self.settings['password'] or "")
-			
-		oldusername = self.settings['username']
-		oldpassword = self.settings['password']
+	#	username.set_text(self.settings['username'] or "")
+	#	password.set_text(self.settings['password'] or "")
 		
+		#oldpassword = self.settings['password']
 		
+		# Accounts
+		self.get("accounts").set_text(lang.settingsAccounts)
+		add = self.get("add")
+		add.set_label(lang.settingsAdd)
+		edit = self.get("edit")
+		edit.set_label(lang.settingsEdit)
+		delete = self.get("delete")
+		delete.set_label(lang.settingsDelete)
+		
+		# Setup Account List
+		def dropChanged(*args):
+			i = drop.get_active()
+			if i != -1:
+				edit.set_sensitive(True)
+				delete.set_sensitive(True)
+					
+			else:
+				edit.set_sensitive(False)
+				delete.set_sensitive(False)
+
+		self.drop = drop = self.get("dropbox")
+		drop.connect("changed", dropChanged)
+		cell = gtk.CellRendererText()
+		self.drop.pack_start(cell, True)
+		self.drop.add_attribute(cell, 'text', 0)
+		self.createDropList()
+		dropChanged()
+
+
+		# Actions
+		def editDialog(*args):
+			name = self.userAccounts[drop.get_active()]
+			AccountDialog(self, name, self.main.settings['password_' + name] or "", lang.accountEdit % name, self.editAccount)
+		
+		edit.connect("clicked", editDialog)
+		
+		def createDialog(*args):
+			AccountDialog(self, "", "", lang.accountCreate, self.createAccount)
+		
+		add.connect("clicked", createDialog)
+		
+		def deleteDialog(*args):
+			name = self.userAccounts[drop.get_active()]
+			QuestionDialog(self, lang.accountDelete % name, lang.accountDeleteDescription % name, self.deleteAccount)
+		
+		delete.connect("clicked", deleteDialog)
+
+
 		# Notifications
+		self.get("notifications").set_text(lang.settingsNotifications)
 		notify = self.get("notify")
 		sound = self.get("sound")
 		notify.set_label(lang.settingsNotify)
@@ -146,7 +200,6 @@ class SettingsDialog(Dialog):
 		sound.set_active(self.settings.isTrue("sound"))
 		notify.set_sensitive(canNotify)
 		
-		
 		def toggle2():
 			fileWidget.set_sensitive(sound.get_active())
 		
@@ -159,27 +212,30 @@ class SettingsDialog(Dialog):
 		sound.connect("toggled", lambda *a: toggle2())
 		
 		
-		# Save
+		
+		# Save -----------------------------------------------------------------
+		oldusername = self.main.username
+		olduserpass = self.settings["password_" + self.main.username]
 		def save(*args):
 			self.settings['soundfile'] = str(fileWidget.get_filename())
 			self.settings['notify'] = notify.get_active()
 			self.settings['sound'] = sound.get_active()
 		
-			self.settings['username'] = username.get_text().strip()
-			self.settings['password'] = password.get_text().strip()
+			if drop.get_active() != -1:
+			 	self.settings['username'] = self.main.username = self.userAccounts[drop.get_active()]
 			
-			# Login again if credentials have changed
-			self.loginStatus = not self.settings.isset("username") or not self.settings.isset("password")
-			if self.settings['username'] != oldusername or self.settings['password'] != oldpassword:
-				if not self.loginStatus:
-	 				self.main.login()
-	 			
-	 			else:
-	 				self.main.logout()
+			if self.main.username == "":
+				self.loginStatus = False
+				self.main.logout()
 			
+			elif self.main.username != oldusername or olduserpass != self.settings["password_" + self.main.username]:
+				self.loginStatus = True
+				self.main.login()
+						
 			self.onClose()
 		
 		self.closeButton.connect("clicked", save)
+		cancelButton.connect("clicked", self.onClose)
 		
 	def onClose(self, *args):
 		self.__class__.instance = None
@@ -187,7 +243,122 @@ class SettingsDialog(Dialog):
 		self.gui.settingsButton.set_active(False)
 		self.dlg.hide()
 		
+	# Generate Account List
+	def createDropList(self, name = None):
+		self.userAccounts = self.main.settings.getAccounts()
+		self.accountsList = gtk.ListStore(str)
+		selected = -1
+		for c, i in enumerate(self.userAccounts):
+			self.accountsList.append([i])
+			if i == name:
+				selected = c
+			elif name == None and i == self.main.username:
+				selected = c
 		
+		self.drop.set_model(self.accountsList)
+		self.drop.set_active(selected)
+		
+	# Edit a User Account
+	def editAccount(self, username, password):
+		name = self.userAccounts[self.drop.get_active()]
+		if name != username:
+			ft = self.main.settings['firsttweet_' + name]
+			lt = self.main.settings['lasttweet_' + name]
+			fm = self.main.settings['firstmessage_' + name]
+			lm = self.main.settings['lastmessage_' + name]
+			
+			del self.main.settings['password_' + name]
+			del self.main.settings['account_' + name]
+			del self.main.settings['firsttweet_' + name]
+			del self.main.settings['lasttweet_' + name]
+			del self.main.settings['firstmessage_' + name]
+			del self.main.settings['lastmessage_' + name]
+			
+			self.main.settings['password_' + username] = password
+			self.main.settings['account_' + username] = ""
+			self.main.settings['firsttweet_' + username] = ft
+			self.main.settings['lasttweet_' + username] = lt
+			self.main.settings['firstmessage_' + username] = fm
+			self.main.settings['lastmessage_' + username] = lm
+			
+			if self.main.username == name:
+				self.main.username = self.main.settings['username'] = username
+			
+			self.main.settings.save()
+			self.createDropList(username)
+			
+		else:
+			self.settings['password_' + username] = password
+	
+	
+	def createAccount(self, username, password):
+		self.main.settings['password_' + username] = password
+		self.main.settings['account_' + username] = ""
+		self.createDropList()
+		if len(self.userAccounts) == 1:
+			self.drop.set_active(0)
+	
+	
+	def deleteAccount(self, mode):
+		if mode:
+			name = self.userAccounts[self.drop.get_active()]
+			del self.main.settings['password_' + name]
+			del self.main.settings['account_' + name]
+			del self.main.settings['firsttweet_' + name]
+			del self.main.settings['lasttweet_' + name]
+			del self.main.settings['firstmessage_' + name]
+			del self.main.settings['lastmessage_' + name]
+			if self.main.username == name:
+				self.main.username = self.main.settings['username'] = ""
+				
+			self.createDropList()
+
+
+# Account Dialog ---------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class AccountDialog(Dialog):
+	resource = "account.glade"
+	instance = None
+	
+	def __init__(self, parent, username, password, title, callback):
+		Dialog.__init__(self, parent.gui, False)
+		self.dlg.set_transient_for(parent.dlg)
+		self.parent = parent
+		self.callback = callback
+		self.dlg.set_title(title)
+		self.username = username
+		self.get("username").set_text(username)
+		self.get("password").set_text(password)
+		self.get("username").grab_focus()
+	
+	def onInit(self):
+		self.closeButton.set_label(lang.accountButton)
+		cancelButton = self.get("cancelbutton")
+		cancelButton.set_label(lang.accountButtonCancel)
+		
+		self.get("user").set_text(lang.accountUsername)
+		self.get("pass").set_text(lang.accountPassword)	
+		
+		def save(*args):
+			username = self.get("username").get_text().strip()
+			password = self.get("password").get_text().strip()
+			if username == "":
+				self.get("username").grab_focus()
+			
+			elif password == "":
+				self.get("password").grab_focus()		
+			
+			elif username in self.parent.userAccounts and username != self.username:
+				self.get("username").grab_focus()
+			
+			else:
+				self.callback(username, password)
+				self.onClose()
+		
+		self.closeButton.connect("clicked", save)
+		cancelButton.connect("clicked", self.onClose)	
+
+
 # Error Dialog -----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class ErrorDialog(Dialog):
@@ -204,10 +375,9 @@ class ErrorDialog(Dialog):
 		
 		self.get("text").set_size_request(160, -1)
 		self.get("text").set_text(self.description)
-			
-			
-			
-			
+
+
+
 # Warning Dialog ---------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class WarningDialog(Dialog):
@@ -224,6 +394,33 @@ class WarningDialog(Dialog):
 		
 		self.get("text").set_size_request(160, -1)
 		self.get("text").set_text(self.description)
-			
+
+
+# Question Dialog --------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class QuestionDialog(Dialog):
+	resource = "question.glade"
+	instance = None
 	
+	def __init__(self, parent, title, description, callback):
+		self.description = description
+		Dialog.__init__(self, parent.gui, False)
+		self.dlg.set_transient_for(parent.dlg)
+		self.dlg.set_title(title)
+		self.callback = callback
 	
+	def onInit(self):
+		self.closeButton.set_label(lang.questionButton)
+		cancelButton = self.get("cancelbutton")
+		cancelButton.set_label(lang.questionButtonCancel)
+		
+		self.get("text").set_size_request(220, -1)
+		self.get("text").set_text(self.description)
+		
+		def done(mode):
+			self.callback(mode)
+			self.onClose()
+		
+		self.closeButton.connect("clicked", lambda *args: done(True))
+		cancelButton.connect("clicked", lambda *args: done(False))	
+

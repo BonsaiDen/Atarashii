@@ -37,7 +37,6 @@ class Settings:
 				i = i[len(name)+1:]
 				t = i[:i.find(' ')]
 				value = i[len(t)+1:]
-				
 				try:
 					if t == 'long':
 						value = long(value)
@@ -59,7 +58,9 @@ class Settings:
 	# Save ---------------------------------------------------------------------
 	def save(self):
 		f = open(os.path.join(self.dir, 'atarashii.conf'), "w")
-		for name in self.values.keys():
+		keys = self.values.keys()
+		keys.sort()
+		for name in keys:
 			value = self.values[name]
 			c = type(value)
 			if c == int or c == long:
@@ -85,6 +86,9 @@ class Settings:
 	def __setitem__(self, key, value):
 		self.values[key] = value
 	
+	def __delitem__(self, key):
+		if self.values.has_key(key):
+			del self.values[key]
 
 	def isset(self, key):
 		return self[key] != None and self[key].strip() != ""
@@ -95,4 +99,15 @@ class Settings:
 			
 		else:
 			return self[key]
-
+	
+	def getAccounts(self):
+		accounts = []
+		for i in self.values.keys():
+			if i.startswith("account_"):
+				accounts.append(i[8:])
+		
+		accounts.sort()
+		return accounts
+		
+				
+				
