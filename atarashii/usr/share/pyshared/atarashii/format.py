@@ -39,9 +39,8 @@ class Formatter:
 			self.textParts.append((1, text[i.start():i.end()]))
 			last = i.end()
 			
-		if len(self.urls) == 0:
-			self.textParts.append((0, text))
-		
+		self.textParts.append((0, text[last:]))
+
 		# Filter @
 		self.filterBy(atRegex, 2)
 		
@@ -77,7 +76,6 @@ class Formatter:
 				tag = c[c.find('#')+1:]
 				self.tags.append(tag)
 				result.append(('<a href="http://search.twitter.com/search?%s" title="' + lang.htmlSearch + '">#%s</a>') % (urllib.urlencode({'q': '#' + tag}), tag, tag))
-				
 		
 		return "".join(result)
 
