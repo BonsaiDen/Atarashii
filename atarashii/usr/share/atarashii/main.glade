@@ -1,13 +1,18 @@
 <?xml version="1.0"?>
 <interface>
-  <!-- interface-requires gtk+ 2.6 -->
+  <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkVBox" id="frame">
+    <property name="width_request">280</property>
+    <property name="height_request">400</property>
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
     <child>
       <object class="GtkToolbar" id="toolbar">
         <property name="visible">True</property>
+        <property name="toolbar_style">icons</property>
+        <property name="show_arrow">False</property>
+        <property name="icon_size_set">True</property>
         <child>
           <object class="GtkToolButton" id="refresh">
             <property name="visible">True</property>
@@ -42,23 +47,21 @@
           </packing>
         </child>
         <child>
-          <object class="GtkToggleToolButton" id="message">
+          <object class="GtkSeparatorToolItem" id="separator1">
             <property name="visible">True</property>
-            <property name="use_underline">True</property>
-            <property name="stock_id">gtk-file</property>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="homogeneous">True</property>
           </packing>
         </child>
         <child>
-          <object class="GtkSeparatorToolItem" id="separator1">
+          <object class="GtkToggleToolButton" id="message">
             <property name="visible">True</property>
-            <property name="draw">False</property>
+            <property name="use_underline">True</property>
+            <property name="stock_id">gtk-dnd-multiple</property>
           </object>
           <packing>
-            <property name="expand">True</property>
+            <property name="expand">False</property>
             <property name="homogeneous">True</property>
           </packing>
         </child>
