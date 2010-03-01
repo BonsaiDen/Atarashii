@@ -67,17 +67,17 @@ def bind_api(**config):
         def build_parameters(self, args, kargs):
             self.parameters = {}
             for idx, arg in enumerate(args):
-
                 try:
                     self.parameters[self.allowed_param[idx]] = convert_to_utf8_str(arg)
                 except IndexError:
                     raise TweepError('Too many parameters supplied!')
-
+			
+			
             for k, arg in kargs.items():
                 if arg is None:
                     continue
-                if k in self.parameters:
-                    raise TweepError('Multiple values for parameter %s supplied!' % k)
+              #  if k in self.parameters:
+               #     raise TweepError('Multiple values for parameter %s supplied!' % k)
 
                 self.parameters[k] = convert_to_utf8_str(arg)
 
