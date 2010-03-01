@@ -158,7 +158,6 @@ class GUI(gtk.Window):
 				
 		# Show
 		self.showInput()
-
 	
 	
 	# Main Functions -----------------------------------------------------------
@@ -212,7 +211,7 @@ class GUI(gtk.Window):
 			self.setStatus(lang.statusLoadHistory if self.main.updater.loadHistoryID != -1 else lang.statusLoadMessageHistory)
 	
 		elif self.main.isConnecting:
-			self.setStatus(lang.statusConnecting % self.main.settings['username'])
+			self.setStatus(lang.statusConnecting % self.main.username)
 			
 		elif self.main.loginError:
 			self.setStatus(lang.statusError)
@@ -319,9 +318,10 @@ class GUI(gtk.Window):
 	# Error & Warning ----------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def showError(self, error):
-		self.showInput()
-		self.text.grab_focus()
-	
+		if self.main.wasSending:
+			self.showInput()
+			self.text.grab_focus()
+		
  		code = error.response.status
  		
 		# Ratelimit error
