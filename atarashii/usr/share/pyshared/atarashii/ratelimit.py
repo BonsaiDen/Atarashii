@@ -1,4 +1,4 @@
-#  This file is part of  Atarashii.
+#  This file is part of Atarashii.
 #
 #  Atarashii is free software: you can redistribute it and/or 
 #  modify it under the terms of the GNU General Public License as published by
@@ -32,7 +32,7 @@ class RateLimiter(threading.Thread):
 		minutes = (req['reset_time_in_seconds'] - calendar.timegm(time.gmtime())) / 60
 		limit = req['remaining_hits']
 		if limit > 0:
-			limit = limit / 2.0
+			limit = limit / (2.0 + (2.0 / 5))
 			self.main.refreshTimeout = int(minutes / limit * 60 * 1.25)
 			if self.main.refreshTimeout < 45:
 				self.main.refreshTimeout = 45
