@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-#  This file is part of  Atarashii.
+#  This file is part of Atarashii.
 #
 #  Atarashii is free software: you can redistribute it and/or 
 #  modify it under the terms of the GNU General Public License as published by
@@ -46,14 +46,19 @@ class LangDE:
 		self.htmlHour = 'vor %d Stunden'
 		self.htmlAboutDay = 'vor ungefähr einem Tag'
 		self.htmlDay = 'vor %d Tagen'
+		self.htmlYesterday = "von Gestern"
+		self.htmlExact = "vom %d.%m.%Y"
+		
+		self.messageLoading = "Nachrichten werden geladen..."
 		
 		# Text
 		self.textEntry = "Was passiert gerade?"
+		self.textEntryMessage = "Nachricht eingeben..."
 		
 		# Status
 		self.statusLogout = "Nicht verbunden."
 		self.statusConnecting = "Verbinde als %s..."
-		self.statusConnected = "Verbunden, aktualisiere Tweets..."
+		self.statusConnected = "Verbunden, aktualisiere..."
 		self.statusError = "Verbindung fehlgeschlagen."
 		self.statusSeconds = "Aktualisierung in %s Sekunden."
 		self.statusOneSecond = "Aktualisierung in einer Sekunde."
@@ -63,10 +68,13 @@ class LangDE:
 		self.statusUpdate = "Aktualisiere..."
 		self.statusReply = "Antworte %s..."
 		self.statusRetweet = "Retweete %s..."
+		self.statusMessage = "Sende Nachricht an %s..."
+		self.statusMessageReply = "Antworte %s..."
 		self.statusSend = "Sende Tweet..."
 		self.statusLeft = "Noch %d Zeichen."
 		self.statusMore = "%d Zeichen zu viel."
 		self.statusLoadHistory = "Tweets werden geladen..."
+		self.statusLoadMessageHistory = "Nachrichten werden geladen..."
 		
 		self.statusReconnectSeconds = "Automatischer Reconnect in %d Sekunden."
 		self.statusReconnectMinute = "Automatischer Reconnect in einer Minute."
@@ -76,6 +84,8 @@ class LangDE:
 		self.labelReply = "<b>Antwort an %s:</b>"
 		self.labelReplyText = "<b>Antwort auf:</b> %s"
 		self.labelRetweet = "<b>%s retweeten:</b>"
+		self.labelMessage = "<b>Nachricht an %s:</b>"
+		self.labelMessageText = "<b>Antwort auf:</b> %s"
 		
 		# Settings
 		self.settingsTitle = "Einstellungen"
@@ -112,16 +122,21 @@ class LangDE:
 		self.menuUpdate = "Aktualisieren"
 		self.menuSettings = "Einstellungen"
 		self.menuAbout = "Über Atarashii"
-		self.menuExit = "Beenden"
+		self.menuQuit = "Beenden"
 		
 		# Toolbar
 		self.toolRefresh = "Tweets aktualisieren"
 		self.toolHistory = "Ältere Tweets entfernen"
 		self.toolRead = "Alle Tweets als gelesen makieren"
+		self.toolMode = "Nachrichten"
 		self.toolSettings = "Einstellungen öffnen"
 		self.toolAbout = "Einige Informationen über Atarashii"
 		self.toolQuit = "Atarashii beenden"
 		
+		self.toolRefreshMessage = "Nachrichten aktualisieren"
+		self.toolHistoryMessage = "Ältere Nachrichten entfernen"
+		self.toolReadMessage = "Alle Nachrichten als gelesen makieren"
+
 
 class LangEN:
 	def __init__(self):
@@ -149,27 +164,35 @@ class LangEN:
 		self.htmlHour = '%d hours ago'
 		self.htmlAboutDay = 'about a day ago'
 		self.htmlDay = '%d days ago'
+		self.htmlYesterday = "from yesterday"
+		self.htmlExact = "from %m.%d.%Y"
+		
+		self.messageLoading = "Loading messages..."
 		
 		# Text
 		self.textEntry = "What's happening?"
+		self.textEntryMessage = "Enter message..."
 		
 		# Status
 		self.statusLogout = "Not connected."
 		self.statusConnecting = "Connecting as %s..."
-		self.statusConnected = "Connected, loading tweets..."
+		self.statusConnected = "Connected, loading..."
 		self.statusError = "Connection failed."
 		self.statusSeconds = "Refresh in %s seconds."
 		self.statusOneSecond = "Refresh in one second."
 		self.statusMinute = "Refresh in one minute."
 		self.statusMinutes = "Refresh in %d minutes."
 		
-		self.statusUpdate = "Updating..."
+		self.statusUpdate = "Sending tweet..."
 		self.statusReply = "Replying to %s..."
 		self.statusRetweet = "Retweeting %s..."
+		self.statusMessage = "Sendind message to %s..."
+		self.statusMessageReply = "Replying to %s..."
 		self.statusSend = "Sending status..."
 		self.statusLeft = "%d chars left."
 		self.statusMore = "%d chars too much."
 		self.statusLoadHistory = "Loading tweets..."
+		self.statusLoadMessageHistory = "Loading messages..."
 		
 		self.statusReconnectSeconds = "Automatic reconnect in %d seconds."
 		self.statusReconnectMinute = "Automatic reconnect in one minute."
@@ -180,6 +203,8 @@ class LangEN:
 		self.labelReply = "<b>Reply to %s:</b>"
 		self.labelReplyText = "<b>Reply on:</b> %s"
 		self.labelRetweet = "<b>Rewteet %s:</b>"
+		self.labelMessage = "<b>Message to %s:</b>"
+		self.labelMessageText = "<b>Message on:</b> %s"
 		
 		# Settings
 		self.settingsTitle = "Preferences"
@@ -217,9 +242,14 @@ class LangEN:
 		self.toolRefresh = "Refresh tweets"
 		self.toolHistory = "Remove history"
 		self.toolRead = "Mark all tweets as read"
+		self.toolMode = "Messages"
 		self.toolSettings = "Open preferences"
 		self.toolAbout = "Some information about Atarashii"
-		self.toolExit = "Quit Atarashii"
+		self.toolQuit = "Quit Atarashii"
+		
+		self.toolRefreshMessage = "Refresh message"
+		self.toolHistoryMessage = "Remove history"
+		self.toolReadMessage = "Mark all messages as read"
 		
 		# Menu
 		self.menuUpdate = "Refresh"
