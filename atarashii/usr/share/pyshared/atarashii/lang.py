@@ -89,18 +89,37 @@ class LangDE:
 		
 		# Settings
 		self.settingsTitle = "Einstellungen"
-		self.settingsUsername = "Benutzername:"
-		self.settingsPassword = "Passwort:"
 		self.settingsButton = "Speichern"
-		self.settingsNotify = "Benachrichtigungen"
+		self.settingsButtonCancel = "Abbrechen"
+		self.settingsAccounts = "Benutzerkonten"
+		self.settingsNotifications = "Benachrichtigungen"
+		self.settingsNotify = "Aktivieren"
 		self.settingsSound = "Sound abspielen"
 		self.settingsFile = "Sounddatei"
 		self.settingsFileFilter = "Soundateien"
+		
+		self.settingsAdd = "Erstellen"
+		self.settingsEdit = "Bearbeiten"
+		self.settingsDelete = "Löschen"
 		
 		# About
 		self.aboutTitle = "Über Atarashii"
 		self.aboutLicenseButton = "Lizenz"
 		self.aboutOKButton = "OK"
+		
+		# Account
+		self.accountEdit = "%s's Benutzerkonto bearbeiten"
+		self.accountCreate = "Benutzerkonto erstellen"
+		self.accountDelete = "%s's Benutzerkonto löschen"
+		self.accountDeleteDescription = 'Möchten sie das Benutzerkonto von "%s" wirklich löschen?'
+		self.accountButton = "OK"
+		self.accountButtonCancel = "Abbrechen"
+		self.accountUsername = "Benutzername:"
+		self.accountPassword = "Passwort:"
+		
+		# Question
+		self.questionButton = "Ja"
+		self.questionButtonCancel = "Nein"
 		
 		# Error
 		self.errorButton = "OK"
@@ -208,18 +227,39 @@ class LangEN:
 		
 		# Settings
 		self.settingsTitle = "Preferences"
-		self.settingsUsername = "Username:"
-		self.settingsPassword = "Password:"
 		self.settingsButton = "Save"
-		self.settingsNotify = "Notifications"
+		self.settingsButtonCancel = "Cancel"
+		self.settingsAccounts = "Accounts"
+		self.settingsNotifications = "Notifications"
+		self.settingsNotify = "Enable"
 		self.settingsSound = "Play sound"
 		self.settingsFile = "Soundfile"
 		self.settingsFileFilter = "Soundfiles"
+		
+		self.settingsAdd = "Add"
+		self.settingsEdit = "Edit"
+		self.settingsDelete = "Delete"
 		
 		# About
 		self.aboutTitle = "About Atarashii"
 		self.aboutLicenseButton = "License"
 		self.aboutOKButton = "OK"
+		
+		# Account
+		self.accountEdit = "Edit %s's account"
+		self.accountCreate = "Create a new account"
+		self.accountDelete = "Delete %s's account"
+		self.accountDeleteDescription = 'Do you really want to delete the account "%s"?'
+		self.accountButton = "OK"
+		self.accountButtonCancel = "Cancel"
+		
+		self.accountUsername = "Username:"
+		self.accountPassword = "Password:"
+		
+		# Question
+		self.questionButton = "Yes"
+		self.questionButtonCancel = "No"
+		
 		
 		# Error
 		self.errorButton = "OK"
