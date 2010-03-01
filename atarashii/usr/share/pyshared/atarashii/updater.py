@@ -46,8 +46,8 @@ class Updater(threading.Thread):
 		
 		self.lastID = -1
 		self.lastMessageID = -1
-		self.initID = self.main.getLatestID()
-		self.initMessageID = self.main.getLatestMessageID()
+		self.initID = -1
+		self.initMessageID = -1
 		self.loadHistoryID = -1
 		self.loadHistoryMessageID = -1
 		self.ratelimit = 150
@@ -85,10 +85,16 @@ class Updater(threading.Thread):
 		
 		# Lazy loading
 		if self.main.gui.mode:
-			self.getInitMessages()
+			if not self.getInitMessages():
+				self.messagesLoaded = -1
+				self.tweetsLoaded = -1
+				return
 			
 		else:
-			self.getInitTweets()
+			if not self.getInitTweets():
+				self.messagesLoaded = -1
+				self.tweetsLoaded = -1
+				return
 		
 		# Stuff ----------------------------------------------------------------
 		self.started = True
@@ -117,7 +123,7 @@ class Updater(threading.Thread):
 		
 		except Exception, error:
 			gobject.idle_add(lambda: self.main.onLoginFailed(error))
-			return	
+			return False
 	
 		if len(updates) > 0:
 			self.setLastTweet(updates[0].id)
@@ -130,6 +136,7 @@ class Updater(threading.Thread):
 	
 		gobject.idle_add(lambda: self.html.pushUpdates())
 		self.tweetsLoaded = 1
+		return True
 	
 	def getInitMessages(self):
 		messages = []
@@ -138,7 +145,7 @@ class Updater(threading.Thread):
 		
 		except Exception, error:
 			gobject.idle_add(lambda: self.main.onLoginFailed(error))
-			return
+			return False
 		
 		if len(messages) > 0:
 			self.setLastMessage(messages[0].id)
@@ -151,7 +158,7 @@ class Updater(threading.Thread):
 	
 		gobject.idle_add(lambda: self.message.pushUpdates())
 		self.messagesLoaded = 1
-	
+		return True
 	
 	# Mainloop -----------------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -223,10 +230,9 @@ class Updater(threading.Thread):
 		tweetList = []
 		tweetIDS = []
 		messageIDS = []
-		username = self.settings['username']
 		for i in updates:
 			imgfile = self.getImage(i.user.profile_image_url, i.user.id)
-			if i.user.screen_name != username:
+			if i.user.screen_name != self.main.username:
 				# Don't add mentions twice
 				if not i.id in tweetIDS:
 					tweetIDS.append(i.id)
@@ -422,13 +428,13 @@ class Updater(threading.Thread):
 	# --------------------------------------------------------------------------
 	def setLastTweet(self, tweetID):
 		self.lastID = tweetID
-		self.settings['lasttweet_' + self.settings['username']] = str(tweetID)
+		self.settings['lasttweet_' + self.main.username] = str(tweetID)
 		if len(self.html.tweets) > 0:
 			self.html.newestID = self.html.tweets[len(self.html.tweets)-1][0].id
 	
 	def setLastMessage(self, messageID):
 		self.lastMessageID = messageID
-		self.settings['lastmessage_' + self.settings['username']] = str(messageID)
+		self.settings['lastmessage_' + self.main.username] = str(messageID)
 		if len(self.message.tweets) > 0:
 			self.message.newestID = self.message.tweets[len(self.message.tweets)-1][0].id
 	
