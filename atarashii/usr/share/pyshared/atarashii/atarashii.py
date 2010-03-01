@@ -196,6 +196,7 @@ class Atarashii:
 		self.isConnecting = False
 		self.isReconnecting = False
 		self.isUpdating = False
+		self.gui.updateStatus()
 		self.gui.set_title("Atarashii")
 		self.gui.hideAll()
 		gobject.idle_add(lambda: self.gui.html.init(True))
