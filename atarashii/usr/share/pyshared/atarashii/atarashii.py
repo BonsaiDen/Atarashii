@@ -38,6 +38,7 @@ import sys
 import os
 import calendar
 import time
+import math
 
 gtk.gdk.threads_init()
 
@@ -84,6 +85,7 @@ class Atarashii:
 		self.refreshTime = calendar.timegm(time.gmtime())
 		self.refreshTimeout = -1
 		self.reconnectTime = -1
+		self.reconnectTimeout = None
 		
 		# State
 		self.loginError = False
@@ -146,10 +148,14 @@ class Atarashii:
 		self.gui.showProgress()
 		
 		# Connect
+		if self.reconnectTimeout != None:
+			gobject.source_remove(self.reconnectTimeout)
+		
 		self.loginStatus = False
 		self.isSending = False
 		self.isConnecting = True
 		self.isReconnecting = False
+		self.reconnectTimeout = None
 		self.isUpdating = False
 		self.loginError = False
 		
@@ -197,15 +203,15 @@ class Atarashii:
 	
 	# Reconnect ----------------------------------------------------------------
 	# --------------------------------------------------------------------------
-	def reconnect():
+	def reconnect(self):
 		limit = self.api.rate_limit_status()
 		minutes = math.ceil((limit['reset_time_in_seconds'] - calendar.timegm(time.gmtime())) / 60.0)
 		self.refreshTimeout = int(minutes * 60 + 2)
 		
-		if not self.isConnected:
+		if not self.loginStatus:
 			self.reconnectTime = calendar.timegm(time.gmtime())
 			self.isReconnecting = True
-			gobject.timeout_add(int(self.refreshTimeout * 1000), lambda: self.login())
+			self.reconnectTimeout = gobject.timeout_add(int(self.refreshTimeout * 1000), lambda: self.login())
 			return lang.errorRatelimitReconnect % math.ceil(minutes)
 		
 		else:

@@ -24,6 +24,7 @@ import gobject
 
 import calendar
 import time
+import math
 
 import html
 import tray
@@ -176,6 +177,17 @@ class GUI(gtk.Window):
 		if self.text.hasTyped:
 			pass
 	
+		elif self.main.isReconnecting:
+			wait = self.main.refreshTimeout - (calendar.timegm(time.gmtime()) - self.main.reconnectTime)
+			if wait < 60:
+				self.setStatus(lang.statusReconnectSeconds % wait)
+		
+			elif wait < 105:
+				self.setStatus(lang.statusReconnectMinute)
+			
+			else:
+				self.setStatus(lang.statusReconnectMinutes % math.ceil(wait / 60.0))
+	
 		elif self.main.isLoadingHistory:
 			self.setStatus(lang.statusLoadHistory)
 	
@@ -192,19 +204,6 @@ class GUI(gtk.Window):
 			self.refreshButton.set_sensitive(False)
 			self.readButton.set_sensitive(False)
 			self.setStatus(lang.statusUpdate)
-		
-		elif self.main.isReconnecting:
-			wait = self.main.refreshTimeout - (calendar.timegm(time.gmtime()) - self.main.reconnectTime)
-			if wait < 60:
-				self.setStatus(lang.statusReconnectSeconds % wait)
-		
-			elif wait < 105:
-				self.setStatus(lang.statusReconnectMinute)
-			
-			else:
-				self.setStatus(lang.statusReconnectMinutes % math.ceil(wait / 60.0))
-			
-			return self.waitForReconnect
 		
 		elif self.main.refreshTimeout == -1:
 			self.setStatus(lang.statusConnected)
@@ -285,7 +284,7 @@ class GUI(gtk.Window):
 	# --------------------------------------------------------------------------
 	def showError(self, error):
  		code = error.response.status
-		
+ 		
 		# Ratelimit error
  		if code == 400:
  			self.refreshButton.set_sensitive(False)
@@ -324,13 +323,13 @@ class GUI(gtk.Window):
 	# --------------------------------------------------------------------------
 	def onRefresh(self, *args):
 		self.main.updater.refreshNow = True
-
+	
 	def onHistory(self, *args):
 		gobject.idle_add(lambda: self.html.clear())
-		
+	
 	def onRead(self, *args):
 		gobject.idle_add(lambda: self.html.read())
-		
+	
 	def onSettings(self, menu):
 		if not self.settingsToggle:
 			self.settingsToggle = True
@@ -350,7 +349,7 @@ class GUI(gtk.Window):
 				self.settingsDialog.onClose()
 				
 			self.settingsToggle = False
-		
+	
 	def onAbout(self, menu):
 		if not self.aboutToggle:
 			self.aboutToggle = True
