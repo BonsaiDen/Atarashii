@@ -42,6 +42,7 @@ class Updater(threading.Thread):
 		self.started = False
 		self.doInit = False
 		self.refreshNow = False
+		self.refreshMessages = False
 		
 		self.lastID = -1
 		self.lastMessageID = -1
