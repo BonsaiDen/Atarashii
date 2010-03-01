@@ -42,6 +42,17 @@
           </packing>
         </child>
         <child>
+          <object class="GtkToggleToolButton" id="message">
+            <property name="visible">True</property>
+            <property name="use_underline">True</property>
+            <property name="stock_id">gtk-file</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="homogeneous">True</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkSeparatorToolItem" id="separator1">
             <property name="visible">True</property>
             <property name="draw">False</property>
@@ -110,6 +121,20 @@
           </packing>
         </child>
         <child>
+          <object class="GtkScrolledWindow" id="messagescroll">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkLabel" id="label">
             <property name="visible">True</property>
             <property name="xalign">0</property>
@@ -118,7 +143,7 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -131,7 +156,7 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="position">2</property>
+            <property name="position">3</property>
           </packing>
         </child>
         <child>
@@ -140,7 +165,7 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="position">3</property>
+            <property name="position">4</property>
           </packing>
         </child>
       </object>
