@@ -14,6 +14,8 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
+# TODO check usernames in lower case
+
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import dbus, dbus.service
@@ -78,8 +80,14 @@ class Atarashii:
 		self.retweetUser = ""	
 		self.retweetText = ""
 		
+		self.messageUser = ""
+		self.messageID = -1
+		self.messageText = ""
+		
 		self.loadTweetCount = 20
 		self.maxTweetCount = 200
+		self.loadMessageCount = 20
+		self.maxMessageCount = 200
 		
 		# Timer
 		self.refreshTime = calendar.timegm(time.gmtime())
@@ -95,15 +103,18 @@ class Atarashii:
 		self.isReconnecting = False
 		self.isUpdating = False
 		self.isLoadingHistory = False
+		self.wasSending = False
 		
 		self.rateWarningShown = False
+		
+		# Updater
+		self.updater = updater.Updater(self)
+		self.updater.setDaemon(True)	
 		
 		# GUI
 		self.gui = gui.GUI(self)
 		
-		# Updater
-		self.updater = updater.Updater(self)
-		self.updater.setDaemon(True)
+		# Start
 		self.updater.start()
 		
 
@@ -112,6 +123,7 @@ class Atarashii:
 	def send(self, text):
 		self.isSending = True
 		self.gui.text.set_sensitive(False)
+		self.gui.modeButton.set_sensitive(False)
 		self.gui.showProgress()	
 		if self.replyUser != "":
 			self.gui.setStatus(lang.statusReply % self.replyUser)
@@ -119,11 +131,17 @@ class Atarashii:
 		elif self.retweetUser != "":
 			self.gui.setStatus(lang.statusRetweet % self.retweetUser)
 			
+		elif self.messageText != "":
+			self.gui.setStatus(lang.statusMessageReply % self.messageUser)
+			
+		elif self.messageUser != "":
+			self.gui.setStatus(lang.statusMessage % self.messageUser)
+			
 		else:
 			self.gui.setStatus(lang.statusSend)
-			
+		
 		# Sender
-		sender = send.Send(self)
+		sender = send.Send(self, self.gui.mode, text)
 		sender.setDaemon(True)
 		sender.start()
 	
@@ -161,9 +179,15 @@ class Atarashii:
 		
 		# Reset
 		self.gui.updateStatus()
-		self.gui.html.init(False)
-		self.gui.html.start()
-
+		self.gui.html.init(True)
+		if self.gui.mode:
+			self.gui.html.start()
+		
+		self.gui.settingsButton.set_sensitive(False)
+		self.gui.message.init(True)
+		if not self.gui.mode:
+			self.gui.message.start()
+		
 		# Do it!
 		auth = tweepy.BasicAuthHandler(self.settings["username"], self.settings["password"])
 		self.api = tweepy.API(auth)
@@ -175,6 +199,7 @@ class Atarashii:
 		self.loginError = False
 		self.loginStatus = True
 		self.isConnecting = False
+		self.gui.settingsButton.set_sensitive(True)
 		self.gui.set_title("Atarashii | %s" % self.settings["username"])
 		self.gui.updateStatus()
 		self.gui.showInput()
@@ -183,6 +208,7 @@ class Atarashii:
 		self.loginError = True
 		self.loginStatus = False
 		self.isConnecting = False
+		self.gui.settingsButton.set_sensitive(True)
 		self.gui.set_title("Atarashii")
 		self.gui.hideAll()
 		self.gui.showError(error)
@@ -196,6 +222,7 @@ class Atarashii:
 		self.isConnecting = False
 		self.isReconnecting = False
 		self.isUpdating = False
+		self.gui.settingsButton.set_sensitive(True)
 		self.gui.updateStatus()
 		self.gui.set_title("Atarashii")
 		self.gui.hideAll()
@@ -228,6 +255,10 @@ class Atarashii:
 	def retweet(self):
 		self.gui.text.retweet()
 	
+	# Message to someone
+	def message(self, num):
+		self.gui.text.message(num)
+	
 	
 	# Helper Functions ---------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -257,6 +288,20 @@ class Atarashii:
 		else:
 			return -1
 
+	def getLatestMessageID(self):
+		if self.settings.isset('lastmessage_' + self.settings['username']):
+			return long(self.settings['lastmessage_' + self.settings['username']])
+		
+		else:
+			return -1
+	
+	def getFirstMessageID(self):
+		if self.settings.isset('firstmessage_' + self.settings['username']):
+			return long(self.settings['firstmessage_' + self.settings['username']])
+		
+		else:
+			return -1
+
 
  	# Start & Quit -------------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -267,6 +312,7 @@ class Atarashii:
  		self.settings['position'] = str(self.gui.get_position())
  		size = self.gui.get_allocation()
 		self.settings['size'] = str((size[2], size[3]))
+		self.settings['mode'] = self.gui.mode
 		self.settings.save()
  		gtk.main_quit()
  		sys.exit(1)

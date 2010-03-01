@@ -44,6 +44,7 @@ class TextInput(gtk.TextView):
 		self.hasTyped = False
 		self.isChanging = False
 		self.replyRegex = re.compile('@([^\s]+)\s.*')
+		self.messageRegex = re.compile('d ([^\s]+)\s.*')
 		
 		# Sizes
 		self.inputSize = None
@@ -78,64 +79,97 @@ class TextInput(gtk.TextView):
 		if not self.hasTyped:
 			self.modify_text(gtk.STATE_NORMAL, self.defaultFG)
 			self.get_buffer().set_text("")
-	
+			
+		else:
+			gobject.idle_add(lambda: self.checkLength())
 	
 	def looseFocus(self):
-		if not self.hasFocus:
+		if not self.hasFocus and self.inputError != None:
 			self.resize()
 			if not self.hasTyped:
 				self.modify_text(gtk.STATE_NORMAL, self.get_style().text[gtk.STATE_INSENSITIVE])
-				self.get_buffer().set_text(lang.textEntry)
-		
+				self.get_buffer().set_text(lang.textEntryMessage if self.gui.mode else lang.textEntry)
+	
 		return False
 	
 	def htmlFocus(self, *args):
 		gobject.timeout_add(100, lambda: self.looseFocus())
 		self.hasFocus = False
 	
-
 	# Events -------------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def submit(self, *args):
 		text = self.getText()
 		if len(text) <= 140 and text.strip() != "":
-			self.main.send(text)
+			if self.gui.mode:
+				if self.main.messageUser != "":
+					text = text[2:]
+					text = text[len(self.main.messageUser):].strip()
+					self.main.send(text)
+				
+			else:
+				self.main.send(text)
 		
 	def changed(self, *args):
 		text = self.getText()
 	
-		# Cancel reply mode
-		if text.strip()[0:1] != "@" and not self.isChanging:
-			self.main.replyText = ""
-			self.main.replyUser = ""
-			self.main.replyID = -1
+		# Message mode ---------------------------------------------------------
+		if self.gui.mode:
+			# Cancel reply mode
+			if len(text) == 0 and not self.isChanging:
+				self.main.messageUser = ""
+				self.main.messageID = -1
+				self.main.messageText = ""
+	
+			# check for @ Reply
+			msg = self.messageRegex.match(text)
+			if msg != None:
+				if self.main.messageID == -1:
+					self.main.messageUser = msg.group(1)
+				else:
+					if msg.group(1) != self.main.messageUser:
+						self.main.messageText = ""
+						self.main.messageUser = msg.group(1)
+						self.main.messageID = -1
 		
-		# Remove spaces only
-		if text.strip() == "":
-			self.setText("")
-			text = ""
+			elif self.main.messageID == -1:
+				self.main.messageUser = ""
+	
+	
+		# Tweet Mode -----------------------------------------------------------
+		else:
+			# Cancel reply mode
+			if text.strip()[0:1] != "@" and not self.isChanging:
+				self.main.replyText = ""
+				self.main.replyUser = ""
+				self.main.replyID = -1
 		
-		# Cancel all modes
-		if len(text) == 0 and not self.isChanging:
-			self.main.replyText = ""
-			self.main.replyUser = ""
-			self.main.replyID = -1
-			self.main.retweetNum = -1
-			self.main.retweetUser = ""
+			# Remove spaces only
+			if text.strip() == "":
+				self.setText("")
+				text = ""
 		
-		# check for @ Reply
-		at = self.replyRegex.match(text)
-		if at != None:
-			if self.main.replyID == -1:
-				self.main.replyUser = at.group(1)
-			else:
-				if at.group(1) != self.main.replyUser:
-					self.main.replyText = ""
+			# Cancel all modes
+			if len(text) == 0 and not self.isChanging:
+				self.main.replyText = ""
+				self.main.replyUser = ""
+				self.main.replyID = -1
+				self.main.retweetNum = -1
+				self.main.retweetUser = ""
+		
+			# check for @ Reply
+			at = self.replyRegex.match(text)
+			if at != None:
+				if self.main.replyID == -1:
 					self.main.replyUser = at.group(1)
-					self.main.replyID = -1
+				else:
+					if at.group(1) != self.main.replyUser:
+						self.main.replyText = ""
+						self.main.replyUser = at.group(1)
+						self.main.replyID = -1
 		
-		elif self.main.replyID == -1:
-			self.main.replyUser = ""
+			elif self.main.replyID == -1:
+				self.main.replyUser = ""
 		
 		# Resize
 		self.resize()	
@@ -146,11 +180,7 @@ class TextInput(gtk.TextView):
 			self.hasTyped = self.hasFocus
 			if self.hasFocus:
 				self.modify_text(gtk.STATE_NORMAL, self.defaultFG)
-				if len(text) <= 140:
-					self.gui.setStatus(lang.statusLeft % (140 - len(text)))
-				
-				else:
-					self.gui.setStatus(lang.statusMore % (len(text) - 140))
+				self.checkLength()
 		
 		else:
 			self.hasTyped = False
@@ -160,6 +190,14 @@ class TextInput(gtk.TextView):
 		self.checkColor(len(text))
 	
 	
+	def checkLength(self):
+		text = self.getText()
+		if len(text) <= 140:
+			self.gui.setStatus(lang.statusLeft % (140 - len(text)))
+		
+		else:
+			self.gui.setStatus(lang.statusMore % (len(text) - 140))
+
 	# Check the length of the text and change color if needed
 	def checkColor(self, count):
 		if count > 140:
@@ -168,18 +206,25 @@ class TextInput(gtk.TextView):
 		else:
 			self.modify_base(gtk.STATE_NORMAL, self.defaultBG)
 	
+	def checkMode(self):
+		self.hasFocus = False
+		self.main.replyText = ""
+		self.main.replyUser = ""
+		self.main.replyID = -1
+		self.main.retweetNum = -1
+		self.main.retweetUser = ""
+		self.main.messageUser = ""
+		self.main.messageID = -1
+		self.main.messageText = ""
+		self.setText("")
 	
-	# Reply / Retweet ----------------------------------------------------------
+	# Reply / Retweet / Message ------------------------------------------------
 	# --------------------------------------------------------------------------
 	def reply(self, num):
 		self.isChanging = True
 		self.grab_focus()
 		text = self.getText()
 		
-		# Show reply text
-		if num != -1:
-			self.main.replyText = self.gui.html.tweets[num][0].text
-	
 		# Cancel Retweet
 		if self.main.retweetNum > -1 or self.main.retweetText != "":
 			self.main.retweetNum = -1
@@ -221,6 +266,27 @@ class TextInput(gtk.TextView):
 		self.modify_text(gtk.STATE_NORMAL, self.defaultFG)
 		self.resize()
 	
+	def message(self, num):
+		self.isChanging = True
+		self.grab_focus()
+		text = self.getText()
+
+		# Check for already existing message
+		msg = self.messageRegex.match(text)
+		if msg != None:
+			p = 2 + len(msg.group(1))
+			text = ("d %s " % self.main.messageUser) + text[p + 1:]
+		
+		else:
+			text = ("d %s " % self.main.messageUser) + text
+	
+		self.setText(text)
+		self.isChanging = False
+		self.checkColor(len(text))
+		self.changed()
+		self.modify_text(gtk.STATE_NORMAL, self.defaultFG)
+		self.resize()
+	
 	
 	# Sizing -------------------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -228,6 +294,7 @@ class TextInput(gtk.TextView):
 		self.inputError = self.inputSize - self.gui.getHeight(self)
 		self.resize()
 		self.looseFocus()
+		
 	
 	def resize(self):
 		# Set Label Text

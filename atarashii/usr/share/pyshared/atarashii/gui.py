@@ -27,6 +27,7 @@ import time
 import math
 
 import html
+import message
 import tray
 import text
 import dialog
@@ -65,6 +66,10 @@ class GUI(gtk.Window):
 		self.readButton.connect("clicked", self.onRead)
 		self.readButton.set_tooltip_text(lang.toolRead)
 		
+		self.modeButton = gt.get_object("message")
+		self.modeButton.connect("clicked", self.onMode)
+		self.modeButton.set_tooltip_text(lang.toolMode)
+		
 		# Settings Button
 		self.settingsButton = gt.get_object("settings")
 		self.settingsButton.connect("toggled", lambda *args: self.onSettings(False))
@@ -83,22 +88,28 @@ class GUI(gtk.Window):
 		
 		self.infoLabel = gt.get_object("label")
 		
-		self.htmlScroll = gt.get_object("htmlscroll")		
-		self.textScroll = gt.get_object("textscroll")
-		
 		# Text Input
+		self.textScroll = gt.get_object("textscroll")
 		self.text = text.TextInput(self)
 		self.textScroll.add(self.text)
 		
 		# HTML
+		self.htmlScroll = gt.get_object("htmlscroll")
 		self.html = html.HTML(self.main, self)
 		self.htmlScroll.add(self.html)
 		self.htmlScroll.set_shadow_type(gtk.SHADOW_IN)
 		
+		# Messages
+		self.messageScroll = gt.get_object("messagescroll")
+		self.message = message.HTML(self.main, self)
+		self.messageScroll.add(self.message)
+		self.messageScroll.set_shadow_type(gtk.SHADOW_IN)
+		
+		
 		self.content = gt.get_object("content")
 		self.content.set_border_width(2)
 		
-		# BArs
+		# Bars
 		self.toolbar = gt.get_object("toolbar")
 		self.progress = gt.get_object("progressbar")
 		self.status = gt.get_object("statusbar")
@@ -115,10 +126,8 @@ class GUI(gtk.Window):
 		else:
 			self.resize(280,400)
 		
-		
 		# Tray
 		self.tray = tray.TrayIcon(self)
-		
 		
 		# Events
 		self.connect("delete_event", self.deleteEvent)
@@ -126,22 +135,30 @@ class GUI(gtk.Window):
 		self.connect("window-state-event", self.stateEvent)
 		self.initEvent = self.connect("expose-event", self.drawEvent)
 		
-		
 		# Dialogs
 		self.aboutDialog = None
 		self.settingsDialog = None
 		
 		# Variables
+		self.mode = self.main.settings.isTrue('mode', False)
 		self.windowPosition = None
 		self.minimized = False
-				
+		
+		self.show_all()
+		
+		# Set Mode
+		if self.mode:
+			self.modeButton.set_active(self.mode)
+		else:
+			self.onMode()
+		
 		# Statusbar Updater
 		self.updateStatus()
 		gobject.timeout_add(1000, lambda: self.updateStatus())
 				
 		# Show
-		self.show_all()
 		self.showInput()
+
 	
 	
 	# Main Functions -----------------------------------------------------------
@@ -150,12 +167,14 @@ class GUI(gtk.Window):
 		self.progress.hide()
 		self.textScroll.show()
 		self.text.resize()
+		self.text.set_sensitive(True)
 		self.refreshButton.set_sensitive(True)
+		self.modeButton.set_sensitive(True)
 	
 	def showProgress(self):
 		def progressActivity():
 			self.progress.pulse()
-			return self.main.isSending or self.main.isConnecting or self.main.isLoadingHistory
+			return self.main.isSending or self.main.isConnecting or self.main.isLoadingHistory or (self.mode and self.main.updater.messagesLoaded == 0) or (not self.mode and self.main.updater.tweetsLoaded == 0)
 	
 		self.progress.set_fraction(0.0)
 		self.progress.show()
@@ -171,6 +190,7 @@ class GUI(gtk.Window):
 		self.refreshButton.set_sensitive(False)
 		self.readButton.set_sensitive(False)
 		self.historyButton.set_sensitive(False)
+		self.modeButton.set_sensitive(False)
 	
 	# Update Statusbar
 	def updateStatus(self, once = False):
@@ -189,7 +209,7 @@ class GUI(gtk.Window):
 				self.setStatus(lang.statusReconnectMinutes % math.ceil(wait / 60.0))
 	
 		elif self.main.isLoadingHistory:
-			self.setStatus(lang.statusLoadHistory)
+			self.setStatus(lang.statusLoadHistory if self.main.updater.loadHistoryID != -1 else lang.statusLoadMessageHistory)
 	
 		elif self.main.isConnecting:
 			self.setStatus(lang.statusConnecting % self.main.settings['username'])
@@ -238,11 +258,18 @@ class GUI(gtk.Window):
 		self.status.pop(0)
 		self.status.push(0, status)	
 	
+	def checkRead(self):
+		if self.mode:
+			self.readButton.set_sensitive(self.main.updater.lastMessageID > self.main.updater.initMessageID)
+			
+		else:
+			self.readButton.set_sensitive(self.main.updater.lastID > self.main.updater.initID)
+	
 	
 	# Info Label ---------------------------------------------------------------
 	# --------------------------------------------------------------------------
-	def setLabel(self):
-		if self.main.replyUser == "" and self.main.retweetUser == "":
+	def setLabel(self):	
+		if self.main.replyUser == "" and self.main.retweetUser == "" and self.main.messageUser == "":
 			self.infoLabel.set_markup("")
 			self.infoLabel.hide()
 			
@@ -254,8 +281,17 @@ class GUI(gtk.Window):
 			self.setLabelText(lang.labelReplyText % self.main.replyText)
 			self.infoLabel.show()	
 			
-		else:
+		elif self.main.replyUser != "":
 			self.setLabelText(lang.labelReply % self.main.replyUser)
+			self.infoLabel.show()
+			
+		# Messages
+		elif self.main.messageText != "":
+			self.setLabelText(lang.labelMessageText % self.main.messageText)
+			self.infoLabel.show()		
+		
+		elif self.main.messageUser != "":
+			self.setLabelText(lang.labelMessage % self.main.messageUser)
 			self.infoLabel.show()
 	
 	def setLabelText(self, text):
@@ -283,16 +319,24 @@ class GUI(gtk.Window):
 	# Error & Warning ----------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def showError(self, error):
+		self.showInput()
+		self.text.grab_focus()
+	
  		code = error.response.status
  		
 		# Ratelimit error
- 		if code == 400:
+ 		if (code == 400 and not self.main.wasSending) or (code == 403 and self.main.wasSending):
  			self.refreshButton.set_sensitive(False)
  			rateError = self.main.reconnect()
  			
+ 		elif (code == 400 and self.main.wasSending) or (code == 403 and not self.main.wasSending):
+ 			code = 500
+ 			rateError = ""
+ 		
  		else:
  			rateError = ""
  		
+ 		self.main.wasSending = False
  		try:
 	 		description = {
 	 			404 : lang.errorLogin,
@@ -307,6 +351,7 @@ class GUI(gtk.Window):
 	 		description = lang.errorInternal % str(detail)
 	 	
 	 	dialog.ErrorDialog(self, description)
+	 	self.updateStatus()
 	
 	def showWarning(self, limit):
 		dialog.WarningDialog(self, lang.warningText % limit)
@@ -322,13 +367,57 @@ class GUI(gtk.Window):
 	# Handlers -----------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def onRefresh(self, *args):
-		self.main.updater.refreshNow = True
+		if self.mode:
+			self.main.updater.refreshMessages = True
+		else:
+			self.main.updater.refreshNow = True
 	
 	def onHistory(self, *args):
 		gobject.idle_add(lambda: self.html.clear())
 	
 	def onRead(self, *args):
-		gobject.idle_add(lambda: self.html.read())
+		if self.mode:
+			gobject.idle_add(lambda: self.message.read())
+			
+		else:
+			gobject.idle_add(lambda: self.html.read())
+	
+	def onMode(self, *args):
+		self.mode = self.modeButton.get_active()
+		if self.mode:
+			self.historyButton.set_tooltip_text(lang.toolHistoryMessage)
+			self.readButton.set_tooltip_text(lang.toolReadMessage)
+			self.refreshButton.set_tooltip_text(lang.toolRefreshMessage)
+			self.htmlScroll.hide()
+			self.messageScroll.show()	
+			self.messageScroll.grab_focus()
+			self.readButton.set_sensitive(self.main.updater.lastMessageID > self.main.updater.initMessageID)
+			self.historyButton.set_sensitive(self.message.historyLoaded)
+			
+			if self.main.updater.messagesLoaded == 0:
+				self.showProgress()
+				
+			elif self.main.updater.messagesLoaded == 1:
+				self.showInput()	
+			
+		else:
+			self.historyButton.set_tooltip_text(lang.toolHistory)
+			self.readButton.set_tooltip_text(lang.toolRead)
+			self.refreshButton.set_tooltip_text(lang.toolRefresh)
+			self.messageScroll.hide()	
+			self.htmlScroll.show()	
+			self.htmlScroll.grab_focus()
+			self.readButton.set_sensitive(self.main.updater.lastID > self.main.updater.initID)
+			self.historyButton.set_sensitive(self.html.historyLoaded)
+		
+			if self.main.updater.tweetsLoaded == 0:
+				self.showProgress()
+				
+			elif self.main.updater.tweetsLoaded == 1:
+				self.showInput()
+		
+		self.text.checkMode()
+		self.text.looseFocus()
 	
 	def onSettings(self, menu):
 		if not self.settingsToggle:

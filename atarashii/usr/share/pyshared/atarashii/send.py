@@ -1,4 +1,4 @@
-#  This file is part of  main.
+#  This file is part of Atarashii.
 #
 #  Atarashii is free software: you can redistribute it and/or 
 #  modify it under the terms of the GNU General Public License as published by
@@ -19,20 +19,33 @@
 import gobject
 import threading
 
+
 class Send(threading.Thread):
-	def __init__(self, main):
+	def __init__(self, main, mode, text):
 		threading.Thread.__init__(self)
 		self.main = main
+		self.mode = mode
+		self.text = text
 
 	def run(self):
-		text = self.main.gui.text.getText()
+		self.main.wasSending = True
+		if not self.mode:
+			self.sendTweet(self.text)
 		
-		# Reply
+		else:
+			self.sendMessage(self.text)
+		
+		self.main.isSending = False
+
+
+	# Send a Tweet -------------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def sendTweet(self, text):
 		if self.main.replyID!= -1:
 			try:
 				# Send Tweet
 				update = self.main.api.update_status(text, in_reply_to_status_id = self.main.replyID)
-				self.main.updater.setLast(update.id)
+				self.main.updater.setLastTweet(update.id)
 				self.main.gui.readButton.set_sensitive(True)
 				
 				# Insert temporary tweet
@@ -50,19 +63,17 @@ class Send(threading.Thread):
 				self.main.gui.text.hasFocus = False
 				self.main.gui.showInput()
 				self.main.gui.html.grab_focus()
+				self.main.wasSending = False
 			
 			except Exception, error:
-				print error
-				self.main.gui.showError(error)
-				self.main.gui.showInput()
-				gobject.idle_add(lambda: self.main.gui.text.grab_focus())
+				gobject.idle_add(lambda: self.main.gui.showError(error))
 		
 		# Normal Tweet / Retweet
 		else:
 			try:
 				# Send Tweet
 				update = self.main.api.update_status(text)
-				self.main.updater.setLast(update.id)
+				self.main.updater.setLastTweet(update.id)
 				self.main.gui.readButton.set_sensitive(True)
 				
 				# Insert temporary tweet
@@ -77,13 +88,41 @@ class Send(threading.Thread):
 				self.main.gui.text.hasFocus = False
 				self.main.gui.showInput()
 				self.main.gui.html.grab_focus()
+				self.main.wasSending = False
 			
 			except Exception, error:
-				print error
-				self.main.gui.showError(error)
-				self.main.gui.showInput()
-				gobject.idle_add(lambda: self.main.gui.text.grab_focus())
+				gobject.idle_add(lambda: self.main.gui.showError(error))				
+	
+	
+	# Send a Direct Message ----------------------------------------------------
+	# --------------------------------------------------------------------------
+	def sendMessage(self, text):
+		try:
+			# Send Message
+			if self.main.messageID != -1:
+				message = self.main.api.send_direct_message(text = text, user_id = self.main.messageID)
+			else:
+				message = self.main.api.send_direct_message(text = text, screen_name = self.main.messageUser)
+			
+			self.main.updater.setLastMessage(message.id)
+			self.main.gui.readButton.set_sensitive(True)
+			
+			# Insert temporary message
+			imgfile = self.main.updater.getImage(message.sender.profile_image_url, message.sender.id)
+			self.main.gui.message.updateList.append((message, imgfile, False))
+			gobject.idle_add(lambda: self.main.gui.message.pushUpdates())
+			
+			# Reset
+			self.main.gui.text.setText("")
+			
+			# Focus HTML
+			self.main.gui.text.hasFocus = False
+			self.main.gui.showInput()
+			self.main.gui.message.grab_focus()
+			self.main.wasSending = False
 		
-		self.main.isSending = False
-		self.main.gui.text.set_sensitive(True)
-
+		except Exception, error:
+			print error
+			gobject.idle_add(lambda: self.main.gui.showError(error))
+	
+		
