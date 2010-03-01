@@ -62,7 +62,7 @@ class TrayIcon(gtk.StatusIcon):
 		
 		# Quit
 		menuItem = gtk.ImageMenuItem(gtk.STOCK_QUIT)
-		menuItem.set_label(lang.menuExit)
+		menuItem.set_label(lang.menuQuit)
 		menuItem.connect('activate', self.gui.onQuit, self)	
 		menu.append(menuItem)
 		
