@@ -27,15 +27,16 @@ class LangDE:
 		self.htmlLoading = "Tweets werden geladen..."
 		self.htmlInfo = "Name: %s\nFollower: %d\nFollowing: %d\nTweets: %d"
 		self.htmlProfile = "%s Profil"
+		self.htmlAt = "%s auf Twitter.com"
 		self.htmlReply = "%s antworten"
 		self.htmlRetweet = "%s retweeten"
 		self.htmlTime = "Getwittert um %H:%M:%S Uhr"
-		self.htmlTimeDay = "Getwittert am %d.%m um %H:%M:%S Uhr"
+		self.htmlTimeDay = "Getwittert am %d.%m.%Y um %H:%M:%S Uhr"
 		self.htmlSearch = "Suche nach &quot;%s&quot;"
 		self.htmlBy = " von %s"
 		self.htmlInReply = "in Antwort auf %s"
-		self.htmlLoadMore = "Ältere Tweets"
-		self.htmlEmpty = "Keine Tweets."
+		self.htmlLoadMore = "Mehr"
+		self.htmlEmpty = "Keine Tweets"
 		
 		self.htmlAboutSecond = 'vor ungefähr einer Sekunde'
 		self.htmlSecond = 'vor %d Sekunden'
@@ -54,18 +55,18 @@ class LangDE:
 		self.statusConnecting = "Verbinde als %s..."
 		self.statusConnected = "Verbunden, aktualisiere Tweets..."
 		self.statusError = "Verbindung fehlgeschlagen."
-		self.statusSeconds = "Update in %s Sekunden."
-		self.statusOneSecond = "Update in einer Sekunde."
-		self.statusMinute = "Update in einer Minute."
-		self.statusMinutes = "Update in %d Minuten."
+		self.statusSeconds = "Aktualisierung in %s Sekunden."
+		self.statusOneSecond = "Aktualisierung in einer Sekunde."
+		self.statusMinute = "Aktualisierung in einer Minute."
+		self.statusMinutes = "Aktualisierung in %d Minuten."
 		
-		self.statusUpdate = "Updating..."
+		self.statusUpdate = "Aktualisiere..."
 		self.statusReply = "Antworte %s..."
 		self.statusRetweet = "Retweete %s..."
-		self.statusSend = "Aktualisiere Status..."
+		self.statusSend = "Sende Tweet..."
 		self.statusLeft = "Noch %d Zeichen."
 		self.statusMore = "%d Zeichen zu viel."
-		self.statusLoadHistory = "Lade Tweets..."
+		self.statusLoadHistory = "Tweets werden geladen..."
 		
 		self.statusReconnectSeconds = "Automatischer Reconnect in %d Sekunden."
 		self.statusReconnectMinute = "Automatischer Reconnect in einer Minute."
@@ -108,17 +109,17 @@ class LangDE:
 		self.warningText = "Twitter hat das Ratelimit auf %d Requests pro Stunde reduziert, das Updateinterval wurde entsprechend angepasst."
 		
 		# Menu
-		self.menuUpdate = "Tweets updaten"
+		self.menuUpdate = "Aktualisieren"
 		self.menuSettings = "Einstellungen"
 		self.menuAbout = "Über Atarashii"
 		self.menuExit = "Beenden"
 		
 		# Toolbar
 		self.toolRefresh = "Tweets aktualisieren"
-		self.toolHistory = "Ältere Tweets leeren"
+		self.toolHistory = "Ältere Tweets entfernen"
 		self.toolRead = "Alle Tweets als gelesen makieren"
 		self.toolSettings = "Einstellungen öffnen"
-		self.toolAbout = "Atarashii Info einblenden"
+		self.toolAbout = "Einige Informationen über Atarashii"
 		self.toolQuit = "Atarashii beenden"
 		
 
@@ -129,14 +130,15 @@ class LangEN:
 		self.htmlLoading = "Loading Tweets..."
 		self.htmlInfo = "Name: %s\nFollower: %d\nFollowing: %d\nTweets: %d"
 		self.htmlProfile = "%s profile"
+		self.htmlAt = "%s on Twitter.com"
 		self.htmlReply = "Reply to %s"
 		self.htmlRetweet = "Retweet %s"
 		self.htmlTime = "Tweeted at %H:%M:%S"
-		self.htmlTimeDay = "Tweeted on %d.%m at %H:%M:%S"
+		self.htmlTimeDay = "Tweeted on %m.%d.%Y at %H:%M:%S"
 		self.htmlSearch = "Search for &quot;%s&quot;"
 		self.htmlBy = " by %s"
 		self.htmlInReply = "in reply to %s"
-		self.htmlLoadMore = "More tweets"
+		self.htmlLoadMore = "More"
 		self.htmlEmpty = "No tweets."
 		
 		self.htmlAboutSecond = 'about one second ago'
@@ -156,10 +158,10 @@ class LangEN:
 		self.statusConnecting = "Connecting as %s..."
 		self.statusConnected = "Connected, loading tweets..."
 		self.statusError = "Connection failed."
-		self.statusSeconds = "Update in %s seconds."
-		self.statusOneSecond = "Update in one second."
-		self.statusMinute = "Update in one minute."
-		self.statusMinutes = "Update in %d minutes."
+		self.statusSeconds = "Refresh in %s seconds."
+		self.statusOneSecond = "Refresh in one second."
+		self.statusMinute = "Refresh in one minute."
+		self.statusMinutes = "Refresh in %d minutes."
 		
 		self.statusUpdate = "Updating..."
 		self.statusReply = "Replying to %s..."
@@ -180,7 +182,7 @@ class LangEN:
 		self.labelRetweet = "<b>Rewteet %s:</b>"
 		
 		# Settings
-		self.settingsTitle = "Settings"
+		self.settingsTitle = "Preferences"
 		self.settingsUsername = "Username:"
 		self.settingsPassword = "Password:"
 		self.settingsButton = "Save"
@@ -212,16 +214,16 @@ class LangEN:
 		self.warningText = "Twitter has lowered the ratelimit to %d requests per hour, the update interval has been adjusted accordingly."
 		
 		# Toolbar
-		self.toolRefresh = "Update tweets"
+		self.toolRefresh = "Refresh tweets"
 		self.toolHistory = "Remove history"
 		self.toolRead = "Mark all tweets as read"
 		self.toolSettings = "Open preferences"
-		self.toolAbout = "Information about Atarashii"
+		self.toolAbout = "Some information about Atarashii"
 		self.toolExit = "Quit Atarashii"
 		
 		# Menu
-		self.menuUpdate = "Update tweets"
-		self.menuSettings = "Settings"
+		self.menuUpdate = "Refresh"
+		self.menuSettings = "Preferences"
 		self.menuAbout = "About Atarashii"
 		self.menuQuit = "Quit"
 		

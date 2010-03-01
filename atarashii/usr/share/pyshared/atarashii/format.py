@@ -69,7 +69,7 @@ class Formatter:
 			elif t == 2:
 				at = c[1:]
 				self.users.append(at)
-				result.append('<a href="http://twitter.com/%s">@%s</a>' % (at, at))
+				result.append(('<a href="http://twitter.com/%s" title="' + lang.htmlAt + '">@%s</a>') % (at, at, at))
 			
 			# tag
 			elif t == 3:

@@ -352,7 +352,7 @@ class HTML(webkit.WebView):
 						
 						<div class="inner-text">
 							<div>
-								<a class="name" href="http://twitter.com/%s" title="''' + (lang.htmlProfile % lang.htmlProfile) + '''">
+								<a class="name" href="http://twitter.com/%s" title="''' + lang.htmlProfile + '''">
 									<b>%s</b>
 								</a> ''' + locked + ''' %s
 							</div>
