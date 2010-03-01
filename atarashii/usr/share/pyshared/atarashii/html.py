@@ -34,6 +34,7 @@ import datetime
 import webbrowser
 
 from lang import lang
+import format
 
 
 class HTML(webkit.WebView):
@@ -49,6 +50,7 @@ class HTML(webkit.WebView):
 		self.scroll = self.gui.htmlScroll
 		self.set_maintains_back_forward_list(False)
 		self.mode = ""
+		self.formatter = format.Formatter()
 		self.init(True)
 	
 	
@@ -205,11 +207,6 @@ class HTML(webkit.WebView):
 			
 			self.main.settings['firsttweet_' + self.username] = str(self.tweets[id][0].id - 1)
 		
-		# Regex
-		urlRegex = re.compile("((mailto\:|(news|(ht|f)tp(s?))\://){1}\S+)")
-		atRegex = re.compile("@((){1}\S+)")
-		tagRegex = re.compile("\#((){1}[^\?\s+-]+)") #re.compile("\#((){1}\S+)")
-		
 		# Render
 		self.position = self.scroll.get_vscrollbar().get_value()
 		renderTweets = []
@@ -236,12 +233,9 @@ class HTML(webkit.WebView):
 			if newTimeline:
 				newest = True
 			
-			# Create Tweet HTML			
-			text = urlRegex.sub(self.urllink, " " + tweet.text + " ")
-			self.atUser = False
-			text = atRegex.sub(self.atlink, text)		
-			text = tagRegex.sub(self.hashlink, text)
-			text = text.strip()
+			# Create Tweet HTML
+			text = self.formatter.parse(tweet.text)
+			self.atUser = self.username in self.formatter.users
 			highlight = hasattr(tweet, "is_mentioned") and tweet.is_mentioned or self.atUser
 			
 			# Spacer
@@ -417,9 +411,6 @@ class HTML(webkit.WebView):
 				</body>
 			</html>""" % (self.main.getResource("atarashii.css"), lang.htmlEmpty)
 		
-		#f = open("debug.html", "wb")
-		#f.write(html)
-		#f.close()
 		self.load_string(html, "text/html", "UTF-8", "file:///main/")
 	
 	
@@ -505,33 +496,4 @@ class HTML(webkit.WebView):
 				self.splash()
 				
 			return True
-				
 	
-	# Regex stuff
-	def escape(self, text):
-		ent = {"&": "&amp;", '"': "&quot;", "'": "&apos;", ">": "&gt;", "<": "&lt;"}
-		return "".join(ent.get(c,c) for c in text)
-	
-	def hashlink(self, match):
-		tag = unicode(match.group().strip())
-		tag = tag[tag.find('#')+1:]
-		return (' <a href="http://search.twitter.com/search?%s" title="' + lang.htmlSearch + '">#%s</a>') % (urllib.urlencode({'q': '#' + tag}), tag, tag)
-	
-	def urllink(self, match):
-		url = match.group()
-		if len(url) > 30:
-			text = url[0:27] + "..."
-		else:
-			text = url
-		
-		return '<a href="%s" title="%s">%s</a>' % (self.escape(url), self.escape(url), text)
-	
-	def atlink(self, match):
-		at = match.group()[1:]
-		if at == self.username:
-			self.atUser = True
-	
-		return '<a href="http://twitter.com/%s">@%s</a>' % (at, at)
-
-		
-		
