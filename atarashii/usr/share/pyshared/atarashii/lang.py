@@ -119,14 +119,9 @@ class LangDE:
 		self.accountButtonCancel = "Abbrechen"
 		self.accountUsername = "Benutzername:"
 		self.accountPassword = "Passwort:"
-		
-		# Question
-		self.questionButton = "Ja"
-		self.questionButtonCancel = "Nein"
-		
+				
 		# Error
-		self.errorButton = "OK"
-		self.errorTitle = "Fehler"
+		self.errorTitle = "Atarashii - Fehler"
  		self.errorLogin = 'Die Anmeldung als "%s" ist fehlgeschlagen.'
  		self.errorRatelimit = "Ratelimit erreicht. Automatisches Update in %d Minute(n)."
  		self.errorRatelimitReconnect = "Ratelimit erreicht. Automatischer Reconnect in %d Minute(n)."
@@ -136,8 +131,7 @@ class LangDE:
  		self.errorInternal = "Atarashii Fehler: %s"
 		
 		# Warning
-		self.warningButton = "OK"
-		self.warningTitle = "Warnung"
+		self.warningTitle = "Atarashii - Warnung"
 		self.warningText = "Twitter hat das Ratelimit auf %d Requests pro Stunde reduziert, das Updateinterval wurde entsprechend angepasst."
 		
 		# Menu
@@ -158,7 +152,14 @@ class LangDE:
 		self.toolRefreshMessage = "Nachrichten aktualisieren"
 		self.toolHistoryMessage = "Ältere Nachrichten entfernen"
 		self.toolReadMessage = "Alle Nachrichten als gelesen makieren"
-
+	
+		# Title
+		self.titleMessage = "%d neue Nachricht"
+		self.titleMessages = "%d neue Nachrichten"
+		
+		self.titleTweet = "%d neuer Tweet"
+		self.titleTweets = "%d neue Tweets"
+			
 
 class LangEN:
 	def __init__(self):
@@ -208,16 +209,16 @@ class LangEN:
 		self.statusMinute = "Refresh in one minute."
 		self.statusMinutes = "Refresh in %d minutes."
 		
-		self.statusUpdate = "Sending tweet..."
+		self.statusUpdate = "Sending Tweet..."
 		self.statusReply = "Replying to %s..."
 		self.statusRetweet = "Retweeting %s..."
-		self.statusMessage = "Sendind message to %s..."
+		self.statusMessage = "Sendind Message to %s..."
 		self.statusMessageReply = "Replying to %s..."
-		self.statusSend = "Sending status..."
+		self.statusSend = "Sending Status..."
 		self.statusLeft = "%d chars left."
 		self.statusMore = "%d chars too much."
-		self.statusLoadHistory = "Loading tweets..."
-		self.statusLoadMessageHistory = "Loading messages..."
+		self.statusLoadHistory = "Loading Tweets..."
+		self.statusLoadMessageHistory = "Loading Messages..."
 		
 		self.statusReconnectSeconds = "Automatic reconnect in %d seconds."
 		self.statusReconnectMinute = "Automatic reconnect in one minute."
@@ -252,24 +253,19 @@ class LangEN:
 		self.aboutOKButton = "OK"
 		
 		# Account
-		self.accountEdit = "Edit %s's account"
-		self.accountCreate = "Create a new account"
-		self.accountDelete = "Delete %s's account"
+		self.accountEdit = "Edit %s's Account"
+		self.accountCreate = "Create a new Account"
+		self.accountDelete = "Delete %s's Account"
 		self.accountDeleteDescription = 'Do you really want to delete the account "%s"?'
 		self.accountButton = "OK"
 		self.accountButtonCancel = "Cancel"
 		
 		self.accountUsername = "Username:"
 		self.accountPassword = "Password:"
+				
 		
-		# Question
-		self.questionButton = "Yes"
-		self.questionButtonCancel = "No"
-		
-		
-		# Error
-		self.errorButton = "OK"
-		self.errorTitle = "Error"
+		# ErrorOK"
+		self.errorTitle = "Atarashii - Error"
  		self.errorLogin = 'The login as "%s" has failed.'
  		self.errorRatelimit = "Reached ratelimit. Automatic update in %d minute(s)."
  		self.errorRatelimitReconnect = "Reached ratelimit. Automatic reconnect in %d minute(s)."
@@ -280,28 +276,36 @@ class LangEN:
  		self.errorInternal = "Atarashii error: %s"
 		
 		# Warning
-		self.warningButton = "OK"
-		self.warningTitle = "Warnung"
+		self.warningTitle = "Atarashii - Warning"
 		self.warningText = "Twitter has lowered the ratelimit to %d requests per hour, the update interval has been adjusted accordingly."
 		
 		# Toolbar
-		self.toolRefresh = "Refresh tweets"
-		self.toolHistory = "Remove history"
-		self.toolRead = "Mark all tweets as read"
+		self.toolRefresh = "Refresh Tweets"
+		self.toolHistory = "Remove History"
+		self.toolRead = "Mark all Tweets as read"
 		self.toolMode = "Messages"
-		self.toolSettings = "Open preferences"
+		self.toolSettings = "Open Preferences"
 		self.toolAbout = "Some information about Atarashii"
 		self.toolQuit = "Quit Atarashii"
 		
-		self.toolRefreshMessage = "Refresh message"
-		self.toolHistoryMessage = "Remove history"
-		self.toolReadMessage = "Mark all messages as read"
+		self.toolRefreshMessage = "Refresh Message"
+		self.toolHistoryMessage = "Remove History"
+		self.toolReadMessage = "Mark all Messages as read"
 		
 		# Menu
 		self.menuUpdate = "Refresh"
 		self.menuSettings = "Preferences"
 		self.menuAbout = "About Atarashii"
 		self.menuQuit = "Quit"
+		
+		# Title
+		self.titleMessage = "%d new Message"
+		self.titleMessages = "%d new Messages"
+		
+		self.titleTweet = "%d new Tweet"
+		self.titleTweets = "%d new Tweets"
+		
+		
 		
 # Select Language
 langs = {
