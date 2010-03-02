@@ -140,17 +140,13 @@ class GUI(gtk.Window):
 		self.settingsDialog = None
 		
 		# Variables
-		self.mode = self.main.settings.isTrue('mode', False)
+		self.mode = False
 		self.windowPosition = None
 		self.minimized = False
 		
 		self.show_all()
 		
-		# Set Mode
-		if self.mode:
-			self.modeButton.set_active(self.mode)
-		else:
-			self.onMode()
+		self.setMode(self.mode)
 		
 		# Statusbar Updater
 		self.updateStatus()
@@ -159,6 +155,14 @@ class GUI(gtk.Window):
 		# Show
 		self.showInput()
 	
+	# Set GUI Mode
+	def setMode(self, mode):
+		self.mode = mode
+		if self.mode:
+			self.modeButton.set_active(self.mode)
+		
+		else:
+			self.onMode()
 	
 	# Main Functions -----------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -339,8 +343,8 @@ class GUI(gtk.Window):
  		self.main.wasSending = False
  		try:
 	 		description = {
-	 			404 : lang.errorLogin,
-	 			401 : lang.errorLogin,
+	 			404 : lang.errorLogin % self.main.username,
+	 			401 : lang.errorLogin % self.main.username,
 	 			400 : rateError,
 	 			500 : lang.errorTwitter,
 	 			502 : lang.errorDown,
@@ -350,12 +354,11 @@ class GUI(gtk.Window):
 	 	except:
 	 		description = lang.errorInternal % str(detail)
 	 	
-	 	dialog.ErrorDialog(self, description)
+	 	dialog.MessageDialog(self, "error", description)
 	 	self.updateStatus()
 	
 	def showWarning(self, limit):
-		dialog.WarningDialog(self, lang.warningText % limit)
-	
+		dialog.MessageDialog(self, "warning", lang.warningText % limit)
 	
 	# Helpers ------------------------------------------------------------------
 	# --------------------------------------------------------------------------

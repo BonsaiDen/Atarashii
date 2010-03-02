@@ -14,7 +14,6 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
-# TODO check usernames in lower case
 # TODO use gtk dialogs for question/warning/error so we get systemsounds
 
 # DBUS Integration -------------------------------------------------------------
@@ -44,6 +43,8 @@ import time
 import math
 
 gtk.gdk.threads_init()
+gtk.gdk.threads_enter()
+
 
 import send
 import gui
@@ -153,7 +154,6 @@ class Atarashii:
 	# --------------------------------------------------------------------------
 	def onInit(self):
 		self.login()
-		#self.gui.settingsButton.set_active(True)
 	
 	def login(self):
 
@@ -161,8 +161,11 @@ class Atarashii:
  		while self.isUpdating:
  			time.sleep(0.1)
 		
+		# Set Mode
+		self.gui.setMode(self.settings.isTrue('mode_' + self.username, False))
+		
 		# Progress
-		#self.gui.hideAll(False)
+		self.gui.hideAll(False)
 		self.gui.showProgress()
 		
 		# Connect
@@ -205,6 +208,7 @@ class Atarashii:
 		self.gui.showInput()
 		
 	def onLoginFailed(self, error):
+		self.gui.setMode(False)
 		self.loginError = True
 		self.loginStatus = False
 		self.isConnecting = False
@@ -216,6 +220,7 @@ class Atarashii:
 		gobject.idle_add(lambda: self.gui.html.init(True))
 	
 	def logout(self):
+		self.gui.setMode(False)
 		self.loginError = False
 		self.loginStatus = False
 		self.isSending = False
@@ -308,13 +313,21 @@ class Atarashii:
 	def start(self):
 		gtk.main()
 		
-	def quit(self):
+	def saveSettings(self):
  		self.settings['position'] = str(self.gui.get_position())
  		size = self.gui.get_allocation()
 		self.settings['size'] = str((size[2], size[3]))
-		self.settings['mode'] = self.gui.mode
 		self.settings['username'] = self.username
 		self.settings.save()
+		
+	def saveMode(self):
+		if self.username != "":
+			self.settings['mode_' + self.username] = self.gui.mode
+		
+		
+	def quit(self):
+		self.saveSettings()
+		self.saveMode()
  		gtk.main_quit()
  		sys.exit(1)
 

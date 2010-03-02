@@ -127,7 +127,7 @@ class LangDE:
 		# Error
 		self.errorButton = "OK"
 		self.errorTitle = "Fehler"
- 		self.errorLogin = "Falscher Benutzername oder Passwort."
+ 		self.errorLogin = 'Die Anmeldung als "%s" ist fehlgeschlagen.'
  		self.errorRatelimit = "Ratelimit erreicht. Automatisches Update in %d Minute(n)."
  		self.errorRatelimitReconnect = "Ratelimit erreicht. Automatischer Reconnect in %d Minute(n)."
  		self.errorTwitter = "Interner Twitterfehler."
@@ -270,7 +270,7 @@ class LangEN:
 		# Error
 		self.errorButton = "OK"
 		self.errorTitle = "Error"
- 		self.errorLogin = "Wrong Username oder Password."
+ 		self.errorLogin = 'The login as "%s" has failed.'
  		self.errorRatelimit = "Reached ratelimit. Automatic update in %d minute(s)."
  		self.errorRatelimitReconnect = "Reached ratelimit. Automatic reconnect in %d minute(s)."
  		

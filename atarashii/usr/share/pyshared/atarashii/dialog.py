@@ -116,17 +116,6 @@ class SettingsDialog(Dialog):
 		cancelButton = self.get("cancelbutton")
 		cancelButton.set_label(lang.settingsButtonCancel)
 
-		# Username / Password
-	#	self.get("user").set_text(lang.settingsUsername)
-	#	self.get("pass").set_text(lang.settingsPassword)
-	#	username = self.get("username")
-	#	password = self.get("password")
-		
-	#	username.set_text(self.settings['username'] or "")
-	#	password.set_text(self.settings['password'] or "")
-		
-		#oldpassword = self.settings['password']
-		
 		# Accounts
 		self.get("accounts").set_text(lang.settingsAccounts)
 		add = self.get("add")
@@ -156,21 +145,23 @@ class SettingsDialog(Dialog):
 		dropChanged()
 
 
-		# Actions
+		# Edit Action
 		def editDialog(*args):
 			name = self.userAccounts[drop.get_active()]
 			AccountDialog(self, name, self.main.settings['password_' + name] or "", lang.accountEdit % name, self.editAccount)
 		
 		edit.connect("clicked", editDialog)
 		
+		# Add Action
 		def createDialog(*args):
 			AccountDialog(self, "", "", lang.accountCreate, self.createAccount)
 		
 		add.connect("clicked", createDialog)
 		
+		# Delete Action
 		def deleteDialog(*args):
 			name = self.userAccounts[drop.get_active()]
-			QuestionDialog(self, lang.accountDelete % name, lang.accountDeleteDescription % name, self.deleteAccount)
+			MessageDialog(self.dlg, "question", lang.accountDeleteDescription % name, yesCallback = self.deleteAccount)
 		
 		delete.connect("clicked", deleteDialog)
 
@@ -220,10 +211,16 @@ class SettingsDialog(Dialog):
 			self.settings['soundfile'] = str(fileWidget.get_filename())
 			self.settings['notify'] = notify.get_active()
 			self.settings['sound'] = sound.get_active()
-		
+			
+			# Save GUI Mode
+			self.main.saveMode()
+			
+			# Set new Username
 			if drop.get_active() != -1:
 			 	self.settings['username'] = self.main.username = self.userAccounts[drop.get_active()]
 			
+			# Save Settings
+			self.main.saveSettings()
 			if self.main.username == "":
 				self.loginStatus = False
 				self.main.logout()
@@ -299,19 +296,18 @@ class SettingsDialog(Dialog):
 			self.drop.set_active(0)
 	
 	
-	def deleteAccount(self, mode):
-		if mode:
-			name = self.userAccounts[self.drop.get_active()]
-			del self.main.settings['password_' + name]
-			del self.main.settings['account_' + name]
-			del self.main.settings['firsttweet_' + name]
-			del self.main.settings['lasttweet_' + name]
-			del self.main.settings['firstmessage_' + name]
-			del self.main.settings['lastmessage_' + name]
-			if self.main.username == name:
-				self.main.username = self.main.settings['username'] = ""
-				
-			self.createDropList()
+	def deleteAccount(self):
+		name = self.userAccounts[self.drop.get_active()]
+		del self.main.settings['password_' + name]
+		del self.main.settings['account_' + name]
+		del self.main.settings['firsttweet_' + name]
+		del self.main.settings['lasttweet_' + name]
+		del self.main.settings['firstmessage_' + name]
+		del self.main.settings['lastmessage_' + name]
+		if self.main.username == name:
+			self.main.username = self.main.settings['username'] = ""
+			
+		self.createDropList()
 
 
 # Account Dialog ---------------------------------------------------------------
@@ -359,68 +355,34 @@ class AccountDialog(Dialog):
 		cancelButton.connect("clicked", self.onClose)	
 
 
-# Error Dialog -----------------------------------------------------------------
+# Message Dialog ---------------------------------------------------------------
 # ------------------------------------------------------------------------------
-class ErrorDialog(Dialog):
-	resource = "error.glade"
-	instance = None
-	
-	def __init__(self, gui, description):
-		self.description = description
-		Dialog.__init__(self, gui)
-	
-	def onInit(self):
-		self.dlg.set_title(lang.errorTitle)
-		self.closeButton.set_label(lang.errorButton)
-		
-		self.get("text").set_size_request(160, -1)
-		self.get("text").set_text(self.description)
+class MessageDialog(gtk.MessageDialog):
+	def __init__(self, parent, type, message, okCallback = None, yesCallback = None, noCallback = None):
+		if type == "error":
+			gtk.MessageDialog.__init__(self, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, message)
 
+		elif type == "warning":
+			gtk.MessageDialog.__init__(self, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_WARNING, gtk.BUTTONS_OK, message)
 
+		elif type == "question":
+			gtk.MessageDialog.__init__(self, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
 
-# Warning Dialog ---------------------------------------------------------------
-# ------------------------------------------------------------------------------
-class WarningDialog(Dialog):
-	resource = "warning.glade"
-	instance = None
-	
-	def __init__(self, gui, description):
-		self.description = description
-		Dialog.__init__(self, gui)
-	
-	def onInit(self):
-		self.dlg.set_title(lang.warningTitle)
-		self.closeButton.set_label(lang.warningButton)
+		self.okCallback = okCallback
+		self.yesCallback = yesCallback
+		self.noCallback = noCallback
+		self.set_default_response(gtk.RESPONSE_OK)
+		self.connect('response', self.onClose)
+		self.show_all()
 		
-		self.get("text").set_size_request(160, -1)
-		self.get("text").set_text(self.description)
-
-
-# Question Dialog --------------------------------------------------------------
-# ------------------------------------------------------------------------------
-class QuestionDialog(Dialog):
-	resource = "question.glade"
-	instance = None
-	
-	def __init__(self, parent, title, description, callback):
-		self.description = description
-		Dialog.__init__(self, parent.gui, False)
-		self.dlg.set_transient_for(parent.dlg)
-		self.dlg.set_title(title)
-		self.callback = callback
-	
-	def onInit(self):
-		self.closeButton.set_label(lang.questionButton)
-		cancelButton = self.get("cancelbutton")
-		cancelButton.set_label(lang.questionButtonCancel)
+	def onClose(self, dialog, response):
+		self.destroy()
+		if response == gtk.RESPONSE_OK and self.okCallback != None:
+			self.okCallback()
 		
-		self.get("text").set_size_request(220, -1)
-		self.get("text").set_text(self.description)
+		elif response == gtk.RESPONSE_YES and self.yesCallback != None:
+			self.yesCallback()
 		
-		def done(mode):
-			self.callback(mode)
-			self.onClose()
-		
-		self.closeButton.connect("clicked", lambda *args: done(True))
-		cancelButton.connect("clicked", lambda *args: done(False))	
+		elif response == gtk.RESPONSE_NO and self.noCallback != None:
+			self.noCallback()
 
