@@ -49,6 +49,9 @@ class LangDE:
 		self.htmlYesterday = "von Gestern"
 		self.htmlExact = "vom %d.%m.%Y"
 		
+		self.htmlHistory = "Ältere Tweets laden"
+		self.htmlHistoryMessage = "Ältere Nachrichten laden"
+		
 		self.messageLoading = "Nachrichten werden geladen..."
 		
 		# Notifications
@@ -159,6 +162,13 @@ class LangDE:
 		self.toolHistoryMessage = "Ältere Nachrichten entfernen"
 		self.toolReadMessage = "Alle Nachrichten als gelesen makieren"
 
+		# Tabs
+		self.tabsTweets = "Tweets"
+		self.tabsMessage = "Nachrichten"
+		self.tabsTweetsNew = "Tweets<b>(%d)</b>"
+		self.tabsMessageNew = "Nachrichten<b>(%d)</b>"
+		self.tabsTweetsLoading = "Tweets..."
+		self.tabsMessageLoading = "Nachrichten..."
 
 class LangEN:
 	def __init__(self):
@@ -188,6 +198,9 @@ class LangEN:
 		self.htmlDay = '%d days ago'
 		self.htmlYesterday = "from yesterday"
 		self.htmlExact = "from %m.%d.%Y"
+		
+		self.htmlHistory = "Load more tweets"
+		self.htmlHistoryMessage = "Load more messages"
 		
 		self.messageLoading = "Loading messages..."
 		
@@ -302,6 +315,15 @@ class LangEN:
 		self.menuSettings = "Preferences"
 		self.menuAbout = "About Atarashii"
 		self.menuQuit = "Quit"
+		
+		# Tabs
+		self.tabsTweets = "Tweets"
+		self.tabsMessage = "Messages"
+		self.tabsTweetsNew = "Tweets<b>(%d)</b>"
+		self.tabsMessageNew = "Messages<b>(%d)</b>"
+		self.tabsTweetsLoading = "Tweets..."
+		self.tabsMessageLoading = "Messages..."
+		
 		
 # Select Language
 langs = {
