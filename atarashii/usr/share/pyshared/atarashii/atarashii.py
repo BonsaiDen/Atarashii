@@ -14,6 +14,7 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
+# TODO somehow notify the user of new direct messages(make the button blink or something...)
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -193,7 +194,7 @@ class Atarashii:
 		# Do it!
 		auth = tweepy.BasicAuthHandler(self.username, self.settings["password_" + self.username])
 		self.api = tweepy.API(auth)
-		
+	
 		# Init
 		self.updater.doInit = True
 
@@ -203,7 +204,6 @@ class Atarashii:
 		self.isConnecting = False
 		self.gui.settingsButton.set_sensitive(True)
 		self.gui.set_title("%s - Atarashii" % self.username)
-		self.gui.tabs.set_sensitive(True)
 		self.gui.updateStatus()
 		self.gui.showInput()
 		
@@ -323,8 +323,7 @@ class Atarashii:
 	def saveMode(self):
 		if self.username != "":
 			self.settings['mode_' + self.username] = self.gui.mode
-		
-		
+	
 	def quit(self):
 		self.saveMode()
 		self.saveSettings()

@@ -52,6 +52,40 @@ class HTMLView(webkit.WebView):
 		self.formatter = format.Formatter()
 		self.init(True)
 	
+	
+	# Screens ------------------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def start(self):
+		self.mode = "start"
+		self.isRendering = True
+		self.offsetCount = 0
+		self.load_string("""
+		<html>
+			<head>
+				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
+			</head>
+			<body class="unloaded">
+				<div class="loading"><b>%s</b></div>
+			</body>
+		</html>""" % (self.main.getResource("atarashii.css"), lang.htmlLoading), "text/html", "UTF-8", "file:///main/")
+	
+	def splash(self):
+		self.mode = "splash"
+		self.isRendering = True
+		self.offsetCount = 0
+		self.load_string("""
+		<html>
+			<head>
+				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
+			</head>
+			<body class="unloaded">
+				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
+			</body>
+		</html>""" % (self.main.getResource("atarashii.css"), self.main.getImage(), lang.htmlWelcome), "text/html", "UTF-8", "file:///main/")
+
+	
 	# Initiate a empty timeline ------------------------------------------------
 	# --------------------------------------------------------------------------
 	def init(self, splash = False):
@@ -87,7 +121,6 @@ class HTMLView(webkit.WebView):
 		
 		if not self.firstLoad and self.position > 0:
 			self.scroll.get_vscrollbar().set_value(self.position + offset)
-			pass
 		
 		elif self.firstLoad:
 			height = self.gui.getHeight(self)
@@ -107,13 +140,12 @@ class HTMLView(webkit.WebView):
 		self.tweets = self.tweets[self.historyCount:]
 		self.main.maxTweetCount -= self.historyCount
 		self.historyCount = 0
-		self.gui.historyButton.set_sensitive(False)
+		self.main.gui.historyButton.set_sensitive(False)
 		self.render()
 	
 	def read(self):
 		if self.main.updater.initID != self.main.getLatestID():
-			self.gui.htmlTab.set_markup(lang.tabsTweets)
-			self.gui.readButton.set_sensitive(False)
+			self.main.gui.readButton.set_sensitive(False)
 			self.main.updater.initID = self.main.getLatestID()
 			if not self.historyLoaded:
 				pos = len(self.tweets) - self.main.loadTweetCount
@@ -220,7 +252,7 @@ class HTMLView(webkit.WebView):
 				if self.main.updater.loadHistoryID != -1:
 					self.main.isLoadingHistory = True
 					self.gui.showProgress()
-					gobject.idle_add(lambda: self.gui.updateStatus(True))
+					gobject.idle_add(lambda: self.main.gui.updateStatus(True))
 		
 		elif uri.startswith("moremessages:"):
 			if not self.main.isLoadingHistory:
@@ -228,7 +260,7 @@ class HTMLView(webkit.WebView):
 				if self.main.updater.loadHistoryMessageID != -1:
 					self.main.isLoadingHistory = True
 					self.gui.showProgress()
-					gobject.idle_add(lambda: self.gui.updateStatus(True))
+					gobject.idle_add(lambda: self.main.gui.updateStatus(True))
 		
 		elif uri.startswith("reply:"):
 			foo, self.main.replyUser, self.main.replyID, num = uri.split(":")

@@ -116,7 +116,6 @@ class Updater(threading.Thread):
 		gobject.idle_add(lambda: self.main.gui.checkRead())
 	
 	
-	# Load the initial tweets --------------------------------------------------
 	def getInitTweets(self):
 		updates = []
 		try:
@@ -139,7 +138,6 @@ class Updater(threading.Thread):
 		self.tweetsLoaded = 1
 		return True
 	
-	# Load the initial messages ------------------------------------------------
 	def getInitMessages(self):
 		messages = []
 		try:

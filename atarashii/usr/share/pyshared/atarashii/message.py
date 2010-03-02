@@ -38,7 +38,6 @@ class HTML(view.HTMLView):
 		self.mode = "start"
 		self.isRendering = True
 		self.offsetCount = 0
-		self.gui.messageTab.set_markup(lang.tabsMessageLoading)
 		self.load_string("""
 		<html>
 			<head>
@@ -50,36 +49,18 @@ class HTML(view.HTMLView):
 			</body>
 		</html>""" % (self.main.getResource("atarashii.css"), lang.messageLoading), "text/html", "UTF-8", "file:///main/")
 	
-	def splash(self):
-		self.mode = "splash"
-		self.isRendering = True
-		self.offsetCount = 0
-		self.gui.messageTab.set_markup(lang.tabsMessageLoading)
-		self.load_string("""
-		<html>
-			<head>
-				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
-			</head>
-			<body class="unloaded">
-				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
-			</body>
-		</html>""" % (self.main.getResource("atarashii.css"), self.main.getImage(), lang.htmlWelcome), "text/html", "UTF-8", "file:///main/")
-	
-	
 	# Clear the History
 	def clear(self):
 		self.historyLoaded = False
 		self.tweets = self.tweets[self.historyCount:]
 		self.main.maxMessageCount -= self.historyCount
 		self.historyCount = 0
-		self.gui.historyButton.set_sensitive(False)
+		self.main.gui.historyButton.set_sensitive(False)
 		self.render()
 	
 	def read(self):
 		if self.main.updater.initMessageID != self.main.getLatestMessageID():
-			self.gui.messageTab.set_markup(lang.tabsMessage)
-			self.gui.readButton.set_sensitive(False)
+			self.main.gui.readButton.set_sensitive(False)
 			self.main.updater.initMessageID = self.main.getLatestMessageID()
 			if not self.historyLoaded:
 				pos = len(self.tweets) - self.main.loadMessageCount
@@ -122,15 +103,11 @@ class HTML(view.HTMLView):
 		lastHighlight = False
 		
 		# Do the rendering!
-		count = 0
 		for num, obj in enumerate(self.tweets):
 			tweet, img, mode = obj
 			
 			# Fix some stuff for the seperation of continous new/old tweets
 			newTimeline = tweet.id > self.main.updater.initMessageID
-			if newTimeline:
-				count += 1
-			
 			if newest or self.main.updater.initMessageID == 0:
 				newTimeline = False
 			
@@ -250,11 +227,6 @@ class HTML(view.HTMLView):
 			
 		
 		# Render Page
-		if count > 0:
-			self.gui.messageTab.set_markup(lang.tabsMessageNew % count)
-		else:
-			self.gui.messageTab.set_markup(lang.tabsMessage)
-		
 		if len(self.tweets) > 0:
 			html = """
 			<html>
@@ -264,9 +236,9 @@ class HTML(view.HTMLView):
 				</head>
 				<body>
 					<div><div id="newcontainer">%s</div>
-					<div class="loadmore"><a href="moremessages:%d" title="%s"><b>%s</b></a></div>
+					<div class="loadmore"><a href="moremessages:%d"><b>%s</b></a></div>
 				</body>
-			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderTweets), self.tweets[0][0].id, lang.htmlHistoryMessage, lang.htmlLoadMore)
+			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderTweets), self.tweets[0][0].id, lang.htmlLoadMore)
 		
 		else:
 			html = """
