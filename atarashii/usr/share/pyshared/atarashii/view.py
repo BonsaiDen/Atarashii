@@ -272,11 +272,10 @@ class HTMLView(webkit.WebView):
 			gobject.idle_add(lambda: self.main.message(int(num)))
 		
 		elif uri.startswith("retweet:"):
-			if not self.main.updater.error:
-				self.main.retweetNum = int(uri.split(":")[1])
-				self.main.retweetText = self.tweets[self.main.retweetNum][0].text
-				self.main.retweetUser = self.tweets[self.main.retweetNum][0].user.screen_name
-				gobject.idle_add(lambda: self.main.retweet())
+			self.main.retweetNum = int(uri.split(":")[1])
+			self.main.retweetText = self.tweets[self.main.retweetNum][0].text
+			self.main.retweetUser = self.tweets[self.main.retweetNum][0].user.screen_name
+			gobject.idle_add(lambda: self.main.retweet())
 		
 		else:
 			webbrowser.open(uri)
