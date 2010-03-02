@@ -75,7 +75,7 @@ class HTML(view.HTMLView):
 			
 			# Create Tweet HTML
 			text = self.formatter.parse(tweet.text)
-			self.atUser = self.main.username in self.formatter.users
+			self.atUser = self.main.username.lower() in [i.lower() for i in self.formatter.users]
 			highlight = hasattr(tweet, "is_mentioned") and tweet.is_mentioned or self.atUser
 			
 			# Spacer
@@ -141,12 +141,12 @@ class HTML(view.HTMLView):
 			if hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
 				clas = 'mentioned'
 				
-			elif self.atUser:
-				clas = 'highlight'
-				
 			elif tweet.id <= self.main.updater.initID:
-				clas = 'oldtweet'
-				
+				if self.atUser:
+					clas = 'highlight'
+				else:
+					clas = 'oldtweet'
+			
 			else:
 				clas = 'tweet'
 			

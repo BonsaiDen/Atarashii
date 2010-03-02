@@ -51,7 +51,7 @@ img {
 }
 
 a, a:hover, a:active {
-	color: #00537b;
+	color: #004363;
 }
 
 
@@ -89,7 +89,7 @@ a, a:hover, a:active {
 .tweet {
 	padding-left: 6px;
 	padding-right: 2px;
-	background-color: #e1e8ed;
+	background-color: #d5e3ed;
 }
 
 .oldtweet {
@@ -101,14 +101,13 @@ a, a:hover, a:active {
 .highlight {
 	padding-left: 6px;
 	padding-right: 2px;		
-	background-color: #c7deed;
+	background-color: #dce6ed;
 }
 
 .mentioned {
 	padding-left: 6px;
 	padding-right: 2px;		
 	background-color: #ffffc8;
-
 }
 
 
