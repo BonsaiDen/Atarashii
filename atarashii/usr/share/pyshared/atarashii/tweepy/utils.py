@@ -9,14 +9,19 @@ import re
 
 
 def parse_datetime(string):
+    # First try it without any hack
+    try:
+        # We must parse datetime this way to work in python 2.4
+        return datetime(*(time.strptime(string, '%a %b %d %H:%M:%S +0000 %Y')[0:6]))
+    
+    # Now fix it by converting the monthname into a integer
+    # We don't care about the dayname altogether...
+    except ValueError:
+        date = string.split(" ")[1:]
+        date[0] = str(["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].index(date[0]))
 
-	# Fix locale bugs, just convert the month to a number
-	# so we don't need to deal with locale dependant strings
-    date = string.split(" ")[1:]
-    date[0] = str(["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].index(date[0]))
-  	
-    # We must parse datetime this way to work in python 2.4
-    return datetime(*(time.strptime(" ".join(date), '%m %d %H:%M:%S +0000 %Y')[0:6]))
+        # We must parse datetime this way to work in python 2.4
+        return datetime(*(time.strptime(" ".join(date), '%m %d %H:%M:%S +0000 %Y')[0:6]))
 
 
 def parse_html_value(html):
@@ -32,14 +37,19 @@ def parse_a_href(atag):
 
 
 def parse_search_datetime(string):
+    # First try it without any hack
+    try:
+        # We must parse datetime this way to work in python 2.4
+        return datetime(*(time.strptime(string, '%a %b %d %H:%M:%S +0000 %Y')[0:6]))
+    
+    # Now fix it by converting the monthname into a integer
+    # We don't care about the dayname altogether...
+    except ValueError:
+        date = string.split(" ")[1:]
+        date[0] = str(["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].index(date[0]))
 
-	# Fix locale bugs, just convert the month to a number
-	# so we don't need to deal with locale dependant strings
-    date = string.split(" ")[1:]
-    date[0] = str(["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].index(date[0]))
-
-    # python 2.4
-    return datetime(*(time.strptime(" ".join(date), '%m %d %H:%M:%S +0000 %Y')[0:6]))
+        # We must parse datetime this way to work in python 2.4
+        return datetime(*(time.strptime(" ".join(date), '%m %d %H:%M:%S +0000 %Y')[0:6]))
 
 
 def unescape_html(text):
