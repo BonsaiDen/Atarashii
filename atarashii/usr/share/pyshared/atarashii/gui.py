@@ -66,10 +66,7 @@ class GUI(gtk.Window):
 		self.readButton.connect("clicked", self.onRead)
 		self.readButton.set_tooltip_text(lang.toolRead)
 		
-		self.modeButton = gt.get_object("message")
-		self.modeButton.connect("clicked", self.onMode)
-		self.modeButton.set_tooltip_text(lang.toolMode)
-		
+
 		# Settings Button
 		self.settingsButton = gt.get_object("settings")
 		self.settingsButton.connect("toggled", lambda *args: self.onSettings(False))
@@ -93,19 +90,31 @@ class GUI(gtk.Window):
 		self.text = text.TextInput(self)
 		self.textScroll.add(self.text)
 		
+		# Tabs
+		self.tabs = gt.get_object("tabs")
+		self.tabs.connect("switch-page", self.onMode)
+		
 		# HTML
-		self.htmlScroll = gt.get_object("htmlscroll")
+		self.htmlScroll = gtk.ScrolledWindow()
+		self.htmlScroll.set_policy(hscrollbar_policy = gtk.POLICY_NEVER, vscrollbar_policy = gtk.POLICY_AUTOMATIC)
+		self.htmlScroll.set_border_width(0)
+		self.htmlTab = gtk.Label()
+		self.htmlTab.set_markup(lang.tabsTweets)
 		self.html = html.HTML(self.main, self)
 		self.htmlScroll.add(self.html)
-		self.htmlScroll.set_shadow_type(gtk.SHADOW_IN)
+		self.tabs.append_page(self.htmlScroll, self.htmlTab)
 		
 		# Messages
-		self.messageScroll = gt.get_object("messagescroll")
+		self.messageScroll = gtk.ScrolledWindow()
+		self.messageScroll.set_policy(hscrollbar_policy = gtk.POLICY_NEVER, vscrollbar_policy = gtk.POLICY_AUTOMATIC)
+		self.messageScroll.set_border_width(0)
+		self.messageTab = gtk.Label()
+		self.messageTab.set_markup(lang.tabsMessage)	
 		self.message = message.HTML(self.main, self)
 		self.messageScroll.add(self.message)
-		self.messageScroll.set_shadow_type(gtk.SHADOW_IN)
-		
-		
+		self.tabs.append_page(self.messageScroll, self.messageTab)
+
+		# Content		
 		self.content = gt.get_object("content")
 		self.content.set_border_width(2)
 		
@@ -143,9 +152,9 @@ class GUI(gtk.Window):
 		self.mode = False
 		self.windowPosition = None
 		self.minimized = False
+		self.progressActive = False
 		
 		self.show_all()
-		
 		self.setMode(self.mode)
 		
 		# Statusbar Updater
@@ -159,7 +168,7 @@ class GUI(gtk.Window):
 	def setMode(self, mode):
 		self.mode = mode
 		if self.mode:
-			self.modeButton.set_active(self.mode)
+			self.tabs.set_current_page(1)
 		
 		else:
 			self.onMode()
@@ -172,28 +181,30 @@ class GUI(gtk.Window):
 		self.text.resize()
 		self.text.set_sensitive(True)
 		self.refreshButton.set_sensitive(True)
-		self.modeButton.set_sensitive(True)
-	
+
 	def showProgress(self):
 		def progressActivity():
 			self.progress.pulse()
-			return self.main.isSending or self.main.isConnecting or self.main.isLoadingHistory or (self.mode and self.main.updater.messagesLoaded == 0) or (not self.mode and self.main.updater.tweetsLoaded == 0)
-	
-		self.progress.set_fraction(0.0)
+			self.progressActive = self.main.isSending or self.main.isConnecting or self.main.isLoadingHistory or (self.mode and self.main.updater.messagesLoaded == 0) or (not self.mode and self.main.updater.tweetsLoaded == 0)
+			return self.progressActive
+		
 		self.progress.show()
 		self.infoLabel.hide()
 		self.textScroll.hide()
-		gobject.timeout_add(100, lambda: progressActivity())
+		if not self.progressActive:
+			self.progress.set_fraction(0.0)
+			gobject.timeout_add(100, lambda: progressActivity())
 	
 	def hideAll(self, progress = True):
 		if progress:
 			self.progress.hide()
 		
+		self.tabs.set_sensitive(False)
 		self.textScroll.hide()
 		self.refreshButton.set_sensitive(False)
 		self.readButton.set_sensitive(False)
 		self.historyButton.set_sensitive(False)
-		self.modeButton.set_sensitive(False)
+		return False
 	
 	# Update Statusbar
 	def updateStatus(self, once = False):
@@ -376,7 +387,11 @@ class GUI(gtk.Window):
 			self.main.updater.refreshNow = True
 	
 	def onHistory(self, *args):
-		gobject.idle_add(lambda: self.html.clear())
+		if self.mode:
+			gobject.idle_add(lambda: self.message.clear())
+			
+		else:
+			gobject.idle_add(lambda: self.html.clear())
 	
 	def onRead(self, *args):
 		if self.mode:
@@ -385,15 +400,12 @@ class GUI(gtk.Window):
 		else:
 			gobject.idle_add(lambda: self.html.read())
 	
-	def onMode(self, *args):
-		self.mode = self.modeButton.get_active()
+	def onMode(self, widget = None, page = None, num = 0, *args):
+		self.mode = True if num == 1 else False
 		if self.mode:
 			self.historyButton.set_tooltip_text(lang.toolHistoryMessage)
 			self.readButton.set_tooltip_text(lang.toolReadMessage)
 			self.refreshButton.set_tooltip_text(lang.toolRefreshMessage)
-			self.htmlScroll.hide()
-			self.messageScroll.show()	
-			self.messageScroll.grab_focus()
 			self.readButton.set_sensitive(self.main.updater.lastMessageID > self.main.updater.initMessageID)
 			self.historyButton.set_sensitive(self.message.historyLoaded)
 			
@@ -407,15 +419,12 @@ class GUI(gtk.Window):
 			self.historyButton.set_tooltip_text(lang.toolHistory)
 			self.readButton.set_tooltip_text(lang.toolRead)
 			self.refreshButton.set_tooltip_text(lang.toolRefresh)
-			self.messageScroll.hide()	
-			self.htmlScroll.show()	
-			self.htmlScroll.grab_focus()
 			self.readButton.set_sensitive(self.main.updater.lastID > self.main.updater.initID)
 			self.historyButton.set_sensitive(self.html.historyLoaded)
 		
 			if self.main.updater.tweetsLoaded == 0:
 				self.showProgress()
-				
+			
 			elif self.main.updater.tweetsLoaded == 1:
 				self.showInput()
 		

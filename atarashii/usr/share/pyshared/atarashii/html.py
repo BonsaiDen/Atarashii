@@ -32,6 +32,43 @@ class HTML(view.HTMLView):
 		self.gui = gui
 		view.HTMLView.__init__(self, main, gui, self.gui.htmlScroll)
 
+
+	# Screens ------------------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def start(self):
+		self.mode = "start"
+		self.isRendering = True
+		self.offsetCount = 0
+		self.gui.htmlTab.set_markup(lang.tabsTweetsLoading)
+		self.load_string("""
+		<html>
+			<head>
+				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
+			</head>
+			<body class="unloaded">
+				<div class="loading"><b>%s</b></div>
+			</body>
+		</html>""" % (self.main.getResource("atarashii.css"), lang.messageLoading), "text/html", "UTF-8", "file:///main/")
+	
+	def splash(self):
+		self.mode = "splash"
+		self.isRendering = True
+		self.offsetCount = 0
+		self.gui.htmlTab.set_markup(lang.tabsTweetsLoading)
+		self.load_string("""
+		<html>
+			<head>
+				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
+			</head>
+			<body class="unloaded">
+				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
+			</body>
+		</html>""" % (self.main.getResource("atarashii.css"), self.main.getImage(), lang.htmlWelcome), "text/html", "UTF-8", "file:///main/")
+	
+	
+
 	# Render the Timeline ------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def render(self):	
@@ -62,11 +99,15 @@ class HTML(view.HTMLView):
 		lastHighlight = False
 		
 		# Do the rendering!
+		count = 0
 		for num, obj in enumerate(self.tweets):
 			tweet, img, mode = obj
 			
 			# Fix some stuff for the seperation of continous new/old tweets
 			newTimeline = tweet.id > self.main.updater.initID
+			if newTimeline:
+				count += 1
+				
 			if newest or self.main.updater.initID == 0:
 				newTimeline = False
 			
@@ -229,6 +270,11 @@ class HTML(view.HTMLView):
 			
 		
 		# Render Page
+		if count > 0:
+			self.gui.htmlTab.set_markup(lang.tabsTweetsNew % count)
+		else:
+			self.gui.htmlTab.set_markup(lang.tabsTweets)
+		
 		if len(self.tweets) > 0:
 			html = """
 			<html>
@@ -238,9 +284,9 @@ class HTML(view.HTMLView):
 				</head>
 				<body>
 					<div><div id="newcontainer">%s</div>
-					<div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
+					<div class="loadmore"><a href="more:%d" title="%s"><b>%s</b></a></div>
 				</body>
-			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderTweets), self.tweets[0][0].id, lang.htmlLoadMore)
+			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderTweets), self.tweets[0][0].id, lang.htmlHistory, lang.htmlLoadMore)
 		
 		else:
 			html = """
