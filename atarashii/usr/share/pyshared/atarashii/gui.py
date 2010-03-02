@@ -354,11 +354,11 @@ class GUI(gtk.Window):
 	 	except:
 	 		description = lang.errorInternal % str(detail)
 	 	
-	 	dialog.MessageDialog(self, "error", description)
+	 	dialog.MessageDialog(self, "error", description, lang.errorTitle)
 	 	self.updateStatus()
 	
 	def showWarning(self, limit):
-		dialog.MessageDialog(self, "warning", lang.warningText % limit)
+		dialog.MessageDialog(self, "warning", lang.warningText % limit, lang.warningTitle)
 	
 	# Helpers ------------------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -366,6 +366,18 @@ class GUI(gtk.Window):
 		size = widget.get_allocation()
 		return size[3] - size[0]
 	
+	def setTitle(self):
+		if self.mode:
+			if self.html.count > 0:
+				self.set_title((lang.titleTweets if self.html.count > 1 else lang.titleTweet) % self.html.count)
+			else:
+				self.set_title("%s - Atarashii" % self.main.username)
+			
+		else:
+			if self.message.count > 0:
+				self.set_title((lang.titleMessages if self.html.count > 1 else lang.titleMessage) % self.message.count)
+			else:
+				self.set_title("%s - Atarashii" % self.main.username)
 	
 	# Handlers -----------------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -403,9 +415,13 @@ class GUI(gtk.Window):
 			
 			if self.main.updater.messagesLoaded == 0:
 				self.showProgress()
+				if not self.main.isUpdating:
+					self.refreshButton.set_sensitive(False)
 				
 			elif self.main.updater.messagesLoaded == 1:
-				self.showInput()	
+				self.showInput()
+				if not self.main.isUpdating:
+					self.refreshButton.set_sensitive(True)
 			
 		else:
 			self.historyButton.set_tooltip_text(lang.toolHistory)
@@ -419,10 +435,15 @@ class GUI(gtk.Window):
 		
 			if self.main.updater.tweetsLoaded == 0:
 				self.showProgress()
+				if not self.main.isUpdating:
+					self.refreshButton.set_sensitive(False)
 				
 			elif self.main.updater.tweetsLoaded == 1:
 				self.showInput()
+				if not self.main.isUpdating:
+					self.refreshButton.set_sensitive(True)
 		
+		self.setTitle()
 		self.text.checkMode()
 		self.text.looseFocus()
 	

@@ -49,6 +49,7 @@ class HTMLView(webkit.WebView):
 		self.scroll = scroll
 		self.set_maintains_back_forward_list(False)
 		self.mode = ""
+		self.count = 0
 		self.formatter = format.Formatter()
 		self.init(True)
 	

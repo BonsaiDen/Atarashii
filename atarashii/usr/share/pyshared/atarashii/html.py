@@ -62,11 +62,15 @@ class HTML(view.HTMLView):
 		lastHighlight = False
 		
 		# Do the rendering!
+		self.count = 0
 		for num, obj in enumerate(self.tweets):
 			tweet, img, mode = obj
 			
 			# Fix some stuff for the seperation of continous new/old tweets
 			newTimeline = tweet.id > self.main.updater.initID
+			if newTimeline:
+				self.count += 1
+			
 			if newest or self.main.updater.initID == 0:
 				newTimeline = False
 			
@@ -225,6 +229,7 @@ class HTML(view.HTMLView):
 			if tweet.id == self.newestID:
 				html = '</div>' + html
 			
+			self.main.gui.setTitle()
 			renderTweets.insert(0, html)
 			
 		
