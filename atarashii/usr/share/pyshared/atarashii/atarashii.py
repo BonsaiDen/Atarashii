@@ -14,7 +14,6 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
-# TODO use gtk dialogs for question/warning/error so we get systemsounds
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -194,7 +193,7 @@ class Atarashii:
 		# Do it!
 		auth = tweepy.BasicAuthHandler(self.username, self.settings["password_" + self.username])
 		self.api = tweepy.API(auth)
-	
+		
 		# Init
 		self.updater.doInit = True
 
@@ -203,7 +202,8 @@ class Atarashii:
 		self.loginStatus = True
 		self.isConnecting = False
 		self.gui.settingsButton.set_sensitive(True)
-		self.gui.set_title("Atarashii | %s" % self.username)
+		self.gui.set_title("%s - Atarashii" % self.username)
+		self.gui.tabs.set_sensitive(True)
 		self.gui.updateStatus()
 		self.gui.showInput()
 		
@@ -326,8 +326,8 @@ class Atarashii:
 		
 		
 	def quit(self):
-		self.saveSettings()
 		self.saveMode()
+		self.saveSettings()
  		gtk.main_quit()
  		sys.exit(1)
 
