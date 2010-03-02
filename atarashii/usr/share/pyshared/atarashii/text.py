@@ -319,7 +319,7 @@ class TextInput(gtk.TextView):
 		if self.inputError == None:
 			gobject.idle_add(lambda: self.fixSize())
 		
-		elif not self.main.loginStatus:
+		elif not self.main.loginStatus and not self.main.isConnecting:
 			self.gui.hideAll()
 
 	# Helpers ------------------------------------------------------------------
