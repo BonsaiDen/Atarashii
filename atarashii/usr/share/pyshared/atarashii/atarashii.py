@@ -263,7 +263,7 @@ class Atarashii:
 	# Message to someone
 	def message(self, num):
 		self.gui.text.message(num)
-	
+		
 	
 	# Helper Functions ---------------------------------------------------------
 	# --------------------------------------------------------------------------
