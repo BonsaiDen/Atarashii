@@ -33,7 +33,7 @@ class RateLimiter(threading.Thread):
 		limit = req['remaining_hits']
 		if limit > 0:
 			limit = limit / (2.0 + (2.0 / 5))
-			self.main.refreshTimeout = int(minutes / limit * 60 * 1.25)
+			self.main.refreshTimeout = int(minutes / limit * 60 * 1.10)
 			if self.main.refreshTimeout < 45:
 				self.main.refreshTimeout = 45
 		
