@@ -107,26 +107,33 @@ class HTMLView(webkit.WebView):
 			self.splash()
 	
 	# Fix scrolling isses on page load
+	def getOffset(self):
+		try:
+			self.execute_script('document.title=document.getElementById("newcontainer").offsetHeight;')
+			return int(self.get_main_frame().get_title())
+		
+		except:
+			return 0
+	
 	def loaded(self, *args):
 		self.isRendering = False
 		if len(self.tweets) > 0 and self.newTweets and not self.loadHistory:
-			try:
-				self.execute_script('document.title=document.getElementById("newcontainer").offsetHeight;')
-				offset = int(self.get_main_frame().get_title())
-			
-			except:
-				offset = 0
+			offset = self.getOffset()
 		
 		else:
 			offset = 0
 		
+		# Re-scroll
 		if not self.firstLoad and self.position > 0:
 			self.scroll.get_vscrollbar().set_value(self.position + offset)
+			gobject.timeout_add(25, self.checkScroll)
 		
+		# scroll to first new tweet
 		elif self.firstLoad:
 			height = self.gui.getHeight(self)
 			if offset > height:
 				self.scroll.get_vscrollbar().set_value(offset - height)
+				gobject.timeout_add(25, self.checkOffset)
 		
 		if len(self.tweets) > 0:
 			self.firstLoad = False
@@ -134,6 +141,15 @@ class HTMLView(webkit.WebView):
 		self.loadHistory = False
 		self.newTweets = False
 	
+	def checkScroll(self):
+		self.scroll.get_vscrollbar().set_value(self.position + self.getOffset())
+	
+	# Double check for some stupid bugs with webkit
+	def checkOffset(self):
+		offset = self.getOffset()
+		height = self.gui.getHeight(self)
+		if offset > height:
+			self.scroll.get_vscrollbar().set_value(offset - height)
 	
 	# Clear the History
 	def clear(self):

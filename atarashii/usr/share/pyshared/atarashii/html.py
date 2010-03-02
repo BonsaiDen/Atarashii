@@ -205,6 +205,7 @@ class HTML(view.HTMLView):
 							</div>
 							<div class="reply">%s</div>
 						</div>
+						<div class="clearfloat"></div>
 					</div>'''	
 			
 			
