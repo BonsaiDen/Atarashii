@@ -232,7 +232,7 @@ class Updater(threading.Thread):
 		messageIDS = []
 		for i in updates:
 			imgfile = self.getImage(i.user.profile_image_url, i.user.id)
-			if i.user.screen_name != self.main.username:
+			if i.user.screen_name.lower() != self.main.username.lower():
 				# Don't add mentions twice
 				if not i.id in tweetIDS:
 					tweetIDS.append(i.id)
@@ -242,7 +242,7 @@ class Updater(threading.Thread):
 		
 		for i in messages:
 			imgfile = self.getImage(i.sender.profile_image_url, i.sender.id)
-			if i.sender.screen_name != username:
+			if i.sender.screen_name.lower() != sefl.main.username.lower():
 				# Don't add mentions twice
 				if not i.id in messageIDS:
 					messageIDS.append(i.id)
