@@ -179,6 +179,8 @@ class Updater(threading.Thread):
 						if calendar.timegm(time.gmtime()) > self.main.refreshTime + self.main.refreshTimeout or self.refreshNow or self.refreshMessages:
 							self.main.isUpdating = True
 							self.updateTweets()
+							gobject.idle_add(lambda: self.main.gui.refreshButton.set_sensitive(True))
+							gobject.idle_add(lambda: self.main.gui.checkRead())
 							self.main.refreshTime = calendar.timegm(time.gmtime())
 							self.refreshMessages = False
 							self.refreshNow = False
@@ -214,8 +216,7 @@ class Updater(threading.Thread):
 			
 			# Something went wrong...
 			except Exception, error:
-				print error
-				gobject.idle_add(lambda: self.main.onLoginFailed(error))
+				gobject.idle_add(lambda: self.main.gui.showError(error))
 				return
 			
 			if len(messages) > 0:
@@ -271,8 +272,6 @@ class Updater(threading.Thread):
 		
 		# Rate Limiting
 		self.updateLimit()
-		gobject.idle_add(lambda: self.main.gui.refreshButton.set_sensitive(True))
-		gobject.idle_add(lambda: self.main.gui.checkRead())
 		
 	
 	# Load History -------------------------------------------------------------
