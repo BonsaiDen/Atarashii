@@ -161,7 +161,7 @@ class SettingsDialog(Dialog):
 		# Delete Action
 		def deleteDialog(*args):
 			name = self.userAccounts[drop.get_active()]
-			MessageDialog(self.dlg, "question", lang.accountDeleteDescription % name, yesCallback = self.deleteAccount)
+			MessageDialog(self.dlg, "question", lang.accountDeleteDescription % name, lang.accountDelete % name, yesCallback = self.deleteAccount)
 		
 		delete.connect("clicked", deleteDialog)
 
@@ -358,7 +358,7 @@ class AccountDialog(Dialog):
 # Message Dialog ---------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class MessageDialog(gtk.MessageDialog):
-	def __init__(self, parent, type, message, okCallback = None, yesCallback = None, noCallback = None):
+	def __init__(self, parent, type, message, title, okCallback = None, yesCallback = None, noCallback = None):
 		if type == "error":
 			gtk.MessageDialog.__init__(self, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, message)
 
@@ -368,6 +368,7 @@ class MessageDialog(gtk.MessageDialog):
 		elif type == "question":
 			gtk.MessageDialog.__init__(self, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
 
+		self.set_title(title)
 		self.okCallback = okCallback
 		self.yesCallback = yesCallback
 		self.noCallback = noCallback
