@@ -231,6 +231,11 @@ a, a:hover, a:active {
 	border-bottom: 2px solid #d2d2d2;
 }
 
+.spacer1 {
+	border-bottom: 2px solid #bdbdbd;
+}
+
+
 .spacer3 {
 	border-bottom: 2px solid #cdd8df;
 }
@@ -240,7 +245,7 @@ a, a:hover, a:active {
 }
 
 .spacer4 {
-	border-bottom: 2px solid #e1e8ed;
+	border-bottom: 2px solid #d5e3ed;
 }
 
 .spacer5 {
@@ -248,7 +253,7 @@ a, a:hover, a:active {
 }
 
 .spacer6 {
-	border-bottom: 2px solid #c7deed;
+	border-bottom: 2px solid #dfe7ed;
 }
 
 a {

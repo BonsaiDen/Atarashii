@@ -120,7 +120,10 @@ class HTML(view.HTMLView):
 			# Spacer
 			if num > 0:
 				if lastname != tweet.sender.screen_name or newTimeline:
-					renderTweets.insert(0, '<div class="spacer"></div>')
+					if tweet.id > self.main.updater.initMessageID:
+						renderTweets.insert(0, '<div class="spacer1"></div>')
+					else:
+						renderTweets.insert(0, '<div class="spacer"></div>')
 				
 				elif tweet.id > self.main.updater.initMessageID:
 					renderTweets.insert(0, '<div class="spacer4"></div>')
