@@ -51,6 +51,9 @@ class LangDE:
 		
 		self.messageLoading = "Nachrichten werden geladen..."
 		
+		# Notifications
+		self.notificationMessage = "Nachricht von %s:"
+		
 		# Text
 		self.textEntry = "Was passiert gerade?"
 		self.textEntryMessage = "Nachricht eingeben..."
@@ -187,6 +190,9 @@ class LangEN:
 		self.htmlExact = "from %m.%d.%Y"
 		
 		self.messageLoading = "Loading messages..."
+		
+		# Notifications
+		self.notificationMessage = "Message from %s:"
 		
 		# Text
 		self.textEntry = "What's happening?"

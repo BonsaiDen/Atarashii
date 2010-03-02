@@ -230,6 +230,16 @@ class Updater(threading.Thread):
 		tweetList = []
 		tweetIDS = []
 		messageIDS = []
+		for i in messages:
+			imgfile = self.getImage(i.sender.profile_image_url, i.sender.id)
+			if i.sender.screen_name.lower() != sefl.main.username.lower():
+				# Don't add mentions twice
+				if not i.id in messageIDS:
+					messageIDS.append(i.id)
+					tweetList.append((lang.notificationMessage % i.sender.screen_name, i.text, imgfile, None))
+			
+			self.message.updateList.append((i, imgfile, False))	
+		
 		for i in updates:
 			imgfile = self.getImage(i.user.profile_image_url, i.user.id)
 			if i.user.screen_name.lower() != self.main.username.lower():
@@ -239,16 +249,6 @@ class Updater(threading.Thread):
 					tweetList.append((i.user.screen_name, i.text, imgfile, None))
 			
 			self.html.updateList.append((i, imgfile, False))
-		
-		for i in messages:
-			imgfile = self.getImage(i.sender.profile_image_url, i.sender.id)
-			if i.sender.screen_name.lower() != sefl.main.username.lower():
-				# Don't add mentions twice
-				if not i.id in messageIDS:
-					messageIDS.append(i.id)
-					tweetList.append((i.sender.screen_name, i.text, imgfile, None))
-			
-			self.message.updateList.append((i, imgfile, False))
 		
 		# Show Notifications
 		if len(tweetList) > 0:
