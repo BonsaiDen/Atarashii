@@ -326,7 +326,11 @@ class GUI(gtk.Window):
 			self.showInput()
 			self.text.grab_focus()
 		
- 		code = error.response.status
+		try:
+ 			code = error.response.status
+ 			
+ 		except:
+ 			code = 0
  		
 		# Ratelimit error
  		if (code == 400 and not self.main.wasSending) or (code == 403 and self.main.wasSending):
@@ -352,7 +356,7 @@ class GUI(gtk.Window):
 	 		}[code]
 	 	
 	 	except:
-	 		description = lang.errorInternal % str(detail)
+	 		description = lang.errorInternal % str(error)
 	 	
 	 	dialog.MessageDialog(self, "error", description, lang.errorTitle)
 	 	self.updateStatus()
