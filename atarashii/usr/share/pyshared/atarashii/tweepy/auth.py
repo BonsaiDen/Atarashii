@@ -124,7 +124,45 @@ class OAuthHandler(AuthHandler):
             return self.access_token
         except Exception, e:
             raise TweepError(e)
-
+    
+    def get_xauth_access_token(self, username, password):
+        """
+        Get an access token from a username and password combination.
+        In order to get this working you need to create an app at 
+        http://twitter.com/apps, after that send a mail to api@twitter.com
+        and request activation of xAuth for it.
+        
+        After that you can use xAuth with your app, make sure you pass the 
+        secure=True parameter to the OAuthHandler constructor.
+        
+        Notes:
+        	The Twitter API is very vague about the whole process of getting 
+        	this to work, it says you need to make a POST request,
+        	which is dead wrong.
+        	
+        	You'll always will receive an 401 if you make a POST request.
+        	Just do a good old GET request with the parameters in the URL and
+        	everything is fine and dandy.
+        """
+        try:
+            from oauth import escape
+            url = self._get_oauth_url('access_token')
+            request = oauth.OAuthRequest.from_consumer_and_token(
+                self._consumer, http_url=url, callback=self.callback, token = None, parameters = {
+		            'x_auth_mode': 'client_auth',
+		            'x_auth_username': username,
+		            'x_auth_password': password
+        	    }
+            )
+            request.sign_request(self._sigmethod, self._consumer, None)
+            
+            headers = '&'.join(['%s=%s' % (k, escape(str(v))) for k, v in request.parameters.iteritems()])
+            resp = urlopen(Request(url + '?' + headers))
+            self.access_token =  oauth.OAuthToken.from_string(resp.read())
+            return self.access_token
+        except Exception, e:
+            raise TweepError(e)
+    
     def get_username(self):
         if self.username is None:
             api = API(self)
