@@ -19,6 +19,7 @@
 import time
 import threading
 import urllib
+import sys
 import os
 import notify
 import gobject
@@ -26,6 +27,14 @@ import calendar
 
 import ratelimit
 from lang import lang
+
+# Import local Tweepy
+sys.path.insert(0, __file__[:__file__.rfind('/')])
+try:
+	import tweepy
+	
+finally:
+	sys.path.pop(0)
 
 
 class Updater(threading.Thread):
@@ -55,6 +64,18 @@ class Updater(threading.Thread):
 	# Init the Updater ---------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def init(self):
+		# xAuth Login, yes the app stuff is here, were should it go?
+		# Why should anyone else use the Atarashii App for posting from HIS client? :D
+		auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q", "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg", secure = True)
+		try:
+			auth.get_xauth_access_token(self.main.username, password = self.main.settings["password_" + self.main.username])
+			self.main.api = tweepy.API(auth)
+		
+		except Exception, error:
+			gobject.idle_add(lambda: self.main.onLoginFailed(error))
+			return False
+		
+		# Init Views
 		self.html = self.main.gui.html
 		self.message = self.main.gui.message
 	
@@ -63,7 +84,7 @@ class Updater(threading.Thread):
 		self.doInit = False
 		self.started = False
 		self.refreshNow = False
-		self.main.refreshTimeout = -1
+		self.main.refreshTimeout = 60
 		self.html.loadHistoryID = -1
 		self.message.loadHistoryID = -1
 		
@@ -191,6 +212,7 @@ class Updater(threading.Thread):
 		if not self.refreshMessages:
 			try:
 				updates = self.getUpdates(self.html.lastID)
+				#print len(updates)
 		
 			# Something went wrong...
 			except Exception, error:
@@ -207,6 +229,7 @@ class Updater(threading.Thread):
 		if (self.messageCounter > 4 or self.refreshMessages) and not self.refreshNow:
 			try:
 				messages = self.getMessages(self.message.lastID)
+			#	print len(messages)
 			
 			# Something went wrong...
 			except Exception, error:
