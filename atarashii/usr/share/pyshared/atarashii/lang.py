@@ -133,10 +133,11 @@ class LangDE:
  		self.errorDown = "Twitter ist gerade offline."
  		self.errorOverload = "Twitter ist gerade überlastet."
  		self.errorInternal = "Atarashii Fehler: %s"
-		
+
 		# Warning
 		self.warningTitle = "Atarashii - Warnung"
 		self.warningText = "Twitter hat das Ratelimit auf %d Requests pro Stunde reduziert, das Updateinterval wurde entsprechend angepasst."
+ 		self.warningURL = "Atarashii konnte Twitter nicht erreichen, dies ist in den meisten Fällen lediglich ein temporäres Problem aufgrund von Überlastung seitens Twitter."
 		
 		# Menu
 		self.menuUpdate = "Aktualisieren"
@@ -286,6 +287,7 @@ class LangEN:
 		# Warning
 		self.warningTitle = "Atarashii - Warning"
 		self.warningText = "Twitter has lowered the ratelimit to %d requests per hour, the update interval has been adjusted accordingly."
+ 		self.warningURL = "Atarashii couldn't connect to Twitter, in most cases this is just a temporary issue due to Twitter being too busy at the moment."
 		
 		# Toolbar
 		self.toolRefresh = "Refresh Tweets"
