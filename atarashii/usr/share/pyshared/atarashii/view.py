@@ -134,23 +134,23 @@ class HTMLView(webkit.WebView):
 			gobject.timeout_add(25, lambda: self.checkScroll(pos))
 		
 		# scroll to first new tweet
-		elif self.firstLoad:
+		elif self.firstLoad or (offset > 0 and self.position == 0):
 			height = self.gui.getHeight(self)
 			if offset > height:
 				self.scroll.get_vscrollbar().set_value(offset - height)
 				gobject.timeout_add(25, self.checkOffset)
-		
+
 		if len(self.items) > 0:
 			self.firstLoad = False
 		
-		print "foo"
 		self.loadHistory = False
 		self.newitems = False
 	
+	
+	# Double check for some stupid scrolling bugs with webkit
 	def checkScroll(self, pos):
 		self.scroll.get_vscrollbar().set_value(pos)
 	
-	# Double check for some stupid bugs with webkit
 	def checkOffset(self):
 		offset = self.getOffset()
 		height = self.gui.getHeight(self)
@@ -248,7 +248,7 @@ class HTMLView(webkit.WebView):
 		elif delta <= 60 * 60 * 48:
 			return lang.htmlYesterday
 			
-		elif delta <= 60 * 60 * 96:
+		elif delta <= 60 * 60 * 72:
 			return lang.htmlDay % math.ceil(delta / (60.0 * 60.0 * 24.0))
 		
 		else:
