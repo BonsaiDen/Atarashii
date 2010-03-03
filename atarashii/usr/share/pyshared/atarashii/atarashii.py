@@ -156,6 +156,8 @@ class Atarashii:
 		self.login()
 	
 	def login(self):
+		if self.username == "":
+			return
 
  		# Wait until the last update is complete
  		while self.isUpdating:
@@ -203,7 +205,7 @@ class Atarashii:
 		self.loginStatus = True
 		self.isConnecting = False
 		self.gui.settingsButton.set_sensitive(True)
-		self.gui.set_title("%s - Atarashii" % self.username)
+		self.gui.set_title(lang.titleLoggedIn % self.username)
 		self.gui.updateStatus()
 		self.gui.showInput()
 		
@@ -213,7 +215,7 @@ class Atarashii:
 		self.loginStatus = False
 		self.isConnecting = False
 		self.gui.settingsButton.set_sensitive(True)
-		self.gui.set_title("Atarashii")
+		self.gui.set_title(lang.title)
 		self.gui.hideAll()
 		self.gui.updateStatus()
 		self.gui.showError(error)
@@ -229,7 +231,7 @@ class Atarashii:
 		self.isUpdating = False
 		self.gui.settingsButton.set_sensitive(True)
 		self.gui.updateStatus()
-		self.gui.set_title("Atarashii")
+		self.gui.set_title(lang.title)
 		self.gui.hideAll()
 		gobject.idle_add(lambda: self.gui.html.init(True))
 	

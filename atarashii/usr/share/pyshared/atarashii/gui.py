@@ -228,7 +228,7 @@ class GUI(gtk.Window):
 			self.readButton.set_sensitive(False)
 			self.setStatus(lang.statusUpdate)
 		
-		elif self.main.refreshTimeout == -1:
+		elif self.main.refreshTimeout == -1 or (self.mode and self.message.loaded == 0) or (not self.mode and self.html.loaded == 0):
 			self.setStatus(lang.statusConnected)
 		
 		elif (not self.text.isTyping or not self.text.hasFocus) and not self.main.isSending:
@@ -367,17 +367,20 @@ class GUI(gtk.Window):
 		return size[3] - size[0]
 	
 	def setTitle(self):
-		if self.mode:
+		if self.main.username == "":
+			self.set_title(lang.title)
+			
+		elif self.mode:
 			if self.html.count > 0:
 				self.set_title((lang.titleTweets if self.html.count > 1 else lang.titleTweet) % self.html.count)
 			else:
-				self.set_title("%s - Atarashii" % self.main.username)
+				self.set_title(lang.titleLoggedIn % self.main.username)
 			
 		else:
 			if self.message.count > 0:
 				self.set_title((lang.titleMessages if self.html.count > 1 else lang.titleMessage) % self.message.count)
 			else:
-				self.set_title("%s - Atarashii" % self.main.username)
+				self.set_title(lang.titleLoggedIn % self.main.username)
 	
 	# Handlers -----------------------------------------------------------------
 	# --------------------------------------------------------------------------

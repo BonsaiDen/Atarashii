@@ -22,6 +22,10 @@ import locale
 
 class LangDE:
 	def __init__(self):
+		# Title
+		self.title = "Atarashii"
+		self.titleLoggedIn = "%s - Atarashii"
+	
 		# HTML
 		self.htmlWelcome = "Willkommen bei Atarashii!"
 		self.htmlLoading = "Tweets werden geladen..."
@@ -38,13 +42,13 @@ class LangDE:
 		self.htmlLoadMore = "Mehr"
 		self.htmlEmpty = "Keine Tweets"
 		
-		self.htmlAboutSecond = 'vor ungefähr einer Sekunde'
+		self.htmlAboutSecond = 'vor circa einer Sekunde'
 		self.htmlSecond = 'vor %d Sekunden'
-		self.htmlAboutMinute = 'vor ungefähr einer Minute'
+		self.htmlAboutMinute = 'vor circa einer Minute'
 		self.htmlMinute = 'vor %d Minuten'
-		self.htmlAboutHour = 'vor ungefähr einer Stunde'
+		self.htmlAboutHour = 'vor circa einer Stunde'
 		self.htmlHour = 'vor %d Stunden'
-		self.htmlAboutDay = 'vor ungefähr einem Tag'
+		self.htmlAboutDay = 'vor circa einem Tag'
 		self.htmlDay = 'vor %d Tagen'
 		self.htmlYesterday = "von Gestern"
 		self.htmlExact = "vom %d.%m.%Y"
@@ -91,7 +95,7 @@ class LangDE:
 		self.labelMessageText = "<b>Antwort auf:</b> %s"
 		
 		# Settings
-		self.settingsTitle = "Atarashiii - Einstellungen"
+		self.settingsTitle = "Atarashii - Einstellungen"
 		self.settingsButton = "Speichern"
 		self.settingsButtonCancel = "Abbrechen"
 		self.settingsAccounts = "Benutzerkonten"
@@ -163,6 +167,10 @@ class LangDE:
 
 class LangEN:
 	def __init__(self):
+		# Title
+		self.title = "Atarashii"
+		self.titleLoggedIn = "%s - Atarashii"
+	
 		# HTML
 		self.htmlWelcome = "Welcome to Atarashii!"
 		self.htmlLoading = "Loading Tweets..."
@@ -233,7 +241,7 @@ class LangEN:
 		self.labelMessageText = "<b>Message on:</b> %s"
 		
 		# Settings
-		self.settingsTitle = "Atarashiii - Preferences"
+		self.settingsTitle = "Atarashii - Preferences"
 		self.settingsButton = "Save"
 		self.settingsButtonCancel = "Cancel"
 		self.settingsAccounts = "Accounts"
