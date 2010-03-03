@@ -36,7 +36,6 @@ import gtk
 import gtk.glade
 import gobject
 
-import sys
 import os
 import calendar
 import time
@@ -51,15 +50,6 @@ import gui
 import settings
 import updater
 from lang import lang
-
-# Import local Tweepy
-sys.path.insert(0, __file__[:__file__.rfind('/')])
-try:
-	import tweepy
-	
-finally:
-	sys.path.pop(0)
-
 
 class Atarashii:
 	def __init__(self, version, debug = None):
@@ -192,14 +182,9 @@ class Atarashii:
 		self.gui.message.init(True)
 		if not self.gui.mode:
 			self.gui.message.start()
-		
-		# Do it!
-		auth = tweepy.BasicAuthHandler(self.username, self.settings["password_" + self.username])
-		self.api = tweepy.API(auth)
-	
-		# Init
-		self.updater.doInit = True
 
+		self.updater.doInit = True
+	
 	def onLogin(self):
 		self.loginError = False
 		self.loginStatus = True
