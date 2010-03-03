@@ -44,17 +44,9 @@ class Updater(threading.Thread):
 		self.refreshNow = False
 		self.refreshMessages = False
 		
-		self.lastID = -1
-		self.lastMessageID = -1
-		self.initID = -1
-		self.initMessageID = -1
 		self.loadHistoryID = -1
 		self.loadHistoryMessageID = -1
-		self.ratelimit = 150
-		self.loadHistoryID = -1
-		self.messagesLoaded = -1
-		self.tweetsLoaded = -1
-		
+		self.ratelimit = 150		
 		self.messageCounter = 0
 		
 		self.path = os.path.expanduser('~')
@@ -69,31 +61,32 @@ class Updater(threading.Thread):
 		# Reset
 		self.messageCounter = 0
 		self.doInit = False
-		self.lastID = -1
-		self.lastMessageID = -1
 		self.started = False
 		self.refreshNow = False
 		self.main.refreshTimeout = -1
-		self.loadHistoryID = -1
-		self.loadHistoryMessageID = -1
-		self.messagesLoaded = 0
-		self.tweetsLoaded = 0
+		self.html.loadHistoryID = -1
+		self.message.loadHistoryID = -1
+		
+		self.message.lastID = -1
+		self.html.lastID = -1
+		self.message.loaded = 0
+		self.html.loaded = 0
 		
 		# InitID = the last read tweet
-		self.initID = self.main.getLatestID()
-		self.initMessageID = self.main.getLatestMessageID()
+		self.html.initID = self.main.getLatestID()
+		self.message.initID = self.main.getLatestMessageID()
 		
 		# Lazy loading
 		if self.main.gui.mode:
 			if not self.getInitMessages():
-				self.messagesLoaded = -1
-				self.tweetsLoaded = -1
+				self.message.loaded = -1
+				self.html.loaded = -1
 				return
 			
 		else:
 			if not self.getInitTweets():
-				self.messagesLoaded = -1
-				self.tweetsLoaded = -1
+				self.message.loaded = -1
+				self.html.loaded = -1
 				return
 		
 		# Stuff ----------------------------------------------------------------
@@ -115,7 +108,7 @@ class Updater(threading.Thread):
 		
 		gobject.idle_add(lambda: self.main.gui.checkRead())
 	
-	
+	# Load initial tweets ------------------------------------------------------
 	def getInitTweets(self):
 		updates = []
 		try:
@@ -135,9 +128,10 @@ class Updater(threading.Thread):
 				self.html.updateList.append((i, imgfile, False))
 	
 		gobject.idle_add(lambda: self.html.pushUpdates())
-		self.tweetsLoaded = 1
+		self.html.loaded = 1
 		return True
 	
+	# Load initial messages ----------------------------------------------------
 	def getInitMessages(self):
 		messages = []
 		try:
@@ -157,7 +151,7 @@ class Updater(threading.Thread):
 				self.message.updateList.append((i, imgfile, False))
 	
 		gobject.idle_add(lambda: self.message.pushUpdates())
-		self.messagesLoaded = 1
+		self.message.loaded = 1
 		return True
 	
 	# Mainloop -----------------------------------------------------------------
@@ -168,10 +162,10 @@ class Updater(threading.Thread):
 				self.init()
 		
 			elif self.started:
-				if self.loadHistoryID != -1:
+				if self.html.loadHistoryID != -1:
 					self.loadHistory()
 					
-				elif self.loadHistoryMessageID != -1:
+				elif self.message.loadHistoryID != -1:
 					self.loadHistoryMessage()
 					
 				else:
@@ -196,7 +190,7 @@ class Updater(threading.Thread):
 		updates = []
 		if not self.refreshMessages:
 			try:
-				updates = self.getUpdates(self.lastID)
+				updates = self.getUpdates(self.html.lastID)
 		
 			# Something went wrong...
 			except Exception, error:
@@ -212,7 +206,7 @@ class Updater(threading.Thread):
 		messages = []
 		if (self.messageCounter > 4 or self.refreshMessages) and not self.refreshNow:
 			try:
-				messages = self.getMessages(self.lastMessageID)
+				messages = self.getMessages(self.message.lastID)
 			
 			# Something went wrong...
 			except Exception, error:
@@ -277,19 +271,15 @@ class Updater(threading.Thread):
 	# Load History -------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def loadHistory(self):
-		# Fetch Tweets
 		updates = []
 		try:
-			updates = self.getUpdates(maxID = self.loadHistoryID, maxCount = self.main.loadTweetCount)
+			updates = self.getUpdates(maxID = self.html.loadHistoryID, maxCount = self.main.loadTweetCount)
 		
 		# Something went wrong...
 		except Exception, error:
-			print error
-			self.loadHistoryID = -1
+			self.html.loadHistoryID = -1
 			self.main.isLoadingHistory = False
 			gobject.idle_add(lambda: self.main.gui.showError(error))
-		#	self.main.refreshTimeout = 60
-		#	self.main.refreshTime = calendar.timegm(time.gmtime())
 			return
 		
 		# Loaded
@@ -298,7 +288,7 @@ class Updater(threading.Thread):
 			imgfile = self.getImage(i.user.profile_image_url, i.user.id)
 			self.html.updateList.append((i, imgfile, True))
 		
-		self.loadHistoryID = -1
+		self.html.loadHistoryID = -1
 		self.main.isLoadingHistory = False
 		
 		if len(updates) > 0:
@@ -312,19 +302,15 @@ class Updater(threading.Thread):
 	
 	
 	def loadHistoryMessage(self):
-		# Fetch Tweets
 		messages = []
 		try:
-			messages = self.getMessages(maxID = self.loadHistoryMessageID, maxCount = self.main.loadMessageCount)
+			messages = self.getMessages(maxID = self.message.loadHistoryID, maxCount = self.main.loadMessageCount)
 		
 		# Something went wrong...
 		except Exception, error:
-			print error
-			self.loadHistoryMessageID = -1
+			self.message.loadHistoryID = -1
 			self.main.isLoadingHistory = False
 			gobject.idle_add(lambda: self.main.gui.showError(error))
-		#	self.main.refreshTimeout = 60
-		#	self.main.refreshTime = calendar.timegm(time.gmtime())
 			return
 		
 		# Loaded
@@ -333,7 +319,7 @@ class Updater(threading.Thread):
 			imgfile = self.getImage(i.sender.profile_image_url, i.sender.id)
 			self.message.updateList.append((i, imgfile, True))
 		
-		self.loadHistoryMessageID = -1
+		self.message.loadHistoryID = -1
 		self.main.isLoadingHistory = False
 		
 		if len(messages) > 0:
@@ -425,17 +411,17 @@ class Updater(threading.Thread):
 	
 	# Helpers ------------------------------------------------------------------
 	# --------------------------------------------------------------------------
-	def setLastTweet(self, tweetID):
-		self.lastID = tweetID
-		self.settings['lasttweet_' + self.main.username] = str(tweetID)
-		if len(self.html.tweets) > 0:
-			self.html.newestID = self.html.tweets[len(self.html.tweets)-1][0].id
+	def setLastTweet(self, itemID):
+		self.html.lastID = itemID
+		self.settings['lasttweet_' + self.main.username] = str(itemID)
+		if len(self.html.items) > 0:
+			self.html.newestID = self.html.items[len(self.html.items)-1][0].id
 	
-	def setLastMessage(self, messageID):
-		self.lastMessageID = messageID
-		self.settings['lastmessage_' + self.main.username] = str(messageID)
-		if len(self.message.tweets) > 0:
-			self.message.newestID = self.message.tweets[len(self.message.tweets)-1][0].id
+	def setLastMessage(self, itemID):
+		self.message.lastID = itemID
+		self.settings['lastmessage_' + self.main.username] = str(itemID)
+		if len(self.message.items) > 0:
+			self.message.newestID = self.message.items[len(self.message.items)-1][0].id
 	
 	def processUpdates(self, updates):
 		def compare(x, y):

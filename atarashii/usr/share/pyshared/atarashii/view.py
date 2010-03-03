@@ -91,7 +91,7 @@ class HTMLView(webkit.WebView):
 	# --------------------------------------------------------------------------
 	def init(self, splash = False):
 		self.isRendering = False
-		self.tweets = []
+		self.items = []
 		self.updateList = []
 		self.position = 0
 		self.offsetCount = 0
@@ -100,8 +100,12 @@ class HTMLView(webkit.WebView):
 		self.historyCount = 0
 		self.firstLoad = True
 		self.newestID = -1
-		self.newTweets = False
+		self.newitems = False
 		self.loadHistory = False
+		self.loadHistoryID = -1
+		self.loaded = -1
+		self.initID = -1
+		self.lastID = -1
 		
 		if splash:
 			self.splash()
@@ -117,7 +121,7 @@ class HTMLView(webkit.WebView):
 	
 	def loaded(self, *args):
 		self.isRendering = False
-		if len(self.tweets) > 0 and self.newTweets and not self.loadHistory:
+		if len(self.items) > 0 and self.newitems and not self.loadHistory:
 			offset = self.getOffset()
 		
 		else:
@@ -125,8 +129,9 @@ class HTMLView(webkit.WebView):
 		
 		# Re-scroll
 		if not self.firstLoad and self.position > 0:
-			self.scroll.get_vscrollbar().set_value(self.position + offset)
-			gobject.timeout_add(25, self.checkScroll)
+			pos = self.position + offset
+			self.checkScroll(pos)
+			gobject.timeout_add(25, lambda: self.checkScroll(pos))
 		
 		# scroll to first new tweet
 		elif self.firstLoad:
@@ -135,14 +140,15 @@ class HTMLView(webkit.WebView):
 				self.scroll.get_vscrollbar().set_value(offset - height)
 				gobject.timeout_add(25, self.checkOffset)
 		
-		if len(self.tweets) > 0:
+		if len(self.items) > 0:
 			self.firstLoad = False
 		
+		print "foo"
 		self.loadHistory = False
-		self.newTweets = False
+		self.newitems = False
 	
-	def checkScroll(self):
-		self.scroll.get_vscrollbar().set_value(self.position + self.getOffset())
+	def checkScroll(self, pos):
+		self.scroll.get_vscrollbar().set_value(pos)
 	
 	# Double check for some stupid bugs with webkit
 	def checkOffset(self):
@@ -151,25 +157,26 @@ class HTMLView(webkit.WebView):
 		if offset > height:
 			self.scroll.get_vscrollbar().set_value(offset - height)
 	
-	# Clear the History
+	
+	# Clear the History --------------------------------------------------------
 	def clear(self):
 		self.historyLoaded = False
-		self.tweets = self.tweets[self.historyCount:]
+		self.items = self.items[self.historyCount:]
 		self.main.maxTweetCount -= self.historyCount
 		self.historyCount = 0
 		self.main.gui.historyButton.set_sensitive(False)
 		self.render()
 	
 	def read(self):
-		if self.main.updater.initID != self.main.getLatestID():
+		if self.initID != self.main.getLatestID():
 			self.main.gui.readButton.set_sensitive(False)
-			self.main.updater.initID = self.main.getLatestID()
+			self.initID = self.main.getLatestID()
 			if not self.historyLoaded:
-				pos = len(self.tweets) - self.main.loadTweetCount
+				pos = len(self.items) - self.main.loadTweetCount
 				if pos < 0:
 					pos = 0
 				
-				self.tweets = self.tweets[pos:]
+				self.items = self.items[pos:]
 			
 			self.render()
 	
@@ -182,25 +189,25 @@ class HTMLView(webkit.WebView):
 	
 		self.render()
 
-	# Add Tweets to the internal List
+	# Add items to the internal List
 	def add(self, tweet):		
-		tweetid = tweet[0].id
+		itemid = tweet[0].id
 		found = False
-		for i in self.tweets:
-			if i[0].id == tweetid:
+		for i in self.items:
+			if i[0].id == itemid:
 				found = True
 				break
 		
 		if not found:
 			if tweet[2]:
-				self.tweets.insert(0, tweet)
+				self.items.insert(0, tweet)
 
 			else:
-				self.tweets.append(tweet)
+				self.items.append(tweet)
 			
-			self.newTweets = True
-			if len(self.tweets) > self.main.maxTweetCount:
-				self.tweets.pop(0)
+			self.newitems = True
+			if len(self.items) > self.main.maxTweetCount:
+				self.items.pop(0)
 	
 	def compare(self, x, y):
 		if x[0].id > y[0].id:
@@ -265,33 +272,25 @@ class HTMLView(webkit.WebView):
 		
 		if uri.startswith("more:"):
 			if not self.main.isLoadingHistory:
-				self.main.updater.loadHistoryID = int(uri.split(":")[1]) - 1
-				if self.main.updater.loadHistoryID != -1:
+				self.loadHistoryID = int(uri.split(":")[1]) - 1
+				if self.loadHistoryID != -1:
 					self.main.isLoadingHistory = True
 					self.gui.showProgress()
 					gobject.idle_add(lambda: self.main.gui.updateStatus(True))
-		
-		elif uri.startswith("moremessages:"):
-			if not self.main.isLoadingHistory:
-				self.main.updater.loadHistoryMessageID = int(uri.split(":")[1]) - 1
-				if self.main.updater.loadHistoryMessageID != -1:
-					self.main.isLoadingHistory = True
-					self.gui.showProgress()
-					gobject.idle_add(lambda: self.main.gui.updateStatus(True))
-		
+
 		elif uri.startswith("reply:"):
 			foo, self.main.replyUser, self.main.replyID, num = uri.split(":")
 			gobject.idle_add(lambda: self.main.reply(int(num)))
 		
 		elif uri.startswith("message:"):
 			foo, self.main.messageUser, self.main.messageID, num = uri.split(":")
-			self.main.messageText = self.tweets[int(num)][0].text
+			self.main.messageText = self.items[int(num)][0].text
 			gobject.idle_add(lambda: self.main.message(int(num)))
 		
 		elif uri.startswith("retweet:"):
 			self.main.retweetNum = int(uri.split(":")[1])
-			self.main.retweetText = self.tweets[self.main.retweetNum][0].text
-			self.main.retweetUser = self.tweets[self.main.retweetNum][0].user.screen_name
+			self.main.retweetText = self.items[self.main.retweetNum][0].text
+			self.main.retweetUser = self.items[self.main.retweetNum][0].user.screen_name
 			gobject.idle_add(lambda: self.main.retweet())
 		
 		else:

@@ -177,7 +177,7 @@ class GUI(gtk.Window):
 	def showProgress(self):
 		def progressActivity():
 			self.progress.pulse()
-			return self.main.isSending or self.main.isConnecting or self.main.isLoadingHistory or (self.mode and self.main.updater.messagesLoaded == 0) or (not self.mode and self.main.updater.tweetsLoaded == 0)
+			return self.main.isSending or self.main.isConnecting or self.main.isLoadingHistory or (self.mode and self.message.loaded == 0) or (not self.mode and self.html.loaded == 0)
 	
 		self.progress.set_fraction(0.0)
 		self.progress.show()
@@ -212,7 +212,7 @@ class GUI(gtk.Window):
 				self.setStatus(lang.statusReconnectMinutes % math.ceil(wait / 60.0))
 	
 		elif self.main.isLoadingHistory:
-			self.setStatus(lang.statusLoadHistory if self.main.updater.loadHistoryID != -1 else lang.statusLoadMessageHistory)
+			self.setStatus(lang.statusLoadHistory if self.html.loadHistoryID != -1 else lang.statusLoadMessageHistory)
 	
 		elif self.main.isConnecting:
 			self.setStatus(lang.statusConnecting % self.main.username)
@@ -263,10 +263,10 @@ class GUI(gtk.Window):
 	
 	def checkRead(self):
 		if self.mode:
-			self.readButton.set_sensitive(self.main.updater.lastMessageID > self.main.updater.initMessageID)
+			self.readButton.set_sensitive(self.message.lastID> self.message.initID)
 			
 		else:
-			self.readButton.set_sensitive(self.main.updater.lastID > self.main.updater.initID)
+			self.readButton.set_sensitive(self.html.lastID > self.html.initID)
 	
 	
 	# Info Label ---------------------------------------------------------------
@@ -410,15 +410,15 @@ class GUI(gtk.Window):
 			self.htmlScroll.hide()
 			self.messageScroll.show()	
 			self.messageScroll.grab_focus()
-			self.readButton.set_sensitive(self.main.updater.lastMessageID > self.main.updater.initMessageID)
+			self.readButton.set_sensitive(self.message.lastID > self.message.initID)
 			self.historyButton.set_sensitive(self.message.historyLoaded)
 			
-			if self.main.updater.messagesLoaded == 0:
+			if self.message.loaded == 0:
 				self.showProgress()
 				if not self.main.isUpdating:
 					self.refreshButton.set_sensitive(False)
 				
-			elif self.main.updater.messagesLoaded == 1:
+			elif self.message.loaded == 1:
 				self.showInput()
 				if not self.main.isUpdating:
 					self.refreshButton.set_sensitive(True)
@@ -430,15 +430,15 @@ class GUI(gtk.Window):
 			self.messageScroll.hide()	
 			self.htmlScroll.show()	
 			self.htmlScroll.grab_focus()
-			self.readButton.set_sensitive(self.main.updater.lastID > self.main.updater.initID)
+			self.readButton.set_sensitive(self.html.lastID > self.html.initID)
 			self.historyButton.set_sensitive(self.html.historyLoaded)
 		
-			if self.main.updater.tweetsLoaded == 0:
+			if self.html.loaded == 0:
 				self.showProgress()
 				if not self.main.isUpdating:
 					self.refreshButton.set_sensitive(False)
 				
-			elif self.main.updater.tweetsLoaded == 1:
+			elif self.html.loaded == 1:
 				self.showInput()
 				if not self.main.isUpdating:
 					self.refreshButton.set_sensitive(True)

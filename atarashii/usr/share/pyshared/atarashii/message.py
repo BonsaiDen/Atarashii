@@ -52,26 +52,25 @@ class HTML(view.HTMLView):
 	# Clear the History
 	def clear(self):
 		self.historyLoaded = False
-		self.tweets = self.tweets[self.historyCount:]
+		self.items = self.items[self.historyCount:]
 		self.main.maxMessageCount -= self.historyCount
 		self.historyCount = 0
 		self.main.gui.historyButton.set_sensitive(False)
 		self.render()
 	
 	def read(self):
-		if self.main.updater.initMessageID != self.main.getLatestMessageID():
+		if self.initID != self.main.getLatestMessageID():
 			self.main.gui.readButton.set_sensitive(False)
-			self.main.updater.initMessageID = self.main.getLatestMessageID()
+			self.initID = self.main.getLatestMessageID()
 			if not self.historyLoaded:
-				pos = len(self.tweets) - self.main.loadMessageCount
+				pos = len(self.items) - self.main.loadMessageCount
 				if pos < 0:
 					pos = 0
 				
-				self.tweets = self.tweets[pos:]
+				self.items = self.items[pos:]
 			
 			self.render()
-	
-	
+
 	
 	# Render the Timeline ------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -79,23 +78,23 @@ class HTML(view.HTMLView):
 		self.position = self.scroll.get_vscrollbar().get_value()
 		self.isRendering = True
 		self.mode = "render"
-		self.tweets.sort(self.compare)
+		self.items.sort(self.compare)
 		
 		# Set the latest tweet for reloading on startup
-		if len(self.tweets) > 0:
-			id = len(self.tweets) - self.main.loadMessageCount
+		if len(self.items) > 0:
+			id = len(self.items) - self.main.loadMessageCount
 			if id < 0:
 				id = 0
 			
-			self.main.settings['firstmessage_' + self.main.username] = str(self.tweets[id][0].id - 1)
+			self.main.settings['firstmessage_' + self.main.username] = str(self.items[id][0].id - 1)
 		
 		# Render
-		renderTweets = []
+		renderitems = []
 		lastname = ""
-				
+		
 		# Newest Stuff
 		if self.newestID == -1:
-			self.newestID = self.main.updater.initMessageID
+			self.newestID = self.initID
 		
 		newest = False
 		newestAvatar = False
@@ -104,15 +103,15 @@ class HTML(view.HTMLView):
 		
 		# Do the rendering!
 		self.count = 0
-		for num, obj in enumerate(self.tweets):
+		for num, obj in enumerate(self.items):
 			tweet, img, mode = obj
 			
-			# Fix some stuff for the seperation of continous new/old tweets
-			newTimeline = tweet.id > self.main.updater.initMessageID
+			# Fix some stuff for the seperation of continous new/old items
+			newTimeline = tweet.id > self.initID
 			if newTimeline:
 				self.count += 1
 			
-			if newest or self.main.updater.initMessageID == 0:
+			if newest or self.initID == 0:
 				newTimeline = False
 			
 			if newTimeline:
@@ -124,16 +123,16 @@ class HTML(view.HTMLView):
 			# Spacer
 			if num > 0:
 				if lastname != tweet.sender.screen_name or newTimeline:
-					if tweet.id > self.main.updater.initMessageID:
-						renderTweets.insert(0, '<div class="spacer1"></div>')
+					if tweet.id > self.initID:
+						renderitems.insert(0, '<div class="spacer1"></div>')
 					else:
-						renderTweets.insert(0, '<div class="spacer"></div>')
+						renderitems.insert(0, '<div class="spacer"></div>')
 				
-				elif tweet.id > self.main.updater.initMessageID:
-					renderTweets.insert(0, '<div class="spacer4"></div>')
+				elif tweet.id > self.initID:
+					renderitems.insert(0, '<div class="spacer4"></div>')
 				
 				else:
-					renderTweets.insert(0, '<div class="spacer2"></div>')
+					renderitems.insert(0, '<div class="spacer2"></div>')
 			
 			lastname = tweet.sender.screen_name
 			
@@ -146,21 +145,21 @@ class HTML(view.HTMLView):
 				profilename += "'"
 			
 			# Display Avatar?
-			if num < len(self.tweets) - 1:
-				newAvatar = self.tweets[num + 1][0].id > self.main.updater.initMessageID
+			if num < len(self.items) - 1:
+				newAvatar = self.items[num + 1][0].id > self.initID
 			else:
 				newAvatar = False
 				
-			if num > 0 and self.tweets[num - 1][0].id <= self.main.updater.initMessageID:
+			if num > 0 and self.items[num - 1][0].id <= self.initID:
 				newTimeline = False
 			
-			if newestAvatar or self.main.updater.initMessageID == 0:
+			if newestAvatar or self.initID == 0:
 				newAvatar = False
 			
 			if newAvatar:
 				newestAvatar = True
 			
-			if (num < len(self.tweets) - 1 and (tweet.sender.screen_name != self.tweets[num + 1][0].sender.screen_name or newAvatar)) or num == len(self.tweets) - 1 or newTimeline:
+			if (num < len(self.items) - 1 and (tweet.sender.screen_name != self.items[num + 1][0].sender.screen_name or newAvatar)) or num == len(self.items) - 1 or newTimeline:
 				avatar = ('<a href="http://twitter.com/%s"><img width="32" src="file://%s" title="' + lang.htmlInfo + '"/></a>') 
 				avatar = avatar % (tweet.sender.screen_name, img, tweet.sender.name, tweet.sender.followers_count, tweet.sender.friends_count, tweet.sender.statuses_count)
 			
@@ -168,7 +167,7 @@ class HTML(view.HTMLView):
 				avatar = ""
 			
 			# At?
-			if tweet.id <= self.main.updater.initMessageID:
+			if tweet.id <= self.initID:
 				clas = 'oldtweet'
 				
 			else:
@@ -228,11 +227,11 @@ class HTML(view.HTMLView):
 				html = '</div>' + html
 			
 			self.main.gui.setTitle()
-			renderTweets.insert(0, html)
+			renderitems.insert(0, html)
 			
 		
 		# Render Page
-		if len(self.tweets) > 0:
+		if len(self.items) > 0:
 			html = """
 			<html>
 				<head>
@@ -241,9 +240,9 @@ class HTML(view.HTMLView):
 				</head>
 				<body>
 					<div><div id="newcontainer">%s</div>
-					<div class="loadmore"><a href="moremessages:%d"><b>%s</b></a></div>
+					<div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
 				</body>
-			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderTweets), self.tweets[0][0].id, lang.htmlLoadMore)
+			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderitems), self.items[0][0].id, lang.htmlLoadMore)
 		
 		else:
 			html = """

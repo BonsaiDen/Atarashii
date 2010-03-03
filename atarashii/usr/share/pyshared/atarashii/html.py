@@ -38,23 +38,23 @@ class HTML(view.HTMLView):
 		self.position = self.scroll.get_vscrollbar().get_value()
 		self.isRendering = True
 		self.mode = "render"
-		self.tweets.sort(self.compare)
+		self.items.sort(self.compare)
 		
 		# Set the latest tweet for reloading on startup
-		if len(self.tweets) > 0:
-			id = len(self.tweets) - self.main.loadTweetCount
+		if len(self.items) > 0:
+			id = len(self.items) - self.main.loadTweetCount
 			if id < 0:
 				id = 0
 			
-			self.main.settings['firsttweet_' + self.main.username] = str(self.tweets[id][0].id - 1)
+			self.main.settings['firsttweet_' + self.main.username] = str(self.items[id][0].id - 1)
 		
 		# Render
-		renderTweets = []
+		renderitems = []
 		lastname = ""
 				
 		# Newest Stuff
 		if self.newestID == -1:
-			self.newestID = self.main.updater.initID
+			self.newestID = self.initID
 		
 		newest = False
 		newestAvatar = False
@@ -63,15 +63,15 @@ class HTML(view.HTMLView):
 		
 		# Do the rendering!
 		self.count = 0
-		for num, obj in enumerate(self.tweets):
+		for num, obj in enumerate(self.items):
 			tweet, img, mode = obj
 			
-			# Fix some stuff for the seperation of continous new/old tweets
-			newTimeline = tweet.id > self.main.updater.initID
+			# Fix some stuff for the seperation of continous new/old items
+			newTimeline = tweet.id > self.initID
 			if newTimeline:
 				self.count += 1
 			
-			if newest or self.main.updater.initID == 0:
+			if newest or self.initID == 0:
 				newTimeline = False
 			
 			if newTimeline:
@@ -85,25 +85,25 @@ class HTML(view.HTMLView):
 			# Spacer
 			if num > 0:
 				if lastname != tweet.user.screen_name or newTimeline:
-					if tweet.id > self.main.updater.initID:
-						renderTweets.insert(0, '<div class="spacer1"></div>')
+					if tweet.id > self.initID:
+						renderitems.insert(0, '<div class="spacer1"></div>')
 					else:
-						renderTweets.insert(0, '<div class="spacer"></div>')
+						renderitems.insert(0, '<div class="spacer"></div>')
 				
 				elif highlight != lastHighlight:
-					renderTweets.insert(0, '<div class="spacer3"></div>')
+					renderitems.insert(0, '<div class="spacer3"></div>')
 					
 				elif hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
-					renderTweets.insert(0, '<div class="spacer5"></div>')
+					renderitems.insert(0, '<div class="spacer5"></div>')
 					
 				elif highlight:
-					renderTweets.insert(0, '<div class="spacer6"></div>')
+					renderitems.insert(0, '<div class="spacer6"></div>')
 					
-				elif tweet.id > self.main.updater.initID:
-					renderTweets.insert(0, '<div class="spacer4"></div>')
+				elif tweet.id > self.initID:
+					renderitems.insert(0, '<div class="spacer4"></div>')
 					
 				else:
-					renderTweets.insert(0, '<div class="spacer2"></div>')
+					renderitems.insert(0, '<div class="spacer2"></div>')
 			
 			lastname = tweet.user.screen_name
 			lastHighlight = highlight
@@ -123,21 +123,21 @@ class HTML(view.HTMLView):
 				profilename += "'"
 			
 			# Display Avatar?
-			if num < len(self.tweets) - 1:
-				newAvatar = self.tweets[num + 1][0].id > self.main.updater.initID
+			if num < len(self.items) - 1:
+				newAvatar = self.items[num + 1][0].id > self.initID
 			else:
 				newAvatar = False
 				
-			if num > 0 and self.tweets[num - 1][0].id <= self.main.updater.initID:
+			if num > 0 and self.items[num - 1][0].id <= self.initID:
 				newTimeline = False
 			
-			if newestAvatar or self.main.updater.initID == 0:
+			if newestAvatar or self.initID == 0:
 				newAvatar = False
 			
 			if newAvatar:
 				newestAvatar = True
 			
-			if (num < len(self.tweets) - 1 and (tweet.user.screen_name != self.tweets[num + 1][0].user.screen_name or newAvatar)) or num == len(self.tweets) - 1 or newTimeline:
+			if (num < len(self.items) - 1 and (tweet.user.screen_name != self.items[num + 1][0].user.screen_name or newAvatar)) or num == len(self.items) - 1 or newTimeline:
 				avatar = ('<a href="http://twitter.com/%s"><img width="32" src="file://%s" title="' + lang.htmlInfo + '"/></a>') 
 				avatar = avatar % (tweet.user.screen_name, img, tweet.user.name, tweet.user.followers_count, tweet.user.friends_count, tweet.user.statuses_count)
 			
@@ -148,7 +148,7 @@ class HTML(view.HTMLView):
 			if hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
 				clas = 'mentioned'
 				
-			elif tweet.id <= self.main.updater.initID:
+			elif tweet.id <= self.initID:
 				if self.atUser:
 					clas = 'highlight'
 				else:
@@ -231,11 +231,11 @@ class HTML(view.HTMLView):
 				html = '</div>' + html
 			
 			self.main.gui.setTitle()
-			renderTweets.insert(0, html)
+			renderitems.insert(0, html)
 			
 		
 		# Render Page
-		if len(self.tweets) > 0:
+		if len(self.items) > 0:
 			html = """
 			<html>
 				<head>
@@ -246,7 +246,7 @@ class HTML(view.HTMLView):
 					<div><div id="newcontainer">%s</div>
 					<div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
 				</body>
-			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderTweets), self.tweets[0][0].id, lang.htmlLoadMore)
+			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderitems), self.items[0][0].id, lang.htmlLoadMore)
 		
 		else:
 			html = """
