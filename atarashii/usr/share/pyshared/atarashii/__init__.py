@@ -1,4 +1,4 @@
-#  Version 0.97
+#  Version 0.98
 #  Copyright (C) 2010 Ivo Wetzel
 #  <http://github.com/BonsaiDen/Atarashii/>
 #
@@ -21,7 +21,7 @@
 """
 Atarashii Twitter Client
 """
-__version__ = '0.97'
+__version__ = '0.98'
 __author__ = 'Ivo Wetzel <ivo.wetzel@googlemail.com>'
 __license__ = 'GPL3'
 
