@@ -172,7 +172,7 @@ class HTML(view.HTMLView):
 			
 			# Protected
 			locked = ""
-			if hasattr(tweet, "protected") and tweet.protected:
+			if hasattr(tweet.user, "protected") and tweet.user.protected:
 				locked = '<div class="protected"></div>'
 			else:
 				locked = '<div class="space">&nbsp;</div>'
