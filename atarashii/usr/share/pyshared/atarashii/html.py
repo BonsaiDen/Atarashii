@@ -95,13 +95,13 @@ class HTML(view.HTMLView):
 					
 				elif hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
 					renderitems.insert(0, '<div class="spacer5"></div>')
-					
+				
+				elif tweet.id > self.initID:
+					renderitems.insert(0, '<div class="spacer4"></div>')	
+				
 				elif highlight:
 					renderitems.insert(0, '<div class="spacer6"></div>')
-					
-				elif tweet.id > self.initID:
-					renderitems.insert(0, '<div class="spacer4"></div>')
-					
+			
 				else:
 					renderitems.insert(0, '<div class="spacer2"></div>')
 			
