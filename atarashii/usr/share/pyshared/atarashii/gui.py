@@ -25,6 +25,7 @@ import gobject
 import calendar
 import time
 import math
+import exceptions
 
 import html
 import message
@@ -330,7 +331,14 @@ class GUI(gtk.Window):
  			code = error.response.status
  			
  		except:
- 			code = 0
+ 			if error.reason.startswith("HTTP Error "):
+ 				code = int(error.reason[11:14])
+ 		
+ 			elif type(error) == exceptions.IOError:
+ 				code = -1
+ 			
+ 			else:
+ 				code = 0
  		
 		# Ratelimit error
  		if (code == 400 and not self.main.wasSending) or (code == 403 and self.main.wasSending):
@@ -345,8 +353,14 @@ class GUI(gtk.Window):
  			rateError = ""
  		
  		self.main.wasSending = False
- 		try:
+ 		
+ 		# Show Warning on url error or error message for anything else 		
+ 		if code == -1:
+ 			dialog.MessageDialog(self, "warning", lang.warningURL, lang.warningTitle)
+ 		
+ 		else:
 	 		description = {
+	 			0 : lang.errorInternal % str(error),
 	 			404 : lang.errorLogin % self.main.username,
 	 			401 : lang.errorLogin % self.main.username,
 	 			400 : rateError,
@@ -354,11 +368,8 @@ class GUI(gtk.Window):
 	 			502 : lang.errorDown,
 	 			503 : lang.errorOverload
 	 		}[code]
+	 		dialog.MessageDialog(self, "error", description, lang.errorTitle)
 	 	
-	 	except:
-	 		description = lang.errorInternal % str(error)
-	 	
-	 	dialog.MessageDialog(self, "error", description, lang.errorTitle)
 	 	self.updateStatus()
 	
 	def showWarning(self, limit):
