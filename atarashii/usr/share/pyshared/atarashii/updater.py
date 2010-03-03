@@ -64,17 +64,6 @@ class Updater(threading.Thread):
 	# Init the Updater ---------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def init(self):
-		# xAuth Login, yes the app stuff is here, were should it go?
-		# Why should anyone else use the Atarashii App for posting from HIS client? :D
-		auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q", "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg", secure = True)
-		try:
-			auth.get_xauth_access_token(self.main.username, password = self.main.settings["password_" + self.main.username])
-			self.main.api = tweepy.API(auth)
-		
-		except Exception, error:
-			gobject.idle_add(lambda: self.main.onLoginFailed(error))
-			return False
-		
 		# Init Views
 		self.html = self.main.gui.html
 		self.message = self.main.gui.message
@@ -91,7 +80,18 @@ class Updater(threading.Thread):
 		self.message.lastID = -1
 		self.html.lastID = -1
 		self.message.loaded = 0
-		self.html.loaded = 0
+		self.html.loaded = 0	
+	
+		# xAuth Login, yes the app stuff is here, were should it go?
+		# Why should anyone else use the Atarashii App for posting from HIS client? :D
+		auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q", "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg", secure = True)
+		try:
+			auth.get_xauth_access_token(self.main.username, password = self.main.settings["password_" + self.main.username])
+			self.main.api = tweepy.API(auth)
+		
+		except Exception, error:
+			gobject.idle_add(lambda: self.main.onLoginFailed(error))
+			return False
 		
 		# InitID = the last read tweet
 		self.html.initID = self.main.getLatestID()
