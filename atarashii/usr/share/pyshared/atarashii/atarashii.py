@@ -331,8 +331,4 @@ class Atarashii:
  		gtk.main_quit()
  		sys.exit(1)
 
-
-# Run for debugging
-if __name__ == "__main__":
-	Atarashii(0.94).start()
 	
