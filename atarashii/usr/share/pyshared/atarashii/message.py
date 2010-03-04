@@ -77,6 +77,8 @@ class HTML(view.HTMLView):
 			
 			# Create Tweet HTML
 			text = self.formatter.parse(tweet.text)
+			highlight = tweet.recipient_screen_name != self.main.username
+			
 			
 			# Spacer
 			if num > 0:
@@ -85,8 +87,14 @@ class HTML(view.HTMLView):
 					if tweet.id > self.initID:
 						spacer = "1"
 				
+				elif highlight != lastHighlight:
+					spacer = "3"		
+				
 				elif tweet.id > self.initID:
 					spacer = "4"
+				
+				elif highlight:
+					spacer = "6"
 				
 				else:
 					spacer = "2"
@@ -94,6 +102,7 @@ class HTML(view.HTMLView):
 				renderitems.insert(0, '<div class="spacer%s"></div>' % spacer)
 			
 			lastname = tweet.sender.screen_name
+			lastHighlight = highlight
 			
 			# Realname
 			profilename = tweet.sender.name.strip() + "'s"
@@ -128,6 +137,7 @@ class HTML(view.HTMLView):
 				mode = lang.messageTo
 				name = tweet.recipient_screen_name
 				reply = "display: none;"
+				clas = "highlight"
 			
 			else:
 				mode = lang.messageFrom
