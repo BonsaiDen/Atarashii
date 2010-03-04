@@ -147,7 +147,7 @@ class Updater(threading.Thread):
 			if i != None:
 				imgfile = self.getImage(i.user.profile_image_url, i.user.id)
 				self.html.updateList.append((i, imgfile, False))
-	
+		
 		gobject.idle_add(lambda: self.html.pushUpdates())
 		self.html.loaded = 1
 		return True
@@ -244,35 +244,8 @@ class Updater(threading.Thread):
 		elif not self.refreshNow:
 			self.messageCounter += 1
 		
-		# Filter non User Tweets
-		tweetList = []
-		tweetIDS = []
-		messageIDS = []
-		for i in messages:
-			imgfile = self.getImage(i.sender.profile_image_url, i.sender.id)
-			if i.sender.screen_name.lower() != sefl.main.username.lower():
-				# Don't add mentions twice
-				if not i.id in messageIDS:
-					messageIDS.append(i.id)
-					tweetList.append((lang.notificationMessage % i.sender.screen_name, i.text, imgfile, None))
-			
-			self.message.updateList.append((i, imgfile, False))	
-		
-		for i in updates:
-			imgfile = self.getImage(i.user.profile_image_url, i.user.id)
-			if i.user.screen_name.lower() != self.main.username.lower():
-				# Don't add mentions twice
-				if not i.id in tweetIDS:
-					tweetIDS.append(i.id)
-					tweetList.append((i.user.screen_name, i.text, imgfile, None))
-			
-			self.html.updateList.append((i, imgfile, False))
-		
-		# Show Notifications
-		if len(tweetList) > 0:
-			if self.settings.isTrue("notify"):
-				tweetList.reverse()
-				self.notify.show(tweetList, self.settings.isTrue("sound"))
+		# Notify
+		self.showNotifications(updates, messages)
 		
 		# Update View
 		if len(updates) > 0:
@@ -290,6 +263,43 @@ class Updater(threading.Thread):
 		# Rate Limiting
 		self.updateLimit()
 		
+		
+	# Notifications ------------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def showNotifications(self, updates, messages):
+		tweetList = []
+		tweetIDS = []
+		messageIDS = []
+		for i in messages:
+			imgfile = self.getImage(i.sender.profile_image_url, i.sender.id)
+			if i.sender.screen_name.lower() != sefl.main.username.lower():
+				if not i.id in messageIDS:
+					messageIDS.append(i.id)
+					tweetList.append([lang.notificationMessage % i.sender.screen_name, i.text, imgfile, None])
+			
+			self.message.updateList.append((i, imgfile, False))	
+		
+		for i in updates:
+			imgfile = self.getImage(i.user.profile_image_url, i.user.id)
+			if i.user.screen_name.lower() != self.main.username.lower():
+				# Don't add mentions twice
+				if not i.id in tweetIDS:
+					tweetIDS.append(i.id)
+					tweetList.append([i.user.screen_name, i.text, imgfile, None])
+			
+			self.html.updateList.append((i, imgfile, False))
+		
+		# Show Notifications
+		if len(tweetList) > 0:
+			if self.settings.isTrue("notify"):
+				tweetList.reverse()
+				count = len(tweetList)
+				if count > 1:
+					for num, i in enumerate(tweetList):
+						tweetList[num][0] = lang.notificationIndex % (tweetList[num][0], num+1, count)
+				
+				self.notify.show(tweetList, self.settings.isTrue("sound"))
+	
 	
 	# Load History -------------------------------------------------------------
 	# --------------------------------------------------------------------------
