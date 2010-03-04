@@ -14,7 +14,6 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
-# TODO somehow notify the user of new direct messages(make the button blink or something...)
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -179,6 +178,7 @@ class Atarashii:
 			self.gui.html.start()
 		
 		self.gui.settingsButton.set_sensitive(False)
+		self.gui.tray.settingsMenu.set_sensitive(False)
 		self.gui.message.init(True)
 		if not self.gui.mode:
 			self.gui.message.start()
@@ -190,6 +190,7 @@ class Atarashii:
 		self.loginStatus = True
 		self.isConnecting = False
 		self.gui.settingsButton.set_sensitive(True)
+		self.gui.tray.settingsMenu.set_sensitive(True)
 		self.gui.set_title(lang.titleLoggedIn % self.username)
 		self.gui.updateStatus()
 		self.gui.showInput()
@@ -200,6 +201,7 @@ class Atarashii:
 		self.loginStatus = False
 		self.isConnecting = False
 		self.gui.settingsButton.set_sensitive(True)
+		self.gui.tray.settingsMenu.set_sensitive(True)
 		self.gui.set_title(lang.title)
 		self.gui.hideAll()
 		self.gui.updateStatus()
@@ -293,6 +295,18 @@ class Atarashii:
 		
 		else:
 			return -1
+
+	def setTweetCount(self, count):
+		self.maxTweetCount = count
+	
+	def getTweetCount(self):
+		return self.maxTweetCount
+
+	def setMessageCount(self, count):
+		self.maxMessageCount = count
+	
+	def getMessageCount(self):
+		return self.maxMessageCount
 
 
  	# Start & Quit -------------------------------------------------------------
