@@ -85,9 +85,7 @@ class TextInput(gtk.TextView):
 			gobject.idle_add(lambda: self.checkLength())
 	
 	def looseFocus(self):
-		print self.hasFocus
 		if not self.hasFocus and self.inputError != None:
-			print self.hasTyped
 			self.resize()
 			if not self.hasTyped:
 				self.modify_text(gtk.STATE_NORMAL, self.get_style().text[gtk.STATE_INSENSITIVE])
