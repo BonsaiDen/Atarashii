@@ -19,7 +19,7 @@
 import re, urllib
 urlRegex = re.compile("((mailto\:|(news|(ht|f)tp(s?))\://){1}[^\s\)]+)")
 atRegex = re.compile("@((){1}[^\?\s:])+")
-tagRegex = re.compile("\#((){1}[^\?\s+-]+)") #re.compile("\#((){1}\S+)")
+tagRegex = re.compile("\#((){1}[^\?\s+-\:]+)") #re.compile("\#((){1}\S+)")
 
 from lang import lang
 
