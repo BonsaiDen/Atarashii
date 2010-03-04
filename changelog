@@ -1,0 +1,20 @@
+atarashii (0.98-1) all;
+
+  * Added xAuth authentication.
+  * Real changelog will start with version 1.0 development is still to busy.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 3 Mar 2010 22:52:00 +0100
+
+atarashii (0.96-1) all;
+
+  * Added support for direct messages.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 2 Mar 2010 18:23:00 +0100
+
+
+atarashii (0.93-1) all;
+
+  * Atarashii is now being distributed as a Debian package.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 27 Feb 2010 10:45:00 +0100
+

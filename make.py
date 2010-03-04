@@ -26,7 +26,27 @@ debDir = os.path.join(sys.path[0], "atarashii/DEBIAN")
 if not os.path.exists(debDir):
 	os.mkdir(debDir)
 
+
+print "\n---- Packing changelog ----"
+log = os.path.join(sys.path[0], 'changelog')
+log1 = os.path.join(sys.path[0], "atarashii/usr/share/doc/atarashii/changelog")
+log2 = os.path.join(sys.path[0], "atarashii/usr/share/doc/atarashii/changelog.Debian")
+shutil.copyfile(log, log1)
+shutil.copyfile(log, log2)
+try:
+	os.unlink(log1 + '.gz')
+except:
+	pass
+try:
+	os.unlink(log2 + '.gz')
+except:
+	pass
+subprocess.call(["gzip", "--best", log1])
+subprocess.call(["gzip", "--best", log2])
+
+
 # Check all files
+print "\n---- Cleaning up ----"
 m = open(os.path.join(sys.path[0], "atarashii/DEBIAN/md5sums"), "w")
 size = 0
 cur = os.path.join(sys.path[0], "atarashii/usr")
@@ -47,8 +67,12 @@ for i in dirs:
 			
 			
 m.close()
+print "\n---- Stats ----"
 print "Current Version is %s" % atarashii.__version__
 print "Complete size is %d KB" % (size / 1024)
+
+# Pack changelog
+print "\n---- Packing ----"
 
 # Write control file
 c = open(os.path.join(sys.path[0], "atarashii/DEBIAN/control"), "w")
@@ -71,7 +95,7 @@ c.close()
 
 
 # Create package
-print "Building package..."
+print "Kittens arr creating your package..."
 subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"])
 shutil.move(os.path.join(sys.path[0], "atarashii.deb"), os.path.join(sys.path[0], "atarashii_%s-1_all.deb" % atarashii.__version__))
 print "Build complete!"
