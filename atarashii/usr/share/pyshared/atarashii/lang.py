@@ -54,6 +54,8 @@ class LangDE:
 		self.htmlExact = "vom %d.%m.%Y"
 		
 		self.messageLoading = "Nachrichten werden geladen..."
+		self.messageLoadMore = "Mehr"
+		self.messageEmpty = "Keine Nachrichten"
 		
 		# Notifications
 		self.notificationMessage = "Nachricht von %s:"
@@ -186,7 +188,7 @@ class LangEN:
 		self.htmlBy = " by %s"
 		self.htmlInReply = "in reply to %s"
 		self.htmlLoadMore = "More"
-		self.htmlEmpty = "No tweets."
+		self.htmlEmpty = "No Tweets"
 		
 		self.htmlAboutSecond = 'about one second ago'
 		self.htmlSecond = '%d seconds ago'
@@ -200,6 +202,8 @@ class LangEN:
 		self.htmlExact = "from %m.%d.%Y"
 		
 		self.messageLoading = "Loading messages..."
+		self.messageLoadMore = "More"
+		self.messageEmpty = "No Messages"
 		
 		# Notifications
 		self.notificationMessage = "Message from %s:"
