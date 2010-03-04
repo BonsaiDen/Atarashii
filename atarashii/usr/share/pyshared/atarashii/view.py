@@ -51,41 +51,17 @@ class HTMLView(webkit.WebView):
 		self.mode = ""
 		self.count = 0
 		self.formatter = format.Formatter()
+		self.getLatest = None
+		self.itemCount = 20
+		self.getItemCount = None
+		self.setItemCount = None
+		
+		self.langLoading = ""
+		self.langLoad = ""
+		self.langEmpty = ""
+		
 		self.init(True)
 	
-	
-	# Screens ------------------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def start(self):
-		self.mode = "start"
-		self.isRendering = True
-		self.offsetCount = 0
-		self.load_string("""
-		<html>
-			<head>
-				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
-			</head>
-			<body class="unloaded">
-				<div class="loading"><b>%s</b></div>
-			</body>
-		</html>""" % (self.main.getResource("atarashii.css"), lang.htmlLoading), "text/html", "UTF-8", "file:///main/")
-	
-	def splash(self):
-		self.mode = "splash"
-		self.isRendering = True
-		self.offsetCount = 0
-		self.load_string("""
-		<html>
-			<head>
-				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
-			</head>
-			<body class="unloaded">
-				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
-			</body>
-		</html>""" % (self.main.getResource("atarashii.css"), self.main.getImage(), lang.htmlWelcome), "text/html", "UTF-8", "file:///main/")
-
 	
 	# Initiate a empty timeline ------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -110,7 +86,42 @@ class HTMLView(webkit.WebView):
 		if splash:
 			self.splash()
 	
-	# Fix scrolling isses on page load
+	
+	# Screens ------------------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def start(self):
+		self.mode = "start"
+		self.isRendering = True
+		self.offsetCount = 0
+		self.load_string("""
+		<html>
+			<head>
+				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
+			</head>
+			<body class="unloaded">
+				<div class="loading"><b>%s</b></div>
+			</body>
+		</html>""" % (self.main.getResource("atarashii.css"), self.langLoading), "text/html", "UTF-8", "file:///main/")
+	
+	def splash(self):
+		self.mode = "splash"
+		self.isRendering = True
+		self.offsetCount = 0
+		self.load_string("""
+		<html>
+			<head>
+				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
+			</head>
+			<body class="unloaded">
+				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
+			</body>
+		</html>""" % (self.main.getResource("atarashii.css"), self.main.getImage(), lang.htmlWelcome), "text/html", "UTF-8", "file:///main/")
+
+	
+	# Fix scrolling isses on page load -----------------------------------------
+	# --------------------------------------------------------------------------
 	def getOffset(self):
 		try:
 			self.execute_script('document.title=document.getElementById("newcontainer").offsetHeight;')
@@ -158,21 +169,22 @@ class HTMLView(webkit.WebView):
 			self.scroll.get_vscrollbar().set_value(offset - height)
 	
 	
-	# Clear the History --------------------------------------------------------
+	# History / Read Button ---------------------------------------------------
+	# -------------------------------------------------------------------------
 	def clear(self):
 		self.historyLoaded = False
 		self.items = self.items[self.historyCount:]
-		self.main.maxTweetCount -= self.historyCount
+		self.setItemCount(self.getItemCount() - self.historyCount)
 		self.historyCount = 0
 		self.main.gui.historyButton.set_sensitive(False)
 		self.render()
 	
 	def read(self):
-		if self.initID != self.main.getLatestID():
+		if self.initID != self.getLatest():
 			self.main.gui.readButton.set_sensitive(False)
-			self.initID = self.main.getLatestID()
+			self.initID = self.getLatest()
 			if not self.historyLoaded:
-				pos = len(self.items) - self.main.loadTweetCount
+				pos = len(self.items) - self.itemCount
 				if pos < 0:
 					pos = 0
 				
@@ -219,6 +231,58 @@ class HTMLView(webkit.WebView):
 		else:
 			return 0
 	
+	
+	# Setup rendering ----------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def initRender(self):
+		self.position = self.scroll.get_vscrollbar().get_value()
+		self.isRendering = True
+		self.mode = "render"
+		self.items.sort(self.compare)
+		
+		# Set the latest tweet for reloading on startup
+		if len(self.items) > 0:
+			id = len(self.items) - self.itemCount
+			if id < 0:
+				id = 0
+			
+			self.main.settings[self.firstSetting + self.main.username] = str(self.items[id][0].id - 1)
+			
+		# Newest Stuff
+		if self.newestID == -1:
+			self.newestID = self.initID	
+	
+	
+	# Render the actual HTML ---------------------------------------------------
+	# --------------------------------------------------------------------------	
+	def setHTML(self, renderitems):
+		if len(self.items) > 0:
+			html = """
+			<html>
+				<head>
+					<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+					<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
+				</head>
+				<body>
+					<div><div id="newcontainer">%s</div>
+					<div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
+				</body>
+			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderitems), self.items[0][0].id, self.langLoad)
+		
+		else:
+			html = """
+			<html>
+				<head>
+					<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+					<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
+				</head>
+				<body class="unloaded">
+					<div class="loading"><b>%s</b></div>
+				</body>
+			</html>""" % (self.main.getResource("atarashii.css"), self.langEmpty)
+		
+		self.load_string(html, "text/html", "UTF-8", "file:///main/")
+
 	
 	# Helpers ------------------------------------------------------------------
 	# --------------------------------------------------------------------------

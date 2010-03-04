@@ -31,31 +31,29 @@ class HTML(view.HTMLView):
 		self.main = main
 		self.gui = gui
 		view.HTMLView.__init__(self, main, gui, self.gui.htmlScroll)
+		self.getLatest = self.main.getLatestID
+		self.itemCount = self.main.loadTweetCount
+		
+		self.getItemCount = self.main.getTweetCount
+		self.setItemCount = self.main.setTweetCount
+		
+		self.langLoading = lang.htmlLoading
+		self.langEmpty = lang.htmlEmpty
+		self.langLoad = lang.htmlLoadMore
+		
+		self.firstSetting = 'firsttweet_'
+		
 
 	# Render the Timeline ------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def render(self):	
-		self.position = self.scroll.get_vscrollbar().get_value()
-		self.isRendering = True
-		self.mode = "render"
-		self.items.sort(self.compare)
-		
-		# Set the latest tweet for reloading on startup
-		if len(self.items) > 0:
-			id = len(self.items) - self.main.loadTweetCount
-			if id < 0:
-				id = 0
-			
-			self.main.settings['firsttweet_' + self.main.username] = str(self.items[id][0].id - 1)
+		self.initRender()
 		
 		# Render
 		renderitems = []
 		lastname = ""
 				
 		# Newest Stuff
-		if self.newestID == -1:
-			self.newestID = self.initID
-		
 		newest = False
 		newestAvatar = False
 		container = False
@@ -232,34 +230,7 @@ class HTML(view.HTMLView):
 			
 			self.main.gui.setTitle()
 			renderitems.insert(0, html)
-			
 		
-		# Render Page
-		if len(self.items) > 0:
-			html = """
-			<html>
-				<head>
-					<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-					<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
-				</head>
-				<body>
-					<div><div id="newcontainer">%s</div>
-					<div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
-				</body>
-			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderitems), self.items[0][0].id, lang.htmlLoadMore)
-		
-		else:
-			html = """
-			<html>
-				<head>
-					<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-					<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
-				</head>
-				<body class="unloaded">
-					<div class="loading"><b>%s</b></div>
-				</body>
-			</html>""" % (self.main.getResource("atarashii.css"), lang.htmlEmpty)
-		
-		self.load_string(html, "text/html", "UTF-8", "file:///main/")
+		# Render
+		self.setHTML(renderitems)
 
-	

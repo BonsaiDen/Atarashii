@@ -25,77 +25,35 @@ import view
 
 from lang import lang
 
+
 class HTML(view.HTMLView):
 	def __init__(self, main, gui):
 		self.main = main
 		self.gui = gui
 		view.HTMLView.__init__(self, main, gui, self.gui.messageScroll)
-
-
-	# Screens ------------------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def start(self):
-		self.mode = "start"
-		self.isRendering = True
-		self.offsetCount = 0
-		self.load_string("""
-		<html>
-			<head>
-				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
-			</head>
-			<body class="unloaded">
-				<div class="loading"><b>%s</b></div>
-			</body>
-		</html>""" % (self.main.getResource("atarashii.css"), lang.messageLoading), "text/html", "UTF-8", "file:///main/")
+		self.getLatest = self.main.getLatestMessageID
+		self.itemCount = self.main.loadMessageCount
+		
+		self.getItemCount = self.main.getMessageCount
+		self.setItemCount = self.main.setMessageCount
+		
+		self.langLoading = lang.messageLoading
+		self.langEmpty = lang.messageEmpty
+		self.langLoad = lang.messageLoadMore
+		
+		self.firstSetting = 'firstmessage_'
 	
-	# Clear the History
-	def clear(self):
-		self.historyLoaded = False
-		self.items = self.items[self.historyCount:]
-		self.main.maxMessageCount -= self.historyCount
-		self.historyCount = 0
-		self.main.gui.historyButton.set_sensitive(False)
-		self.render()
-	
-	def read(self):
-		if self.initID != self.main.getLatestMessageID():
-			self.main.gui.readButton.set_sensitive(False)
-			self.initID = self.main.getLatestMessageID()
-			if not self.historyLoaded:
-				pos = len(self.items) - self.main.loadMessageCount
-				if pos < 0:
-					pos = 0
-				
-				self.items = self.items[pos:]
-			
-			self.render()
-
 	
 	# Render the Timeline ------------------------------------------------------
 	# --------------------------------------------------------------------------
-	def render(self):	
-		self.position = self.scroll.get_vscrollbar().get_value()
-		self.isRendering = True
-		self.mode = "render"
-		self.items.sort(self.compare)
-		
-		# Set the latest tweet for reloading on startup
-		if len(self.items) > 0:
-			id = len(self.items) - self.main.loadMessageCount
-			if id < 0:
-				id = 0
-			
-			self.main.settings['firstmessage_' + self.main.username] = str(self.items[id][0].id - 1)
+	def render(self):
+		self.initRender()
 		
 		# Render
 		renderitems = []
 		lastname = ""
 		
 		# Newest Stuff
-		if self.newestID == -1:
-			self.newestID = self.initID
-		
 		newest = False
 		newestAvatar = False
 		container = False
@@ -229,33 +187,6 @@ class HTML(view.HTMLView):
 			self.main.gui.setTitle()
 			renderitems.insert(0, html)
 			
-		
-		# Render Page
-		if len(self.items) > 0:
-			html = """
-			<html>
-				<head>
-					<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-					<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
-				</head>
-				<body>
-					<div><div id="newcontainer">%s</div>
-					<div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
-				</body>
-			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderitems), self.items[0][0].id, lang.htmlLoadMore)
-		
-		else:
-			html = """
-			<html>
-				<head>
-					<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-					<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
-				</head>
-				<body class="unloaded">
-					<div class="loading"><b>%s</b></div>
-				</body>
-			</html>""" % (self.main.getResource("atarashii.css"), lang.htmlEmpty)
-		
-		self.load_string(html, "text/html", "UTF-8", "file:///main/")
-
+		# Render
+		self.setHTML(renderitems)
 	
