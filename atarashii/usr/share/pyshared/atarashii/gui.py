@@ -182,7 +182,10 @@ class GUI(gtk.Window):
 	def showProgress(self):
 		def progressActivity():
 			self.progress.pulse()
-			return self.main.isSending or self.main.isConnecting or self.main.isLoadingHistory or (self.mode and self.message.loaded == 0) or (not self.mode and self.html.loaded == 0)
+			return self.main.isSending or self.main.isConnecting or \
+				self.main.isLoadingHistory or \
+				(self.mode and self.message.loaded == 0) or \
+				(not self.mode and self.html.loaded == 0)
 	
 		self.progress.set_fraction(0.0)
 		self.progress.show()
@@ -359,7 +362,7 @@ class GUI(gtk.Window):
  		self.main.wasSending = False
  		
  		# Show Warning on url error or error message for anything else 		
- 		if code == -1:
+ 		if code == -1 or code == 500 or code == 502 or code == 503:
  			dialog.MessageDialog(self, "warning", lang.warningURL, lang.warningTitle)
  		
  		else:
