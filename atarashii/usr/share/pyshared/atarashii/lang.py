@@ -58,7 +58,8 @@ class LangDE:
 		self.messageEmpty = "Keine Nachrichten"
 		
 		# Notifications
-		self.notificationMessage = "Nachricht von %s:"
+		self.notificationMessage = "Nachricht von %s"
+		self.notificationIndex = "%s (%d von %d)"
 		
 		# Text
 		self.textEntry = "Was passiert gerade?"
@@ -207,6 +208,9 @@ class LangEN:
 		
 		# Notifications
 		self.notificationMessage = "Message from %s:"
+		self.notificationMessage = "Message from %s"
+		self.notificationIndex = "%s (%d of %d)"
+		
 		
 		# Text
 		self.textEntry = "What's happening?"
