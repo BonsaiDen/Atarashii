@@ -29,10 +29,12 @@ if not os.path.exists(debDir):
 
 print "\n---- Packing changelog ----"
 log = os.path.join(sys.path[0], 'changelog')
+print "Copying logs..."
 log1 = os.path.join(sys.path[0], "atarashii/usr/share/doc/atarashii/changelog")
 log2 = os.path.join(sys.path[0], "atarashii/usr/share/doc/atarashii/changelog.Debian")
 shutil.copyfile(log, log1)
 shutil.copyfile(log, log2)
+print "Removing old logs..."
 try:
 	os.unlink(log1 + '.gz')
 except:
@@ -41,12 +43,14 @@ try:
 	os.unlink(log2 + '.gz')
 except:
 	pass
+print "Packing new logs..."
 subprocess.call(["gzip", "--best", log1])
 subprocess.call(["gzip", "--best", log2])
 
 
 # Check all files
 print "\n---- Cleaning up ----"
+print "Checking files..."
 m = open(os.path.join(sys.path[0], "atarashii/DEBIAN/md5sums"), "w")
 size = 0
 cur = os.path.join(sys.path[0], "atarashii/usr")
@@ -58,23 +62,24 @@ for i in dirs:
 		file = os.path.join(path, f)
 		if f.endswith("~") or f.endswith(".pyc"):
 			os.remove(file)
-			print "deleting %s" % file
+			print "- deleting %s" % file
 		
 		else:
 			size += os.stat(file).st_size
 			cf = file[len(cur)-3:]
 			m.write("%s  %s\n" % (getFileMD5(file), cf))
-			
-			
+
+
 m.close()
 print "\n---- Stats ----"
 print "Current Version is %s" % atarashii.__version__
 print "Complete size is %d KB" % (size / 1024)
 
 # Pack changelog
-print "\n---- Packing ----"
+print "\n---- Packaging ----"
 
 # Write control file
+print "Creating control file..."
 c = open(os.path.join(sys.path[0], "atarashii/DEBIAN/control"), "w")
 
 c.write("""Package: atarashii
@@ -95,7 +100,8 @@ c.close()
 
 
 # Create package
-print "Kittens arr creating your package..."
+print "Kittens are playing with the contents of your package..."
+print "...I mean we're building Aatrashii!"
 subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"])
 shutil.move(os.path.join(sys.path[0], "atarashii.deb"), os.path.join(sys.path[0], "atarashii_%s-1_all.deb" % atarashii.__version__))
 print "Build complete!"
