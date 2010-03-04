@@ -50,6 +50,7 @@ class TrayIcon(gtk.StatusIcon):
 		menuItem.set_label(lang.menuSettings)
 		menuItem.connect('activate', lambda *args: self.gui.onSettings(True), self)	
 		menu.append(menuItem)
+		self.settingsMenu = menuItem
 		
 		# Abvout
 		menuItem = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
