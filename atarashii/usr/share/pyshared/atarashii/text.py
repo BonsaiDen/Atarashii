@@ -43,6 +43,7 @@ class TextInput(gtk.TextView):
 		self.isTyping = False
 		self.hasTyped = False
 		self.isChanging = False
+		self.changeContents = False
 		self.replyRegex = re.compile('@([^\s]+)\s.*')
 		self.messageRegex = re.compile('d ([^\s]+)\s.*')
 		
@@ -89,12 +90,17 @@ class TextInput(gtk.TextView):
 			if not self.hasTyped:
 				self.modify_text(gtk.STATE_NORMAL, self.get_style().text[gtk.STATE_INSENSITIVE])
 				self.get_buffer().set_text(lang.textEntryMessage if self.gui.mode else lang.textEntry)
-	
+
 		return False
 	
 	def htmlFocus(self, *args):
-		gobject.timeout_add(100, lambda: self.looseFocus())
-		self.hasFocus = False
+		if self.hasFocus:
+			if not self.changeContents:
+				gobject.timeout_add(100, lambda: self.looseFocus())
+				self.hasFocus = False
+			
+			self.changeContents = False
+		
 	
 	# Events -------------------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -183,6 +189,9 @@ class TextInput(gtk.TextView):
 				self.checkLength()
 		
 		else:
+			if not self.isChanging:
+				self.changeContents = False
+			
 			self.hasTyped = False
 			self.gui.updateStatus()
 		
@@ -221,6 +230,7 @@ class TextInput(gtk.TextView):
 	# Reply / Retweet / Message ------------------------------------------------
 	# --------------------------------------------------------------------------
 	def reply(self, num):
+		self.changeContents = True
 		self.isChanging = True
 		self.grab_focus()
 		text = self.getText()
@@ -251,6 +261,7 @@ class TextInput(gtk.TextView):
 		self.resize()
 	
 	def retweet(self):	
+		self.changeContents = True
 		self.isChanging = True
 		self.grab_focus()
 		
@@ -267,6 +278,7 @@ class TextInput(gtk.TextView):
 		self.resize()
 	
 	def message(self, num):
+		self.changeContents = True
 		self.isChanging = True
 		self.grab_focus()
 		text = self.getText()

@@ -342,21 +342,25 @@ class HTMLView(webkit.WebView):
 					self.main.isLoadingHistory = True
 					self.gui.showProgress()
 					gobject.idle_add(lambda: self.main.gui.updateStatus(True))
+					self.main.gui.text.htmlFocus()
 
 		elif uri.startswith("reply:"):
 			foo, self.main.replyUser, self.main.replyID, num = uri.split(":")
-			gobject.idle_add(lambda: self.main.reply(int(num)))
+			self.main.reply(int(num))
+			self.main.gui.text.htmlFocus()
 		
 		elif uri.startswith("message:"):
 			foo, self.main.messageUser, self.main.messageID, num = uri.split(":")
 			self.main.messageText = self.items[int(num)][0].text
-			gobject.idle_add(lambda: self.main.message(int(num)))
+			self.main.message(int(num))
+			self.main.gui.text.htmlFocus()
 		
 		elif uri.startswith("retweet:"):
 			self.main.retweetNum = int(uri.split(":")[1])
 			self.main.retweetText = self.items[self.main.retweetNum][0].text
 			self.main.retweetUser = self.items[self.main.retweetNum][0].user.screen_name
-			gobject.idle_add(lambda: self.main.retweet())
+			self.main.retweet()
+			self.main.gui.text.htmlFocus()
 		
 		else:
 			webbrowser.open(uri)
