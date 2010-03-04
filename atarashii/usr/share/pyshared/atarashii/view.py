@@ -82,6 +82,7 @@ class HTMLView(webkit.WebView):
 		self.loaded = -1
 		self.initID = -1
 		self.lastID = -1
+		self.count = 0
 		
 		if splash:
 			self.splash()

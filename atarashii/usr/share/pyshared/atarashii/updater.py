@@ -82,6 +82,10 @@ class Updater(threading.Thread):
 		self.message.loaded = 0
 		self.html.loaded = 0	
 	
+		# InitID = the last read tweet
+		self.html.initID = self.main.getLatestID()
+		self.message.initID = self.main.getLatestMessageID()
+	
 		# xAuth Login, yes the app stuff is here, were should it go?
 		# Why should anyone else use the Atarashii App for posting from HIS client? :D
 		auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q", "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg", secure = True)
@@ -92,10 +96,6 @@ class Updater(threading.Thread):
 		except Exception, error:
 			gobject.idle_add(lambda: self.main.onLoginFailed(error))
 			return False
-		
-		# InitID = the last read tweet
-		self.html.initID = self.main.getLatestID()
-		self.message.initID = self.main.getLatestMessageID()
 		
 		# Lazy loading
 		if self.main.gui.mode:
@@ -148,8 +148,8 @@ class Updater(threading.Thread):
 				imgfile = self.getImage(i.user.profile_image_url, i.user.id)
 				self.html.updateList.append((i, imgfile, False))
 		
-		gobject.idle_add(lambda: self.html.pushUpdates())
 		self.html.loaded = 1
+		gobject.idle_add(lambda: self.html.pushUpdates())
 		return True
 	
 	# Load initial messages ----------------------------------------------------
@@ -171,8 +171,8 @@ class Updater(threading.Thread):
 				imgfile = self.getImage(i.sender.profile_image_url, i.sender.id)
 				self.message.updateList.append((i, imgfile, False))
 	
-		gobject.idle_add(lambda: self.message.pushUpdates())
 		self.message.loaded = 1
+		gobject.idle_add(lambda: self.message.pushUpdates())
 		return True
 	
 	# Mainloop -----------------------------------------------------------------
