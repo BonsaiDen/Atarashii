@@ -101,7 +101,7 @@ c.close()
 
 # Create package
 print "Kittens are playing with the contents of your package..."
-print "...I mean we're building Aatrashii!"
+print "...I mean we're building it!"
 subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"])
 shutil.move(os.path.join(sys.path[0], "atarashii.deb"), os.path.join(sys.path[0], "atarashii_%s-1_all.deb" % atarashii.__version__))
 print "Build complete!"
