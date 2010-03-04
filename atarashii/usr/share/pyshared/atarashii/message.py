@@ -80,17 +80,18 @@ class HTML(view.HTMLView):
 			
 			# Spacer
 			if num > 0:
+				spacer = ""
 				if lastname != tweet.sender.screen_name or newTimeline:
 					if tweet.id > self.initID:
-						renderitems.insert(0, '<div class="spacer1"></div>')
-					else:
-						renderitems.insert(0, '<div class="spacer"></div>')
+						spacer = "1"
 				
 				elif tweet.id > self.initID:
-					renderitems.insert(0, '<div class="spacer4"></div>')
+					spacer = "4"
 				
 				else:
-					renderitems.insert(0, '<div class="spacer2"></div>')
+					spacer = "2"
+				
+				renderitems.insert(0, '<div class="spacer%s"></div>' % spacer)
 			
 			lastname = tweet.sender.screen_name
 			

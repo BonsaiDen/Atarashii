@@ -82,26 +82,28 @@ class HTML(view.HTMLView):
 			
 			# Spacer
 			if num > 0:
+				spacer = ""
 				if lastname != tweet.user.screen_name or newTimeline:
 					if tweet.id > self.initID:
-						renderitems.insert(0, '<div class="spacer1"></div>')
-					else:
-						renderitems.insert(0, '<div class="spacer"></div>')
+						spacer = "1"
 				
 				elif highlight != lastHighlight:
-					renderitems.insert(0, '<div class="spacer3"></div>')
+					spacer = "3"
 					
 				elif hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
-					renderitems.insert(0, '<div class="spacer5"></div>')
+					spacer = "5"
 				
 				elif tweet.id > self.initID:
-					renderitems.insert(0, '<div class="spacer4"></div>')	
+					spacer = "4"
 				
 				elif highlight:
-					renderitems.insert(0, '<div class="spacer6"></div>')
+					spacer = "6"
 			
 				else:
-					renderitems.insert(0, '<div class="spacer2"></div>')
+					spacer = "2"
+				
+				renderitems.insert(0, '<div class="spacer%s"></div>' % spacer)
+					
 			
 			lastname = tweet.user.screen_name
 			lastHighlight = highlight
@@ -113,12 +115,7 @@ class HTML(view.HTMLView):
 				reply = reply % (tweet.in_reply_to_screen_name, tweet.in_reply_to_status_id, tweet.in_reply_to_screen_name)
 			
 			# Realname
-			profilename = tweet.user.name.strip()
-			if not tweet.user.name.endswith('s') and not tweet.user.name.endswith('x'):
-				profilename += "'s"
-				
-			else:
-				profilename += "'"
+			profilename = tweet.user.name.strip() + "'s"
 			
 			# Display Avatar?
 			if num < len(self.items) - 1:
