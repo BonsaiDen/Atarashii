@@ -28,7 +28,14 @@ class RateLimiter(threading.Thread):
 		self.main = updater.main
 	
 	def run(self):
-		req = self.main.api.rate_limit_status()
+		# Catch Errors
+		try:
+			req = self.main.api.rate_limit_status()
+		
+		except Exception, error:
+			gobject.idle_add(lambda: self.main.gui.showError(error))
+			return
+		
 		minutes = (req['reset_time_in_seconds'] - calendar.timegm(time.gmtime())) / 60
 		limit = req['remaining_hits']
 		if limit > 0:
