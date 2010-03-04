@@ -60,8 +60,7 @@ class Send(threading.Thread):
 				self.main.gui.text.setText("")
 				
 				# Focus HTML
-				self.main.gui.text.hasFocus = False
-				self.main.gui.showInput()
+				self.main.gui.showInput(False)
 				self.main.gui.html.grab_focus()
 				self.main.wasSending = False
 			
@@ -80,13 +79,12 @@ class Send(threading.Thread):
 				imgfile = self.main.updater.getImage(update.user.profile_image_url, update.user.id)
 				self.main.gui.html.updateList.append((update, imgfile, False))
 				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
-				
+
 				# Reset
 				self.main.gui.text.setText("")
 				
 				# Focus HTML
-				self.main.gui.text.hasFocus = False
-				self.main.gui.showInput()
+				self.main.gui.showInput(False)
 				self.main.gui.html.grab_focus()
 				self.main.wasSending = False
 			
@@ -116,8 +114,7 @@ class Send(threading.Thread):
 			self.main.gui.text.setText("")
 			
 			# Focus HTML
-			self.main.gui.text.hasFocus = False
-			self.main.gui.showInput()
+			self.main.gui.showInput(False)
 			self.main.gui.message.grab_focus()
 			self.main.wasSending = False
 		

@@ -167,10 +167,14 @@ class GUI(gtk.Window):
 	
 	# Main Functions -----------------------------------------------------------
 	# --------------------------------------------------------------------------
-	def showInput(self):
+	def showInput(self, resize = True):
 		self.progress.hide()
 		self.textScroll.show()
-		self.text.resize()
+		if resize:
+			self.text.resize()
+		else:
+			self.text.resize(1)
+		
 		self.text.set_sensitive(True)
 		self.refreshButton.set_sensitive(True)
 		self.modeButton.set_sensitive(True)

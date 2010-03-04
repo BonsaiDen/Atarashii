@@ -85,7 +85,9 @@ class TextInput(gtk.TextView):
 			gobject.idle_add(lambda: self.checkLength())
 	
 	def looseFocus(self):
+		print self.hasFocus
 		if not self.hasFocus and self.inputError != None:
+			print self.hasTyped
 			self.resize()
 			if not self.hasTyped:
 				self.modify_text(gtk.STATE_NORMAL, self.get_style().text[gtk.STATE_INSENSITIVE])
@@ -308,13 +310,13 @@ class TextInput(gtk.TextView):
 		self.looseFocus()
 		
 	
-	def resize(self):
+	def resize(self, lineCount = 5):
 		# Set Label Text
 		self.gui.setLabel()
 		
 		# Calculate Textinput Size
 		textSize = self.create_pango_context().get_font_description().get_size() / pango.SCALE
-		lines = 5 if self.hasFocus else 1 
+		lines = lineCount if self.hasFocus else 1 
 		
 		# Resize
 		height = self.gui.getHeight(self.gui.content)
