@@ -53,9 +53,12 @@ class LangDE:
 		self.htmlYesterday = "von Gestern"
 		self.htmlExact = "vom %d.%m.%Y"
 		
+		# Messages
 		self.messageLoading = "Nachrichten werden geladen..."
 		self.messageLoadMore = "Mehr"
 		self.messageEmpty = "Keine Nachrichten"
+		self.messageFrom = "Von"
+		self.messageTo = "An"
 		
 		# Notifications
 		self.notificationMessage = "Nachricht von %s"
@@ -202,9 +205,12 @@ class LangEN:
 		self.htmlYesterday = "from yesterday"
 		self.htmlExact = "from %m.%d.%Y"
 		
+		# Messages
 		self.messageLoading = "Loading messages..."
 		self.messageLoadMore = "More"
 		self.messageEmpty = "No Messages"
+		self.messageFrom = "From"
+		self.messageTo = "To"
 		
 		# Notifications
 		self.notificationMessage = "Message from %s:"
