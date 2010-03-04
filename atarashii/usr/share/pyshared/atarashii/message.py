@@ -96,12 +96,7 @@ class HTML(view.HTMLView):
 			lastname = tweet.sender.screen_name
 			
 			# Realname
-			profilename = tweet.sender.name.strip()
-			if not tweet.sender.name.endswith('s') and not tweet.sender.name.endswith('x'):
-				profilename += "'s"
-				
-			else:
-				profilename += "'"
+			profilename = tweet.sender.name.strip() + "'s"
 			
 			# Display Avatar?
 			if num < len(self.items) - 1:
@@ -125,24 +120,21 @@ class HTML(view.HTMLView):
 			else:
 				avatar = ""
 			
-			# At?
-			if tweet.id <= self.initID:
-				clas = 'oldtweet'
-				
-			else:
-				clas = 'tweet'
-			
+			# Class
+			clas = 'oldtweet' if tweet.id <= self.initID else 'tweet'
+
 			# HTML
 			if tweet.recipient_screen_name != self.main.username:
-				mode = "An"
+				mode = lang.messageTo
 				name = tweet.recipient_screen_name
 				reply = "display: none;"
 			
 			else:
-				mode = "Von"
+				mode = lang.messageFrom
 				name = tweet.sender.screen_name
 				reply = ""
 			
+			# HTML Snippet
 			html = '''
 					<div class="%s">
 						<div class="avatar">
@@ -165,7 +157,7 @@ class HTML(view.HTMLView):
 						</div>
 					</div>'''
 			
-			
+			# Insert values
 			html = html % (
 					clas, 
 					avatar,

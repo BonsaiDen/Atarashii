@@ -144,10 +144,7 @@ class HTML(view.HTMLView):
 				clas = 'mentioned'
 				
 			elif tweet.id <= self.initID:
-				if self.atUser:
-					clas = 'highlight'
-				else:
-					clas = 'oldtweet'
+				clas = 'highlight' if self.atUser else 'oldtweet'
 			
 			else:
 				clas = 'tweet'
@@ -166,13 +163,9 @@ class HTML(view.HTMLView):
 				by = lang.htmlBy % source
 			
 			# Protected
-			locked = ""
-			if hasattr(tweet.user, "protected") and tweet.user.protected:
-				locked = '<div class="protected"></div>'
-			else:
-				locked = '<div class="space">&nbsp;</div>'
+			locked = '<div class="protected"></div>' if hasattr(tweet.user, "protected") and tweet.user.protected else '<div class="space">&nbsp;</div>'
 			
-			# HTML
+			# HTML Snippet
 			html = '''
 					<div class="%s">
 						<div class="avatar">
@@ -203,7 +196,7 @@ class HTML(view.HTMLView):
 						<div class="clearfloat"></div>
 					</div>'''	
 			
-			
+			# Insert values
 			html = html % (
 					clas, 
 					avatar,
