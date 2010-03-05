@@ -472,7 +472,7 @@ class Updater(threading.Thread):
 			if updates[i] != None:
 				for e in range(i + 1, len(updates)):
 					if updates[e] != None and updates[i].id == updates[e].id:
-							updates[e] = None
+						updates[e] = None
 		
 		updates = [i for i in updates if i != None]
 		updates.sort(compare)
