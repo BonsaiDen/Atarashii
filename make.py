@@ -29,12 +29,15 @@ if not os.path.exists(debDir):
 
 print "\n---- Packing changelog ----"
 log = os.path.join(sys.path[0], 'changelog')
-print "Copying logs..."
+man = os.path.join(sys.path[0], 'manpage')
+print "Copying logs and manpage..."
 log1 = os.path.join(sys.path[0], "atarashii/usr/share/doc/atarashii/changelog")
 log2 = os.path.join(sys.path[0], "atarashii/usr/share/doc/atarashii/changelog.Debian")
+man1 = os.path.join(sys.path[0], "atarashii/usr/share/man/man1/atarashii.1")
 shutil.copyfile(log, log1)
 shutil.copyfile(log, log2)
-print "Removing old logs..."
+shutil.copyfile(man, man1)
+print "Removing old logs and manpage..."
 try:
 	os.unlink(log1 + '.gz')
 except:
@@ -43,10 +46,14 @@ try:
 	os.unlink(log2 + '.gz')
 except:
 	pass
-print "Packing new logs..."
+try:
+	os.unlink(man1 + '.gz')
+except:
+	pass
+print "Packing new logs and manpage..."
 subprocess.call(["gzip", "--best", log1])
 subprocess.call(["gzip", "--best", log2])
-
+subprocess.call(["gzip", "--best", man1])
 
 # Check all files
 print "\n---- Cleaning up ----"
