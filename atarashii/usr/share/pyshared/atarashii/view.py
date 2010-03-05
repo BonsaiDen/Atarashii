@@ -88,38 +88,52 @@ class HTMLView(webkit.WebView):
 			self.splash()
 	
 	
-	# Screens ------------------------------------------------------------------
+	# Loading HTML -------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def start(self):
-		self.mode = "start"
-		self.isRendering = True
 		self.offsetCount = 0
-		self.load_string("""
-		<html>
-			<head>
-				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
-			</head>
+		self.renderHTML("""
 			<body class="unloaded">
 				<div class="loading"><b>%s</b></div>
-			</body>
-		</html>""" % (self.main.getResource("atarashii.css"), self.langLoading), "text/html", "UTF-8", "file:///main/")
+			</body>""" % self.langLoading, "start")
+	
 	
 	def splash(self):
-		self.mode = "splash"
-		self.isRendering = True
 		self.offsetCount = 0
-		self.load_string("""
-		<html>
+		self.renderHTML("""
+			<body class="unloaded">
+				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
+			</body>""" % (self.main.getImage(), lang.htmlWelcome), "splash")
+
+
+	# Render the actual HTML ---------------------------------------------------
+	# --------------------------------------------------------------------------	
+	def renderHTML(self, html, mode):
+		self.mode = mode
+		self.isRendering = True
+		self.load_string("""<html>
 			<head>
 				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
 				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
 			</head>
-			<body class="unloaded">
-				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
-			</body>
-		</html>""" % (self.main.getResource("atarashii.css"), self.main.getImage(), lang.htmlWelcome), "text/html", "UTF-8", "file:///main/")
-
+			%s
+		</html>""" % (self.main.getResource("atarashii.css"), html), "text/html", "UTF-8", "file:///main/")
+	
+	
+	def setHTML(self, renderitems):
+		if len(self.items) > 0:
+			self.renderHTML("""
+				<body>
+					<div><div id="newcontainer">%s</div>
+					<div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
+				</body>""" % ("".join(renderitems), self.items[0][0].id, self.langLoad), "render")
+		
+		else:
+			self.renderHTML("""
+				<body class="unloaded">
+					<div class="loading"><b>%s</b></div>
+				</body>""" % self.langEmpty, "render")
+	
 	
 	# Fix scrolling isses on page load -----------------------------------------
 	# --------------------------------------------------------------------------
@@ -169,9 +183,24 @@ class HTMLView(webkit.WebView):
 		if offset > height:
 			self.scroll.get_vscrollbar().set_value(offset - height)
 	
+		
+	# Fix Reloading
+	def onLoading(self, *args):
+		if not self.isRendering:
+			if self.mode == "render":
+				self.render()
 	
-	# History / Read Button ---------------------------------------------------
-	# -------------------------------------------------------------------------
+			elif self.mode == "start":
+				self.start()
+			
+			elif self.mode == "splash":
+				self.splash()
+				
+			return True
+	
+	
+	# History / Read Button ----------------------------------------------------
+	# --------------------------------------------------------------------------
 	def clear(self):
 		self.historyLoaded = False
 		self.items = self.items[self.historyCount:]
@@ -237,8 +266,6 @@ class HTMLView(webkit.WebView):
 	# --------------------------------------------------------------------------
 	def initRender(self):
 		self.position = self.scroll.get_vscrollbar().get_value()
-		self.isRendering = True
-		self.mode = "render"
 		self.items.sort(self.compare)
 		
 		# Set the latest tweet for reloading on startup
@@ -253,37 +280,6 @@ class HTMLView(webkit.WebView):
 		if self.newestID == -1:
 			self.newestID = self.initID	
 	
-	
-	# Render the actual HTML ---------------------------------------------------
-	# --------------------------------------------------------------------------	
-	def setHTML(self, renderitems):
-		if len(self.items) > 0:
-			html = """
-			<html>
-				<head>
-					<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-					<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
-				</head>
-				<body>
-					<div><div id="newcontainer">%s</div>
-					<div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
-				</body>
-			</html>""" % (self.main.getResource("atarashii.css"), "".join(renderitems), self.items[0][0].id, self.langLoad)
-		
-		else:
-			html = """
-			<html>
-				<head>
-					<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-					<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
-				</head>
-				<body class="unloaded">
-					<div class="loading"><b>%s</b></div>
-				</body>
-			</html>""" % (self.main.getResource("atarashii.css"), self.langEmpty)
-		
-		self.load_string(html, "text/html", "UTF-8", "file:///main/")
-
 	
 	# Helpers ------------------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -319,7 +315,8 @@ class HTMLView(webkit.WebView):
 		else:
 			t = time.localtime(calendar.timegm(t.timetuple()))
 			return time.strftime(lang.htmlExact, t)
-				
+	
+	
 	def absolute_time(self, t):
 		delta = long(calendar.timegm(time.gmtime())) - long(calendar.timegm(t.timetuple()))
 		t = time.localtime(calendar.timegm(t.timetuple()))
@@ -329,12 +326,17 @@ class HTMLView(webkit.WebView):
 		else:
 			return time.strftime(lang.htmlTimeDay, t)
 	
-	# Open a Link
+	
+	# Handle the opening of links ----------------------------------------------
+	# --------------------------------------------------------------------------
 	def openLink(self, view, frame, req):
 		uri = req.get_uri()
+		
+		# Local links
 		if uri.startswith("file:///"):
 			return False
 		
+		# Load history
 		if uri.startswith("more:"):
 			if not self.main.isLoadingHistory:
 				self.loadHistoryID = int(uri.split(":")[1]) - 1
@@ -343,18 +345,21 @@ class HTMLView(webkit.WebView):
 					self.gui.showProgress()
 					gobject.idle_add(lambda: self.main.gui.updateStatus(True))
 					self.main.gui.text.htmlFocus()
-
+		
+		# Replies
 		elif uri.startswith("reply:"):
 			foo, self.main.replyUser, self.main.replyID, num = uri.split(":")
 			self.main.reply(int(num))
 			self.main.gui.text.htmlFocus()
 		
+		# Send a message
 		elif uri.startswith("message:"):
 			foo, self.main.messageUser, self.main.messageID, num = uri.split(":")
 			self.main.messageText = self.items[int(num)][0].text
 			self.main.message(int(num))
 			self.main.gui.text.htmlFocus()
 		
+		# Retweet someone
 		elif uri.startswith("retweet:"):
 			self.main.retweetNum = int(uri.split(":")[1])
 			self.main.retweetText = self.items[self.main.retweetNum][0].text
@@ -362,22 +367,9 @@ class HTMLView(webkit.WebView):
 			self.main.retweet()
 			self.main.gui.text.htmlFocus()
 		
+		# Regular links
 		else:
 			webbrowser.open(uri)
 		
 		return True
-	
-	
-	# Fix Reloading
-	def onLoading(self, *args):
-		if not self.isRendering:
-			if self.mode == "render":
-				self.render()
-	
-			elif self.mode == "start":
-				self.start()
-			
-			elif self.mode == "splash":
-				self.splash()
-				
-			return True
+
