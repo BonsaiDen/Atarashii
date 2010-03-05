@@ -96,7 +96,7 @@ class TextInput(gtk.TextView):
 	def htmlFocus(self, *args):
 		if self.hasFocus:
 			if not self.changeContents:
-				gobject.timeout_add(100, lambda: self.looseFocus())
+				gobject.timeout_add(50, lambda: self.looseFocus())
 				self.hasFocus = False
 			
 			self.changeContents = False
