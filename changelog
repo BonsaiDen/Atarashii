@@ -1,3 +1,9 @@
+atarashii (0.99-1) all;
+
+  * Bugfix release, nearly all bugs should be fixed now.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 5 Mar 2010 13:22:00 +0100
+
 atarashii (0.98-1) all;
 
   * Added xAuth authentication.
@@ -10,7 +16,6 @@ atarashii (0.96-1) all;
   * Added support for direct messages.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 2 Mar 2010 18:23:00 +0100
-
 
 atarashii (0.93-1) all;
 
