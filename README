@@ -16,6 +16,47 @@ The source is available on GitHub <http://github.com/BonsaiDen/Atarashii>, to
 contribute to the project, fork it on GitHub and send a pull request.
 Everyone is welcome to make improvements to Atarashii!
 
+Frequently Asked Questions
+--------------------------
+Q: Why another Twitter Client?
+A: Long story short: 
+   I switched to Ubuntu a couple of weeks ago so I finally got workspaces
+   (which means that I now have 5 times the amount of windows open that I had on
+    windows).
+   
+   Echofon didn't notify me about new tweets when I was on a different workspace
+   than firefox was on, so I created my own twitter client!
+   
+Q: Hey! I know Japanse and Atarashii doesn't mean "new"!
+A: Yes I know, "new" is "Shin". But to me that sounds boring so I decided to
+   go with Atarashii and fool all people that can't speak Japanese.
+
+Q: Are you the only one working on this project?
+A: No I'm not, "the kittens" are also working on it! ^.^"
+
+Q: Who are "the kittens"?
+A: Just a bunch of programming kittens I think, they just joined me recently so 
+   I don't know everything about them, but I guess the do have their reasons.
+	
+Q: Your Python code uses tabs instead of spaces! That's against PEP08!
+A: Indeed it is, but the kittens don't like using spaces, you know every single 
+   kitten has their own indentation settings, there are a couple of them using 2
+   space indentation, while others use 4 spaces, and I also think there's Carlo 
+   who has 2 16:10 monitors and favors 8 spaces.
+   
+   And since the kittens are democratic, they decided to go with a compromise. 
+   Tabs. Now every kitten can decide on their own how wide those tabs should be 
+   displayed.
+
+Q: What's the kittens favorite food?
+A: Most recently they have switched to Sushi, which means I'm running in to 
+   money problems in the short term...
+   
+   But they also like cheesecake, fruit yoghurt and all sorts of exotic fruits.
+
+Q: Can I get one of the kittens? PLEASE! PLEASE!
+A: You can't haz me! -Carlo
+
 License
 -------
 Atarashii is free software: you can redistribute it and/or 
