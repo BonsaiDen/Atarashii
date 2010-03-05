@@ -1,8 +1,3 @@
-#  Version 0.98
-#  Copyright (C) 2010 Ivo Wetzel
-#  <http://github.com/BonsaiDen/Atarashii/>
-#
-#
 #  This file is part of Atarashii.
 #
 #  Atarashii is free software: you can redistribute it and/or 
@@ -23,7 +18,8 @@ Atarashii Twitter Client
 """
 __version__ = '0.99'
 __author__ = 'Ivo Wetzel <ivo.wetzel@googlemail.com>'
-__license__ = 'GPL3'
+__copyright__ = 'Copyright (c) 2010 Ivo Wetzel'
+__license__ = 'GPL 3'
 
 import sys
 if sys.path[0] == "/usr/share/pyshared": 
