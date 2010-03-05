@@ -62,12 +62,19 @@ m = open(os.path.join(sys.path[0], "atarashii/DEBIAN/md5sums"), "w")
 size = 0
 cur = os.path.join(sys.path[0], "atarashii/usr")
 dirs = os.walk(cur)
+tempFiles = []
 for i in dirs:
 	files = i[2]
 	path = os.path.join(cur, i[0])
 	for f in files:
 		file = os.path.join(path, f)
-		if f.endswith("~") or f.endswith(".pyc"):
+		if f.startswith('.'):
+			print "- temping %s" % file
+			to = os.path.join(sys.path[0], 'tmp' + f)
+			tempFiles.append((file, to))
+			shutil.move(file, to)
+		
+		elif f.endswith("~") or f.endswith(".pyc"):
 			os.remove(file)
 			print "- deleting %s" % file
 		
@@ -108,9 +115,15 @@ c.close()
 
 # Create package
 print "Kittens are playing with the contents of your package..."
-print "...I mean we're building it!"
+print "...I mean they're building it!"
 subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"])
 shutil.move(os.path.join(sys.path[0], "atarashii.deb"), os.path.join(sys.path[0], "atarashii_%s-1_all.deb" % atarashii.__version__))
 print "Build complete!"
+
+# Move all those temp files back
+for file, to in tempFiles:
+	shutil.move(to, file)
+
+
 
 
