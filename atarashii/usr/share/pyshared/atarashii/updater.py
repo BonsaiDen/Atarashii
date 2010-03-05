@@ -86,7 +86,7 @@ class Updater(threading.Thread):
 		self.html.initID = self.main.getLatestID()
 		self.message.initID = self.main.getLatestMessageID()
 	
-		# xAuth Login, yes the app stuff is here, were should it go?
+		# xAuth Login, yes the app stuff is here, were else should it go?
 		# Why should anyone else use the Atarashii App for posting from HIS client? :D
 		auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q", "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg", secure = True)
 		try:
