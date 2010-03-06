@@ -163,9 +163,9 @@ class HTML(view.HTMLView):
 			</div>
 			
 			<div class="actions">
-				<div class="doretweet" style="''' + reply + '''">
-					<a href="message:%s:%d:%d" title="''' + \
-					(lang.htmlReply % tweet.sender.screen_name) + '''"> </a>
+				<div class="doretweet" style="''' + reply + \
+				'''"><a href="message:%s:%d:%d" title="''' + \
+					(lang.htmlReply % tweet.sender.screen_name) + '''"></a>
 				</div>
 			</div>
 			
@@ -174,7 +174,7 @@ class HTML(view.HTMLView):
 					<span class="name"><b>''' + mode + \
 					''' <a href="http://twitter.com/%s" title="''' + \
 					lang.htmlProfile + \
-					'''">%s</a></b></span> <div class="space">&nbsp;</div> %s
+					'''">%s</a></b></span> %s
 				</div>
 				<div class="time">
 					<a href="http://twitter.com/%s/statuses/%d" title="''' + \

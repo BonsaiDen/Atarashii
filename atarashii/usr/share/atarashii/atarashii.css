@@ -79,10 +79,6 @@ a, a:hover, a:active {
 	cursor: pointer;
 }
 
-.space {
-	float: left;
-}
-
 
 .clearfloat {
 	clear: both;
