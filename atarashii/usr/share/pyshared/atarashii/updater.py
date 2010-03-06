@@ -269,12 +269,10 @@ class Updater(threading.Thread):
 			if len(updates) > 0:
 				self.setLastTweet(updates[0].id)
 		
-		print "updating tweets"
 		# Messages
 		messages = []
 		if (self.messageCounter > 1 or self.refreshMessages) and \
 			not self.refreshNow:
-			print "updating messages"
 
 			try:
 				messages = self.getMessages(self.message.lastID)
