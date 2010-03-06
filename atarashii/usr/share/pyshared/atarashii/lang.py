@@ -41,6 +41,7 @@ class LangDE:
 		self.htmlInReply = "in Antwort auf %s"
 		self.htmlLoadMore = "Mehr"
 		self.htmlEmpty = "Keine Tweets"
+		self.htmlProtected = "%s's Tweets sind geschützt"
 		
 		self.htmlAboutSecond = 'vor circa einer Sekunde'
 		self.htmlSecond = 'vor %d Sekunden'
@@ -198,6 +199,7 @@ class LangEN:
 		self.htmlInReply = "in reply to %s"
 		self.htmlLoadMore = "More"
 		self.htmlEmpty = "No Tweets"
+		self.htmlProtected = "%s's Tweets are protected"
 		
 		self.htmlAboutSecond = 'about one second ago'
 		self.htmlSecond = '%d seconds ago'
