@@ -165,6 +165,14 @@ class GUI(gtk.Window):
 		else:
 			self.onMode()
 	
+	
+	# Enter as Password --------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def enterPassword(self):
+		self.main.apiTempPassword = None
+		dialog.PasswordDialog(self, lang.passwordTitle, lang.passwordQuestion % self.main.username)
+	
+	
 	# Main Functions -----------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def showInput(self, resize = True):
