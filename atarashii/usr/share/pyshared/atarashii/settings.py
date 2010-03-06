@@ -17,6 +17,7 @@
 # Settings ---------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import os
+import urllib
 
 class Settings:
 	def __init__(self):
@@ -45,8 +46,8 @@ class Settings:
 						value = True if value == "True" else False
 					
 					if name != "":
-						self.values[name] = value
-					
+						self.values[urllib.unquote(name)] = value
+				
 				except Exception, detail:
 					print detail
 			
@@ -72,7 +73,7 @@ class Settings:
 			else:
 				t = "str"
 			
-			f.write("%s %s %s\n" % (name, t, value))
+			f.write("%s %s %s\n" % (urllib.quote(name), t, value))
 		
 		f.close()
 		
