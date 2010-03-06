@@ -346,15 +346,18 @@ class GUI(gtk.Window):
  			code = error.response.status
  			
  		except:
- 			if error.reason.startswith("HTTP Error "):
- 				code = int(error.reason[11:14])
- 		
- 			elif type(error) == exceptions.IOError:
- 				code = -1
- 			
- 			else:
- 				code = 0
- 		
+ 			try:
+	 			if error.reason.startswith("HTTP Error "):
+	 				code = int(error.reason[11:14])
+	 		
+	 			elif type(error) == exceptions.IOError:
+	 				code = -1
+	 			
+	 			else:
+	 				code = 0
+	 		except:
+	 			code = 0
+	 		
 		# Ratelimit error
  		if (code == 400 and not self.main.wasSending) or (code == 403 and self.main.wasSending):
  			self.refreshButton.set_sensitive(False)
