@@ -25,7 +25,6 @@ import notify
 import gobject
 import calendar
 
-import ratelimit
 from lang import lang
 
 # Import local Tweepy
@@ -431,6 +430,9 @@ class Updater(threading.Thread):
 		
 		self.refreshNow = False
 		
+		# Ratelimit
+		self.updateLimit()
+		
 		# Return
 		updates = updates + mentions
 		if len(mentions) > 0:
@@ -462,6 +464,10 @@ class Updater(threading.Thread):
 		
 		self.refreshMessages = False
 		
+		# Ratelimit
+		self.updateLimit()
+		
+		# Return
 		def compare(x, y):
 			if x.id > y.id:
 				return -1
@@ -472,7 +478,6 @@ class Updater(threading.Thread):
 			else:
 				return 0
 	
-		# Return
 		messages.sort(compare)
 		return messages
 	
@@ -515,9 +520,23 @@ class Updater(threading.Thread):
 	
 	# Update the refreshTimeout
 	def updateLimit(self):
-		i = ratelimit.RateLimiter(self)
-		i.setDaemon(True)
-		i.start()
+		minutes = (self.main.api.ratelimit['reset'] - calendar.timegm(time.gmtime())) / 60
+		limit = self.main.api.ratelimit['remaining']
+		if limit > 0:
+			limit = limit / (2.0 + (2.0 / 5))
+			self.main.refreshTimeout = int(minutes / limit * 60 * 1.10)
+			if self.main.refreshTimeout < 30:
+				self.main.refreshTimeout = 30
+		
+		# Check for ratelimit
+		count = self.main.api.ratelimit['limit']
+		if count < 150:
+			if not self.main.rateWarningShown:
+				self.main.rateWarningShown= True
+				gobject.idle_add(lambda: self.main.gui.showWarning(count))
+		
+		else:
+			self.main.rateWarningShown = False
 	
 	# Cache a user avatar	
 	def getImage(self, url, userid):
