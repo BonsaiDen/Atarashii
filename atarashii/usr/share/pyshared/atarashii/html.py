@@ -78,8 +78,11 @@ class HTML(view.HTMLView):
 			
 			# Create Tweet HTML
 			text = self.formatter.parse(tweet.text)
-			self.atUser = self.main.username.lower() in [i.lower() for i in self.formatter.users]
-			highlight = hasattr(tweet, "is_mentioned") and tweet.is_mentioned or self.atUser
+			self.atUser = self.main.username.lower() in \
+							[i.lower() for i in self.formatter.users]
+			
+			highlight = hasattr(tweet, "is_mentioned") and \
+						tweet.is_mentioned or self.atUser
 			
 			# Spacer
 			if num > 0:
@@ -112,8 +115,11 @@ class HTML(view.HTMLView):
 			# Is this tweet a reply?
 			reply = ""
 			if tweet.in_reply_to_screen_name and tweet.in_reply_to_status_id:
-				reply = ('<a href="http://twitter.com/%s/statuses/%d">' + lang.htmlInReply + '</a>') 
-				reply = reply % (tweet.in_reply_to_screen_name, tweet.in_reply_to_status_id, tweet.in_reply_to_screen_name)
+				reply = '<a href="http://twitter.com/%s/statuses/%d">' + \
+						lang.htmlInReply + '</a>'
+				reply = reply % (tweet.in_reply_to_screen_name, 
+								tweet.in_reply_to_status_id,
+								tweet.in_reply_to_screen_name)
 			
 			# Realname
 			profilename = tweet.user.name.strip() + "'s"
@@ -133,9 +139,19 @@ class HTML(view.HTMLView):
 			if newAvatar:
 				newestAvatar = True
 			
-			if (num < len(self.items) - 1 and (tweet.user.screen_name != self.items[num + 1][0].user.screen_name or newAvatar)) or num == len(self.items) - 1 or newTimeline:
-				avatar = ('<a href="http://twitter.com/%s"><img width="32" src="file://%s" title="' + lang.htmlInfo + '"/></a>') 
-				avatar = avatar % (tweet.user.screen_name, img, tweet.user.name, tweet.user.followers_count, tweet.user.friends_count, tweet.user.statuses_count)
+			if (num < len(self.items) - 1 and \
+				(tweet.user.screen_name != \
+				self.items[num + 1][0].user.screen_name or newAvatar)) or \
+				num == len(self.items) - 1 or newTimeline:
+			
+				avatar = '''<a href="http://twitter.com/%s">
+							<img width="32" src="file://%s" title="''' + \
+							lang.htmlInfo + '''"/></a>'''
+				
+				avatar = avatar % (tweet.user.screen_name, img, 
+									tweet.user.name, tweet.user.followers_count,
+									tweet.user.friends_count,
+									tweet.user.statuses_count)
 			
 			else:
 				avatar = ""
@@ -156,7 +172,8 @@ class HTML(view.HTMLView):
 			if source != "web":
 				try:
 					if tweet.source_url != "":
-						source = '<a href="%s" title="%s">%s</a>' % (tweet.source_url, tweet.source_url, tweet.source)
+						source = '<a href="%s" title="%s">%s</a>' % \
+							(tweet.source_url, tweet.source_url, tweet.source)
 			
 				except:
 					pass
@@ -164,38 +181,45 @@ class HTML(view.HTMLView):
 				by = lang.htmlBy % source
 			
 			# Protected
-			locked = '<span class="protected"></span>' if hasattr(tweet.user, "protected") and tweet.user.protected else ' '
+			locked = ''
+			if hasattr(tweet.user, "protected") and tweet.user.protected:
+				locked = ('<span class="protected" title="' + \
+					lang.htmlProtected + '"></span>') % tweet.user.screen_name
 			
 			# HTML Snippet
 			html = '''
-					<div class="%s">
-						<div class="avatar">
-							%s
-						</div>
-						
-						<div class="actions">
-							<div class="doreply">
-								<a href="reply:%s:%d:%d" title="''' + (lang.htmlReply % tweet.user.screen_name) + '''"> </a>
-							</div>
-							<div class="doretweet">
-								<a href="retweet:%d" title="''' + (lang.htmlRetweet % tweet.user.screen_name) + '''"> </a>
-							</div>
-						</div>
-						
-						<div class="inner-text">
-							<div>
-								<a class="name" href="http://twitter.com/%s" title="''' + lang.htmlProfile + '''">
-									<b>%s</b>
-								</a> ''' + locked + ''' %s
-							</div>
-							<div class="time">
-								<a href="http://twitter.com/%s/statuses/%d" title="''' + (self.absolute_time(tweet.created_at)) + '''">%s</a>
-								''' + by + '''
-							</div>
-							<div class="reply">%s</div>
-						</div>
-						<div class="clearfloat"></div>
-					</div>'''	
+			<div class="%s">
+			<div class="avatar">
+				%s
+			</div>
+			
+			<div class="actions">
+				<div class="doreply">
+					<a href="reply:%s:%d:%d" title="''' + \
+					(lang.htmlReply % tweet.user.screen_name) + '''"> </a>
+				</div>
+				<div class="doretweet">
+					<a href="retweet:%d" title="''' + \
+					(lang.htmlRetweet % tweet.user.screen_name) + '''"> </a>
+				</div>
+			</div>
+			
+			<div class="inner-text">
+				<div>
+					<a class="name" href="http://twitter.com/%s" title="''' + \
+					lang.htmlProfile + '''">
+						<b>%s</b>
+					</a> ''' + locked + ''' %s
+				</div>
+				<div class="time">
+					<a href="http://twitter.com/%s/statuses/%d" title="''' + \
+					(self.absolute_time(tweet.created_at)) + '''">%s</a>
+					''' + by + '''
+				</div>
+				<div class="reply">%s</div>
+			</div>
+			<div class="clearfloat"></div>
+			</div>'''	
 			
 			# Insert values
 			html = html % (
@@ -213,7 +237,9 @@ class HTML(view.HTMLView):
 					text, 	
 					
 					# Time
-					tweet.user.screen_name, tweet.id, self.relative_time(tweet.created_at), 
+					tweet.user.screen_name,
+					tweet.id,
+					self.relative_time(tweet.created_at),
 					reply)
 			
 			if tweet.id == self.newestID:
