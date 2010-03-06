@@ -88,14 +88,48 @@ class Updater(threading.Thread):
 	
 		# xAuth Login, yes the app stuff is here, were else should it go?
 		# Why should anyone else use the Atarashii App for posting from HIS client? :D
-		auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q", "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg", secure = True)
+		auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q", "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg", secure = True)		
 		try:
-			auth.get_xauth_access_token(self.main.username, self.main.settings["password_" + self.main.username])
-			self.main.api = tweepy.API(auth)
+			# Try using an old token
+			tokenOK = False
+			keyName = 'xkey_' + self.main.username
+			secretName = 'xsecret_' + self.main.username
+			if self.main.settings.isset(keyName) and self.main.settings.isset(secretName):
+				auth.set_access_token(self.main.settings[keyName], self.main.settings[secretName])
+				try:
+					auth.get_username()
+					tokenOK = True
+				
+				except:
+					pass
+			
+			# Get a new token!
+			if not tokenOK:
+				gobject.idle_add(lambda: self.main.gui.enterPassword())
+				
+				# Wait for password entry
+				while self.main.apiTempPassword == None:
+					time.sleep(0.1)
+				
+				# Try to login with the new password
+				if self.main.apiTempPassword != "":
+					token = auth.get_xauth_access_token(self.main.username, self.main.apiTempPassword)
+					self.main.apiTempPassword = None
+					self.main.settings[keyName] = token.key
+					self.main.settings[secretName] = token.secret
+					
+				else:
+					gobject.idle_add(lambda: self.main.onLoginFailed())
+					self.main.apiTempPassword = None
+					return
 		
 		except Exception, error:
+			self.main.apiTempPassword = None
 			gobject.idle_add(lambda: self.main.onLoginFailed(error))
 			return False
+		
+		# Create the api instance
+		self.main.api = tweepy.API(auth)
 		
 		# Lazy loading
 		if self.main.gui.mode:
