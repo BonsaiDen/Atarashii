@@ -111,13 +111,15 @@ class HTMLView(webkit.WebView):
 	def renderHTML(self, html, mode):
 		self.mode = mode
 		self.isRendering = True
-		self.load_string("""<html>
-			<head>
-				<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-				<link rel="stylesheet" type="text/css" media="screen" href="file://%s" />
-			</head>
-			%s
-		</html>""" % (self.main.getResource("atarashii.css"), html), "text/html", "UTF-8", "file:///main/")
+		self.load_string("""
+		<html>
+		<head>
+		<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+		<link rel="stylesheet" type="text/css" media="screen" href="file://%s"/>
+		</head>
+		%s
+		</html>""" % (self.main.getResource("atarashii.css"), html), 
+						"text/html", "UTF-8", "file:///main/")
 	
 	
 	def setHTML(self, renderitems):
@@ -126,7 +128,8 @@ class HTMLView(webkit.WebView):
 				<body>
 					<div><div id="newcontainer">%s</div>
 					<div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
-				</body>""" % ("".join(renderitems), self.items[0][0].id, self.langLoad), "render")
+				</body>""" % ("".join(renderitems), 
+								self.items[0][0].id, self.langLoad), "render")
 		
 		else:
 			self.renderHTML("""
@@ -139,7 +142,9 @@ class HTMLView(webkit.WebView):
 	# --------------------------------------------------------------------------
 	def getOffset(self):
 		try:
-			self.execute_script('document.title=document.getElementById("newcontainer").offsetHeight;')
+			self.execute_script(
+				'''document.title=
+					document.getElementById("newcontainer").offsetHeight;''')
 			return int(self.get_main_frame().get_title())
 		
 		except:

@@ -122,22 +122,33 @@ class HTML(view.HTMLView):
 			if newAvatar:
 				newestAvatar = True
 			
-			if (num < len(self.items) - 1 and (tweet.sender.screen_name != self.items[num + 1][0].sender.screen_name or newAvatar)) or num == len(self.items) - 1 or newTimeline:
-				avatar = ('<a href="http://twitter.com/%s"><img width="32" src="file://%s" title="' + lang.htmlInfo + '"/></a>') 
-				avatar = avatar % (tweet.sender.screen_name, img, tweet.sender.name, tweet.sender.followers_count, tweet.sender.friends_count, tweet.sender.statuses_count)
+			if (num < len(self.items) - 1 and \
+				(tweet.sender.screen_name != \
+				self.items[num + 1][0].sender.screen_name or newAvatar)) or \
+				num == len(self.items) - 1 or newTimeline:
+				
+				avatar = '''<a href="http://twitter.com/%s">
+							<img width="32" src="file://%s" title="''' + \
+							lang.htmlInfo + '''"/></a>'''
+				
+				avatar = avatar % (tweet.sender.screen_name, img, 
+									tweet.sender.name, 
+									tweet.sender.followers_count, 
+									tweet.sender.friends_count, 
+									tweet.sender.statuses_count)
 			
 			else:
 				avatar = ""
 			
 			# Class
-			clas = 'oldtweet' if tweet.id <= self.initID else 'tweet'
+			cls = 'oldtweet' if tweet.id <= self.initID else 'tweet'
 
 			# HTML
 			if tweet.recipient_screen_name != self.main.username:
 				mode = lang.messageTo
 				name = tweet.recipient_screen_name
 				reply = "display: none;"
-				clas = "highlightold" if tweet.id <= self.initID else "highlight"
+				cls = "highlightold" if tweet.id <= self.initID else "highlight"
 			
 			else:
 				mode = lang.messageFrom
@@ -146,30 +157,35 @@ class HTML(view.HTMLView):
 			
 			# HTML Snippet
 			html = '''
-					<div class="%s">
-						<div class="avatar">
-							%s
-						</div>
-						
-						<div class="actions">
-							<div class="doretweet" style="''' + reply + '''">
-								<a href="message:%s:%d:%d" title="''' + (lang.htmlReply % tweet.sender.screen_name) + '''"> </a>
-							</div>
-						</div>
-						
-						<div class="inner-text">
-							<div>
-								<span class="name"><b>''' + mode + ''' <a href="http://twitter.com/%s" title="''' + lang.htmlProfile + '''">%s</a></b></span> <div class="space">&nbsp;</div> %s
-							</div>
-							<div class="time">
-								<a href="http://twitter.com/%s/statuses/%d" title="''' + (self.absolute_time(tweet.created_at)) + '''">%s</a>
-							</div>
-						</div>
-					</div>'''
+			<div class="%s">
+			<div class="avatar">
+				%s
+			</div>
+			
+			<div class="actions">
+				<div class="doretweet" style="''' + reply + '''">
+					<a href="message:%s:%d:%d" title="''' + \
+					(lang.htmlReply % tweet.sender.screen_name) + '''"> </a>
+				</div>
+			</div>
+			
+			<div class="inner-text">
+				<div>
+					<span class="name"><b>''' + mode + \
+					''' <a href="http://twitter.com/%s" title="''' + \
+					lang.htmlProfile + \
+					'''">%s</a></b></span> <div class="space">&nbsp;</div> %s
+				</div>
+				<div class="time">
+					<a href="http://twitter.com/%s/statuses/%d" title="''' + \
+					(self.absolute_time(tweet.created_at)) + '''">%s</a>
+				</div>
+			</div>
+			</div>'''
 			
 			# Insert values
 			html = html % (
-					clas, 
+					cls, 
 					avatar,
 					
 					# Actions
@@ -182,7 +198,9 @@ class HTML(view.HTMLView):
 					text, 	
 					
 					# Time
-					tweet.sender.screen_name, tweet.id, self.relative_time(tweet.created_at))
+					tweet.sender.screen_name,
+					tweet.id,
+					self.relative_time(tweet.created_at))
 			
 			if tweet.id == self.newestID:
 				html = '</div>' + html
