@@ -84,7 +84,7 @@ class LangDE:
 		self.statusRetweet = "Retweete %s..."
 		self.statusMessage = "Sende Nachricht an %s..."
 		self.statusMessageReply = "Antworte %s..."
-		self.statusSend = "Sende Tweet..."
+		self.statusSend = "Sende Status..."
 		self.statusLeft = "Noch %d Zeichen."
 		self.statusMore = "%d Zeichen zu viel."
 		self.statusLoadHistory = "Tweets werden geladen..."
@@ -239,7 +239,7 @@ class LangEN:
 		self.statusMinute = "Refresh in one minute."
 		self.statusMinutes = "Refresh in %d minutes."
 		
-		self.statusUpdate = "Sending Tweet..."
+		self.statusUpdate = "Sending Status..."
 		self.statusReply = "Replying to %s..."
 		self.statusRetweet = "Retweeting %s..."
 		self.statusMessage = "Sending Message to %s..."
