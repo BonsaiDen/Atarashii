@@ -520,6 +520,10 @@ class Updater(threading.Thread):
 	
 	# Update the refreshTimeout
 	def updateLimit(self):
+		if self.main.api.ratelimit == None:
+			self.main.refreshTimeout = 60
+			return
+		
 		minutes = (self.main.api.ratelimit['reset'] - calendar.timegm(time.gmtime())) / 60
 		limit = self.main.api.ratelimit['remaining']
 		if limit > 0:
