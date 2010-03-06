@@ -148,7 +148,6 @@ class Updater(threading.Thread):
 		self.started = True
 		gobject.idle_add(lambda: self.main.onLogin())
 		gobject.idle_add(lambda: self.main.gui.checkRead())
-		self.updateLimit()
 		
 		# Load other stuff
 		if not self.main.gui.mode:
@@ -227,7 +226,7 @@ class Updater(threading.Thread):
 					if self.main.refreshTimeout != -1:
 						if calendar.timegm(time.gmtime()) > self.main.refreshTime + self.main.refreshTimeout or self.refreshNow or self.refreshMessages:
 							self.main.isUpdating = True
-							self.updateTweets()
+							self.update()
 							gobject.idle_add(lambda: self.main.gui.refreshButton.set_sensitive(True))
 							gobject.idle_add(lambda: self.main.gui.checkRead())
 							self.main.refreshTime = calendar.timegm(time.gmtime())
@@ -240,7 +239,7 @@ class Updater(threading.Thread):
 	
 	# Update -------------------------------------------------------------------
 	# --------------------------------------------------------------------------
-	def updateTweets(self):
+	def update(self):
 		# Fetch Tweets
 		updates = []
 		if not self.refreshMessages:
@@ -294,8 +293,6 @@ class Updater(threading.Thread):
 		else:
 			gobject.idle_add(lambda: self.message.render())		
 		
-		# Rate Limiting
-		self.updateLimit()
 		
 		
 	# Notifications ------------------------------------------------------------
