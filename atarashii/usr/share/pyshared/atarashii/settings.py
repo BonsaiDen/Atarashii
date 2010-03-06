@@ -40,7 +40,10 @@ class Settings:
 				value = i[len(t)+1:]
 				try:
 					if t == 'long':
-						value = long(value)
+						if value == "":
+							value = long(-1)
+						else:
+							value = long(value)
 					
 					elif t == 'bool':
 						value = True if value == "True" else False
@@ -90,9 +93,13 @@ class Settings:
 	def __delitem__(self, key):
 		if self.values.has_key(key):
 			del self.values[key]
-
+	
 	def isset(self, key):
-		return self[key] != None and self[key].strip() != ""
+		if self[key] != None:
+			if type(self[key]) == long or type(self[key]) == int:
+				return self[key] != -1
+			else:
+				return self[key].strip() != ""
 	
 	def isTrue(self, key, default = True):
 		if self[key] == None:
@@ -109,6 +116,4 @@ class Settings:
 		
 		accounts.sort()
 		return accounts
-		
-				
 				

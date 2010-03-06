@@ -483,13 +483,13 @@ class Updater(threading.Thread):
 	# --------------------------------------------------------------------------
 	def setLastTweet(self, itemID):
 		self.html.lastID = itemID
-		self.settings['lasttweet_' + self.main.username] = str(itemID)
+		self.settings['lasttweet_' + self.main.username] = itemID
 		if len(self.html.items) > 0:
 			self.html.newestID = self.html.items[len(self.html.items)-1][0].id
 	
 	def setLastMessage(self, itemID):
 		self.message.lastID = itemID
-		self.settings['lastmessage_' + self.main.username] = str(itemID)
+		self.settings['lastmessage_' + self.main.username] = itemID
 		if len(self.message.items) > 0:
 			self.message.newestID = self.message.items[len(self.message.items)-1][0].id
 	

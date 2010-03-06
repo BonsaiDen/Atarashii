@@ -274,7 +274,7 @@ class HTMLView(webkit.WebView):
 			if id < 0:
 				id = 0
 			
-			self.main.settings[self.firstSetting + self.main.username] = str(self.items[id][0].id - 1)
+			self.main.settings[self.firstSetting + self.main.username] = self.items[id][0].id - 1
 			
 		# Newest Stuff
 		if self.newestID == -1:
