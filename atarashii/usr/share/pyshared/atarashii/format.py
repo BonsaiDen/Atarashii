@@ -18,8 +18,8 @@
 # ------------------------------------------------------------------------------
 import re, urllib
 urlRegex = re.compile("((mailto\:|(news|(ht|f)tp(s?))\://){1}[^\s\)\]]+)")
-atRegex = re.compile("@((){1}[a-zA-Z0-9_]+)")
-tagRegex = re.compile("\#((){1}[^\?\s\+\-\:\!\.\,\;]+)") #re.compile("\#((){1}\S+)")
+atRegex = re.compile("\B@([a-zA-Z0-9_]{1,15})")
+tagRegex = re.compile("\B#([A-Za-z0-9_-]+)") #re.compile("\#((){1}\S+)")
 
 from lang import lang
 
