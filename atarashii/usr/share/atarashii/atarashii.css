@@ -92,7 +92,7 @@ a, a:hover, a:active {
 .tweet {
 	padding-left: 6px;
 	padding-right: 2px;
-	background-color: #d5e3ed;
+	background-color: #e1e8ed;
 }
 
 .oldtweet {
@@ -104,7 +104,7 @@ a, a:hover, a:active {
 .highlight {
 	padding-left: 6px;
 	padding-right: 2px;		
-	background-color: #dfe7ed;
+	background-color: #d5e3ed;
 }
 
 .mentioned {
@@ -247,7 +247,7 @@ a, a:hover, a:active {
 }
 
 .spacer4 {
-	border-bottom: 2px solid #d5e3ed;
+	border-bottom: 2px solid #e1e8ed;
 }
 
 .spacer5 {
@@ -255,7 +255,7 @@ a, a:hover, a:active {
 }
 
 .spacer6 {
-	border-bottom: 2px solid #dfe7ed;
+	border-bottom: 2px solid #d5e3ed; 
 }
 
 a {

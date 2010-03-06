@@ -59,6 +59,7 @@ class HTML(view.HTMLView):
 		container = False
 		lastHighlight = False
 		
+		
 		# Do the rendering!
 		self.count = 0
 		for num, obj in enumerate(self.items):
@@ -94,10 +95,10 @@ class HTML(view.HTMLView):
 					spacer = "5"
 				
 				elif tweet.id > self.initID:
-					spacer = "4"
+					spacer = "6" if highlight else "4"
 				
 				elif highlight:
-					spacer = "6"
+					spacer = "4"
 			
 				else:
 					spacer = "2"
@@ -144,10 +145,10 @@ class HTML(view.HTMLView):
 				clas = 'mentioned'
 				
 			elif tweet.id <= self.initID:
-				clas = 'highlight' if self.atUser else 'oldtweet'
+				clas = 'tweet' if self.atUser else 'oldtweet'
 			
 			else:
-				clas = 'tweet'
+				clas = 'highlight' if self.atUser else 'tweet'
 			
 			# Source
 			by = ""
