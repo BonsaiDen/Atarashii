@@ -90,7 +90,7 @@ class Updater(threading.Thread):
 		# Why should anyone else use the Atarashii App for posting from HIS client? :D
 		auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q", "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg", secure = True)
 		try:
-			auth.get_xauth_access_token(self.main.username, password = self.main.settings["password_" + self.main.username])
+			auth.get_xauth_access_token(self.main.username, self.main.settings["password_" + self.main.username])
 			self.main.api = tweepy.API(auth)
 		
 		except Exception, error:
