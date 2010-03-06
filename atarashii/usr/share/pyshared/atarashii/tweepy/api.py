@@ -28,6 +28,7 @@ class API(object):
         self.retry_count = retry_count
         self.retry_delay = retry_delay
         self.retry_errors = retry_errors
+        self.ratelimit = None
         self.parser = parser or ModelParser()
 
     """ statuses/public_timeline """
