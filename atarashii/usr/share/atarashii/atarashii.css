@@ -104,7 +104,7 @@ a, a:hover, a:active {
 .highlight {
 	padding-left: 6px;
 	padding-right: 2px;		
-	background-color: #d1e1ed;
+	background-color: #c9deed;
 }
 
 .mentioned {
@@ -255,7 +255,7 @@ a, a:hover, a:active {
 }
 
 .spacer6 {
-	border-bottom: 2px solid #d1e1ed; 
+	border-bottom: 2px solid #c9deed; 
 }
 
 a {

@@ -137,7 +137,7 @@ class HTML(view.HTMLView):
 				mode = lang.messageTo
 				name = tweet.recipient_screen_name
 				reply = "display: none;"
-				clas = "highlight"
+				clas = "tweet" if tweet.id <= self.initID else "highlight"
 			
 			else:
 				mode = lang.messageFrom
