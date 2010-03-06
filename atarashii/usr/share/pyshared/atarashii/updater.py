@@ -269,10 +269,12 @@ class Updater(threading.Thread):
 			if len(updates) > 0:
 				self.setLastTweet(updates[0].id)
 		
+		print "updating tweets"
 		# Messages
 		messages = []
-		if (self.messageCounter > 4 or self.refreshMessages) and \
+		if (self.messageCounter > 1 or self.refreshMessages) and \
 			not self.refreshNow:
+			print "updating messages"
 
 			try:
 				messages = self.getMessages(self.message.lastID)
@@ -557,14 +559,14 @@ class Updater(threading.Thread):
 		
 		limit = self.api.ratelimit['remaining']
 		if limit > 0:
-			limit = limit / (2.0 + (2.0 / 5))
+			limit = limit / (2.0 + (2.0 / 2))
 			self.main.refreshTimeout = int(minutes / limit * 60 * 1.10)
-			if self.main.refreshTimeout < 30:
-				self.main.refreshTimeout = 30
+			if self.main.refreshTimeout < 45:
+				self.main.refreshTimeout = 45
 		
 		# Check for ratelimit
 		count = self.api.ratelimit['limit']
-		if count < 150:
+		if count < 350:
 			if not self.main.rateWarningShown:
 				self.main.rateWarningShown= True
 				gobject.idle_add(lambda: self.main.gui.showWarning(count))
