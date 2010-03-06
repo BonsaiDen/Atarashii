@@ -198,7 +198,7 @@ class Atarashii:
 		
 	def onLoginFailed(self, error = None):
 		self.gui.setMode(False)
-		self.loginError = True
+		self.loginError = True if error != None else False
 		self.loginStatus = False
 		self.isConnecting = False
 		self.gui.settingsButton.set_sensitive(True)
@@ -208,6 +208,7 @@ class Atarashii:
 		self.gui.updateStatus()
 		if error:
 			self.gui.showError(error)
+		
 		gobject.idle_add(lambda: self.gui.html.init(True))
 	
 	def logout(self):
