@@ -13,7 +13,7 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-# TODO don't save passwords, only ask for them when needed
+
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
