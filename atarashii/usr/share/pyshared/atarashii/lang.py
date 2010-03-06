@@ -121,14 +121,19 @@ class LangDE:
 		self.aboutOKButton = "OK"
 		
 		# Account
-		self.accountEdit = "%s's Benutzerkonto bearbeiten"
-		self.accountCreate = "Benutzerkonto erstellen"
-		self.accountDelete = "%s's Benutzerkonto löschen"
+		self.accountEdit = "Konto bearbeiten"
+		self.accountCreate = "Kkonto erstellen"
+		self.accountDelete = "Konto löschen"
 		self.accountDeleteDescription = 'Möchten sie das Benutzerkonto von "%s" wirklich löschen?'
 		self.accountButton = "OK"
 		self.accountButtonCancel = "Abbrechen"
 		self.accountUsername = "Benutzername:"
-		self.accountPassword = "Passwort:"
+		
+		# Password
+		self.passwordButton = "OK"
+		self.passwordButtonCancel = "Abbrechen"
+		self.passwordTitle = "Passwort"
+		self.passwordQuestion = "%s's Password:"
 				
 		# Error
 		self.errorTitle = "Atarashii - Fehler"
@@ -276,16 +281,19 @@ class LangEN:
 		self.aboutOKButton = "OK"
 		
 		# Account
-		self.accountEdit = "Edit %s's Account"
+		self.accountEdit = "Edit Account"
 		self.accountCreate = "Create a new Account"
-		self.accountDelete = "Delete %s's Account"
+		self.accountDelete = "Delete Account"
 		self.accountDeleteDescription = 'Do you really want to delete the account "%s"?'
 		self.accountButton = "OK"
 		self.accountButtonCancel = "Cancel"
-		
 		self.accountUsername = "Username:"
-		self.accountPassword = "Password:"
-				
+		
+		# Password
+		self.passwordButton = "OK"
+		self.passwordButtonCancel = "Cancel"
+		self.passwordTitle = "Password"
+		self.passwordQuestion = "%s's password:"
 		
 		# ErrorOK"
 		self.errorTitle = "Atarashii - Error"
@@ -327,10 +335,9 @@ class LangEN:
 		self.titleMessages = "%d new Messages"
 		
 		self.titleTweet = "%d new Tweet"
-		self.titleTweets = "%d new Tweets"
-		
-		
-		
+		self.titleTweets = "%d new Tweets"	
+
+
 # Select Language
 langs = {
 	"de_DE" : LangDE,
