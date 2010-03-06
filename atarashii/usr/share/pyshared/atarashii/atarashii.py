@@ -236,12 +236,14 @@ class Atarashii:
 		
 		self.refreshTimeout = int(minutes * 60 + 2)
 		
+		# Schedule a reconnect if the actual login failed
 		if not self.loginStatus:
 			self.reconnectTime = calendar.timegm(time.gmtime())
 			self.isReconnecting = True
 			self.reconnectTimeout = gobject.timeout_add(int(self.refreshTimeout * 1000), lambda: self.login())
 			return lang.errorRatelimitReconnect % math.ceil(minutes)
 		
+		# Just display an error if we exiced the ratelim while being logged in
 		else:
 			return lang.errorRatelimit % math.ceil(minutes)	
 	
