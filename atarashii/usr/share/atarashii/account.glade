@@ -22,45 +22,27 @@
                 <property name="stock">gtk-dialog-authentication</property>
               </object>
               <packing>
-                <property name="padding">10</property>
+                <property name="expand">False</property>
+                <property name="padding">8</property>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkVBox" id="vbox3">
+              <object class="GtkVBox" id="vbox1">
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkLabel" id="user">
                     <property name="visible">True</property>
-                    <property name="xalign">0.89999997615814209</property>
-                    <property name="label" translatable="yes">Username:</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">label</property>
                   </object>
                   <packing>
-                    <property name="padding">4</property>
+                    <property name="expand">False</property>
+                    <property name="padding">8</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
-                <child>
-                  <object class="GtkLabel" id="pass">
-                    <property name="visible">True</property>
-                    <property name="xalign">0.89999997615814209</property>
-                    <property name="label" translatable="yes">Password:</property>
-                  </object>
-                  <packing>
-                    <property name="padding">4</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkVBox" id="vbox2">
-                <property name="visible">True</property>
-                <property name="orientation">vertical</property>
                 <child>
                   <object class="GtkEntry" id="username">
                     <property name="visible">True</property>
@@ -68,28 +50,12 @@
                     <property name="invisible_char">&#x25CF;</property>
                   </object>
                   <packing>
-                    <property name="fill">False</property>
-                    <property name="padding">4</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkEntry" id="password">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="visibility">False</property>
-                    <property name="invisible_char">&#x25CF;</property>
-                  </object>
-                  <packing>
-                    <property name="fill">False</property>
-                    <property name="padding">4</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
               </object>
               <packing>
-                <property name="padding">8</property>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
           </object>
