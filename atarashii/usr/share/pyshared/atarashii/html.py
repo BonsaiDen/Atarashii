@@ -163,7 +163,7 @@ class HTML(view.HTMLView):
 				by = lang.htmlBy % source
 			
 			# Protected
-			locked = '<div class="protected"></div>' if hasattr(tweet.user, "protected") and tweet.user.protected else '<div class="space">&nbsp;</div>'
+			locked = '<span class="protected"></span>' if hasattr(tweet.user, "protected") and tweet.user.protected else ' '
 			
 			# HTML Snippet
 			html = '''
