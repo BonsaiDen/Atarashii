@@ -107,6 +107,13 @@ a, a:hover, a:active {
 	background-color: #c9deed;
 }
 
+.highlightold {
+	padding-left: 6px;
+	padding-right: 2px;		
+	background-color: #e4e9ed;
+}
+
+
 .mentioned {
 	padding-left: 6px;
 	padding-right: 2px;		
@@ -256,6 +263,10 @@ a, a:hover, a:active {
 
 .spacer6 {
 	border-bottom: 2px solid #c9deed; 
+}
+
+.spacer7 {
+	border-bottom: 2px solid #e4e9ed;
 }
 
 a {

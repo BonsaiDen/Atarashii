@@ -98,7 +98,7 @@ class HTML(view.HTMLView):
 					spacer = "6" if highlight else "4"
 				
 				elif highlight:
-					spacer = "4"
+					spacer = "7"
 			
 				else:
 					spacer = "2"
@@ -145,7 +145,7 @@ class HTML(view.HTMLView):
 				clas = 'mentioned'
 				
 			elif tweet.id <= self.initID:
-				clas = 'tweet' if self.atUser else 'oldtweet'
+				clas = 'highlightold' if self.atUser else 'oldtweet'
 			
 			else:
 				clas = 'highlight' if self.atUser else 'tweet'
