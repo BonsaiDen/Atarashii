@@ -104,7 +104,7 @@ class LangDE:
 		self.settingsTitle = "Atarashii - Einstellungen"
 		self.settingsButton = "Speichern"
 		self.settingsButtonCancel = "Abbrechen"
-		self.settingsAccounts = "Benutzerkonten"
+		self.settingsAccounts = "Benutzer"
 		self.settingsNotifications = "Benachrichtigungen"
 		self.settingsNotify = "Aktivieren"
 		self.settingsSound = "Sound abspielen"
@@ -121,10 +121,10 @@ class LangDE:
 		self.aboutOKButton = "OK"
 		
 		# Account
-		self.accountEdit = "Konto bearbeiten"
-		self.accountCreate = "Kkonto erstellen"
-		self.accountDelete = "Konto löschen"
-		self.accountDeleteDescription = 'Möchten sie das Benutzerkonto von "%s" wirklich löschen?'
+		self.accountEdit = "Benutzer bearbeiten"
+		self.accountCreate = "Benutzer erstellen"
+		self.accountDelete = "Benutzer löschen"
+		self.accountDeleteDescription = 'Möchten sie den Benutzer "%s" wirklich löschen?'
 		self.accountButton = "OK"
 		self.accountButtonCancel = "Abbrechen"
 		self.accountUsername = "Benutzername:"
@@ -159,7 +159,7 @@ class LangDE:
 		# Toolbar
 		self.toolRefresh = "Tweets aktualisieren"
 		self.toolHistory = "Ältere Tweets entfernen"
-		self.toolRead = "Alle Tweets als gelesen makieren"
+		self.toolRead = "Alle Tweets als gelesen markieren"
 		self.toolMode = "Nachrichten"
 		self.toolSettings = "Einstellungen öffnen"
 		self.toolAbout = "Einige Informationen über Atarashii"
@@ -167,7 +167,7 @@ class LangDE:
 		
 		self.toolRefreshMessage = "Nachrichten aktualisieren"
 		self.toolHistoryMessage = "Ältere Nachrichten entfernen"
-		self.toolReadMessage = "Alle Nachrichten als gelesen makieren"
+		self.toolReadMessage = "Alle Nachrichten als gelesen markieren"
 	
 		# Title
 		self.titleMessage = "%d neue Nachricht"
@@ -240,7 +240,7 @@ class LangEN:
 		self.statusUpdate = "Sending Tweet..."
 		self.statusReply = "Replying to %s..."
 		self.statusRetweet = "Retweeting %s..."
-		self.statusMessage = "Sendind Message to %s..."
+		self.statusMessage = "Sending Message to %s..."
 		self.statusMessageReply = "Replying to %s..."
 		self.statusSend = "Sending Status..."
 		self.statusLeft = "%d chars left."
@@ -256,7 +256,7 @@ class LangEN:
 		# Reply
 		self.labelReply = "<b>Reply to %s:</b>"
 		self.labelReplyText = "<b>Reply on:</b> %s"
-		self.labelRetweet = "<b>Rewteet %s:</b>"
+		self.labelRetweet = "<b>Retweet %s:</b>"
 		self.labelMessage = "<b>Message to %s:</b>"
 		self.labelMessageText = "<b>Message on:</b> %s"
 		
@@ -264,7 +264,7 @@ class LangEN:
 		self.settingsTitle = "Atarashii - Preferences"
 		self.settingsButton = "Save"
 		self.settingsButtonCancel = "Cancel"
-		self.settingsAccounts = "Accounts"
+		self.settingsAccounts = "Users"
 		self.settingsNotifications = "Notifications"
 		self.settingsNotify = "Enable"
 		self.settingsSound = "Play sound"
@@ -281,10 +281,10 @@ class LangEN:
 		self.aboutOKButton = "OK"
 		
 		# Account
-		self.accountEdit = "Edit Account"
-		self.accountCreate = "Create a new Account"
-		self.accountDelete = "Delete Account"
-		self.accountDeleteDescription = 'Do you really want to delete the account "%s"?'
+		self.accountEdit = "Edit user"
+		self.accountCreate = "Create a new user"
+		self.accountDelete = "Delete user"
+		self.accountDeleteDescription = 'Do you really want to delete the user "%s"?'
 		self.accountButton = "OK"
 		self.accountButtonCancel = "Cancel"
 		self.accountUsername = "Username:"
