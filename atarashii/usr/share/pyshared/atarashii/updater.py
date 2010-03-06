@@ -101,7 +101,8 @@ class Updater(threading.Thread):
 					tokenOK = True
 				
 				except:
-					pass
+					self.main.settings[keyName] = ""
+					self.main.settings[secretName] = ""
 			
 			# Get a new token!
 			if not tokenOK:
