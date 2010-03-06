@@ -64,9 +64,50 @@ class Dialog:
 		
 	def get(self, widget):
 		return self.gt.get_object(widget)
-		
-		
+
+
+
+# Password Dialog --------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class PasswordDialog(Dialog):
+	resource = "password.glade"
+	instance = None
 	
+	def __init__(self, parent, title, info):
+		Dialog.__init__(self, parent, False)
+		self.dlg.set_transient_for(parent)
+		self.parent = parent
+		self.dlg.set_title(title)
+		self.get("password").grab_focus()
+		self.get("info").set_label(info)
+	
+	def onInit(self):
+		self.closeButton.set_label(lang.passwordButton)
+		cancelButton = self.get("cancelbutton")
+		cancelButton.set_label(lang.passwordButtonCancel)
+				
+		def save(*args):
+			password = self.get("password").get_text().strip()
+			if password == "":
+				self.get("password").grab_focus()		
+			
+			else:
+				self.main.apiTempPassword = password
+				self.onClose()
+		
+		def abort(*args):
+			self.main.apiTempPassword = ""
+			self.onClose()
+		
+		def key(widget, event, *args):
+			if event.keyval == gtk.keysyms.Return:
+				save()
+		
+		self.get("password").connect("key-press-event", key)
+		self.closeButton.connect("clicked", save)
+		cancelButton.connect("clicked", abort)
+
+
 # About Dialog -----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class AboutDialog(Dialog):
@@ -148,20 +189,20 @@ class SettingsDialog(Dialog):
 		# Edit Action
 		def editDialog(*args):
 			name = self.userAccounts[drop.get_active()]
-			AccountDialog(self, name, self.main.settings['password_' + name] or "", lang.accountEdit % name, self.editAccount)
+			AccountDialog(self, name, lang.accountEdit, self.editAccount)
 		
 		edit.connect("clicked", editDialog)
 		
 		# Add Action
 		def createDialog(*args):
-			AccountDialog(self, "", "", lang.accountCreate, self.createAccount)
+			AccountDialog(self, "", lang.accountCreate, self.createAccount)
 		
 		add.connect("clicked", createDialog)
 		
 		# Delete Action
 		def deleteDialog(*args):
 			name = self.userAccounts[drop.get_active()]
-			MessageDialog(self.dlg, "question", lang.accountDeleteDescription % name, lang.accountDelete % name, yesCallback = self.deleteAccount)
+			MessageDialog(self.dlg, "question", lang.accountDeleteDescription % name, lang.accountDelete, yesCallback = self.deleteAccount)
 		
 		delete.connect("clicked", deleteDialog)
 
@@ -225,7 +266,7 @@ class SettingsDialog(Dialog):
 				self.loginStatus = False
 				self.main.logout()
 			
-			elif self.main.username != oldusername or olduserpass != self.settings["password_" + self.main.username]:
+			elif self.main.username != oldusername:
 				self.loginStatus = True
 				self.main.login()
 						
@@ -256,7 +297,7 @@ class SettingsDialog(Dialog):
 		self.drop.set_active(selected)
 		
 	# Edit a User Account
-	def editAccount(self, username, password):
+	def editAccount(self, username):
 		name = self.userAccounts[self.drop.get_active()]
 		if name != username:
 			ft = self.main.settings['firsttweet_' + name]
@@ -264,14 +305,12 @@ class SettingsDialog(Dialog):
 			fm = self.main.settings['firstmessage_' + name]
 			lm = self.main.settings['lastmessage_' + name]
 			
-			del self.main.settings['password_' + name]
 			del self.main.settings['account_' + name]
 			del self.main.settings['firsttweet_' + name]
 			del self.main.settings['lasttweet_' + name]
 			del self.main.settings['firstmessage_' + name]
 			del self.main.settings['lastmessage_' + name]
 			
-			self.main.settings['password_' + username] = password
 			self.main.settings['account_' + username] = ""
 			self.main.settings['firsttweet_' + username] = ft
 			self.main.settings['lasttweet_' + username] = lt
@@ -283,13 +322,9 @@ class SettingsDialog(Dialog):
 			
 			self.main.settings.save()
 			self.createDropList(username)
-			
-		else:
-			self.settings['password_' + username] = password
 	
-	
-	def createAccount(self, username, password):
-		self.main.settings['password_' + username] = password
+		
+	def createAccount(self, username):
 		self.main.settings['account_' + username] = ""
 		self.createDropList()
 		if len(self.userAccounts) == 1:
@@ -298,7 +333,6 @@ class SettingsDialog(Dialog):
 	
 	def deleteAccount(self):
 		name = self.userAccounts[self.drop.get_active()]
-		del self.main.settings['password_' + name]
 		del self.main.settings['account_' + name]
 		del self.main.settings['firsttweet_' + name]
 		del self.main.settings['lasttweet_' + name]
@@ -316,7 +350,7 @@ class AccountDialog(Dialog):
 	resource = "account.glade"
 	instance = None
 	
-	def __init__(self, parent, username, password, title, callback):
+	def __init__(self, parent, username, title, callback):
 		Dialog.__init__(self, parent.gui, False)
 		self.dlg.set_transient_for(parent.dlg)
 		self.parent = parent
@@ -324,7 +358,6 @@ class AccountDialog(Dialog):
 		self.dlg.set_title(title)
 		self.username = username
 		self.get("username").set_text(username)
-		self.get("password").set_text(password)
 		self.get("username").grab_focus()
 	
 	def onInit(self):
@@ -333,22 +366,17 @@ class AccountDialog(Dialog):
 		cancelButton.set_label(lang.accountButtonCancel)
 		
 		self.get("user").set_text(lang.accountUsername)
-		self.get("pass").set_text(lang.accountPassword)	
 		
 		def save(*args):
 			username = self.get("username").get_text().strip()
-			password = self.get("password").get_text().strip()
 			if username == "":
 				self.get("username").grab_focus()
-			
-			elif password == "":
-				self.get("password").grab_focus()		
-			
+						
 			elif username in self.parent.userAccounts and username != self.username:
 				self.get("username").grab_focus()
 			
 			else:
-				self.callback(username, password)
+				self.callback(username)
 				self.onClose()
 		
 		self.closeButton.connect("clicked", save)
