@@ -1,3 +1,10 @@
+atarashii (0.99.1-1) all;
+
+  * Fixed xAuth authentication.
+  * Password is no longer being stored, instead the access tokens are stored.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 6 Mar 2010 16:37:00 +0100
+
 atarashii (0.99-1) all;
 
   * Bugfix release, nearly all bugs should be fixed now.
