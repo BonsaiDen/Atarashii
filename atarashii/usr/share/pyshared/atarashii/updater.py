@@ -303,7 +303,7 @@ class Updater(threading.Thread):
 		messageIDS = []
 		for i in messages:
 			imgfile = self.getImage(i.sender.profile_image_url, i.sender.id)
-			if i.sender.screen_name.lower() != sefl.main.username.lower():
+			if i.sender.screen_name.lower() != self.main.username.lower():
 				if not i.id in messageIDS:
 					messageIDS.append(i.id)
 					tweetList.append([lang.notificationMessage % i.sender.screen_name, i.text, imgfile, None])
