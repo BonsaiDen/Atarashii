@@ -115,8 +115,7 @@ class GUI(gtk.Window):
 		self.toolbar = gt.get_object("toolbar")
 		self.progress = gt.get_object("progressbar")
 		self.status = gt.get_object("statusbar")
-		
-		
+				
 		# Restore Position & Size
 		if main.settings.isset("position"):
 			self.windowPosition = main.settings['position'][1:-1].split(",")
