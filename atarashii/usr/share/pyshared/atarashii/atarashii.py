@@ -13,7 +13,7 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-
+# TODO don't save passwords, only ask for them when needed
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -61,6 +61,7 @@ class Atarashii:
 		
 		# API
 		self.api = None
+		self.apiTempPassword = None
 		
 		# Variables
 		self.replyUser = -1
@@ -195,7 +196,7 @@ class Atarashii:
 		self.gui.updateStatus()
 		self.gui.showInput()
 		
-	def onLoginFailed(self, error):
+	def onLoginFailed(self, error = None):
 		self.gui.setMode(False)
 		self.loginError = True
 		self.loginStatus = False
@@ -205,7 +206,8 @@ class Atarashii:
 		self.gui.set_title(lang.title)
 		self.gui.hideAll()
 		self.gui.updateStatus()
-		self.gui.showError(error)
+		if error:
+			self.gui.showError(error)
 		gobject.idle_add(lambda: self.gui.html.init(True))
 	
 	def logout(self):
