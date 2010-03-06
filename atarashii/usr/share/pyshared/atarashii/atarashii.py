@@ -229,8 +229,11 @@ class Atarashii:
 	# Reconnect ----------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def reconnect(self):
-		limit = self.api.rate_limit_status()
-		minutes = math.ceil((limit['reset_time_in_seconds'] - calendar.timegm(time.gmtime())) / 60.0)
+		if self.api.ratelimit != None:
+			minutes = math.ceil((self.api.ratelimit['reset'] - calendar.timegm(time.gmtime())) / 60.0)
+		else:
+			minutes = 5
+		
 		self.refreshTimeout = int(minutes * 60 + 2)
 		
 		if not self.loginStatus:
