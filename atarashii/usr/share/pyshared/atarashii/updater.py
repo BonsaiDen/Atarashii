@@ -86,22 +86,25 @@ class Updater(threading.Thread):
 		self.message.initID = self.main.getLatestMessageID()
 	
 		# xAuth Login, yes the app stuff is here, were else should it go?
-		# Why should anyone else use the Atarashii App for posting from HIS client? :D
-		auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q", "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg", secure = True)		
+		# Why should anyone else use the Atarashii App for posting from HIS 
+		# client? :D
+		auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q", 
+					"Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg", secure = True)		
 		try:
 			# Try using an old token
 			tokenOK = False
 			keyName = 'xkey_' + self.main.username
 			secretName = 'xsecret_' + self.main.username
-			if self.main.settings.isset(keyName) and self.main.settings.isset(secretName):
-				auth.set_access_token(self.main.settings[keyName], self.main.settings[secretName])
+			if self.settings.isset(keyName) and self.settings.isset(secretName):
+				auth.set_access_token(self.settings[keyName], 
+										self.settings[secretName])
 				try:
 					auth.get_username()
 					tokenOK = True
 				
 				except:
-					self.main.settings[keyName] = ""
-					self.main.settings[secretName] = ""
+					self.settings[keyName] = ""
+					self.settings[secretName] = ""
 			
 			# Get a new token!
 			if not tokenOK:
@@ -113,10 +116,12 @@ class Updater(threading.Thread):
 				
 				# Try to login with the new password
 				if self.main.apiTempPassword != "":
-					token = auth.get_xauth_access_token(self.main.username, self.main.apiTempPassword)
+					token = auth.get_xauth_access_token(self.main.username, 
+													self.main.apiTempPassword)
+					
 					self.main.apiTempPassword = None
-					self.main.settings[keyName] = token.key
-					self.main.settings[secretName] = token.secret
+					self.settings[keyName] = token.key
+					self.settings[secretName] = token.secret
 					
 				else:
 					gobject.idle_add(lambda: self.main.onLoginFailed())
@@ -129,7 +134,7 @@ class Updater(threading.Thread):
 			return False
 		
 		# Create the api instance
-		self.main.api = tweepy.API(auth)
+		self.api = self.main.api = tweepy.API(auth)
 		
 		# Lazy loading
 		if self.main.gui.mode:
@@ -222,30 +227,37 @@ class Updater(threading.Thread):
 				elif self.message.loadHistoryID != -1:
 					self.loadHistoryMessage()
 					
-				else:
-					if self.main.refreshTimeout != -1:
-						if calendar.timegm(time.gmtime()) > self.main.refreshTime + self.main.refreshTimeout or self.refreshNow or self.refreshMessages:
-							self.main.isUpdating = True
-							self.update()
-							gobject.idle_add(lambda: self.main.gui.refreshButton.set_sensitive(True))
-							gobject.idle_add(lambda: self.main.gui.checkRead())
-							self.main.refreshTime = calendar.timegm(time.gmtime())
-							self.refreshMessages = False
-							self.refreshNow = False
-							self.main.isUpdating = False
-							gobject.idle_add(lambda: self.main.gui.updateStatus(True))
+				elif self.main.refreshTimeout != -1:
+					self.checkForUpdate()
 			
 			time.sleep(0.1)
 	
+	
 	# Update -------------------------------------------------------------------
 	# --------------------------------------------------------------------------
+	def checkForUpdate(self):
+		if calendar.timegm(time.gmtime()) > self.main.refreshTime + \
+			self.main.refreshTimeout or self.refreshNow or self.refreshMessages:
+			
+			self.main.isUpdating = True
+			self.update()
+			gobject.idle_add(
+						lambda: self.main.gui.refreshButton.set_sensitive(True))
+			
+			gobject.idle_add(lambda: self.main.gui.checkRead())
+			self.main.refreshTime = calendar.timegm(time.gmtime())
+			self.refreshMessages = False
+			self.refreshNow = False
+			self.main.isUpdating = False
+			gobject.idle_add(lambda: self.main.gui.updateStatus(True))
+	
+	
 	def update(self):
 		# Fetch Tweets
 		updates = []
 		if not self.refreshMessages:
 			try:
 				updates = self.getUpdates(self.html.lastID)
-				#print len(updates)
 		
 			# Something went wrong...
 			except Exception, error:
@@ -259,11 +271,12 @@ class Updater(threading.Thread):
 		
 		# Messages
 		messages = []
-		if (self.messageCounter > 4 or self.refreshMessages) and not self.refreshNow:
+		if (self.messageCounter > 4 or self.refreshMessages) and \
+			not self.refreshNow:
+
 			try:
 				messages = self.getMessages(self.message.lastID)
-			#	print len(messages)
-			
+
 			# Something went wrong...
 			except Exception, error:
 				gobject.idle_add(lambda: self.main.gui.showError(error))
@@ -306,7 +319,9 @@ class Updater(threading.Thread):
 			if i.sender.screen_name.lower() != self.main.username.lower():
 				if not i.id in messageIDS:
 					messageIDS.append(i.id)
-					tweetList.append([lang.notificationMessage % i.sender.screen_name, i.text, imgfile, None])
+					tweetList.append([
+						lang.notificationMessage % i.sender.screen_name, 
+						i.text, imgfile, None])
 			
 			self.message.updateList.append((i, imgfile, False))	
 		
@@ -316,20 +331,21 @@ class Updater(threading.Thread):
 				# Don't add mentions twice
 				if not i.id in tweetIDS:
 					tweetIDS.append(i.id)
-					tweetList.append([i.user.screen_name, i.text, imgfile, None])
+					tweetList.append([i.user.screen_name, 
+						i.text, imgfile, None])
 			
 			self.html.updateList.append((i, imgfile, False))
 		
 		# Show Notifications
-		if len(tweetList) > 0:
-			if self.settings.isTrue("notify"):
-				tweetList.reverse()
-				count = len(tweetList)
-				if count > 1:
-					for num, i in enumerate(tweetList):
-						tweetList[num][0] = lang.notificationIndex % (tweetList[num][0], num+1, count)
-				
-				self.notify.show(tweetList, self.settings.isTrue("sound"))
+		count = len(tweetList)
+		if count > 0 and self.settings.isTrue("notify"):
+			tweetList.reverse()
+			if count > 1:
+				for num, i in enumerate(tweetList):
+					tweetList[num][0] = lang.notificationIndex % (
+										tweetList[num][0], num+1, count)
+			
+			self.notify.show(tweetList, self.settings.isTrue("sound"))
 	
 	
 	# Load History -------------------------------------------------------------
@@ -337,7 +353,8 @@ class Updater(threading.Thread):
 	def loadHistory(self):
 		updates = []
 		try:
-			updates = self.getUpdates(maxID = self.html.loadHistoryID, maxCount = self.main.loadTweetCount)
+			updates = self.getUpdates(maxID = self.html.loadHistoryID, 
+										maxCount = self.main.loadTweetCount)
 		
 		# Something went wrong...
 		except Exception, error:
@@ -368,7 +385,8 @@ class Updater(threading.Thread):
 	def loadHistoryMessage(self):
 		messages = []
 		try:
-			messages = self.getMessages(maxID = self.message.loadHistoryID, maxCount = self.main.loadMessageCount)
+			messages = self.getMessages(maxID = self.message.loadHistoryID, 
+										maxCount = self.main.loadMessageCount)
 		
 		# Something went wrong...
 		except Exception, error:
@@ -406,21 +424,27 @@ class Updater(threading.Thread):
 		# Get new Tweets
 		if sinceID != -1:
 			if maxID == None:
-				mentions = self.main.api.mentions(since_id = sinceID, count = maxCount)
-				updates = self.main.api.home_timeline(since_id = sinceID, count = maxCount)
+				mentions = self.api.mentions(since_id = sinceID, 
+													count = maxCount)
+				updates = self.api.home_timeline(since_id = sinceID, 
+														count = maxCount)
 				
 			else:				
-				updates = self.main.api.home_timeline(max_id = maxID, count = maxCount)
+				updates = self.api.home_timeline(max_id = maxID, 
+														count = maxCount)
 				if len(updates) > 0:
-					mentions = self.main.api.mentions(max_id = maxID, since_id = updates[len(updates) -1].id, count = maxCount)
+					mentions = self.api.mentions(max_id = maxID, 
+										since_id = updates[len(updates) - 1].id, 
+										count = maxCount)
 		
 		# Init the Timeline
 		else:
-			updates = self.main.api.home_timeline(count = self.main.loadTweetCount)
+			updates = self.api.home_timeline(count = self.main.loadTweetCount)
 			if len(updates) > 0:
-				mentions = self.main.api.mentions(since_id = updates[len(updates) - 1].id, count = 200)
-		
-		
+				mentions = self.api.mentions(
+								since_id = updates[len(updates) - 1].id,
+								count = 200)
+				
 		# Sort and Stuff
 		for i in mentions:
 			i.is_mentioned = True
@@ -447,17 +471,23 @@ class Updater(threading.Thread):
 		# Get new Tweets
 		if sinceID != -1:
 			if maxID == None:
-				messages = self.main.api.direct_messages(since_id = sinceID, count = maxCount)
-				messages += self.main.api.sent_direct_messages(since_id = sinceID, count = maxCount)
+				messages = self.api.direct_messages(since_id = sinceID, 
+													count = maxCount)
+				messages += self.api.sent_direct_messages(since_id = sinceID, 
+													count = maxCount)
 				
 			else:				
-				messages = self.main.api.direct_messages(max_id = maxID, count = maxCount)
-				messages += self.main.api.sent_direct_messages(max_id = maxID, count = maxCount)
+				messages = self.api.direct_messages(max_id = maxID, 
+													count = maxCount)
+				messages += self.api.sent_direct_messages(max_id = maxID, 
+													count = maxCount)
 		
 		# Init the Timeline
 		else:
-			messages = self.main.api.direct_messages(count = self.main.loadMessageCount)
-			messages += self.main.api.sent_direct_messages(count = self.main.loadMessageCount)
+			messages = self.api.direct_messages(
+											count = self.main.loadMessageCount)
+			messages += self.api.sent_direct_messages(
+											count = self.main.loadMessageCount)
 		
 		self.refreshMessages = False
 		
@@ -485,13 +515,14 @@ class Updater(threading.Thread):
 		self.html.lastID = itemID
 		self.settings['lasttweet_' + self.main.username] = itemID
 		if len(self.html.items) > 0:
-			self.html.newestID = self.html.items[len(self.html.items)-1][0].id
+			self.html.newestID = self.html.items[len(self.html.items) - 1][0].id
 	
 	def setLastMessage(self, itemID):
 		self.message.lastID = itemID
 		self.settings['lastmessage_' + self.main.username] = itemID
 		if len(self.message.items) > 0:
-			self.message.newestID = self.message.items[len(self.message.items)-1][0].id
+			self.message.newestID = self.message.items[
+											len(self.message.items) - 1][0].id
 	
 	def processUpdates(self, updates):
 		def compare(x, y):
@@ -517,12 +548,14 @@ class Updater(threading.Thread):
 	
 	# Update the refreshTimeout
 	def updateLimit(self):
-		if self.main.api.ratelimit == None:
+		if self.api.ratelimit == None:
 			self.main.refreshTimeout = 60
 			return
 		
-		minutes = (self.main.api.ratelimit['reset'] - calendar.timegm(time.gmtime())) / 60
-		limit = self.main.api.ratelimit['remaining']
+		minutes = (self.api.ratelimit['reset'] - \
+					calendar.timegm(time.gmtime())) / 60
+		
+		limit = self.api.ratelimit['remaining']
 		if limit > 0:
 			limit = limit / (2.0 + (2.0 / 5))
 			self.main.refreshTimeout = int(minutes / limit * 60 * 1.10)
@@ -530,7 +563,7 @@ class Updater(threading.Thread):
 				self.main.refreshTimeout = 30
 		
 		# Check for ratelimit
-		count = self.main.api.ratelimit['limit']
+		count = self.api.ratelimit['limit']
 		if count < 150:
 			if not self.main.rateWarningShown:
 				self.main.rateWarningShown= True

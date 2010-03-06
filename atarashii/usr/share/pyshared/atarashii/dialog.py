@@ -117,7 +117,8 @@ class AboutDialog(Dialog):
 	def onInit(self):
 		self.dlg.set_title(lang.aboutTitle)
 		self.closeButton.set_label(lang.aboutOKButton)
-		self.get("title").set_markup('<span size="x-large"><b>Atarashii %s</b></span>' % self.main.version)
+		self.get("title").set_markup(
+		'<span size="x-large"><b>Atarashii %s</b></span>' % self.main.version)
 		self.get("image").set_from_file(self.main.getImage())
 	
 		# License toggling
@@ -202,7 +203,10 @@ class SettingsDialog(Dialog):
 		# Delete Action
 		def deleteDialog(*args):
 			name = self.userAccounts[drop.get_active()]
-			MessageDialog(self.dlg, "question", lang.accountDeleteDescription % name, lang.accountDelete, yesCallback = self.deleteAccount)
+			MessageDialog(self.dlg, "question",
+							lang.accountDeleteDescription % name,
+							lang.accountDelete,
+							yesCallback = self.deleteAccount)
 		
 		delete.connect("clicked", deleteDialog)
 
@@ -258,7 +262,8 @@ class SettingsDialog(Dialog):
 			
 			# Set new Username
 			if drop.get_active() != -1:
-			 	self.settings['username'] = self.main.username = self.userAccounts[drop.get_active()]
+				self.main.username = self.userAccounts[drop.get_active()]
+			 	self.settings['username'] = self.main.username
 			
 			# Save Settings
 			self.main.saveSettings()
@@ -372,7 +377,8 @@ class AccountDialog(Dialog):
 			if username == "":
 				self.get("username").grab_focus()
 						
-			elif username in self.parent.userAccounts and username != self.username:
+			elif username in self.parent.userAccounts and \
+				username != self.username:
 				self.get("username").grab_focus()
 			
 			else:
@@ -386,15 +392,23 @@ class AccountDialog(Dialog):
 # Message Dialog ---------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class MessageDialog(gtk.MessageDialog):
-	def __init__(self, parent, type, message, title, okCallback = None, yesCallback = None, noCallback = None):
+	def __init__(self, parent, type, message, title, okCallback = None,
+				yesCallback = None, noCallback = None):
+		
 		if type == "error":
-			gtk.MessageDialog.__init__(self, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, message)
+			gtk.MessageDialog.__init__(self, parent, 
+						gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+						gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, message)
 
 		elif type == "warning":
-			gtk.MessageDialog.__init__(self, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_WARNING, gtk.BUTTONS_OK, message)
+			gtk.MessageDialog.__init__(self, parent,
+						gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+						gtk.MESSAGE_WARNING, gtk.BUTTONS_OK, message)
 
 		elif type == "question":
-			gtk.MessageDialog.__init__(self, parent, gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
+			gtk.MessageDialog.__init__(self, parent,
+						gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+						gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
 
 		self.set_title(title)
 		self.okCallback = okCallback

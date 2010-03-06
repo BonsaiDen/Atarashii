@@ -88,8 +88,10 @@ class TextInput(gtk.TextView):
 		if not self.hasFocus and self.inputError != None:
 			self.resize()
 			if not self.hasTyped:
-				self.modify_text(gtk.STATE_NORMAL, self.get_style().text[gtk.STATE_INSENSITIVE])
-				self.get_buffer().set_text(lang.textEntryMessage if self.gui.mode else lang.textEntry)
+				self.modify_text(gtk.STATE_NORMAL, 
+								self.get_style().text[gtk.STATE_INSENSITIVE])
+				self.get_buffer().set_text(
+					lang.textEntryMessage if self.gui.mode else lang.textEntry)
 
 		return False
 	
@@ -210,7 +212,8 @@ class TextInput(gtk.TextView):
 	# Check the length of the text and change color if needed
 	def checkColor(self, count):
 		if count > 140:
-			self.modify_base(gtk.STATE_NORMAL, gtk.gdk.Color(255 * 255, 200 * 255, 200 * 255))
+			self.modify_base(gtk.STATE_NORMAL, 
+								gtk.gdk.Color(255 * 255, 200 * 255, 200 * 255))
 			
 		else:
 			self.modify_base(gtk.STATE_NORMAL, self.defaultBG)
@@ -313,7 +316,8 @@ class TextInput(gtk.TextView):
 		self.gui.setLabel()
 		
 		# Calculate Textinput Size
-		textSize = self.create_pango_context().get_font_description().get_size() / pango.SCALE
+		psize = self.create_pango_context().get_font_description().get_size() 
+		textSize = psize / pango.SCALE
 		lines = lineCount if self.hasFocus else 1 
 		
 		# Resize

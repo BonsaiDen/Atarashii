@@ -44,12 +44,15 @@ class Send(threading.Thread):
 		if self.main.replyID!= -1:
 			try:
 				# Send Tweet
-				update = self.main.api.update_status(text, in_reply_to_status_id = self.main.replyID)
+				update = self.main.api.update_status(text, 
+									in_reply_to_status_id = self.main.replyID)
 				self.main.updater.setLastTweet(update.id)
 				self.main.gui.readButton.set_sensitive(True)
 				
 				# Insert temporary tweet
-				imgfile = self.main.updater.getImage(update.user.profile_image_url, update.user.id)
+				imgfile = self.main.updater.getImage(
+									update.user.profile_image_url,
+									update.user.id)
 				self.main.gui.html.updateList.append((update, imgfile, False))
 				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
 				
@@ -76,7 +79,9 @@ class Send(threading.Thread):
 				self.main.gui.readButton.set_sensitive(True)
 				
 				# Insert temporary tweet
-				imgfile = self.main.updater.getImage(update.user.profile_image_url, update.user.id)
+				imgfile = self.main.updater.getImage(
+									update.user.profile_image_url, 
+									update.user.id)
 				self.main.gui.html.updateList.append((update, imgfile, False))
 				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
 
@@ -98,15 +103,18 @@ class Send(threading.Thread):
 		try:
 			# Send Message
 			if self.main.messageID != -1:
-				message = self.main.api.send_direct_message(text = text, user_id = self.main.messageID)
+				message = self.main.api.send_direct_message(text = text, 
+											user_id = self.main.messageID)
 			else:
-				message = self.main.api.send_direct_message(text = text, screen_name = self.main.messageUser)
+				message = self.main.api.send_direct_message(text = text, 
+											screen_name = self.main.messageUser)
 			
 			self.main.updater.setLastMessage(message.id)
 			self.main.gui.readButton.set_sensitive(True)
 			
 			# Insert temporary message
-			imgfile = self.main.updater.getImage(message.sender.profile_image_url, message.sender.id)
+			imgfile = self.main.updater.getImage(
+							message.sender.profile_image_url, message.sender.id)
 			self.main.gui.message.updateList.append((message, imgfile, False))
 			gobject.idle_add(lambda: self.main.gui.message.pushUpdates())
 			

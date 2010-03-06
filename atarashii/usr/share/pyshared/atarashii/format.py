@@ -62,20 +62,27 @@ class Formatter:
 				else:
 					text = c
 	
-				result.append('<a href="%s" title="%s">%s</a>' % (self.escape(c), self.escape(c), text))
+				result.append(
+					'<a href="%s" title="%s">%s</a>' % 
+					(self.escape(c), self.escape(c), text))
 			
 			# @
 			elif t == 2:
 				at = c[1:]
 				self.users.append(at)
-				result.append(('<a href="http://twitter.com/%s" title="' + lang.htmlAt + '">@%s</a>') % (at, at, at))
+				result.append(
+					('<a href="http://twitter.com/%s" title="' + lang.htmlAt +\
+					'">@%s</a>') % (at, at, at))
 			
 			# tag
 			elif t == 3:
 				c = unicode(c)
 				tag = c[c.find('#')+1:]
 				self.tags.append(tag)
-				result.append(('<a href="http://search.twitter.com/search?%s" title="' + lang.htmlSearch + '">#%s</a>') % (urllib.urlencode({'q': '#' + tag}), tag, tag))
+				result.append(
+					('<a href="http://search.twitter.com/search?%s" title="' +\
+					lang.htmlSearch + '">#%s</a>') % 
+					(urllib.urlencode({'q': '#' + tag}), tag, tag))
 		
 		return "".join(result)
 
@@ -100,6 +107,12 @@ class Formatter:
 		
 	# Regex stuff
 	def escape(self, text):
-		ent = {"&": "&amp;", '"': "&quot;", "'": "&apos;", ">": "&gt;", "<": "&lt;"}
+		ent = {
+			"&": "&amp;", 
+			'"': "&quot;", 
+			"'": "&apos;", 
+			">": "&gt;", 
+			"<": "&lt;"
+		}
 		return "".join(ent.get(c,c) for c in text)
 		

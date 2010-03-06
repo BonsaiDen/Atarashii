@@ -274,7 +274,8 @@ class HTMLView(webkit.WebView):
 			if id < 0:
 				id = 0
 			
-			self.main.settings[self.firstSetting + self.main.username] = self.items[id][0].id - 1
+			setting = self.firstSetting + self.main.username
+			self.main.settings[setting] = self.items[id][0].id - 1
 			
 		# Newest Stuff
 		if self.newestID == -1:
@@ -284,7 +285,8 @@ class HTMLView(webkit.WebView):
 	# Helpers ------------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def relative_time(self, t):
-		delta = long(calendar.timegm(time.gmtime())) - long(calendar.timegm(t.timetuple()))
+		delta = long(calendar.timegm(time.gmtime())) - \
+				long(calendar.timegm(t.timetuple()))
 		if delta <= 1:
 			return lang.htmlAboutSecond
 		
@@ -318,7 +320,8 @@ class HTMLView(webkit.WebView):
 	
 	
 	def absolute_time(self, t):
-		delta = long(calendar.timegm(time.gmtime())) - long(calendar.timegm(t.timetuple()))
+		delta = long(calendar.timegm(time.gmtime())) - \
+				long(calendar.timegm(t.timetuple()))
 		t = time.localtime(calendar.timegm(t.timetuple()))
 		if delta <= 60 * 60 * 24:
 			return time.strftime(lang.htmlTime, t)
@@ -354,16 +357,16 @@ class HTMLView(webkit.WebView):
 		
 		# Send a message
 		elif uri.startswith("message:"):
-			foo, self.main.messageUser, self.main.messageID, num = uri.split(":")
+			o, self.main.messageUser, self.main.messageID, num = uri.split(":")
 			self.main.messageText = self.items[int(num)][0].text
 			self.main.message(int(num))
 			self.main.gui.text.htmlFocus()
 		
 		# Retweet someone
 		elif uri.startswith("retweet:"):
-			self.main.retweetNum = int(uri.split(":")[1])
-			self.main.retweetText = self.items[self.main.retweetNum][0].text
-			self.main.retweetUser = self.items[self.main.retweetNum][0].user.screen_name
+			num = self.main.retweetNum = int(uri.split(":")[1])
+			self.main.retweetText = self.items[num][0].text
+			self.main.retweetUser = self.items[num][0].user.screen_name
 			self.main.retweet()
 			self.main.gui.text.htmlFocus()
 		

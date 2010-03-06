@@ -20,7 +20,10 @@
 import dbus, dbus.service
 import sys
 
-if 'org.Atarashii' in dbus.Interface(dbus.SessionBus().get_object("org.freedesktop.DBus", "/org/freedesktop/DBus"), "org.freedesktop.DBus").ListNames():
+if 'org.Atarashii' in dbus.Interface(
+	dbus.SessionBus().get_object("org.freedesktop.DBus", 
+	"/org/freedesktop/DBus"), "org.freedesktop.DBus").ListNames():
+
 	sys.exit(2)
 
 DBUS = dbus.SessionBus()
@@ -230,7 +233,8 @@ class Atarashii:
 	# --------------------------------------------------------------------------
 	def reconnect(self):
 		if self.api.ratelimit != None:
-			minutes = math.ceil((self.api.ratelimit['reset'] - calendar.timegm(time.gmtime())) / 60.0)
+			minutes = math.ceil((self.api.ratelimit['reset'] - \
+						calendar.timegm(time.gmtime())) / 60.0)
 		else:
 			minutes = 5
 		
@@ -240,7 +244,10 @@ class Atarashii:
 		if not self.loginStatus:
 			self.reconnectTime = calendar.timegm(time.gmtime())
 			self.isReconnecting = True
-			self.reconnectTimeout = gobject.timeout_add(int(self.refreshTimeout * 1000), lambda: self.login())
+			self.reconnectTimeout = gobject.timeout_add(
+									int(self.refreshTimeout * 1000), 
+									lambda: self.login())
+			
 			return lang.errorRatelimitReconnect % math.ceil(minutes)
 		
 		# Just display an error if we exiced the ratelim while being logged in
@@ -268,13 +275,15 @@ class Atarashii:
 		if self.debug == None:
 			return '/usr/share/icons/atarashii.png'
 		else:
-			return os.path.join(self.debug, 'atarashii/usr/share/icons/atarashii.png')
+			return os.path.join(self.debug, 
+								'atarashii/usr/share/icons/atarashii.png')
 		
 	def getResource(self, res):
 		if self.debug == None:
 			return os.path.join("/usr/share/atarashii", res)
 		else:
-			return os.path.join(self.debug, "atarashii/usr/share/atarashii", res)
+			return os.path.join(self.debug, "atarashii/usr/share/atarashii", 
+								res)
 	
 	def getLatestID(self):
 		if self.settings.isset('lasttweet_' + self.username):

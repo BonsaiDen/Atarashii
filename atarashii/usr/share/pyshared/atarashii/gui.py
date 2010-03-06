@@ -73,7 +73,8 @@ class GUI(gtk.Window):
 		
 		# Settings Button
 		self.settingsButton = gt.get_object("settings")
-		self.settingsButton.connect("toggled", lambda *args: self.onSettings(False))
+		self.settingsButton.connect("toggled", 
+									lambda *args: self.onSettings(False))
 		self.settingsButton.set_tooltip_text(lang.toolSettings)
 		self.settingsToggle = False
 		
@@ -170,7 +171,8 @@ class GUI(gtk.Window):
 	# --------------------------------------------------------------------------
 	def enterPassword(self):
 		self.main.apiTempPassword = None
-		dialog.PasswordDialog(self, lang.passwordTitle, lang.passwordQuestion % self.main.username)
+		dialog.PasswordDialog(self, lang.passwordTitle, 
+								lang.passwordQuestion % self.main.username)
 	
 	
 	# Main Functions -----------------------------------------------------------
@@ -217,7 +219,8 @@ class GUI(gtk.Window):
 			pass
 	
 		elif self.main.isReconnecting:
-			wait = self.main.refreshTimeout - (calendar.timegm(time.gmtime()) - self.main.reconnectTime)
+			wait = self.main.refreshTimeout - \
+					(calendar.timegm(time.gmtime()) - self.main.reconnectTime)
 			if wait < 60:
 				self.setStatus(lang.statusReconnectSeconds % wait)
 		
@@ -225,10 +228,13 @@ class GUI(gtk.Window):
 				self.setStatus(lang.statusReconnectMinute)
 			
 			else:
-				self.setStatus(lang.statusReconnectMinutes % math.ceil(wait / 60.0))
+				self.setStatus(
+					lang.statusReconnectMinutes % math.ceil(wait / 60.0))
 	
 		elif self.main.isLoadingHistory:
-			self.setStatus(lang.statusLoadHistory if self.html.loadHistoryID != -1 else lang.statusLoadMessageHistory)
+			self.setStatus(
+				lang.statusLoadHistory if self.html.loadHistoryID != -1 else \
+				lang.statusLoadMessageHistory)
 	
 		elif self.main.isConnecting:
 			self.setStatus(lang.statusConnecting % self.main.username)
@@ -244,11 +250,18 @@ class GUI(gtk.Window):
 			self.readButton.set_sensitive(False)
 			self.setStatus(lang.statusUpdate)
 		
-		elif self.main.refreshTimeout == -1 or (self.mode and self.message.loaded == 0) or (not self.mode and self.html.loaded == 0):
+		elif self.main.refreshTimeout == -1 or \
+			(self.mode and self.message.loaded == 0) or \
+			(not self.mode and self.html.loaded == 0):
+			
 			self.setStatus(lang.statusConnected)
 		
-		elif (not self.text.isTyping or not self.text.hasFocus) and not self.main.isSending:
-			wait = self.main.refreshTimeout - (calendar.timegm(time.gmtime()) - self.main.refreshTime)
+		elif (not self.text.isTyping or not self.text.hasFocus) and not \
+			self.main.isSending:
+			
+			wait = self.main.refreshTimeout - \
+				(calendar.timegm(time.gmtime()) - self.main.refreshTime)
+			
 			if wait == 0:
 				self.refreshButton.set_sensitive(False)
 				self.readButton.set_sensitive(False)
@@ -279,7 +292,8 @@ class GUI(gtk.Window):
 	
 	def checkRead(self):
 		if self.mode:
-			self.readButton.set_sensitive(self.message.lastID> self.message.initID)
+			self.readButton.set_sensitive(
+									self.message.lastID > self.message.initID)
 			
 		else:
 			self.readButton.set_sensitive(self.html.lastID > self.html.initID)
@@ -288,7 +302,9 @@ class GUI(gtk.Window):
 	# Info Label ---------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def setLabel(self):	
-		if self.main.replyUser == "" and self.main.retweetUser == "" and self.main.messageUser == "":
+		if self.main.replyUser == "" and self.main.retweetUser == "" and \
+			self.main.messageUser == "":
+			
 			self.infoLabel.set_markup("")
 			self.infoLabel.hide()
 			
@@ -359,11 +375,15 @@ class GUI(gtk.Window):
 	 			code = 0
 	 		
 		# Ratelimit error
- 		if (code == 400 and not self.main.wasSending) or (code == 403 and self.main.wasSending):
+ 		if (code == 400 and not self.main.wasSending) or \
+ 			(code == 403 and self.main.wasSending):
+ 			
  			self.refreshButton.set_sensitive(False)
  			rateError = self.main.reconnect()
  			
- 		elif (code == 400 and self.main.wasSending) or (code == 403 and not self.main.wasSending):
+ 		elif (code == 400 and self.main.wasSending) or \
+ 			(code == 403 and not self.main.wasSending):
+ 			
  			code = 500
  			rateError = ""
  		
@@ -374,7 +394,8 @@ class GUI(gtk.Window):
  		
  		# Show Warning on url error or error message for anything else 		
  		if code == -1 or code == 500 or code == 502 or code == 503:
- 			dialog.MessageDialog(self, "warning", lang.warningURL, lang.warningTitle)
+ 			dialog.MessageDialog(self, "warning", 
+ 									lang.warningURL, lang.warningTitle)
  		
  		else:
 	 		description = {
@@ -391,7 +412,8 @@ class GUI(gtk.Window):
 	 	self.updateStatus()
 	
 	def showWarning(self, limit):
-		dialog.MessageDialog(self, "warning", lang.warningText % limit, lang.warningTitle)
+		dialog.MessageDialog(self, "warning", lang.warningText % limit, 
+								lang.warningTitle)
 	
 	# Helpers ------------------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -405,13 +427,15 @@ class GUI(gtk.Window):
 			
 		elif self.mode:
 			if self.html.count > 0:
-				self.set_title((lang.titleTweets if self.html.count > 1 else lang.titleTweet) % self.html.count)
+				self.set_title((lang.titleTweets if self.html.count > 1 else \
+								lang.titleTweet) % self.html.count)
 			else:
 				self.set_title(lang.titleLoggedIn % self.main.username)
 			
 		else:
 			if self.message.count > 0:
-				self.set_title((lang.titleMessages if self.html.count > 1 else lang.titleMessage) % self.message.count)
+				self.set_title((lang.titleMessages if self.html.count > 1 else \
+								lang.titleMessage) % self.message.count)
 			else:
 				self.set_title(lang.titleLoggedIn % self.main.username)
 	
@@ -446,7 +470,9 @@ class GUI(gtk.Window):
 			self.htmlScroll.hide()
 			self.messageScroll.show()	
 			self.messageScroll.grab_focus()
-			self.readButton.set_sensitive(self.message.lastID > self.message.initID)
+			self.readButton.set_sensitive(
+									self.message.lastID > self.message.initID)
+			
 			self.historyButton.set_sensitive(self.message.historyLoaded)
 			
 			if self.message.loaded == 0:
@@ -545,7 +571,8 @@ class GUI(gtk.Window):
 		
 	def stateEvent(self, window, event):
 		if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
-			self.minimized = event.new_window_state & gtk.gdk.WINDOW_STATE_ICONIFIED
+			self.minimized = event.new_window_state & \
+								gtk.gdk.WINDOW_STATE_ICONIFIED
 	
 	def drawEvent(self, *args):
 		self.disconnect(self.initEvent)

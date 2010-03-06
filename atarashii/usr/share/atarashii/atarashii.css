@@ -181,7 +181,11 @@ a, a:hover, a:active {
 }
 
 /* Reply */
-.tweet:hover .doreply a, .highlight:hover .doreply a, .mentioned:hover .doreply a, .oldtweet:hover .doreply a{
+.tweet:hover .doreply a, 
+.highlight:hover .doreply a, 
+.mentioned:hover .doreply a, 
+.oldtweet:hover .doreply a, 
+.highlightold:hover .doreply a{
 	background-image: url("file:///usr/share/atarashii/at.png");
 	display: block;
 }
@@ -205,7 +209,11 @@ a, a:hover, a:active {
 	
 	
 /* Retweet */
-.tweet:hover .doretweet a, .highlight:hover .doretweet a, .mentioned:hover .doretweet a, .oldtweet:hover .doretweet a{
+.tweet:hover .doretweet a, 
+.highlight:hover .doretweet a, 
+.mentioned:hover .doretweet a, 
+.oldtweet:hover .doretweet a, 
+.highlightold:hover .doretweet a{
 	background-image: url("file:///usr/share/atarashii/rt.png")
 }
 
