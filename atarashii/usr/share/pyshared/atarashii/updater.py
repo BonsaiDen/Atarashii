@@ -495,16 +495,6 @@ class Updater(threading.Thread):
 		self.updateLimit()
 		
 		# Return
-		def compare(x, y):
-			if x.id > y.id:
-				return -1
-	
-			elif x.id < y.id:
-				return 1
-		
-			else:
-				return 0
-	
 		return self.processUpdates(messages)
 	
 	
