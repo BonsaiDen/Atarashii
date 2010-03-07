@@ -46,6 +46,22 @@ class HTML(view.HTMLView):
 
 	# Render the Timeline ------------------------------------------------------
 	# --------------------------------------------------------------------------
+	def getUser(self, num):
+		item = self.items[num][0]
+		if hasattr(item, "retweeted_status"):
+			return item.retweeted_status.user
+		else:
+			return item.user
+	
+	def getText(self, num):
+		item = self.items[num][0]
+		if hasattr(item, "retweeted_status"):
+			return item.retweeted_status.text
+		
+		else:
+			return item.text
+	
+	
 	def render(self):	
 		self.initRender()
 		
@@ -59,11 +75,28 @@ class HTML(view.HTMLView):
 		container = False
 		lastHighlight = False
 		
-		
 		# Do the rendering!
 		self.count = 0
 		for num, obj in enumerate(self.items):
-			tweet, img, mode = obj
+			item, img, mode = obj
+			
+			# Check for new style retweet
+			retweeted = False
+			retweet = ""
+			if hasattr(item, "retweeted_status"):
+				tweet = item.retweeted_status
+				retweeted = True
+				
+				# Retweet Info
+				retweet = '<a href="http://twitter.com/%s/statuses/%d">' + \
+						lang.htmlInRetweet + '</a>'
+				retweet = retweet % (item.user.screen_name, item.user.id,
+								item.user.screen_name)
+			
+			else:
+				tweet = item
+			
+			user = tweet.user
 			
 			# Fix some stuff for the seperation of continous new/old items
 			newTimeline = tweet.id > self.initID
@@ -87,7 +120,7 @@ class HTML(view.HTMLView):
 			# Spacer
 			if num > 0:
 				spacer = ""
-				if lastname != tweet.user.screen_name or newTimeline:
+				if lastname != user.screen_name or newTimeline:
 					if tweet.id > self.initID:
 						spacer = "1"
 				
@@ -109,7 +142,7 @@ class HTML(view.HTMLView):
 				renderitems.insert(0, '<div class="spacer%s"></div>' % spacer)
 					
 			
-			lastname = tweet.user.screen_name
+			lastname = user.screen_name
 			lastHighlight = highlight
 			
 			# Is this tweet a reply?
@@ -122,7 +155,7 @@ class HTML(view.HTMLView):
 								tweet.in_reply_to_screen_name)
 			
 			# Realname
-			profilename = tweet.user.name.strip() + "'s"
+			profilename = user.name.strip() + "'s"
 			
 			# Display Avatar?
 			if num < len(self.items) - 1:
@@ -140,18 +173,18 @@ class HTML(view.HTMLView):
 				newestAvatar = True
 			
 			if (num < len(self.items) - 1 and \
-				(tweet.user.screen_name != \
-				self.items[num + 1][0].user.screen_name or newAvatar)) or \
+				(user.screen_name != \
+				self.getUser(num+1).screen_name or newAvatar)) or \
 				num == len(self.items) - 1 or newTimeline:
 			
 				avatar = '''<a href="http://twitter.com/%s">
 							<img width="32" src="file://%s" title="''' + \
 							lang.htmlInfo + '''"/></a>'''
 				
-				avatar = avatar % (tweet.user.screen_name, img, 
-									tweet.user.name, tweet.user.followers_count,
-									tweet.user.friends_count,
-									tweet.user.statuses_count)
+				avatar = avatar % (user.screen_name, img, 
+									user.name, user.followers_count,
+									user.friends_count,
+									user.statuses_count)
 			
 			else:
 				avatar = ""
@@ -182,9 +215,9 @@ class HTML(view.HTMLView):
 			
 			# Protected
 			locked = ''
-			if hasattr(tweet.user, "protected") and tweet.user.protected:
+			if hasattr(user, "protected") and user.protected:
 				locked = ('<span class="protected" title="' + \
-					lang.htmlProtected + '"></span>') % tweet.user.screen_name
+					lang.htmlProtected + '"></span>') % user.screen_name
 			
 			# HTML Snippet
 			html = '''
@@ -196,26 +229,27 @@ class HTML(view.HTMLView):
 			<div class="actions">
 				<div class="doreply">
 					<a href="reply:%s:%d:%d" title="''' + \
-					(lang.htmlReply % tweet.user.screen_name) + '''"> </a>
+					(lang.htmlReply % user.screen_name) + '''"> </a>
 				</div>
 				<div class="doretweet">
 					<a href="retweet:%d" title="''' + \
-					(lang.htmlRetweet % tweet.user.screen_name) + '''"> </a>
+					(lang.htmlRetweet % user.screen_name) + '''"> </a>
 				</div>
 			</div>
 			
 			<div class="inner-text">
-				<div>
-					<a class="name" href="http://twitter.com/%s" title="''' + \
+				<div><span class="name">''' + ("<b>RT</b>" if retweeted else "") + '''
+					<a href="http://twitter.com/%s" title="''' + \
 					lang.htmlProfile + '''">
 						<b>%s</b>
-					</a> ''' + locked + ''' %s
+					</a></span> ''' + locked + ''' %s
 				</div>
 				<div class="time">
 					<a href="http://twitter.com/%s/statuses/%d" title="''' + \
 					(self.absolute_time(tweet.created_at)) + '''">%s</a>
 					''' + by + '''
 				</div>
+				<div class="reply">%s</div>
 				<div class="reply">%s</div>
 			</div>
 			<div class="clearfloat"></div>
@@ -227,22 +261,22 @@ class HTML(view.HTMLView):
 					avatar,
 					
 					# Actions
-					tweet.user.screen_name, tweet.id, num, 
+					user.screen_name, tweet.id, num, 
 					num,		
 					
 					# Text
-					tweet.user.screen_name, 
+					user.screen_name, 
 					profilename, 
-					tweet.user.screen_name, 
+					user.screen_name, 
 					text, 	
 					
 					# Time
-					tweet.user.screen_name,
+					user.screen_name,
 					tweet.id,
 					self.relative_time(tweet.created_at),
-					reply)
+					reply, retweet)
 			
-			if tweet.id == self.newestID:
+			if item.id == self.newestID:
 				html = '</div>' + html
 			
 			self.main.gui.setTitle()

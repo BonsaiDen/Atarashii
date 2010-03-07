@@ -284,7 +284,7 @@ class HTMLView(webkit.WebView):
 			
 		# Newest Stuff
 		if self.newestID == -1:
-			self.newestID = self.initID	
+			self.newestID = self.initID
 	
 	
 	# Helpers ------------------------------------------------------------------
@@ -357,22 +357,22 @@ class HTMLView(webkit.WebView):
 		# Replies
 		elif uri.startswith("reply:"):
 			foo, self.main.replyUser, self.main.replyID, num = uri.split(":")
-			self.main.reply(int(num))
+			self.main.gui.text.reply()
 			self.main.gui.text.htmlFocus()
 		
 		# Send a message
 		elif uri.startswith("message:"):
 			o, self.main.messageUser, self.main.messageID, num = uri.split(":")
 			self.main.messageText = self.items[int(num)][0].text
-			self.main.message(int(num))
+			self.main.gui.text.message()
 			self.main.gui.text.htmlFocus()
 		
 		# Retweet someone
 		elif uri.startswith("retweet:"):
 			num = self.main.retweetNum = int(uri.split(":")[1])
-			self.main.retweetText = self.items[num][0].text
-			self.main.retweetUser = self.items[num][0].user.screen_name
-			self.main.retweet()
+			self.main.retweetText = self.getText(num)
+			self.main.retweetUser = self.getUser(num).screen_name
+			self.main.gui.text.retweet()
 			self.main.gui.text.htmlFocus()
 		
 		# Regular links
