@@ -21,8 +21,9 @@ import dbus, dbus.service
 import sys
 
 if 'org.Atarashii' in dbus.Interface(
-	dbus.SessionBus().get_object("org.freedesktop.DBus", 
-	"/org/freedesktop/DBus"), "org.freedesktop.DBus").ListNames():
+	dbus.SessionBus().get_object(
+		"org.freedesktop.DBus", "/org/freedesktop/DBus"),
+		"org.freedesktop.DBus").ListNames():
 
 	sys.exit(2)
 
