@@ -16,7 +16,7 @@
 """
 Atarashii Twitter Client
 """
-__version__ = '0.99.2'
+__version__ = '0.99.3'
 __author__ = 'Ivo Wetzel <ivo.wetzel@googlemail.com>'
 __copyright__ = 'Copyright (c) 2010 Ivo Wetzel'
 __license__ = 'GPL 3'

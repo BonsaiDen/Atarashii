@@ -1,3 +1,9 @@
+atarashii (0.99.3-1) all;
+
+  * Added support for new style retweets.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 7 Mar 2010 18:29:00 +0100
+
 atarashii (0.99.2-1) all;
 
   * Bugfix for direct message notifications.
