@@ -232,7 +232,7 @@ class TextInput(gtk.TextView):
 	
 	# Reply / Retweet / Message ------------------------------------------------
 	# --------------------------------------------------------------------------
-	def reply(self, num):
+	def reply(self):
 		self.changeContents = True
 		self.isChanging = True
 		self.grab_focus()
@@ -280,7 +280,7 @@ class TextInput(gtk.TextView):
 		self.modify_text(gtk.STATE_NORMAL, self.defaultFG)
 		self.resize()
 	
-	def message(self, num):
+	def message(self):
 		self.changeContents = True
 		self.isChanging = True
 		self.grab_focus()
