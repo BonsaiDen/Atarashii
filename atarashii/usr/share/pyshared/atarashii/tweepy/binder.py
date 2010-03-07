@@ -160,20 +160,16 @@ def bind_api(**config):
                     error_msg = "Twitter error response: status code = %s" % resp.status
                 raise TweepError(error_msg, resp)
 
-            # Save ratelimit if we are using OAuth
+            # Save rate limit information if we are using OAuth
             if resp.getheader('x-ratelimit-class') != None:
-                self.api.ratelimit = {
+                self.api.rate_limit = {
                     'limit' : int(resp.getheader('x-ratelimit-limit')),
                     'remaining' : int(resp.getheader('x-ratelimit-remaining')),
                     'reset' : long(resp.getheader('x-ratelimit-reset'))
                 }
 
-            else:
-               self.api.ratelimit = None
-
             # Parse the response payload
             result = self.api.parser.parse(self, resp.read())
-
             conn.close()
 
             # Store result into cache if one is available.

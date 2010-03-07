@@ -28,8 +28,12 @@ class API(object):
         self.retry_count = retry_count
         self.retry_delay = retry_delay
         self.retry_errors = retry_errors
-        self.ratelimit = None
+        self.rate_limit = None
         self.parser = parser or ModelParser()
+
+    """ access OAuth rate limit information"""
+    def oauth_rate_limit_status(self):
+    	return self.rate_limit
 
     """ statuses/public_timeline """
     public_timeline = bind_api(

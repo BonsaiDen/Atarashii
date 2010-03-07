@@ -539,14 +539,13 @@ class Updater(threading.Thread):
 	
 	# Update the refreshTimeout
 	def updateLimit(self):
-		if self.api.ratelimit == None:
+		ratelimit = self.api.oauth_rate_limit_status()
+		if ratelimit == None:
 			self.main.refreshTimeout = 60
 			return
 		
-		minutes = (self.api.ratelimit['reset'] - \
-					calendar.timegm(time.gmtime())) / 60
-		
-		limit = self.api.ratelimit['remaining']
+		minutes = (ratelimit['reset'] - calendar.timegm(time.gmtime())) / 60
+		limit = ratelimit['remaining']
 		if limit > 0:
 			limit = limit / (2.0 + (2.0 / 2))
 			self.main.refreshTimeout = int(minutes / limit * 60 * 1.10)
@@ -554,7 +553,7 @@ class Updater(threading.Thread):
 				self.main.refreshTimeout = 45
 		
 		# Check for ratelimit
-		count = self.api.ratelimit['limit']
+		count = ratelimit['limit']
 		if count < 350:
 			if not self.main.rateWarningShown:
 				self.main.rateWarningShown= True
