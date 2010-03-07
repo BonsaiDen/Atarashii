@@ -148,7 +148,6 @@ class HTML(view.HTMLView):
 				mode = lang.messageTo
 				name = tweet.recipient_screen_name
 				reply = "display: none;"
-				
 			
 			else:
 				mode = lang.messageFrom
