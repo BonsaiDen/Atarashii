@@ -50,9 +50,7 @@ class Send(threading.Thread):
 				self.main.gui.readButton.set_sensitive(True)
 				
 				# Insert temporary tweet
-				imgfile = self.main.updater.getImage(
-									update.user.profile_image_url,
-									update.user.id)
+				imgfile = self.main.updater.getImage(update)
 				self.main.gui.html.updateList.append((update, imgfile, False))
 				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
 				
@@ -79,9 +77,7 @@ class Send(threading.Thread):
 				self.main.gui.readButton.set_sensitive(True)
 				
 				# Insert temporary tweet
-				imgfile = self.main.updater.getImage(
-									update.user.profile_image_url, 
-									update.user.id)
+				imgfile = self.main.updater.getImage(update)
 				self.main.gui.html.updateList.append((update, imgfile, False))
 				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
 
@@ -113,8 +109,7 @@ class Send(threading.Thread):
 			self.main.gui.readButton.set_sensitive(True)
 			
 			# Insert temporary message
-			imgfile = self.main.updater.getImage(
-							message.sender.profile_image_url, message.sender.id)
+			imgfile = self.main.updater.getImage(message, True)
 			self.main.gui.message.updateList.append((message, imgfile, False))
 			gobject.idle_add(lambda: self.main.gui.message.pushUpdates())
 			
