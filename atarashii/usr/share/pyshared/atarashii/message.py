@@ -79,7 +79,6 @@ class HTML(view.HTMLView):
 			text = self.formatter.parse(tweet.text)
 			highlight = tweet.recipient_screen_name != self.main.username
 			
-			
 			# Spacer
 			if num > 0:
 				spacer = ""
@@ -124,8 +123,10 @@ class HTML(view.HTMLView):
 			
 			if (num < len(self.items) - 1 and \
 				(tweet.sender.screen_name != \
-				self.items[num + 1][0].sender.screen_name or newAvatar)) or \
-				num == len(self.items) - 1 or newTimeline:
+				self.items[num + 1][0].sender.screen_name or \
+				tweet.recipient_screen_name != \
+				self.items[num + 1][0].recipient_screen_name or newAvatar \
+				)) or num == len(self.items) - 1 or newTimeline:
 				
 				avatar = '''<a href="http://twitter.com/%s">
 							<img width="32" src="file://%s" title="''' + \
