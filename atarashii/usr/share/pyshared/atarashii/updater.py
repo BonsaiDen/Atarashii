@@ -167,6 +167,7 @@ class Updater(threading.Thread):
 		
 		gobject.idle_add(lambda: self.main.gui.checkRead())
 	
+	
 	# Load initial tweets ------------------------------------------------------
 	def getInitTweets(self):
 		updates = []
@@ -190,6 +191,7 @@ class Updater(threading.Thread):
 		gobject.idle_add(lambda: self.html.pushUpdates())
 		return True
 	
+	
 	# Load initial messages ----------------------------------------------------
 	def getInitMessages(self):
 		messages = []
@@ -212,6 +214,7 @@ class Updater(threading.Thread):
 		self.message.loaded = 1
 		gobject.idle_add(lambda: self.message.pushUpdates())
 		return True
+	
 	
 	# Mainloop -----------------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -305,9 +308,8 @@ class Updater(threading.Thread):
 		
 		else:
 			gobject.idle_add(lambda: self.message.render())		
-		
-		
-		
+	
+	
 	# Notifications ------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def showNotifications(self, updates, messages):
