@@ -91,13 +91,13 @@ class HTML(view.HTMLView):
 					spacer = "3"		
 				
 				elif tweet.id > self.initID:
-					spacer = "6" if highlight else "4"
+					spacer = "4" if highlight else "6"
 				
 				elif highlight:
-					spacer = "7"
+					spacer = "2"
 				
 				else:
-					spacer = "2"
+					spacer = "7"
 				
 				renderitems.insert(0, '<div class="spacer%s"></div>' % spacer)
 			
@@ -148,12 +148,13 @@ class HTML(view.HTMLView):
 				mode = lang.messageTo
 				name = tweet.recipient_screen_name
 				reply = "display: none;"
-				cls = "highlightold" if tweet.id <= self.initID else "highlight"
+				
 			
 			else:
 				mode = lang.messageFrom
 				name = tweet.sender.screen_name
 				reply = ""
+				cls = "highlightold" if tweet.id <= self.initID else "highlight"
 			
 			# HTML Snippet
 			html = '''
