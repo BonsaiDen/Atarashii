@@ -255,21 +255,7 @@ class Atarashii:
 		# Just display an error if we exiced the ratelim while being logged in
 		else:
 			return lang.errorRatelimit % math.ceil(minutes)	
-	
-	
-	# HTML ---------------------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def reply(self, num = -1):
-		self.gui.text.reply(num)
-
-	# Retweet Something
-	def retweet(self):
-		self.gui.text.retweet()
-	
-	# Message to someone
-	def message(self, num):
-		self.gui.text.message(num)
-		
+			
 	
 	# Helper Functions ---------------------------------------------------------
 	# --------------------------------------------------------------------------
