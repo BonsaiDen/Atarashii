@@ -505,8 +505,7 @@ class Updater(threading.Thread):
 			else:
 				return 0
 	
-		messages.sort(compare)
-		return messages
+		return self.processUpdates(messages)
 	
 	
 	# Helpers ------------------------------------------------------------------
