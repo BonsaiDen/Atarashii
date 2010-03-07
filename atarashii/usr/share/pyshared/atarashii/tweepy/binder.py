@@ -76,10 +76,7 @@ def bind_api(**config):
             for k, arg in kargs.items():
                 if arg is None:
                     continue
-                    
-                # Actually this breaks the send direct message api when using 
-                # basic auth
-                # TODO fix without commenting out the 2 lines below
+                
                 if k in self.parameters:
                     raise TweepError('Multiple values for parameter %s supplied!' % k)
 
