@@ -333,8 +333,14 @@ class Updater(threading.Thread):
 				# Don't add mentions twice
 				if not i.id in tweetIDS:
 					tweetIDS.append(i.id)
-					tweetList.append([i.user.screen_name, 
-						i.text, imgfile, None])
+					if hasattr(i, "retweeted_status"):
+						name = "RT %s" % i.retweeted_status.user.screen_name
+						text = i.retweeted_status.text
+					else:
+						name = i.user.screen_name
+						text = i.text
+					
+					tweetList.append([name, text, imgfile, None])
 			
 			self.html.updateList.append((i, imgfile, False))
 		
