@@ -76,8 +76,12 @@ def bind_api(**config):
             for k, arg in kargs.items():
                 if arg is None:
                     continue
-              #  if k in self.parameters:
-               #     raise TweepError('Multiple values for parameter %s supplied!' % k)
+                    
+                # Actually this breaks the send direct message api when using 
+                # basic auth
+                # TODO fix without commenting out the 2 lines below
+                if k in self.parameters:
+                    raise TweepError('Multiple values for parameter %s supplied!' % k)
 
                 self.parameters[k] = convert_to_utf8_str(arg)
 
