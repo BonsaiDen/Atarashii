@@ -184,7 +184,7 @@ class Updater(threading.Thread):
 		updates.reverse()
 		for i in updates:
 			if i != None:
-				imgfile = self.getImage(i.user.profile_image_url, i.user.id)
+				imgfile = self.getImage(i)
 				self.html.updateList.append((i, imgfile, False))
 		
 		self.html.loaded = 1
@@ -208,7 +208,7 @@ class Updater(threading.Thread):
 		messages.reverse()
 		for i in messages:
 			if i != None:
-				imgfile = self.getImage(i.sender.profile_image_url, i.sender.id)
+				imgfile = self.getImage(i, True)
 				self.message.updateList.append((i, imgfile, False))
 	
 		self.message.loaded = 1
@@ -317,7 +317,7 @@ class Updater(threading.Thread):
 		tweetIDS = []
 		messageIDS = []
 		for i in messages:
-			imgfile = self.getImage(i.sender.profile_image_url, i.sender.id)
+			imgfile = self.getImage(i, True)
 			if i.sender.screen_name.lower() != self.main.username.lower():
 				if not i.id in messageIDS:
 					messageIDS.append(i.id)
@@ -328,7 +328,7 @@ class Updater(threading.Thread):
 			self.message.updateList.append((i, imgfile, False))	
 		
 		for i in updates:
-			imgfile = self.getImage(i.user.profile_image_url, i.user.id)
+			imgfile = self.getImage(i)
 			if i.user.screen_name.lower() != self.main.username.lower():
 				# Don't add mentions twice
 				if not i.id in tweetIDS:
@@ -368,7 +368,7 @@ class Updater(threading.Thread):
 		# Loaded
 		self.main.maxTweetCount += len(updates)
 		for i in updates:
-			imgfile = self.getImage(i.user.profile_image_url, i.user.id)
+			imgfile = self.getImage(i)
 			self.html.updateList.append((i, imgfile, True))
 		
 		self.html.loadHistoryID = -1
@@ -400,7 +400,7 @@ class Updater(threading.Thread):
 		# Loaded
 		self.main.maxMessageCount += len(messages)
 		for i in messages:
-			imgfile = self.getImage(i.sender.profile_image_url, i.sender.id)
+			imgfile = self.getImage(i, True)
 			self.message.updateList.append((i, imgfile, True))
 		
 		self.message.loadHistoryID = -1
@@ -563,7 +563,19 @@ class Updater(threading.Thread):
 			self.main.rateWarningShown = False
 	
 	# Cache a user avatar	
-	def getImage(self, url, userid):
+	def getImage(self, item, message = False):#url, userid):
+		if message:
+			url = item.sender.profile_image_url
+			userid = item.sender.id
+		else:
+			if hasattr(item, "retweeted_status"):
+				url = item.retweeted_status.user.profile_image_url
+				userid = item.retweeted_status.user.id	
+			else:
+				url = item.user.profile_image_url
+				userid = item.user.id
+	
+	
 		image = url[url.rfind('/')+1:]
 		imgdir = os.path.join(self.path, ".atarashii")
 		if not os.path.exists(imgdir):
