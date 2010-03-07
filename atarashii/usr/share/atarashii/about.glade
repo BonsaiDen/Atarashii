@@ -84,6 +84,7 @@
 &lt;a href="http://github.com/BonsaiDen/Atarashii"&gt;Atarashii@GitHub&lt;/a&gt;</property>
                         <property name="use_markup">True</property>
                         <property name="wrap">True</property>
+                        <property name="track_visited_links">False</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
