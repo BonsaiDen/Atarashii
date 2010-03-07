@@ -103,8 +103,6 @@ class HTML(view.HTMLView):
 			lastname = tweet.sender.screen_name
 			lastHighlight = highlight
 			
-			# Realname
-			profilename = tweet.sender.name.strip() + "'s"
 			
 			# Display Avatar?
 			if num < len(self.items) - 1:
@@ -194,7 +192,7 @@ class HTML(view.HTMLView):
 					
 					# Text
 					tweet.sender.screen_name, 
-					profilename, 
+					tweet.sender.name.strip(), 
 					name, 
 					text, 	
 					

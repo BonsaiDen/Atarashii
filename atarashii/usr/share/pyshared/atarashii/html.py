@@ -88,10 +88,10 @@ class HTML(view.HTMLView):
 				retweeted = True
 				
 				# Retweet Info
-				retweet = '<a href="http://twitter.com/%s/statuses/%d">' + \
-						lang.htmlInRetweet + '</a>'
-				retweet = retweet % (item.user.screen_name, item.user.id,
-								item.user.screen_name)
+				retweet = '<a href="http://twitter.com/%s" title="''' + \
+						(self.relative_time(item.created_at)) + '">' + lang.htmlInRetweet + '</a>'
+				retweet = retweet % (item.user.screen_name, 
+										item.user.screen_name)
 			
 			else:
 				tweet = item
@@ -154,8 +154,6 @@ class HTML(view.HTMLView):
 								tweet.in_reply_to_status_id,
 								tweet.in_reply_to_screen_name)
 			
-			# Realname
-			profilename = user.name.strip() + "'s"
 			
 			# Display Avatar?
 			if num < len(self.items) - 1:
@@ -266,7 +264,7 @@ class HTML(view.HTMLView):
 					
 					# Text
 					user.screen_name, 
-					profilename, 
+					user.name.strip(), 
 					user.screen_name, 
 					text, 	
 					
