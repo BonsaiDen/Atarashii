@@ -40,7 +40,6 @@ class GUI(gtk.Window):
 		# Setup
 		self.main = main
 		gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)		
-		self.set_title("Atarashii")
 		self.hide_on_delete()
 		self.set_border_width(2)
 		self.set_size_request(280, 400)
