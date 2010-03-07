@@ -94,8 +94,8 @@ class HTMLView(webkit.WebView):
 		self.offsetCount = 0
 		self.renderHTML("""
 			<body class="unloaded">
-				<div class="loading"><b>%s</b></div>
-			</body>""" % self.langLoading, "start")
+				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
+			</body>""" % (self.main.getImage(), self.langLoading), "start")
 	
 	
 	def splash(self):
