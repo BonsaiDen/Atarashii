@@ -99,7 +99,7 @@ class HTML(view.HTMLView):
 			user = tweet.user
 			
 			# Fix some stuff for the seperation of continous new/old items
-			newTimeline = tweet.id > self.initID
+			newTimeline = item.id > self.initID
 			if newTimeline:
 				self.count += 1
 			
@@ -121,7 +121,7 @@ class HTML(view.HTMLView):
 			if num > 0:
 				spacer = ""
 				if lastname != user.screen_name or newTimeline:
-					if tweet.id > self.initID:
+					if item.id > self.initID:
 						spacer = "1"
 				
 				elif highlight != lastHighlight:
@@ -130,7 +130,7 @@ class HTML(view.HTMLView):
 				elif hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
 					spacer = "5"
 				
-				elif tweet.id > self.initID:
+				elif item.id > self.initID:
 					spacer = "6" if highlight else "4"
 				
 				elif highlight:
@@ -193,7 +193,7 @@ class HTML(view.HTMLView):
 			if hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
 				clas = 'mentioned'
 				
-			elif tweet.id <= self.initID:
+			elif item.id <= self.initID:
 				clas = 'highlightold' if self.atUser else 'oldtweet'
 			
 			else:
