@@ -135,12 +135,12 @@ class LangDE:
 		self.passwordButton = "OK"
 		self.passwordButtonCancel = "Abbrechen"
 		self.passwordTitle = "Passwort"
-		self.passwordQuestion = "%s's Password:"
+		self.passwordQuestion = "%s's Passwort:"
 				
 		# Error
 		self.errorTitle = "Atarashii - Fehler"
  		self.errorLogin = 'Die Anmeldung als "%s" ist fehlgeschlagen.'
- 		self.errorRatelimit = "Ratelimit erreicht. Automatisches Update in %d Minute(n)."
+ 		self.errorRatelimit = "Ratelimit erreicht. Automatische Aktualisierung in %d Minute(n)."
  		self.errorRatelimitReconnect = "Ratelimit erreicht. Automatischer Reconnect in %d Minute(n)."
  		self.errorTwitter = "Interner Twitterfehler."
  		self.errorDown = "Twitter ist gerade offline."
@@ -229,7 +229,7 @@ class LangEN:
 		
 		# Text
 		self.textEntry = "What's happening?"
-		self.textEntryMessage = "Enter message..."
+		self.textEntryMessage = "Enter Message..."
 		
 		# Status
 		self.statusLogout = "Not connected."
@@ -302,8 +302,8 @@ class LangEN:
 		# ErrorOK"
 		self.errorTitle = "Atarashii - Error"
  		self.errorLogin = 'The login as "%s" has failed.'
- 		self.errorRatelimit = "Reached ratelimit. Automatic update in %d minute(s)."
- 		self.errorRatelimitReconnect = "Reached ratelimit. Automatic reconnect in %d minute(s)."
+ 		self.errorRatelimit = "Reached rate limit. Automatic refresh in %d minute(s)."
+ 		self.errorRatelimitReconnect = "Reached rate limit. Automatic reconnect in %d minute(s)."
  		
  		self.errorTwitter = "Internal Twitter error."
  		self.errorDown = "Twitter is currently offline."
@@ -312,7 +312,7 @@ class LangEN:
 		
 		# Warning
 		self.warningTitle = "Atarashii - Warning"
-		self.warningText = "Twitter has lowered the ratelimit to %d requests per hour, the update interval has been adjusted accordingly."
+		self.warningText = "Twitter has lowered the rate limit to %d requests per hour, the update interval has been adjusted accordingly."
  		self.warningURL = "Atarashii couldn't connect to Twitter, in most cases this is just a temporary issue due to Twitter being too busy at the moment."
 		
 		# Toolbar
