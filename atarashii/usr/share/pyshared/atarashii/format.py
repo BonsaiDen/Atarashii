@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 #  This file is part of Atarashii.
 #
 #  Atarashii is free software: you can redistribute it and/or 
@@ -19,7 +21,8 @@
 import re, urllib
 urlRegex = re.compile("((mailto\:|(news|(ht|f)tp(s?))\://){1}[^\s\)\]]+)")
 atRegex = re.compile("\B@([a-zA-Z0-9_]{1,15})")
-tagRegex = re.compile("\B#([A-Za-z0-9_-]+)") #re.compile("\#((){1}\S+)")
+tagRegex = re.compile('''\B#([^\-\+\)\(\[\]\?\=\*\}\{\:\.\;\,\"\'\!\<\>\|\s\~\&\§\$\%\/\\\\µ#]{1,})''')
+
 
 from lang import lang
 
