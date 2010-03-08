@@ -83,11 +83,14 @@ class HTML(view.HTMLView):
 			if num > 0:
 				spacer = ""
 				if lastname != tweet.sender.screen_name or newTimeline:
-					if tweet.id > self.initID:
+					if lastHighlight != highlight:
+						spacer = ""
+					
+					elif tweet.id > self.initID:
 						spacer = "1"
 				
 				elif highlight != lastHighlight:
-					spacer = "3"		
+					spacer = "3" if tweet.id > self.initID else ""
 				
 				elif tweet.id > self.initID:
 					spacer = "4" if highlight else "6"

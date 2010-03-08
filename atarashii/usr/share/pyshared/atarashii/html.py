@@ -74,7 +74,7 @@ class HTML(view.HTMLView):
 		newestAvatar = False
 		container = False
 		lastHighlight = False
-		
+
 		# Do the rendering!
 		self.count = 0
 		for num, obj in enumerate(self.items):
@@ -121,11 +121,14 @@ class HTML(view.HTMLView):
 			if num > 0:
 				spacer = ""
 				if lastname != user.screen_name or newTimeline:
-					if item.id > self.initID:
+					if lastHighlight != highlight:
+						spacer = ""
+					
+					elif item.id > self.initID:
 						spacer = "1"
 				
 				elif highlight != lastHighlight:
-					spacer = "3"
+					spacer = "1" if item.id > self.initID else ""
 					
 				elif hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
 					spacer = "5"
@@ -135,7 +138,10 @@ class HTML(view.HTMLView):
 				
 				elif highlight:
 					spacer = "7"
-			
+				
+				elif lastHighlight:
+					spacer = "1"
+				
 				else:
 					spacer = "2"
 				
