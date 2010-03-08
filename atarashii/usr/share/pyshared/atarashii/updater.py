@@ -172,7 +172,7 @@ class Updater(threading.Thread):
 	def getInitTweets(self):
 		updates = []
 		try:
-			updates = self.getUpdates(self.main.getFirstID())
+			updates = self.tryGetUpdates(self.main.getFirstID())
 		
 		except Exception, error:
 			gobject.idle_add(lambda: self.main.onLoginFailed(error))
@@ -196,7 +196,7 @@ class Updater(threading.Thread):
 	def getInitMessages(self):
 		messages = []
 		try:
-			messages = self.getMessages(self.main.getFirstMessageID())
+			messages = self.tryGetMessages(self.main.getFirstMessageID())
 		
 		except Exception, error:
 			gobject.idle_add(lambda: self.main.onLoginFailed(error))
@@ -260,7 +260,7 @@ class Updater(threading.Thread):
 		updates = []
 		if not self.refreshMessages:
 			try:
-				updates = self.getUpdates(self.html.lastID)
+				updates = self.tryGetUpdates(self.html.lastID)
 		
 			# Something went wrong...
 			except Exception, error:
@@ -278,7 +278,7 @@ class Updater(threading.Thread):
 			not self.refreshNow:
 
 			try:
-				messages = self.getMessages(self.message.lastID)
+				messages = self.tryGetMessages(self.message.lastID)
 
 			# Something went wrong...
 			except Exception, error:
@@ -361,7 +361,7 @@ class Updater(threading.Thread):
 	def loadHistory(self):
 		updates = []
 		try:
-			updates = self.getUpdates(maxID = self.html.loadHistoryID, 
+			updates = self.tryGetUpdates(maxID = self.html.loadHistoryID, 
 										maxCount = self.main.loadTweetCount)
 		
 		# Something went wrong...
@@ -389,11 +389,11 @@ class Updater(threading.Thread):
 		gobject.idle_add(lambda: self.html.pushUpdates())
 		gobject.idle_add(lambda: self.main.gui.showInput())
 	
-	
+	# Load Message History -----------------------------------------------------
 	def loadHistoryMessage(self):
 		messages = []
 		try:
-			messages = self.getMessages(maxID = self.message.loadHistoryID, 
+			messages = self.tryGetMessages(maxID = self.message.loadHistoryID, 
 										maxCount = self.main.loadMessageCount)
 		
 		# Something went wrong...
@@ -470,6 +470,21 @@ class Updater(threading.Thread):
 		else:
 			return updates
 	
+	# Try to get updates X times and then fail
+	def tryGetUpdates(self, sinceID = 0, maxID = None, maxCount = 200):
+		count = 0
+		while True:
+			count += 1
+			try:
+				# Try to get the updates and then break
+				return self.getUpdates(sinceID = sinceID, maxID = maxID, 
+								maxCount = maxCount)
+			
+			# Something went wrong, either try it again or break with the error
+			except Exception, error:
+				if count == 2:
+					raise error
+	
 	
 	# Main Function that fetches the messages ----------------------------------
 	# --------------------------------------------------------------------------
@@ -504,6 +519,21 @@ class Updater(threading.Thread):
 		
 		# Return
 		return self.processUpdates(messages)
+	
+	# Try to get messages X times and then fail
+	def tryGetMessages(self, sinceID = 0, maxID = None, maxCount = 200):
+		count = 0
+		while True:
+			count += 1
+			try:
+				# Try to get the updates and then break
+				return self.getMessages(sinceID = sinceID, maxID = maxID, 
+								maxCount = maxCount)
+			
+			# Something went wrong, either try it again or break with the error
+			except Exception, error:
+				if count == 2:
+					raise error
 	
 	
 	# Helpers ------------------------------------------------------------------
