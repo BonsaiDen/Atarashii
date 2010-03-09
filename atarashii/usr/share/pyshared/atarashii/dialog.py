@@ -247,6 +247,24 @@ class SettingsDialog(Dialog):
 		notify.connect("toggled", lambda *a: toggle())
 		sound.connect("toggled", lambda *a: toggle2())
 		
+		# Retweet settings
+		self.get("retweets").set_text(lang.settingsRetweets)
+		retweet = self.get("retweet_ask")
+		askRT = self.get("retweet_ask")
+		newRT = self.get("retweet_new")
+		oldRT = self.get("retweet_old")
+		askRT.set_label(lang.settingsRetweetsAsk)
+		newRT.set_label(lang.settingsRetweetsNew)
+		oldRT.set_label(lang.settingsRetweetsOld)
+		rt = self.settings['retweets']
+		if rt == 0:
+			askRT.set_active(True)
+		
+		elif rt == 1:
+			newRT.set_active(True)
+		
+		elif rt == 2:
+			oldRT.set_active(True)
 		
 		
 		# Save -----------------------------------------------------------------
@@ -256,6 +274,17 @@ class SettingsDialog(Dialog):
 			self.settings['soundfile'] = str(fileWidget.get_filename())
 			self.settings['notify'] = notify.get_active()
 			self.settings['sound'] = sound.get_active()
+			
+			if askRT.get_active():
+				rt = 0
+				
+			elif newRT.get_active():
+				rt = 1
+				
+			elif oldRT.get_active():
+				rt = 2	
+			
+			self.settings['retweets'] = rt
 			
 			# Save GUI Mode
 			self.main.saveMode()
@@ -268,11 +297,9 @@ class SettingsDialog(Dialog):
 			# Save Settings
 			self.main.saveSettings()
 			if self.main.username == "":
-				self.loginStatus = False
 				self.main.logout()
 			
-			elif self.main.username != oldusername:
-				self.loginStatus = True
+			elif self.main.username != oldusername or not self.main.loginStatus:
 				self.main.login()
 						
 			self.onClose()
@@ -409,6 +436,11 @@ class MessageDialog(gtk.MessageDialog):
 			gtk.MessageDialog.__init__(self, parent,
 						gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
 						gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
+
+		elif type == "info":
+			gtk.MessageDialog.__init__(self, parent,
+						gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+						gtk.MESSAGE_INFO, gtk.BUTTONS_OK, message)
 
 		self.set_title(title)
 		self.okCallback = okCallback
