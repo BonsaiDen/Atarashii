@@ -1,3 +1,13 @@
+atarashii (0.99.4-1) all;
+
+  * Users are now able to actually use new style retweets.
+  * Notifications for Direct Messages do work again.
+  * Fixed an issue with escaped HTML getting copied into the textbox.
+  * Improved detection of #Hashtags, works more like Twitter.com now.
+  * Lots of other bugfixes by the kittens.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 9 Mar 2010 04:26:00 +0100
+
 atarashii (0.99.3-1) all;
 
   * Added support for new style retweets.
