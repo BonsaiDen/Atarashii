@@ -314,6 +314,9 @@ class GUI(gtk.Window):
 	# Info Label ---------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def setLabel(self):	
+		if self.main.isSending:
+			return
+	
 		if self.main.replyUser == "" and self.main.retweetUser == "" and \
 			self.main.messageUser == "":
 			
@@ -326,7 +329,7 @@ class GUI(gtk.Window):
 			
 		elif self.main.replyText != "":
 			self.setLabelText(lang.labelReplyText % self.main.replyText)
-			self.infoLabel.show()	
+			self.infoLabel.show()
 			
 		elif self.main.replyUser != "":
 			self.setLabelText(lang.labelReply % self.main.replyUser)
@@ -368,7 +371,9 @@ class GUI(gtk.Window):
 	def showError(self, error):
 		if self.main.wasSending:
 			self.showInput()
-			if not self.main.wasRetweeting:
+			
+			# Select Textbox?
+			if not self.main.wasRetweeting or (self.main.retweetNum > -1 or self.main.retweetText != "" or self.main.replyUser != "" or self.main.replyID != -1):
 				self.text.grab_focus()
 		
 		try:
