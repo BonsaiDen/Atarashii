@@ -113,6 +113,11 @@ class LangDE:
 		self.settingsFile = "Sounddatei"
 		self.settingsFileFilter = "Soundateien"
 		
+		self.settingsRetweets = "Retweets"
+		self.settingsRetweetsAsk = "Immer fragen"
+		self.settingsRetweetsNew = "Immer neue Retweets verwenden"
+		self.settingsRetweetsOld = "Immer alte Retweets verwenden"
+		
 		self.settingsAdd = "Erstellen"
 		self.settingsEdit = "Bearbeiten"
 		self.settingsDelete = "Löschen"
@@ -136,7 +141,13 @@ class LangDE:
 		self.passwordButtonCancel = "Abbrechen"
 		self.passwordTitle = "Passwort"
 		self.passwordQuestion = "%s's Passwort:"
-				
+		
+		# Retweet
+		self.retweetTitle = "%s retweeten"
+		self.retweetQuestion = "Möchten sie einen neuen Retweet verwenden?"
+		self.retweetInfoTitle = "Retweet erfolgreich"
+		self.retweetInfo = '"%s" wurde erfolgreich retweeted!'
+		
 		# Error
 		self.errorTitle = "Atarashii - Fehler"
  		self.errorLogin = 'Die Anmeldung als "%s" ist fehlgeschlagen.'
@@ -146,6 +157,7 @@ class LangDE:
  		self.errorDown = "Twitter ist gerade offline."
  		self.errorOverload = "Twitter ist gerade überlastet."
  		self.errorInternal = "Atarashii Fehler: %s"
+ 		self.errorAlreadyRetweeted = "Es ist entweder nicht möglich diesen Tweet zu retweeten oder er wurde bereits von ihnen retweeted."
 
 		# Warning
 		self.warningTitle = "Atarashii - Warnung"
@@ -275,6 +287,11 @@ class LangEN:
 		self.settingsFile = "Soundfile"
 		self.settingsFileFilter = "Soundfiles"
 		
+		self.settingsRetweets = "Retweets"
+		self.settingsRetweetsAsk = "Always ask which style to use"
+		self.settingsRetweetsNew = "Always use new style"
+		self.settingsRetweetsOld = "Always use old style"
+		
 		self.settingsAdd = "Add"
 		self.settingsEdit = "Edit"
 		self.settingsDelete = "Delete"
@@ -299,7 +316,13 @@ class LangEN:
 		self.passwordTitle = "Password"
 		self.passwordQuestion = "%s's password:"
 		
-		# ErrorOK"
+		# Retweet
+		self.retweetTitle = "Retweet %s"
+		self.retweetQuestion = "Do you want to use a new style Retweet?"
+		self.retweetInfoTitle = "Retweet successful"
+		self.retweetInfo = '"%s" has been successfully retweeted!'
+		
+		# Error
 		self.errorTitle = "Atarashii - Error"
  		self.errorLogin = 'The login as "%s" has failed.'
  		self.errorRatelimit = "Reached rate limit. Automatic refresh in %d minute(s)."
@@ -309,6 +332,7 @@ class LangEN:
  		self.errorDown = "Twitter is currently offline."
  		self.errorOverload = "Twitter is over capacity."
  		self.errorInternal = "Atarashii error: %s"
+ 		self.errorAlreadyRetweeted = "Either it's not possible to retweet this Tweet or you've already retweeted it."
 		
 		# Warning
 		self.warningTitle = "Atarashii - Warning"
