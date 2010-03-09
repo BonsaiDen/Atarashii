@@ -267,6 +267,7 @@ class TextInput(gtk.TextView):
 		self.changeContents = True
 		self.isChanging = True
 		self.grab_focus()
+		self.hasFocus = True
 		
 		# Cancel reply
 		self.main.replyUser = ""
