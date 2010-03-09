@@ -363,21 +363,56 @@ class HTMLView(webkit.WebView):
 		# Send a message
 		elif uri.startswith("message:"):
 			o, self.main.messageUser, self.main.messageID, num = uri.split(":")
-			self.main.messageText = self.items[int(num)][0].text
+			self.main.messageText = self.unescape(self.items[int(num)][0].text)
 			self.main.gui.text.message()
 			self.main.gui.text.htmlFocus()
 		
 		# Retweet someone
 		elif uri.startswith("retweet:"):
-			num = self.main.retweetNum = int(uri.split(":")[1])
-			self.main.retweetText = self.getText(num)
-			self.main.retweetUser = self.getUser(num).screen_name
-			self.main.gui.text.retweet()
-			self.main.gui.text.htmlFocus()
+			foo, num, tweetid = uri.split(":")
+			num, tweetid = int(num), long(tweetid)
+			name = self.getUser(num).screen_name
+			def oldRetweet():
+				self.main.retweetNum = num
+				self.main.retweetText = self.unescape(self.getText(num))
+				self.main.retweetUser = name
+				self.main.gui.text.retweet()
+				self.main.gui.text.htmlFocus()
+			
+			def newRetweet():
+				self.main.retweet(name, tweetid)
+			
+			# Which style?
+			rt = self.main.settings["retweets"]
+			if name.lower() == self.main.username.lower():
+				rt = 2
+			
+			if rt == 0:
+				self.main.gui.askForRetweet(name, newRetweet, oldRetweet)
+			
+			elif rt == 1:
+				newRetweet()
+			
+			elif rt == 2:
+				oldRetweet()
 		
 		# Regular links
 		else:
 			webbrowser.open(uri)
 		
 		return True
+		
+	# Unescape chars
+	def unescape(self, text):
+		ent = {
+			"&": "&amp;", 
+			'"': "&quot;", 
+			"'": "&apos;", 
+			">": "&gt;", 
+			"<": "&lt;"
+		}
+		for k, v in ent.iteritems():
+			text = text.replace(v, k)
+		
+		return text
 
