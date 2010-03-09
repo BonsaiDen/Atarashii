@@ -22,7 +22,6 @@ import gtk
 import gobject
 
 import calendar
-import rfc822
 import urllib
 import webkit
 
@@ -120,7 +119,6 @@ class HTMLView(webkit.WebView):
 		%s
 		</html>""" % (self.main.getResource("atarashii.css"), html), 
 						"text/html", "UTF-8", "file:///main/")
-	
 	
 	def setHTML(self, renderitems):
 		if len(self.items) > 0:
