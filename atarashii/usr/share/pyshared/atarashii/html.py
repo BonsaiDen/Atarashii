@@ -236,7 +236,7 @@ class HTML(view.HTMLView):
 					(lang.htmlReply % user.screen_name) + '''"> </a>
 				</div>
 				<div class="doretweet">
-					<a href="retweet:%d" title="''' + \
+					<a href="retweet:%d:%d" title="''' + \
 					(lang.htmlRetweet % user.screen_name) + '''"> </a>
 				</div>
 			</div>
@@ -266,7 +266,7 @@ class HTML(view.HTMLView):
 					
 					# Actions
 					user.screen_name, tweet.id, num, 
-					num,		
+					num, tweet.id,		
 					
 					# Text
 					user.screen_name, 
