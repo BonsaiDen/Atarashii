@@ -14,12 +14,14 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
-# Sender Thread ------------------------------------------------------------------
+# Sender Thread ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import gobject
 import threading
 
 
+# Send Tweets/Messages ---------------------------------------------------------
+# ------------------------------------------------------------------------------
 class Send(threading.Thread):
 	def __init__(self, main, mode, text):
 		threading.Thread.__init__(self)
@@ -66,6 +68,7 @@ class Send(threading.Thread):
 				self.main.wasSending = False
 			
 			except Exception, error:
+				print error
 				gobject.idle_add(lambda: self.main.gui.showError(error))
 		
 		# Normal Tweet / Retweet
@@ -90,6 +93,7 @@ class Send(threading.Thread):
 				self.main.wasSending = False
 			
 			except Exception, error:
+	 			print error
 				gobject.idle_add(lambda: self.main.gui.showError(error))				
 	
 	
@@ -125,4 +129,33 @@ class Send(threading.Thread):
 			print error
 			gobject.idle_add(lambda: self.main.gui.showError(error))
 	
+
+# New style Retweets -----------------------------------------------------------
+# ------------------------------------------------------------------------------
+class Retweet(threading.Thread):
+	def __init__(self, main, name, tweetid):
+		threading.Thread.__init__(self)
+		self.main = main
+		self.name = name
+		self.tweetid = tweetid
+	
+	def run(self):
+		self.main.wasSending = True
+		self.main.wasRetweeting = True
+		try:
+			# Send Tweet
+			self.main.api.retweet(self.tweetid)
+
+			# Focus HTML
+			self.main.gui.showInput(False)
+			self.main.gui.html.grab_focus()
+			self.main.wasSending = False
+			gobject.idle_add(lambda: self.main.gui.showRetweetInfo(self.name))
 		
+		except Exception, error:
+			print error
+			gobject.idle_add(lambda: self.main.gui.showError(error))	
+		
+		self.main.isSending = False
+
+
