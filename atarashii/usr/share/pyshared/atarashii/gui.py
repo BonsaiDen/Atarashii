@@ -173,6 +173,20 @@ class GUI(gtk.Window):
 								lang.passwordQuestion % self.main.username)
 	
 	
+	# Retweet Stuff ------------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def askForRetweet(self, name, yes, no):
+		dialog.MessageDialog(self, "question",
+						lang.retweetQuestion,
+						lang.retweetTitle % name,
+						yesCallback = yes, noCallback = no)
+	
+	def showRetweetInfo(self, name):
+		dialog.MessageDialog(self, "info",
+						lang.retweetInfo % name,
+						lang.retweetInfoTitle)
+	
+	
 	# Main Functions -----------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def showInput(self, resize = True):
@@ -354,11 +368,14 @@ class GUI(gtk.Window):
 	def showError(self, error):
 		if self.main.wasSending:
 			self.showInput()
-			self.text.grab_focus()
+			if not self.main.wasRetweeting:
+				self.text.grab_focus()
 		
 		try:
  			code = error.response.status
- 			
+ 			if error.reason.startswith("Share sharing"):
+ 				code = -2
+ 		
  		except:
  			try:
 	 			if error.reason.startswith("HTTP Error "):
@@ -389,6 +406,7 @@ class GUI(gtk.Window):
  			rateError = ""
  		
  		self.main.wasSending = False
+		self.main.wasRetweeting = False
  		
  		# Show Warning on url error or error message for anything else 		
  		if code == -1 or code == 500 or code == 502 or code == 503:
@@ -397,9 +415,11 @@ class GUI(gtk.Window):
  		
  		else:
 	 		description = {
+	 		    -2 : lang.errorAlreadyRetweeted,
 	 			0 : lang.errorInternal % str(error),
 	 			404 : lang.errorLogin % self.main.username,
 	 			401 : lang.errorLogin % self.main.username,
+	 			403 : rateError,
 	 			400 : rateError,
 	 			500 : lang.errorTwitter,
 	 			502 : lang.errorDown,
