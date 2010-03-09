@@ -14,6 +14,7 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
+# TODO notify if retweet succeded
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -100,10 +101,14 @@ class Atarashii:
 		self.isUpdating = False
 		self.isLoadingHistory = False
 		self.wasSending = False
+		self.wasRetweeting = False
 		self.rateWarningShown = False
 		
 		# Current Username
 		self.username = self.settings['username'] or ""
+		
+		# Retweet Style - 0 = ask, 1 = new, 2 = old
+		self.retweetStyle = self.settings['retweet'] or 0
 		
 		# Updater
 		self.updater = updater.Updater(self)
@@ -119,6 +124,10 @@ class Atarashii:
 	# Sending ------------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def send(self, text):
+		if self.isSending:
+			return
+		
+		# Send
 		self.isSending = True
 		self.gui.text.set_sensitive(False)
 		self.gui.modeButton.set_sensitive(False)
@@ -142,6 +151,20 @@ class Atarashii:
 		sender = send.Send(self, self.gui.mode, text)
 		sender.setDaemon(True)
 		sender.start()
+	
+	# New style Retweet
+	def retweet(self, name, tweetid):
+		if not self.isSending:
+			self.isSending = True
+			self.gui.text.set_sensitive(False)
+			self.gui.modeButton.set_sensitive(False)
+			self.gui.showProgress()	
+			self.gui.setStatus(lang.statusRetweet % name)
+		
+			# Sender
+			sender = send.Retweet(self, name, tweetid)
+			sender.setDaemon(True)
+			sender.start()
 	
 	
 	# Login & Logout -----------------------------------------------------------
