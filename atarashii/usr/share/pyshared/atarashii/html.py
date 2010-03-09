@@ -122,7 +122,7 @@ class HTML(view.HTMLView):
 				spacer = ""
 				if lastname != user.screen_name or newTimeline:
 					if lastHighlight != highlight:
-						spacer = ""
+						spacer = "1" if item.id > self.initID else ""
 					
 					elif item.id > self.initID:
 						spacer = "1"
