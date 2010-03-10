@@ -211,7 +211,7 @@ a, a:hover, a:active {
 .mentioned:hover .doretweet a, 
 .oldtweet:hover .doretweet a, 
 .highlightold:hover .doretweet a{
-	background-image: url("file:///usr/share/atarashii/rt.png")
+	background-image: url("file:///usr/share/atarashii/rt.png");
 }
 
 
