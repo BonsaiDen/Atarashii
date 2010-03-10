@@ -100,12 +100,13 @@ class Formatter:
 			
 			# tag
 			elif t == 3:
-				search = c[c.find('#')+1:]
-				self.tags.append(search)
+				pos = c.rfind("#")
+				stuff, tag = c[:pos], c[pos + 1:]
+				self.tags.append(tag)
 				result.append(
-					('<a href="http://search.twitter.com/search?%s" title="' +\
-					lang.htmlSearch + '">%s</a>') % 
-					(urllib.urlencode({'q': '#' + search}), search, c))
+					('%s<a href="http://search.twitter.com/search?%s" title="'+\
+					lang.htmlSearch + '">#%s</a>') % 
+					(stuff, urllib.urlencode({'q': '#' + tag}), tag, tag))
 		
 		return "".join(result)
 
