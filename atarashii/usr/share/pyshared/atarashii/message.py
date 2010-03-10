@@ -57,8 +57,7 @@ class HTML(view.HTMLView):
 		# Do the rendering!
 		for num, obj in enumerate(self.items):
 			item, img, mode = obj
-			newTimeline = self.isNewTimeline(item)
-			newAvatar = self.isNewAvatar(num)
+			self.isNewTimeline(item)
 			text = self.formatter.parse(item.text)
 			
 			
@@ -69,20 +68,21 @@ class HTML(view.HTMLView):
 					self.main.username if num < len(self.items) - 1 else False
 				
 				renderitems.insert(0, self.insertSpacer(item, lastname, 
-						item.sender, newTimeline, highlight, lastHighlight, 
-						False, True, nextHighlight))
+						item.sender, highlight, lastHighlight, False, True, 
+						nextHighlight))
 			
 			lastname = item.sender.screen_name
 			lastHighlight = highlight
 			
 			
 			# Avatar -----------------------------------------------------------
+			self.isNewAvatar(num)
 			if (num < len(self.items) - 1 and \
 				(item.sender.screen_name != \
 				self.items[num + 1][0].sender.screen_name or \
 				item.recipient_screen_name != \
-				self.items[num + 1][0].recipient_screen_name or newAvatar \
-				)) or num == len(self.items) - 1 or newTimeline:
+				self.items[num + 1][0].recipient_screen_name or self.newAvatar \
+				)) or num == len(self.items) - 1 or self.newTimeline:
 				
 				avatar = '''<a href="http://twitter.com/%s">
 							<img width="32" src="file://%s" title="''' + \

@@ -73,8 +73,7 @@ class HTML(view.HTMLView):
 		# Do the rendering!
 		for num, obj in enumerate(self.items):
 			item, img, mode = obj
-			newTimeline = self.isNewTimeline(item)
-			newAvatar = self.isNewAvatar(num)
+			self.isNewTimeline(item)
 			
 			# Check for new style retweet
 			retweeted = False
@@ -102,7 +101,7 @@ class HTML(view.HTMLView):
 			mentioned = hasattr(tweet, "is_mentioned") and tweet.is_mentioned
 			if num > 0:
 				renderitems.insert(0, self.insertSpacer(item, lastname, user, 
-							newTimeline, highlight, lastHighlight, mentioned))
+							self.newTimeline, highlight, lastHighlight, mentioned))
 			
 			lastname = user.screen_name
 			lastHighlight = highlight
@@ -118,10 +117,11 @@ class HTML(view.HTMLView):
 			
 			
 			# Avatar -----------------------------------------------------------
+			self.isNewAvatar(num)	
 			if (num < len(self.items) - 1 and \
 				(user.screen_name != \
-				self.getUser(num+1).screen_name or newAvatar)) or \
-				num == len(self.items) - 1 or newTimeline:
+				self.getUser(num+1).screen_name or self.newAvatar)) or \
+				num == len(self.items) - 1 or self.newTimeline:
 			
 				avatar = '''<a href="http://twitter.com/%s">
 							<img width="32" src="file://%s" title="''' + \

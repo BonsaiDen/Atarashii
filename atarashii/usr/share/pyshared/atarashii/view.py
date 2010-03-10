@@ -137,8 +137,8 @@ class HTMLView(webkit.WebView):
 				</body>""" % self.langEmpty, "render")
 	
 	
-	def insertSpacer(self, item, lastname, user, newTimeline, highlight, 
-					lastHighlight, mentioned, message = False, next = False):
+	def insertSpacer(self, item, lastname, user, highlight, lastHighlight, 
+					mentioned, message = False, next = False):
 		
 		# Red spacer that indicates something did fall through
 		spacer = "foo"
@@ -146,7 +146,7 @@ class HTMLView(webkit.WebView):
 		# New Tweets
 		if item.id > self.initID:
 			# Name change
-			if lastname != user.screen_name or newTimeline:
+			if lastname != user.screen_name or self.newTimline:
 				spacer = "1" # Dark Gray
 			
 			else:
@@ -171,7 +171,7 @@ class HTMLView(webkit.WebView):
 		# Old Tweets		
 		else:	
 			# Name change
-			if lastname != user.screen_name or newTimeline:
+			if lastname != user.screen_name or self.newTimline:
 				spacer = "" # Normal Gray
 			
 			else:
@@ -348,6 +348,7 @@ class HTMLView(webkit.WebView):
 		# Newest Stuff
 		self.newest = False
 		self.newestAvatar = False
+		self.newTimline = False
 	
 	
 	# Helpers ------------------------------------------------------------------
@@ -398,34 +399,30 @@ class HTMLView(webkit.WebView):
 	
 	# Checks for new Tweets
 	def isNewTimeline(self, item):
-		newTimeline = item.id > self.initID
-		if newTimeline:
+		self.newTimeline = item.id > self.initID
+		if self.newTimeline:
 			self.count += 1
 		
 		if self.newest or self.initID == 0:
-			newTimeline = False
+			self.newTimeline = False
 		
-		if newTimeline:
+		if self.newTimeline:
 			self.newest = True
 		
-		return newTimeline
-	
 	def isNewAvatar(self, num):
 		if num < len(self.items) - 1:
-			newAvatar = self.items[num + 1][0].id > self.initID
+			self.newAvatar = self.items[num + 1][0].id > self.initID
 		else:
-			newAvatar = False
+			self.newAvatar = False
 			
 		if num > 0 and self.items[num - 1][0].id <= self.initID:
-			newTimeline = False
+			self.newTimeline = False
 		
 		if self.newestAvatar or self.initID == 0:
-			newAvatar = False
+			self.newAvatar = False
 		
-		if newAvatar:
-			self.newestAvatar = True
-		
-		return newAvatar	
+		if self.newAvatar:
+			self.newestAvatar = True	
 	
 	
 	# Handle the opening of links ----------------------------------------------
