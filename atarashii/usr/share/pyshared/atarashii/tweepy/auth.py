@@ -3,7 +3,6 @@
 # See LICENSE for details.
 
 from urllib2 import Request, urlopen
-from urllib import urlencode
 import base64
 
 from tweepy import oauth
@@ -50,8 +49,8 @@ class OAuthHandler(AuthHandler):
         self.username = None
         self.secure = secure
 
-    def _get_oauth_url(self, endpoint):
-        if self.secure:
+    def _get_oauth_url(self, endpoint, secure=False):
+        if self.secure or secure:
             prefix = 'https://'
         else:
             prefix = 'http://'
@@ -125,40 +124,33 @@ class OAuthHandler(AuthHandler):
             return self.access_token
         except Exception, e:
             raise TweepError(e)
-    
+
     def get_xauth_access_token(self, username, password):
         """
-        Get an access token from a username and password combination.
-        In order to get this working you need to create an app at 
+        Get an access token from an username and password combination.
+        In order to get this working you need to create an app at
         http://twitter.com/apps, after that send a mail to api@twitter.com
         and request activation of xAuth for it.
-        
-        After that you can use xAuth with your app, make sure you pass the 
-        secure=True parameter to the OAuthHandler constructor.
         """
         try:
-            # xAuth parameters
-            xauth = {
-	            'x_auth_mode': 'client_auth',
-	            'x_auth_password': password,
-	            'x_auth_username': username
-    	    }
-        
-            # Build request
-            url = self._get_oauth_url('access_token')
+            url = self._get_oauth_url('access_token', secure=True) # must use HTTPS
             request = oauth.OAuthRequest.from_consumer_and_token(
-                self._consumer, http_url=url, http_method = "POST", 
-                callback=self.callback, token = None, 
-                parameters = xauth
+                oauth_consumer=self._consumer,
+                http_method='POST', http_url=url,
+                parameters = {
+		            'x_auth_mode': 'client_auth',
+		            'x_auth_username': username,
+		            'x_auth_password': password
+                }
             )
             request.sign_request(self._sigmethod, self._consumer, None)
-            resp = urlopen(Request(url , headers= request.to_header(), 
-            	data = urlencode(xauth)))
-            self.access_token =  oauth.OAuthToken.from_string(resp.read())
+
+            resp = urlopen(Request(url, data=request.to_postdata()))
+            self.access_token = oauth.OAuthToken.from_string(resp.read())
             return self.access_token
         except Exception, e:
             raise TweepError(e)
-    
+
     def get_username(self):
         if self.username is None:
             api = API(self)
@@ -168,4 +160,5 @@ class OAuthHandler(AuthHandler):
             else:
                 raise TweepError("Unable to get username, invalid oauth token!")
         return self.username
+
 
