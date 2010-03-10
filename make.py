@@ -112,14 +112,17 @@ Description: Twitter Client for the GNOME Desktop
  for the GTK+ libraries.
 """)
 c.close()
-
+print ">> Created!"
 
 # Create package
-print "Kittens are playing with the contents of your package..."
-print "...I mean they're building it!"
-subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"])
-shutil.move(os.path.join(sys.path[0], "atarashii.deb"), os.path.join(sys.path[0], "atarashii_%s-1_all.deb" % atarashii.__version__))
-print "Build complete!"
+print "The kittens are building your package..."
+subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"], 
+				stdout = open("/dev/null", "wb"))
+shutil.move(os.path.join(sys.path[0], "atarashii.deb"), 
+			os.path.join(sys.path[0], 
+			"atarashii_%s-1_all.deb" % atarashii.__version__))
+
+print ">> Build complete!"
 
 # Move all those temp files back
 for file, to in tempFiles:
@@ -127,13 +130,12 @@ for file, to in tempFiles:
 
 # Check for errors
 try:
-	subprocess.call(["lintian", ">> /dev/null"]) 
-
+	subprocess.call(["lintian"], stdout = open("/dev/null", "wb")) 
 except:
 	exit()
 
 print "\n---- Checking for Errors ----"
 subprocess.call(["lintian", "atarashii_%s-1_all.deb" % atarashii.__version__])
-
+print ">> Done!"
 
 
