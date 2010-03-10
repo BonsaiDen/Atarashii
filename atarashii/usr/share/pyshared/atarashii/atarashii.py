@@ -339,6 +339,7 @@ class Atarashii:
 			self.settings['mode_' + self.username] = self.gui.mode
 	
 	def quit(self):
+		self.updater.running = False
 		self.saveMode()
 		self.saveSettings()
  		gtk.main_quit()
