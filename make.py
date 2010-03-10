@@ -104,6 +104,7 @@ Architecture: all
 Installed-Size: """ + str(size / 1024) + """
 Depends: python (>= 2.6), python-webkit, python-gtk2, python-gconf, python-gobject, python-dbus, python-notify, mplayer-nogui
 Maintainer: Ivo Wetzel <ivo.wetzel@googlemail.com>
+Homepage: http://github.com/BonsaiDen/Atarashii
 Description: Twitter Client for the GNOME Desktop
  Atarashii(Japanese for "New") is a Twitter Client specifically designed for the 
  GNOME Desktop. It uses GTK+ and webkit to archive a slim and functional design.
@@ -124,6 +125,15 @@ print "Build complete!"
 for file, to in tempFiles:
 	shutil.move(to, file)
 
+# Check for errors
+try:
+	subprocess.call(["lintian", ">> /dev/null"]) 
+
+except:
+	exit()
+
+print "\n---- Checking for Errors ----"
+subprocess.call(["lintian", "atarashii_%s-1_all.deb" % atarashii.__version__])
 
 
 
