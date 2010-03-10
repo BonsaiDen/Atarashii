@@ -19,10 +19,31 @@
 # Tweet Formatter --------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import re, urllib
-urlRegex = re.compile("((mailto\:|(news|(ht|f)tp(s?))\://){1}[^\s\)\]]+)")
-atRegex = re.compile("\B@([a-zA-Z0-9_]{1,15})")
-tagRegex = re.compile('''\B#([^\-\+\)\(\[\]\?\=\*\}\{\:\.\;\,\"\'\!\<\>\|\s\~\&\§\$\%\/\\\\µ#]{1,})''')
+#urlRegex = re.compile("((mailto\:|(news|(ht|f)tp(s?))\://){1}[^\s\)\]]+)")
+#atRegex = re.compile("\B@([a-zA-Z0-9_]{1,15})")
+#tagRegex = re.compile('''\B#([^\-\+\)\(\[\]\?\=\*\}\{\:\.\;\,\"\'\!\<\>\|\s\~\&\§\$\%\/\\\\µ#]{1,})''')
 
+# Some of this code has been translated from the twitter-text-java library:
+# <http://github.com/mzsanford/twitter-text-java>
+urlRegex = re.compile("((mailto\:|(news|(ht|f)tp(s?))\://){1}[^\s\)\]]+)")
+atRegex = re.compile(ur"\B[@\uFF20]([a-z0-9_]{1,20})", re.UNICODE | re.IGNORECASE)
+tagRegex = re.compile(ur"(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+['\u00c0-\u00d6\u00d8-\u00f6\\u00f8-\u00ff]*)", re.UNICODE | re.IGNORECASE)
+
+preChars = "(?:[^/\"':!=]|^|\\:)"
+domainChars = "(?:[\\.-]|[^\\s])+\\.[a-z]{2,}(?::[0-9]+)?"
+pathChars = "(?:[\\.,]?[a-z0-9!\\*'\\(\\);:=\\+\\$/%#\\[\\]\\-_,~@])"
+  # Valid end-of-path chracters (so /foo. does not gobble the period).
+  # 1. Allow ) for Wikipedia URLs.
+  # 2. Allow =&# for empty URL parameters and other URL-join artifacts
+  
+pathEndingChars = "[a-z0-9\\)=#/]"
+queryChars = "[a-z0-9!\\*'\\(\\);:&=\\+\\$/%#\\[\\]\\-_\\.,~]"
+queryEndingChars = "[a-z0-9_&=#]"
+
+urlRegex = re.compile("((" + preChars + ")((https?://|www\\.)(" + domainChars +\
+					 ")(/" + pathChars + "*" + pathEndingChars + "?)?(\\?" + \
+					 queryChars + "*" + queryEndingChars + ")?))",
+					 re.UNICODE | re.IGNORECASE)
 
 from lang import lang
 
@@ -79,13 +100,13 @@ class Formatter:
 			
 			# tag
 			elif t == 3:
-				c = unicode(c)
-				tag = c[c.find('#')+1:]
-				self.tags.append(tag)
+				print "-" + c + "-"
+				search = c[c.find('#')+1:]
+				self.tags.append(search)
 				result.append(
 					('<a href="http://search.twitter.com/search?%s" title="' +\
-					lang.htmlSearch + '">#%s</a>') % 
-					(urllib.urlencode({'q': '#' + tag}), tag, tag))
+					lang.htmlSearch + '">%s</a>') % 
+					(urllib.urlencode({'q': '#' + search}), search, c))
 		
 		return "".join(result)
 
