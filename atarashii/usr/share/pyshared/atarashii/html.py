@@ -68,17 +68,13 @@ class HTML(view.HTMLView):
 		# Render
 		renderitems = []
 		lastname = ""
-				
-		# Newest Stuff
-		newest = False
-		newestAvatar = False
-		container = False
 		lastHighlight = False
 		
 		# Do the rendering!
-		self.count = 0
 		for num, obj in enumerate(self.items):
 			item, img, mode = obj
+			newTimeline = self.isNewTimeline(item)
+			newAvatar = self.isNewAvatar(num)
 			
 			# Check for new style retweet
 			retweeted = False
@@ -97,27 +93,13 @@ class HTML(view.HTMLView):
 				tweet = item
 			
 			user = tweet.user
-			
-			# Fix some stuff for the seperation of continous new/old items
-			newTimeline = item.id > self.initID
-			if newTimeline:
-				self.count += 1
-			
-			if newest or self.initID == 0:
-				newTimeline = False
-			
-			if newTimeline:
-				newest = True
-			
-			# Parse Text
 			text = self.formatter.parse(tweet.text)
 			
-			# Highlight indicators
+			
+			# Spacers ----------------------------------------------------------
 			highlight = self.main.username.lower() in \
 							[i.lower() for i in self.formatter.users]
 			mentioned = hasattr(tweet, "is_mentioned") and tweet.is_mentioned
-			
-			# Spacer Colors
 			if num > 0:
 				renderitems.insert(0, self.insertSpacer(item, lastname, user, 
 							newTimeline, highlight, lastHighlight, mentioned))
@@ -135,21 +117,7 @@ class HTML(view.HTMLView):
 								tweet.in_reply_to_screen_name)
 			
 			
-			# Display Avatar?
-			if num < len(self.items) - 1:
-				newAvatar = self.items[num + 1][0].id > self.initID
-			else:
-				newAvatar = False
-				
-			if num > 0 and self.items[num - 1][0].id <= self.initID:
-				newTimeline = False
-			
-			if newestAvatar or self.initID == 0:
-				newAvatar = False
-			
-			if newAvatar:
-				newestAvatar = True
-			
+			# Avatar -----------------------------------------------------------
 			if (num < len(self.items) - 1 and \
 				(user.screen_name != \
 				self.getUser(num+1).screen_name or newAvatar)) or \
@@ -167,7 +135,8 @@ class HTML(view.HTMLView):
 			else:
 				avatar = ""
 			
-			# At?
+			
+			# Background -------------------------------------------------------
 			if mentioned:
 				clas = 'mentioned'
 				
@@ -177,7 +146,8 @@ class HTML(view.HTMLView):
 			else:
 				clas = 'highlight' if highlight else 'tweet'
 			
-			# Source
+			
+			# Source -----------------------------------------------------------
 			by = ""
 			source = tweet.source
 			if source != "web":
@@ -191,13 +161,15 @@ class HTML(view.HTMLView):
 			
 				by = lang.htmlBy % source
 			
-			# Protected
+			
+			# Protected --------------------------------------------------------
 			locked = ''
 			if hasattr(user, "protected") and user.protected:
 				locked = ('<span class="protected" title="' + \
 					lang.htmlProtected + '"></span>') % user.screen_name
 			
-			# HTML Snippet
+			
+			# HTML Snippet -----------------------------------------------------
 			html = '''
 			<div class="%s">
 			<div class="avatar">
@@ -254,12 +226,12 @@ class HTML(view.HTMLView):
 					self.relative_time(tweet.created_at),
 					reply, retweet)
 			
+			# Close Newest Container
 			if item.id == self.newestID:
 				html = '</div>' + html
 			
-			self.main.gui.setTitle()
 			renderitems.insert(0, html)
-		
+				
 		# Render
 		self.setHTML(renderitems)
 

@@ -121,6 +121,7 @@ class HTMLView(webkit.WebView):
 						"text/html", "UTF-8", "file:///main/")
 	
 	def setHTML(self, renderitems):
+		self.main.gui.setTitle()
 		if len(self.items) > 0:
 			self.renderHTML("""
 				<body>
@@ -329,6 +330,7 @@ class HTMLView(webkit.WebView):
 	def initRender(self):
 		self.position = self.scroll.get_vscrollbar().get_value()
 		self.items.sort(self.compare)
+		self.count = 0
 		
 		# Set the latest tweet for reloading on startup
 		if len(self.items) > 0:
@@ -342,6 +344,10 @@ class HTMLView(webkit.WebView):
 		# Newest Stuff
 		if self.newestID == -1:
 			self.newestID = self.initID
+	
+		# Newest Stuff
+		self.newest = False
+		self.newestAvatar = False
 	
 	
 	# Helpers ------------------------------------------------------------------
@@ -380,7 +386,6 @@ class HTMLView(webkit.WebView):
 			t = time.localtime(calendar.timegm(t.timetuple()))
 			return time.strftime(lang.htmlExact, t)
 	
-	
 	def absolute_time(self, t):
 		delta = long(calendar.timegm(time.gmtime())) - \
 				long(calendar.timegm(t.timetuple()))
@@ -390,6 +395,37 @@ class HTMLView(webkit.WebView):
 			
 		else:
 			return time.strftime(lang.htmlTimeDay, t)
+	
+	# Checks for new Tweets
+	def isNewTimeline(self, item):
+		newTimeline = item.id > self.initID
+		if newTimeline:
+			self.count += 1
+		
+		if self.newest or self.initID == 0:
+			newTimeline = False
+		
+		if newTimeline:
+			self.newest = True
+		
+		return newTimeline
+	
+	def isNewAvatar(self, num):
+		if num < len(self.items) - 1:
+			newAvatar = self.items[num + 1][0].id > self.initID
+		else:
+			newAvatar = False
+			
+		if num > 0 and self.items[num - 1][0].id <= self.initID:
+			newTimeline = False
+		
+		if self.newestAvatar or self.initID == 0:
+			newAvatar = False
+		
+		if newAvatar:
+			self.newestAvatar = True
+		
+		return newAvatar	
 	
 	
 	# Handle the opening of links ----------------------------------------------

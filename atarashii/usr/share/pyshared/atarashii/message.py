@@ -52,39 +52,22 @@ class HTML(view.HTMLView):
 		# Render
 		renderitems = []
 		lastname = ""
-		
-		# Newest Stuff
-		newest = False
-		newestAvatar = False
-		container = False
 		lastHighlight = False
 		
 		# Do the rendering!
-		self.count = 0
 		for num, obj in enumerate(self.items):
 			item, img, mode = obj
-			
-			# Fix some stuff for the seperation of continous new/old items
-			newTimeline = item.id > self.initID
-			if newTimeline:
-				self.count += 1
-			
-			if newest or self.initID == 0:
-				newTimeline = False
-			
-			if newTimeline:
-				newest = True
-			
-			# Parse Text
+			newTimeline = self.isNewTimeline(item)
+			newAvatar = self.isNewAvatar(num)
 			text = self.formatter.parse(item.text)
 			
-			# Highlight indicators
-			highlight = item.recipient_screen_name != self.main.username
 			
-					
-			# Spacer Colors
+			# Spacers ----------------------------------------------------------
+			highlight = item.recipient_screen_name != self.main.username
 			if num > 0:
-				nextHighlight = self.items[num+1][0].recipient_screen_name != self.main.username if num < len(self.items) - 1 else False
+				nextHighlight = self.items[num+1][0].recipient_screen_name != \
+					self.main.username if num < len(self.items) - 1 else False
+				
 				renderitems.insert(0, self.insertSpacer(item, lastname, 
 						item.sender, newTimeline, highlight, lastHighlight, 
 						False, True, nextHighlight))
@@ -93,21 +76,7 @@ class HTML(view.HTMLView):
 			lastHighlight = highlight
 			
 			
-			# Display Avatar?
-			if num < len(self.items) - 1:
-				newAvatar = self.items[num + 1][0].id > self.initID
-			else:
-				newAvatar = False
-				
-			if num > 0 and self.items[num - 1][0].id <= self.initID:
-				newTimeline = False
-			
-			if newestAvatar or self.initID == 0:
-				newAvatar = False
-			
-			if newAvatar:
-				newestAvatar = True
-			
+			# Avatar -----------------------------------------------------------
 			if (num < len(self.items) - 1 and \
 				(item.sender.screen_name != \
 				self.items[num + 1][0].sender.screen_name or \
@@ -128,10 +97,9 @@ class HTML(view.HTMLView):
 			else:
 				avatar = ""
 			
-			# Class
+			
+			# Background -------------------------------------------------------
 			cls = 'oldtweet' if item.id <= self.initID else 'tweet'
-
-			# HTML
 			if item.recipient_screen_name != self.main.username:
 				mode = lang.messageTo
 				name = item.recipient_screen_name
@@ -143,7 +111,8 @@ class HTML(view.HTMLView):
 				reply = ""
 				cls = "highlightold" if item.id <= self.initID else "highlight"
 			
-			# HTML Snippet
+			
+			# HTML Snippet -----------------------------------------------------
 			html = '''
 			<div class="%s">
 			<div class="avatar">
@@ -190,12 +159,12 @@ class HTML(view.HTMLView):
 					item.id,
 					self.relative_time(item.created_at))
 			
+			# Close Newest Container
 			if item.id == self.newestID:
 				html = '</div>' + html
 			
-			self.main.gui.setTitle()
 			renderitems.insert(0, html)
-			
+		
 		# Render
 		self.setHTML(renderitems)
 	
