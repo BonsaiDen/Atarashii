@@ -75,33 +75,19 @@ class HTML(view.HTMLView):
 			if newTimeline:
 				newest = True
 			
-			# Create Tweet HTML
+			# Parse Text
 			text = self.formatter.parse(item.text)
+			
+			# Highlight indicators
 			highlight = item.recipient_screen_name != self.main.username
 			
-			# Spacer
-			if num > 0:
-				spacer = ""
-				if lastname != item.sender.screen_name or newTimeline:
-					if lastHighlight != highlight:
-						spacer = "1" if item.id > self.initID else ""
 					
-					elif item.id > self.initID:
-						spacer = "1"
-				
-				elif highlight != lastHighlight:
-					spacer = "3" if item.id > self.initID else ""
-				
-				elif item.id > self.initID:
-					spacer = "4" if highlight else "6"
-				
-				elif highlight:
-					spacer = "2"
-				
-				else:
-					spacer = "7"
-				
-				renderitems.insert(0, '<div class="spacer%s"></div>' % spacer)
+			# Spacer Colors
+			if num > 0:
+				nextHighlight = self.items[num+1][0].recipient_screen_name != self.main.username if num < len(self.items) - 1 else False
+				renderitems.insert(0, self.insertSpacer(item, lastname, 
+						item.sender, newTimeline, highlight, lastHighlight, 
+						False, True, nextHighlight))
 			
 			lastname = item.sender.screen_name
 			lastHighlight = highlight

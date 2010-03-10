@@ -74,7 +74,7 @@ class HTML(view.HTMLView):
 		newestAvatar = False
 		container = False
 		lastHighlight = False
-
+		
 		# Do the rendering!
 		self.count = 0
 		for num, obj in enumerate(self.items):
@@ -109,44 +109,18 @@ class HTML(view.HTMLView):
 			if newTimeline:
 				newest = True
 			
-			# Create Tweet HTML
+			# Parse Text
 			text = self.formatter.parse(tweet.text)
-			self.atUser = self.main.username.lower() in \
+			
+			# Highlight indicators
+			highlight = self.main.username.lower() in \
 							[i.lower() for i in self.formatter.users]
+			mentioned = hasattr(tweet, "is_mentioned") and tweet.is_mentioned
 			
-			highlight = hasattr(tweet, "is_mentioned") and \
-						tweet.is_mentioned or self.atUser
-			
-			# Spacer
+			# Spacer Colors
 			if num > 0:
-				spacer = ""
-				if lastname != user.screen_name or newTimeline:
-					if lastHighlight != highlight:
-						spacer = "1" if item.id > self.initID else ""
-					
-					elif item.id > self.initID:
-						spacer = "1"
-				
-				elif highlight != lastHighlight:
-					spacer = "1" if item.id > self.initID else ""
-					
-				elif hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
-					spacer = "5"
-				
-				elif item.id > self.initID:
-					spacer = "6" if highlight else "4"
-				
-				elif highlight:
-					spacer = "7"
-				
-				elif lastHighlight:
-					spacer = "1"
-				
-				else:
-					spacer = "2"
-				
-				renderitems.insert(0, '<div class="spacer%s"></div>' % spacer)
-					
+				renderitems.insert(0, self.insertSpacer(item, lastname, user, 
+							newTimeline, highlight, lastHighlight, mentioned))
 			
 			lastname = user.screen_name
 			lastHighlight = highlight
@@ -194,14 +168,14 @@ class HTML(view.HTMLView):
 				avatar = ""
 			
 			# At?
-			if hasattr(tweet, "is_mentioned") and tweet.is_mentioned:
+			if mentioned:
 				clas = 'mentioned'
 				
 			elif item.id <= self.initID:
-				clas = 'highlightold' if self.atUser else 'oldtweet'
+				clas = 'highlightold' if highlight else 'oldtweet'
 			
 			else:
-				clas = 'highlight' if self.atUser else 'tweet'
+				clas = 'highlight' if highlight else 'tweet'
 			
 			# Source
 			by = ""

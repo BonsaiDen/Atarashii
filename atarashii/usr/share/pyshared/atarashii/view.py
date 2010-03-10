@@ -136,6 +136,65 @@ class HTMLView(webkit.WebView):
 				</body>""" % self.langEmpty, "render")
 	
 	
+	def insertSpacer(self, item, lastname, user, newTimeline, highlight, 
+					lastHighlight, mentioned, message = False, next = False):
+		
+		# Red spacer that indicates something did fall through
+		spacer = "foo"
+		
+		# New Tweets
+		if item.id > self.initID:
+			# Name change
+			if lastname != user.screen_name or newTimeline:
+				spacer = "1" # Dark Gray
+			
+			else:
+				# More @username
+				if highlight:
+					if not lastHighlight:
+						spacer = "1" # Dark Gray
+					else:
+						spacer = "4" if message else "6" # Dark Blue
+				
+				# More mentions
+				elif mentioned:
+					spacer = "5" # Yellow
+				
+				# Just more normal tweets
+				else:
+					if next and lastHighlight:
+						spacer = "1" # Dark Gray
+					else:
+						spacer = "6" if message else "4" # Normal Blue
+			
+		# Old Tweets		
+		else:	
+			# Name change
+			if lastname != user.screen_name or newTimeline:
+				spacer = "" # Normal Gray
+			
+			else:
+				# More @username
+				if highlight:
+					if not lastHighlight:
+						spacer = "" # Normal Gray
+					else:
+						spacer = "2" if message else "7" # White/Light Blue		
+			
+				# More mentions
+				elif mentioned:
+					spacer = "5" # Yellow
+			
+				# Just more normal tweets
+				else:
+					if next and lastHighlight:
+						spacer = "" # Normal Gray
+					else:
+						spacer = "7" if message else "2" # Light Blue/White		
+	
+		return '<div class="spacer%s"></div>' % spacer
+	
+	
 	# Fix scrolling isses on page load -----------------------------------------
 	# --------------------------------------------------------------------------
 	def getOffset(self):
