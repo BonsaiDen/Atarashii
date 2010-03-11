@@ -88,6 +88,7 @@ class Atarashii:
 		self.wasSending = False
 		self.wasRetweeting = False
 		self.rateWarningShown = False
+		self.requestWarningShown = False
 		
 		# Current Username
 		self.username = self.settings['username'] or UNSET_TEXT
