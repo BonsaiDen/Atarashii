@@ -72,7 +72,7 @@ class HTML(view.HTMLView):
 		
 		# Do the rendering!
 		for num, obj in enumerate(self.items):
-			item, img, mode = obj
+			item, img = obj
 			self.isNewTimeline(item)
 			
 			# Check for new style retweet
@@ -84,7 +84,8 @@ class HTML(view.HTMLView):
 				
 				# Retweet Info
 				retweet = '<a href="http://twitter.com/%s" title="''' + \
-						(self.relative_time(item.created_at)) + '">' + lang.htmlInRetweet + '</a>'
+						(self.relative_time(item.created_at)) + '">' + \
+						lang.htmlInRetweet + '</a>'
 				retweet = retweet % (item.user.screen_name, 
 										item.user.screen_name)
 			
@@ -101,7 +102,7 @@ class HTML(view.HTMLView):
 			mentioned = hasattr(tweet, "is_mentioned") and tweet.is_mentioned
 			if num > 0:
 				renderitems.insert(0, self.insertSpacer(item, lastname, user, 
-							self.newTimeline, highlight, lastHighlight, mentioned))
+										highlight, lastHighlight, mentioned))
 			
 			lastname = user.screen_name
 			lastHighlight = highlight
@@ -139,7 +140,7 @@ class HTML(view.HTMLView):
 			# Background -------------------------------------------------------
 			if mentioned:
 				clas = 'mentioned'
-				
+			
 			elif item.id <= self.initID:
 				clas = 'highlightold' if highlight else 'oldtweet'
 			
@@ -188,7 +189,8 @@ class HTML(view.HTMLView):
 			</div>
 			
 			<div class="inner-text">
-				<div><span class="name">''' + ("<b>RT</b>" if retweeted else "") + '''
+				<div><span class="name">''' + \
+					("<b>RT</b>" if retweeted else "") + '''
 					<a href="http://twitter.com/%s" title="''' + \
 					lang.htmlProfile + '''">
 						<b>%s</b>
