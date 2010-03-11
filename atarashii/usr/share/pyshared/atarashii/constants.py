@@ -29,9 +29,9 @@ UNSET_LABEL = ""		# Should be ""
 UNSET_TIMEOUT = -1		# Don't know if this is needed anymore at all...
 
 # Modes
-MODE_TWEETS = 2			# Can be anything
-MODE_MESSAGES = 0		# Can be anything
-MODE_SEARCH = 4			# Can be anything, currently unused
+MODE_TWEETS = 0			# Can be anything
+MODE_MESSAGES = 1		# Can be anything
+MODE_SEARCH = 2			# Can be anything, currently unused
 
 # HTML
 HTML_UNSET_ID = -1		# Must be lower than 0
