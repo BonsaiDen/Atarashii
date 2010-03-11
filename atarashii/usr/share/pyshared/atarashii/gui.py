@@ -373,7 +373,9 @@ class GUI(gtk.Window):
 			self.showInput()
 			
 			# Select Textbox?
-			if not self.main.wasRetweeting or (self.main.retweetNum > -1 or self.main.retweetText != "" or self.main.replyUser != "" or self.main.replyID != -1):
+			if not self.main.wasRetweeting or (self.main.retweetNum > -1 or \
+				self.main.retweetText != "" or self.main.replyUser != "" or \
+				self.main.replyID != -1):
 				self.text.grab_focus()
 		
 		try:
