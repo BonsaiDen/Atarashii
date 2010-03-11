@@ -185,7 +185,7 @@ class Updater(threading.Thread):
 		for i in updates:
 			if i != None:
 				imgfile = self.getImage(i)
-				self.html.updateList.append((i, imgfile, False))
+				self.html.updateList.append((i, imgfile))
 		
 		self.html.loaded = 1
 		gobject.idle_add(lambda: self.html.pushUpdates())
@@ -209,7 +209,7 @@ class Updater(threading.Thread):
 		for i in messages:
 			if i != None:
 				imgfile = self.getImage(i, True)
-				self.message.updateList.append((i, imgfile, False))
+				self.message.updateList.append((i, imgfile))
 	
 		self.message.loaded = 1
 		gobject.idle_add(lambda: self.message.pushUpdates())
@@ -325,7 +325,7 @@ class Updater(threading.Thread):
 						lang.notificationMessage % i.sender.screen_name, 
 						i.text, imgfile, None])
 			
-			self.message.updateList.append((i, imgfile, False))	
+			self.message.updateList.append((i, imgfile))	
 		
 		for i in updates:
 			imgfile = self.getImage(i)
@@ -342,7 +342,7 @@ class Updater(threading.Thread):
 					
 					tweetList.append([name, text, imgfile, None])
 			
-			self.html.updateList.append((i, imgfile, False))
+			self.html.updateList.append((i, imgfile))
 		
 		# Show Notifications
 		count = len(tweetList)
@@ -375,7 +375,7 @@ class Updater(threading.Thread):
 		self.main.maxTweetCount += len(updates)
 		for i in updates:
 			imgfile = self.getImage(i)
-			self.html.updateList.append((i, imgfile, True))
+			self.html.historyList.append((i, imgfile))
 		
 		self.html.loadHistoryID = -1
 		self.main.isLoadingHistory = False
@@ -407,7 +407,7 @@ class Updater(threading.Thread):
 		self.main.maxMessageCount += len(messages)
 		for i in messages:
 			imgfile = self.getImage(i, True)
-			self.message.updateList.append((i, imgfile, True))
+			self.message.historyList.append((i, imgfile))
 		
 		self.message.loadHistoryID = -1
 		self.main.isLoadingHistory = False
