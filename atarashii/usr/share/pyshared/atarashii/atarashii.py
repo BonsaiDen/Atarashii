@@ -76,7 +76,7 @@ class Atarashii:
 		self.refreshTime = UNSET_TIMEOUT
 		self.refreshTimeout = UNSET_TIMEOUT
 		self.reconnectTime = UNSET_TIMEOUT
-		self.reconnectTimeout = None # TODO check if this is still in use
+		self.reconnectTimeout = None # The reconnect timer reference
 		
 		# State
 		self.loginError = False
@@ -116,7 +116,7 @@ class Atarashii:
 		# Send
 		self.isSending = True
 		self.gui.text.set_sensitive(False)
-		self.gui.modeButton.set_sensitive(False)
+		self.gui.messageButton.set_sensitive(False)
 		self.gui.showProgress()	
 		if self.replyUser != UNSET_TEXT:
 			self.gui.setStatus(lang.statusReply % self.replyUser)
@@ -143,7 +143,7 @@ class Atarashii:
 		if not self.isSending:
 			self.isSending = True
 			self.gui.text.set_sensitive(False)
-			self.gui.modeButton.set_sensitive(False)
+			self.gui.messageButton.set_sensitive(False)
 			self.gui.showProgress()	
 			self.gui.setStatus(lang.statusRetweet % name)
 		

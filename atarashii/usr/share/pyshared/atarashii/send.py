@@ -19,6 +19,8 @@
 import gobject
 import threading
 
+from constants import *
+
 
 # Send Tweets/Messages ---------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -31,10 +33,10 @@ class Send(threading.Thread):
 
 	def run(self):
 		self.main.wasSending = True
-		if not self.mode:
+		if self.mode == MODE_TWEETS:
 			self.sendTweet(self.text)
 		
-		else:
+		elif self.mode == MODE_MESSAGES:
 			self.sendMessage(self.text)
 		
 		self.main.isSending = False
@@ -43,7 +45,7 @@ class Send(threading.Thread):
 	# Send a Tweet -------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def sendTweet(self, text):
-		if self.main.replyID!= -1:
+		if self.main.replyID != UNSET_ID_NUM:
 			try:
 				# Send Tweet
 				update = self.main.api.update_status(text, 
@@ -57,10 +59,10 @@ class Send(threading.Thread):
 				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
 				
 				# Reset
-				self.main.replyUser = ""
-				self.main.replyText = ""
-				self.main.replyID = -1
-				self.main.gui.text.setText("")
+				self.main.replyUser = UNSET_TEXT
+				self.main.replyText = UNSET_TEXT
+				self.main.replyID = UNSET_ID_NUM
+				self.main.gui.text.setText(UNSET_TEXT)
 				
 				# Focus HTML
 				self.main.gui.showInput(False)
@@ -85,7 +87,12 @@ class Send(threading.Thread):
 				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
 
 				# Reset
-				self.main.gui.text.setText("")
+				self.main.replyUser = UNSET_TEXT
+				self.main.replyText = UNSET_TEXT
+				self.main.replyID = UNSET_ID_NUM
+				self.main.retweetUser = UNSET_TEXT	
+				self.main.retweetText = UNSET_TEXT
+				self.main.gui.text.setText(UNSET_TEXT)
 				
 				# Focus HTML
 				self.main.gui.showInput(False)
@@ -102,7 +109,7 @@ class Send(threading.Thread):
 	def sendMessage(self, text):
 		try:
 			# Send Message
-			if self.main.messageID != -1:
+			if self.main.messageID != UNSET_ID_NUM:
 				message = self.main.api.send_direct_message(text = text, 
 											user_id = self.main.messageID)
 			else:
@@ -118,7 +125,10 @@ class Send(threading.Thread):
 			gobject.idle_add(lambda: self.main.gui.message.pushUpdates())
 			
 			# Reset
-			self.main.gui.text.setText("")
+			self.main.messageUser = UNSET_TEXT
+			self.main.messageID = UNSET_ID_NUM
+			self.main.messageText = UNSET_TEXT
+			self.main.gui.text.setText(UNSET_TEXT)
 			
 			# Focus HTML
 			self.main.gui.showInput(False)
