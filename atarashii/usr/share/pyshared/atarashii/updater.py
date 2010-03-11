@@ -78,8 +78,8 @@ class Updater(threading.Thread):
 		
 		self.message.lastID = -1
 		self.html.lastID = -1
-		self.message.loaded = 0
-		self.html.loaded = 0	
+		self.message.loaded = -1
+		self.html.loaded = -1	
 	
 		# InitID = the last read tweet
 		self.html.initID = self.main.getLatestID()
@@ -135,6 +135,10 @@ class Updater(threading.Thread):
 		
 		# Create the api instance
 		self.api = self.main.api = tweepy.API(auth)
+		
+		# Set loading to pending
+		self.message.loaded = 0
+		self.html.loaded = 0
 		
 		# Lazy loading
 		if self.main.gui.mode:
