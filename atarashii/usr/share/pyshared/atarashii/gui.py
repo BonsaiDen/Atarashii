@@ -32,7 +32,9 @@ import message
 import tray
 import text
 import dialog
+
 from lang import lang
+from constants import *
 
 
 class GUI(gtk.Window):
@@ -66,9 +68,9 @@ class GUI(gtk.Window):
 		self.readButton.connect("clicked", self.onRead)
 		self.readButton.set_tooltip_text(lang.toolRead)
 		
-		self.modeButton = gt.get_object("message")
-		self.modeButton.connect("clicked", self.onMode)
-		self.modeButton.set_tooltip_text(lang.toolMode)
+		self.messageButton = gt.get_object("message")
+		self.messageButton.connect("clicked", self.onMode)
+		self.messageButton.set_tooltip_text(lang.toolMode)
 		
 		# Settings Button
 		self.settingsButton = gt.get_object("settings")
@@ -140,7 +142,7 @@ class GUI(gtk.Window):
 		self.settingsDialog = None
 		
 		# Variables
-		self.mode = False
+		self.mode = MODE_TWEETS
 		self.windowPosition = None
 		self.minimized = False
 		
@@ -158,8 +160,8 @@ class GUI(gtk.Window):
 	# Set GUI Mode
 	def setMode(self, mode):
 		self.mode = mode
-		if self.mode:
-			self.modeButton.set_active(self.mode)
+		if self.mode == MODE_MESSAGES:
+			self.messageButton.set_active(self.mode)
 		
 		else:
 			self.onMode()
@@ -199,15 +201,16 @@ class GUI(gtk.Window):
 		
 		self.text.set_sensitive(True)
 		self.refreshButton.set_sensitive(True)
-		self.modeButton.set_sensitive(True)
+		self.messageButton.set_sensitive(True)
 	
 	def showProgress(self):
 		def progressActivity():
 			self.progress.pulse()
 			return self.main.isSending or self.main.isConnecting or \
 				self.main.isLoadingHistory or \
-				(self.mode and self.message.loaded == 0) or \
-				(not self.mode and self.html.loaded == 0)
+				(self.mode == MODE_MESSAGES and \
+				self.message.loaded == HTML_LOADING) or \
+				(self.mode == MODE_TWEETS and self.html.loaded == HTML_LOADING)
 	
 		self.progress.set_fraction(0.0)
 		self.progress.show()
@@ -223,7 +226,7 @@ class GUI(gtk.Window):
 		self.refreshButton.set_sensitive(False)
 		self.readButton.set_sensitive(False)
 		self.historyButton.set_sensitive(False)
-		self.modeButton.set_sensitive(False)
+		self.messageButton.set_sensitive(False)
 	
 	# Update Statusbar
 	def updateStatus(self, once = False):
@@ -245,7 +248,8 @@ class GUI(gtk.Window):
 	
 		elif self.main.isLoadingHistory:
 			self.setStatus(
-				lang.statusLoadHistory if self.html.loadHistoryID != -1 else \
+				lang.statusLoadHistory if \
+				self.html.loadHistoryID != HTML_UNSET_ID else \
 				lang.statusLoadMessageHistory)
 	
 		elif self.main.isConnecting:
@@ -262,9 +266,10 @@ class GUI(gtk.Window):
 			self.readButton.set_sensitive(False)
 			self.setStatus(lang.statusUpdate)
 		
-		elif self.main.refreshTimeout == -1 or \
-			(self.mode and self.message.loaded == 0) or \
-			(not self.mode and self.html.loaded == 0):
+		elif self.main.refreshTime == UNSET_TIMEOUT or \
+			(self.mode == MODE_MESSAGES and \
+			self.message.loaded == HTML_LOADING) or \
+			(self.mode == MODE_TWEETS and self.html.loaded == HTML_LOADING):
 			
 			self.setStatus(lang.statusConnected)
 		
@@ -303,12 +308,15 @@ class GUI(gtk.Window):
 		self.status.push(0, status)	
 	
 	def checkRead(self):
-		if self.mode:
+		if self.mode == MODE_MESSAGES:
 			self.readButton.set_sensitive(
 									self.message.lastID > self.message.initID)
 			
-		else:
+		elif self.mode == MODE_TWEETS:
 			self.readButton.set_sensitive(self.html.lastID > self.html.initID)
+			
+		else:
+			self.readButton.set_sensitive(False)
 	
 	
 	# Info Label ---------------------------------------------------------------
@@ -317,30 +325,31 @@ class GUI(gtk.Window):
 		if self.main.isSending:
 			return
 	
-		if self.main.replyUser == "" and self.main.retweetUser == "" and \
-			self.main.messageUser == "":
+		if self.main.replyUser == UNSET_TEXT and \
+			self.main.retweetUser == UNSET_TEXT and \
+			self.main.messageUser == UNSET_TEXT:
 			
-			self.infoLabel.set_markup("")
+			self.infoLabel.set_markup(UNSET_LABEL)
 			self.infoLabel.hide()
 			
-		elif self.main.retweetUser != "":
+		elif self.main.retweetUser != UNSET_TEXT:
 			self.setLabelText(lang.labelRetweet % self.main.retweetUser)
 			self.infoLabel.show()			
 			
-		elif self.main.replyText != "":
+		elif self.main.replyText != UNSET_TEXT:
 			self.setLabelText(lang.labelReplyText % self.main.replyText)
 			self.infoLabel.show()
 			
-		elif self.main.replyUser != "":
+		elif self.main.replyUser != UNSET_TEXT:
 			self.setLabelText(lang.labelReply % self.main.replyUser)
 			self.infoLabel.show()
 			
 		# Messages
-		elif self.main.messageText != "":
+		elif self.main.messageText != UNSET_TEXT:
 			self.setLabelText(lang.labelMessageText % self.main.messageText)
 			self.infoLabel.show()		
 		
-		elif self.main.messageUser != "":
+		elif self.main.messageUser != UNSET_TEXT:
 			self.setLabelText(lang.labelMessage % self.main.messageUser)
 			self.infoLabel.show()
 	
@@ -373,9 +382,10 @@ class GUI(gtk.Window):
 			self.showInput()
 			
 			# Select Textbox?
-			if not self.main.wasRetweeting or (self.main.retweetNum > -1 or \
-				self.main.retweetText != "" or self.main.replyUser != "" or \
-				self.main.replyID != -1):
+			if not self.main.wasRetweeting or \
+				(self.main.retweetText != UNSET_TEXT or \
+				self.main.replyUser != UNSET_TEXT or \
+				self.main.replyID != UNSET_ID_NUM):
 				self.text.grab_focus()
 		
 		try:
@@ -447,17 +457,17 @@ class GUI(gtk.Window):
 		return size[3] - size[0]
 	
 	def setTitle(self):
-		if self.main.username == "":
+		if self.main.username == UNSET_TEXT:
 			self.set_title(lang.title)
 			
-		elif self.mode:
+		elif self.mode == MODE_MESSAGES:
 			if self.html.count > 0:
 				self.set_title((lang.titleTweets if self.html.count > 1 else \
 								lang.titleTweet) % self.html.count)
 			else:
 				self.set_title(lang.titleLoggedIn % self.main.username)
 			
-		else:
+		elif self.mode == MODE_TWEETS:
 			if self.message.count > 0:
 				self.set_title((lang.titleMessages if self.html.count > 1 else \
 								lang.titleMessage) % self.message.count)
@@ -467,28 +477,32 @@ class GUI(gtk.Window):
 	# Handlers -----------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def onRefresh(self, *args):
-		if self.mode:
+		if self.mode == MODE_MESSAGES:
 			self.main.updater.refreshMessages = True
 		else:
 			self.main.updater.refreshNow = True
 	
 	def onHistory(self, *args):
-		if self.mode:
+		if self.mode == MODE_MESSAGES:
 			gobject.idle_add(lambda: self.message.clear())
 			
 		else:
 			gobject.idle_add(lambda: self.html.clear())
 	
 	def onRead(self, *args):
-		if self.mode:
+		if self.mode == MODE_MESSAGES:
 			gobject.idle_add(lambda: self.message.read())
 			
 		else:
 			gobject.idle_add(lambda: self.html.read())
 	
 	def onMode(self, *args):
-		self.mode = self.modeButton.get_active()
-		if self.mode:
+		if self.messageButton.get_active():
+			self.mode = MODE_MESSAGES
+		else: # TODO add case for searchbutton
+			self.mode = MODE_TWEETS
+		
+		if self.mode == MODE_MESSAGES:
 			self.historyButton.set_tooltip_text(lang.toolHistoryMessage)
 			self.readButton.set_tooltip_text(lang.toolReadMessage)
 			self.refreshButton.set_tooltip_text(lang.toolRefreshMessage)
@@ -500,17 +514,17 @@ class GUI(gtk.Window):
 			
 			self.historyButton.set_sensitive(self.message.historyLoaded)
 			
-			if self.message.loaded == 0:
+			if self.message.loaded == HTML_LOADING:
 				self.showProgress()
 				if not self.main.isUpdating:
 					self.refreshButton.set_sensitive(False)
 				
-			elif self.message.loaded == 1:
+			elif self.message.loaded == HTML_LOADED:
 				self.showInput()
 				if not self.main.isUpdating:
 					self.refreshButton.set_sensitive(True)
 			
-		else:
+		elif self.mode == MODE_TWEETS:
 			self.historyButton.set_tooltip_text(lang.toolHistory)
 			self.readButton.set_tooltip_text(lang.toolRead)
 			self.refreshButton.set_tooltip_text(lang.toolRefresh)
@@ -520,15 +534,19 @@ class GUI(gtk.Window):
 			self.readButton.set_sensitive(self.html.lastID > self.html.initID)
 			self.historyButton.set_sensitive(self.html.historyLoaded)
 		
-			if self.html.loaded == 0:
+			if self.html.loaded == HTML_LOADING:
 				self.showProgress()
 				if not self.main.isUpdating:
 					self.refreshButton.set_sensitive(False)
 				
-			elif self.html.loaded == 1:
+			elif self.html.loaded == HTML_LOADED:
 				self.showInput()
 				if not self.main.isUpdating:
 					self.refreshButton.set_sensitive(True)
+		
+		else: # TODO implement search here
+			pass
+		
 		
 		self.setTitle()
 		self.text.checkMode()

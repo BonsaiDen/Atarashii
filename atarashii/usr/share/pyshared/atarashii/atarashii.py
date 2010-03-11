@@ -38,7 +38,9 @@ import send
 import gui
 import settings
 import updater
+
 from lang import lang
+from constants import *
 
 class Atarashii:
 	def __init__(self, version, debug = None):
@@ -54,17 +56,16 @@ class Atarashii:
 		self.apiTempPassword = None
 		
 		# Variables
-		self.replyUser = -1
-		self.replyText = ""
-		self.replyID = -1
+		self.replyUser = UNSET_ID_NUM
+		self.replyText = UNSET_TEXT
+		self.replyID = UNSET_ID_NUM
 		
-		self.retweetNum = -1
-		self.retweetUser = ""	
-		self.retweetText = ""
+		self.retweetUser = UNSET_TEXT	
+		self.retweetText = UNSET_TEXT
 		
-		self.messageUser = ""
-		self.messageID = -1
-		self.messageText = ""
+		self.messageUser = UNSET_TEXT
+		self.messageID = UNSET_ID_NUM
+		self.messageText = UNSET_TEXT
 		
 		self.loadTweetCount = 20
 		self.maxTweetCount = 200
@@ -72,10 +73,10 @@ class Atarashii:
 		self.maxMessageCount = 200
 		
 		# Timer
-		self.refreshTime = calendar.timegm(time.gmtime())
-		self.refreshTimeout = -1
-		self.reconnectTime = -1
-		self.reconnectTimeout = None
+		self.refreshTime = UNSET_TIMEOUT
+		self.refreshTimeout = UNSET_TIMEOUT
+		self.reconnectTime = UNSET_TIMEOUT
+		self.reconnectTimeout = None # TODO check if this is still in use
 		
 		# State
 		self.loginError = False
@@ -90,10 +91,10 @@ class Atarashii:
 		self.rateWarningShown = False
 		
 		# Current Username
-		self.username = self.settings['username'] or ""
+		self.username = self.settings['username'] or UNSET_TEXT
 		
 		# Retweet Style - 0 = ask, 1 = new, 2 = old
-		self.retweetStyle = self.settings['retweet'] or 0
+		self.retweetStyle = self.settings['retweet'] or RETWEET_ASK
 		
 		# Updater
 		self.updater = updater.Updater(self)
@@ -117,16 +118,16 @@ class Atarashii:
 		self.gui.text.set_sensitive(False)
 		self.gui.modeButton.set_sensitive(False)
 		self.gui.showProgress()	
-		if self.replyUser != "":
+		if self.replyUser != UNSET_TEXT:
 			self.gui.setStatus(lang.statusReply % self.replyUser)
 			
-		elif self.retweetUser != "":
+		elif self.retweetUser != UNSET_TEXT:
 			self.gui.setStatus(lang.statusRetweet % self.retweetUser)
 			
-		elif self.messageText != "":
+		elif self.messageText != UNSET_TEXT:
 			self.gui.setStatus(lang.statusMessageReply % self.messageUser)
 			
-		elif self.messageUser != "":
+		elif self.messageUser != UNSET_TEXT:
 			self.gui.setStatus(lang.statusMessage % self.messageUser)
 			
 		else:
@@ -158,7 +159,7 @@ class Atarashii:
 		self.login()
 	
 	def login(self):
-		if self.username == "":
+		if self.username == UNSET_TEXT:
 			return
 
  		# Wait until the last update is complete
@@ -286,28 +287,28 @@ class Atarashii:
 			return long(self.settings['lasttweet_' + self.username])
 		
 		else:
-			return -1
+			return HTML_UNSET_ID
 			
 	def getFirstID(self):
 		if self.settings.isset('firsttweet_' + self.username):
 			return long(self.settings['firsttweet_' + self.username])
 		
 		else:
-			return -1
+			return HTML_UNSET_ID
 
 	def getLatestMessageID(self):
 		if self.settings.isset('lastmessage_' + self.username):
 			return long(self.settings['lastmessage_' + self.username])
 		
 		else:
-			return -1
+			return HTML_UNSET_ID
 	
 	def getFirstMessageID(self):
 		if self.settings.isset('firstmessage_' + self.username):
 			return long(self.settings['firstmessage_' + self.username])
 		
 		else:
-			return -1
+			return HTML_UNSET_ID
 
 	def setTweetCount(self, count):
 		self.maxTweetCount = count
@@ -335,7 +336,7 @@ class Atarashii:
 		self.settings.save()
 		
 	def saveMode(self):
-		if self.username != "":
+		if self.username != UNSET_TEXT:
 			self.settings['mode_' + self.username] = self.gui.mode
 	
 	def quit(self):

@@ -26,6 +26,7 @@ import gobject
 import calendar
 
 from lang import lang
+from constants import *
 
 # Import local Tweepy
 sys.path.insert(0, __file__[:__file__.rfind('/')])
@@ -52,8 +53,8 @@ class Updater(threading.Thread):
 		self.refreshNow = False
 		self.refreshMessages = False
 		
-		self.loadHistoryID = -1
-		self.loadHistoryMessageID = -1
+		self.loadHistoryID = HTML_UNSET_ID
+		self.loadHistoryMessageID = HTML_UNSET_ID
 		self.ratelimit = 150		
 		self.messageCounter = 0
 		
@@ -72,14 +73,14 @@ class Updater(threading.Thread):
 		self.doInit = False
 		self.started = False
 		self.refreshNow = False
-		self.main.refreshTimeout = 60
-		self.html.loadHistoryID = -1
-		self.message.loadHistoryID = -1
+		self.main.refreshTimeout = UNSET_TIMEOUT
+		self.html.loadHistoryID = HTML_UNSET_ID
+		self.message.loadHistoryID = HTML_UNSET_ID
 		
-		self.message.lastID = -1
-		self.html.lastID = -1
-		self.message.loaded = -1
-		self.html.loaded = -1	
+		self.message.lastID = HTML_UNSET_ID
+		self.html.lastID = HTML_UNSET_ID
+		self.message.loaded = HTML_RESET
+		self.html.loaded = HTML_RESET	
 	
 		# InitID = the last read tweet
 		self.html.initID = self.main.getLatestID()
@@ -135,23 +136,26 @@ class Updater(threading.Thread):
 		
 		# Create the api instance
 		self.api = self.main.api = tweepy.API(auth)
-		
+				
 		# Set loading to pending
-		self.message.loaded = 0
-		self.html.loaded = 0
+		self.message.loaded = HTML_LOADING
+		self.html.loaded = HTML_LOADING
 		
 		# Lazy loading
-		if self.main.gui.mode:
+		if self.main.gui.mode == MODE_MESSAGES:
 			if not self.getInitMessages():
-				self.message.loaded = -1
-				self.html.loaded = -1
+				self.message.loaded = HTML_RESET
+				self.html.loaded = HTML_RESET
 				return
 			
-		else:
+		elif self.main.gui.mode == MODE_TWEETS:
 			if not self.getInitTweets():
-				self.message.loaded = -1
-				self.html.loaded = -1
+				self.message.loaded = HTML_RESET
+				self.html.loaded = HTML_RESET
 				return
+		
+		else: # TODO implement loading of search
+			pass
 		
 		# Stuff ----------------------------------------------------------------
 		self.started = True
@@ -159,15 +163,21 @@ class Updater(threading.Thread):
 		gobject.idle_add(lambda: self.main.gui.checkRead())
 		
 		# Load other stuff
-		if not self.main.gui.mode:
+		if self.main.gui.mode == MODE_TWEETS:
 			self.getInitMessages()
-			if self.main.gui.mode:
+			if self.main.gui.mode == MODE_MESSAGES:
 				gobject.idle_add(lambda: self.main.gui.showInput())
 			
-		else:
+		elif self.main.gui.mode == MODE_MESSAGES:
 			self.getInitTweets()	
-			if not self.main.gui.mode:
+			if not self.main.gui.mode == MODE_TWEETS:
 				gobject.idle_add(lambda: self.main.gui.showInput())
+		
+		else: # TODO implement loading of search
+			pass
+		
+		# Init Timer
+		self.main.refreshTime = calendar.timegm(time.gmtime())		
 		
 		gobject.idle_add(lambda: self.main.gui.checkRead())
 	
@@ -191,7 +201,7 @@ class Updater(threading.Thread):
 				imgfile = self.getImage(i)
 				self.html.updateList.append((i, imgfile))
 		
-		self.html.loaded = 1
+		self.html.loaded = HTML_LOADED
 		gobject.idle_add(lambda: self.html.pushUpdates())
 		return True
 	
@@ -215,7 +225,7 @@ class Updater(threading.Thread):
 				imgfile = self.getImage(i, True)
 				self.message.updateList.append((i, imgfile))
 	
-		self.message.loaded = 1
+		self.message.loaded = HTML_LOADED
 		gobject.idle_add(lambda: self.message.pushUpdates())
 		return True
 	
@@ -228,13 +238,13 @@ class Updater(threading.Thread):
 				self.init()
 		
 			elif self.started:
-				if self.html.loadHistoryID != -1:
+				if self.html.loadHistoryID != HTML_UNSET_ID:
 					self.loadHistory()
 					
-				elif self.message.loadHistoryID != -1:
+				elif self.message.loadHistoryID != HTML_UNSET_ID:
 					self.loadHistoryMessage()
 					
-				elif self.main.refreshTimeout != -1:
+				elif self.main.refreshTimeout != HTML_UNSET_ID:
 					self.checkForUpdate()
 			
 			time.sleep(0.1)
@@ -243,6 +253,9 @@ class Updater(threading.Thread):
 	# Update -------------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def checkForUpdate(self):
+		if self.main.refreshTime == UNSET_TIMEOUT:
+			return
+	
 		if calendar.timegm(time.gmtime()) > self.main.refreshTime + \
 			self.main.refreshTimeout or self.refreshNow or self.refreshMessages:
 			
@@ -370,7 +383,7 @@ class Updater(threading.Thread):
 		
 		# Something went wrong...
 		except Exception, error:
-			self.html.loadHistoryID = -1
+			self.html.loadHistoryID = HTML_UNSET_ID
 			self.main.isLoadingHistory = False
 			gobject.idle_add(lambda: self.main.gui.showError(error))
 			return
@@ -381,7 +394,7 @@ class Updater(threading.Thread):
 			imgfile = self.getImage(i)
 			self.html.historyList.append((i, imgfile))
 		
-		self.html.loadHistoryID = -1
+		self.html.loadHistoryID = HTML_UNSET_ID
 		self.main.isLoadingHistory = False
 		
 		if len(updates) > 0:
@@ -402,7 +415,7 @@ class Updater(threading.Thread):
 		
 		# Something went wrong...
 		except Exception, error:
-			self.message.loadHistoryID = -1
+			self.message.loadHistoryID = HTML_UNSET_ID
 			self.main.isLoadingHistory = False
 			gobject.idle_add(lambda: self.main.gui.showError(error))
 			return
@@ -413,7 +426,7 @@ class Updater(threading.Thread):
 			imgfile = self.getImage(i, True)
 			self.message.historyList.append((i, imgfile))
 		
-		self.message.loadHistoryID = -1
+		self.message.loadHistoryID = HTML_UNSET_ID
 		self.main.isLoadingHistory = False
 		
 		if len(messages) > 0:
@@ -434,7 +447,7 @@ class Updater(threading.Thread):
 		mentions = []
 	
 		# Get new Tweets
-		if sinceID != -1:
+		if sinceID != HTML_UNSET_ID:
 			if maxID == None:
 				mentions = self.api.mentions(since_id = sinceID, 
 													count = maxCount)
@@ -496,7 +509,7 @@ class Updater(threading.Thread):
 		messages = []
 	
 		# Get new Tweets
-		if sinceID != -1:
+		if sinceID != HTML_UNSET_ID:
 			if maxID == None:
 				messages = self.api.direct_messages(since_id = sinceID, 
 													count = maxCount)
