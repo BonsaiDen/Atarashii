@@ -92,8 +92,8 @@ class HTML(view.HTMLView):
 			else:
 				tweet = item
 			
-			user = tweet.user
-			text = self.formatter.parse(tweet.text)
+			# Get User and Text
+			user, text = tweet.user, self.formatter.parse(tweet.text)
 			
 			
 			# Spacers ----------------------------------------------------------
@@ -108,22 +108,23 @@ class HTML(view.HTMLView):
 			lastHighlight = highlight
 			
 			# Is this tweet a reply?
-			reply = ""
 			if tweet.in_reply_to_screen_name and tweet.in_reply_to_status_id:
 				reply = '<a href="http://twitter.com/%s/statuses/%d">' + \
 						lang.htmlInReply + '</a>'
 				reply = reply % (tweet.in_reply_to_screen_name, 
 								tweet.in_reply_to_status_id,
 								tweet.in_reply_to_screen_name)
+			else:
+				reply = ""
 			
 			
 			# Avatar -----------------------------------------------------------
 			self.isNewAvatar(num)	
 			if (num < len(self.items) - 1 and \
-				(user.screen_name != \
-				self.getUser(num+1).screen_name or self.newAvatar)) or \
-				num == len(self.items) - 1 or self.newTimeline:
-			
+				(user.screen_name != self.getUser(num+1).screen_name or \
+				self.newAvatar) \
+				) or num == len(self.items) - 1 or self.newTimeline:
+				
 				avatar = '''<a href="http://twitter.com/%s">
 							<img width="32" src="file://%s" title="''' + \
 							lang.htmlInfo + '''"/></a>'''
@@ -149,25 +150,24 @@ class HTML(view.HTMLView):
 			
 			
 			# Source -----------------------------------------------------------
-			by = ""
-			source = tweet.source
-			if source != "web":
-				try:
-					if tweet.source_url != "":
-						source = '<a href="%s" title="%s">%s</a>' % \
-							(tweet.source_url, tweet.source_url, tweet.source)
+			if tweet.source != "web":
+				if hasattr(tweet, "source_url") and tweet.source_url != "":
+					by = lang.htmlBy % ('<a href="%s" title="%s">%s</a>' % \
+							(tweet.source_url, tweet.source_url, tweet.source))
+				
+				else:
+					by =  lang.htmlBy % tweet.source
 			
-				except:
-					pass
-			
-				by = lang.htmlBy % source
+			else:
+				by = ""
 			
 			
 			# Protected --------------------------------------------------------
-			locked = ''
 			if hasattr(user, "protected") and user.protected:
 				locked = ('<span class="protected" title="' + \
 					lang.htmlProtected + '"></span>') % user.screen_name
+			else:
+				locked = ''
 			
 			
 			# HTML Snippet -----------------------------------------------------

@@ -58,7 +58,7 @@ class HTML(view.HTMLView):
 		for num, obj in enumerate(self.items):
 			item, img = obj
 			self.isNewTimeline(item)
-			text = self.formatter.parse(item.text)
+			user, text = item.sender, self.formatter.parse(item.text)
 			
 			
 			# Spacers ----------------------------------------------------------
@@ -68,31 +68,30 @@ class HTML(view.HTMLView):
 					self.main.username if num < len(self.items) - 1 else False
 				
 				renderitems.insert(0, self.insertSpacer(item, lastname, 
-						item.sender, highlight, lastHighlight, False, True, 
+						user, highlight, lastHighlight, False, True, 
 						nextHighlight))
 			
-			lastname = item.sender.screen_name
+			lastname = user.screen_name
 			lastHighlight = highlight
 			
 			
 			# Avatar -----------------------------------------------------------
 			self.isNewAvatar(num)
 			if (num < len(self.items) - 1 and \
-				(item.sender.screen_name != \
-				self.items[num + 1][0].sender.screen_name or \
-				item.recipient_screen_name != \
-				self.items[num + 1][0].recipient_screen_name or self.newAvatar \
-				)) or num == len(self.items) - 1 or self.newTimeline:
+				(user.screen_name != self.items[num + 1][0].sender.screen_name \
+				or item.recipient_screen_name != \
+				self.items[num + 1][0].recipient_screen_name or self.newAvatar)\
+				) or num == len(self.items) - 1 or self.newTimeline:
 				
 				avatar = '''<a href="http://twitter.com/%s">
 							<img width="32" src="file://%s" title="''' + \
 							lang.htmlInfo + '''"/></a>'''
 				
-				avatar = avatar % (item.sender.screen_name, img, 
-									item.sender.name, 
-									item.sender.followers_count, 
-									item.sender.friends_count, 
-									item.sender.statuses_count)
+				avatar = avatar % (user.screen_name, img, 
+									user.name, 
+									user.followers_count, 
+									user.friends_count, 
+									user.statuses_count)
 			
 			else:
 				avatar = ""
@@ -100,16 +99,24 @@ class HTML(view.HTMLView):
 			
 			# Background -------------------------------------------------------
 			cls = 'oldtweet' if item.id <= self.initID else 'tweet'
-			if item.recipient_screen_name != self.main.username:
+			if item.recipient_screen_name.lower() != self.main.username.lower():
 				mode = lang.messageTo
 				name = item.recipient_screen_name
 				reply = "display: none;"
 			
 			else:
 				mode = lang.messageFrom
-				name = item.sender.screen_name
+				name = user.screen_name
 				reply = ""
 				cls = "highlightold" if item.id <= self.initID else "highlight"
+			
+			
+			# Protected --------------------------------------------------------
+			if hasattr(user, "protected") and user.protected:
+				locked = ('<span class="protected" title="' + \
+					lang.htmlProtected + '"></span>') % user.screen_name
+			else:
+				locked = ''
 			
 			
 			# HTML Snippet -----------------------------------------------------
@@ -122,7 +129,7 @@ class HTML(view.HTMLView):
 			<div class="actions">
 				<div class="doretweet" style="''' + reply + \
 				'''"><a href="message:%s:%d:%d" title="''' + \
-					(lang.htmlReply % item.sender.screen_name) + '''"></a>
+					(lang.htmlReply % user.screen_name) + '''"></a>
 				</div>
 			</div>
 			
@@ -131,7 +138,7 @@ class HTML(view.HTMLView):
 					<span class="name"><b>''' + mode + \
 					''' <a href="http://twitter.com/%s" title="''' + \
 					lang.htmlProfile + \
-					'''">%s</a></b></span> %s
+					'''">%s</a></b></span> ''' + locked + ''' %s
 				</div>
 				<div class="time">
 					<a href="http://twitter.com/%s/statuses/%d" title="''' + \
@@ -146,16 +153,16 @@ class HTML(view.HTMLView):
 					avatar,
 					
 					# Actions
-					item.sender.screen_name, item.sender.id, num, 	
+					user.screen_name, user.id, num,
 					
 					# Text
-					item.sender.screen_name, 
-					item.sender.name.strip(), 
-					name, 
+					user.screen_name,
+					user.name.strip(),
+					name,
 					text, 	
 					
 					# Time
-					item.sender.screen_name,
+					user.screen_name,
 					item.id,
 					self.relative_time(item.created_at))
 			
