@@ -204,8 +204,14 @@ class GUI(gtk.Window):
 			self.text.resize(1)
 		
 		self.text.set_sensitive(True)
-		self.refreshButton.set_sensitive(True)
+		self.checkRefresh()
 		self.messageButton.set_sensitive(True)
+		
+	def checkRefresh(self):
+		if not self.main.isUpdating:
+			self.refreshButton.set_sensitive(
+								self.message.loaded == HTML_LOADED and \
+								self.html.loaded == HTML_LOADED)
 	
 	def showProgress(self):
 		def progressActivity():
@@ -435,8 +441,17 @@ class GUI(gtk.Window):
  		
  		# Show Warning on url error or error message for anything else 		
  		if code == -1 or code == 500 or code == 502 or code == 503:
- 			dialog.MessageDialog(self, MESSAGE_WARNING, 
- 									lang.warningURL, lang.warningTitle)
+ 		
+ 			# Show only one warning at a time to prevent dialog cluttering
+ 			if not self.main.requestWarningShown:
+ 				self.main.requestWarningShown = True
+ 				
+ 				def unset():
+ 					self.main.requestWarningShown = False
+ 				
+ 				dialog.MessageDialog(self, MESSAGE_WARNING,
+ 					lang.warningURL, lang.warningTitle,
+ 					okCallback = unset)
  		
  		else:
 	 		description = {
@@ -525,14 +540,10 @@ class GUI(gtk.Window):
 			
 			if self.message.loaded == HTML_LOADING:
 				self.showProgress()
-				if not self.main.isUpdating:
-					self.refreshButton.set_sensitive(False)
 				
 			elif self.message.loaded == HTML_LOADED:
 				self.showInput()
-				if not self.main.isUpdating:
-					self.refreshButton.set_sensitive(True)
-			
+		
 		elif self.mode == MODE_TWEETS:
 			self.historyButton.set_tooltip_text(lang.toolHistory)
 			self.readButton.set_tooltip_text(lang.toolRead)
@@ -545,13 +556,9 @@ class GUI(gtk.Window):
 		
 			if self.html.loaded == HTML_LOADING:
 				self.showProgress()
-				if not self.main.isUpdating:
-					self.refreshButton.set_sensitive(False)
 				
 			elif self.html.loaded == HTML_LOADED:
 				self.showInput()
-				if not self.main.isUpdating:
-					self.refreshButton.set_sensitive(True)
 		
 		else: # TODO implement search here
 			pass
