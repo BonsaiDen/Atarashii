@@ -43,14 +43,11 @@ try:
 				self.sound()
 		
 			for obj in objs:
-				self.notify(obj[0], obj[1], obj[2], obj[3])
+				self.notify(obj[0], obj[1], obj[2])
 	
-		def notify(self, title, text, icon = None, timeout = None):
-			caps = pynotify.get_server_caps()    
-			notification = pynotify.Notification(title, text, icon)
-			if timeout:
-				notification.set_timeout(timeout)
-		
+		def notify(self, title, text, icon = None):
+			caps = pynotify.get_server_caps()
+			notification = pynotify.Notification(title, text, icon)		
 			return notification.show()
 	
 		def sound(self):
@@ -58,8 +55,8 @@ try:
 			snd.setDaemon(True)
 			snd.start()
 	
-	CAN_NOTIFY = True		
-	
+	CAN_NOTIFY = True
+
 except:
 	class Notifier():
 		def __init__(self, main):

@@ -345,7 +345,7 @@ class Updater(threading.Thread):
 					messageIDS.append(i.id)
 					tweetList.append([
 						lang.notificationMessage % i.sender.screen_name, 
-						i.text, imgfile, None])
+						i.text, imgfile])
 			
 			self.message.updateList.append((i, imgfile))	
 		
@@ -362,7 +362,7 @@ class Updater(threading.Thread):
 						name = i.user.screen_name
 						text = i.text
 					
-					tweetList.append([name, text, imgfile, None])
+					tweetList.append([name, text, imgfile])
 			
 			self.html.updateList.append((i, imgfile))
 		
