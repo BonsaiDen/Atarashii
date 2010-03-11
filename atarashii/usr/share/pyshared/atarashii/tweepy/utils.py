@@ -6,22 +6,22 @@ from datetime import datetime
 import time
 import htmlentitydefs
 import re
+import locale
+
+def _parse_date(string):
+    # Set locale for date parsing
+    locale.setlocale(locale.LC_TIME, 'C')
+    
+    # We must parse datetime this way to work in python 2.4
+    date = datetime(*(time.strptime(string, '%a %b %d %H:%M:%S +0000 %Y')[0:6]))
+    
+    # Reset locale back to the default setting
+    locale.setlocale(locale.LC_TIME, '')
+    return date
 
 
 def parse_datetime(string):
-    # First try it without any hack
-    try:
-        # We must parse datetime this way to work in python 2.4
-        return datetime(*(time.strptime(string, '%a %b %d %H:%M:%S +0000 %Y')[0:6]))
-    
-    # Now fix it by converting the monthname into a integer
-    # We don't care about the dayname altogether...
-    except ValueError:
-        date = string.split(" ")[1:]
-        date[0] = str(["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].index(date[0]))
-
-        # We must parse datetime this way to work in python 2.4
-        return datetime(*(time.strptime(" ".join(date), '%m %d %H:%M:%S +0000 %Y')[0:6]))
+    return _parse_date(string)
 
 
 def parse_html_value(html):
@@ -37,19 +37,7 @@ def parse_a_href(atag):
 
 
 def parse_search_datetime(string):
-    # First try it without any hack
-    try:
-        # We must parse datetime this way to work in python 2.4
-        return datetime(*(time.strptime(string, '%a %b %d %H:%M:%S +0000 %Y')[0:6]))
-    
-    # Now fix it by converting the monthname into a integer
-    # We don't care about the dayname altogether...
-    except ValueError:
-        date = string.split(" ")[1:]
-        date[0] = str(["", "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].index(date[0]))
-
-        # We must parse datetime this way to work in python 2.4
-        return datetime(*(time.strptime(" ".join(date), '%m %d %H:%M:%S +0000 %Y')[0:6]))
+    return _parse_date(string)
 
 
 def unescape_html(text):
