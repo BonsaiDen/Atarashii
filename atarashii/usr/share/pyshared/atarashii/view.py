@@ -68,6 +68,7 @@ class HTMLView(webkit.WebView):
 		self.isRendering = False
 		self.items = []
 		self.updateList = []
+		self.historyList = []
 		self.position = 0
 		self.offsetCount = 0
 		self.historyLoaded = False
@@ -155,7 +156,7 @@ class HTMLView(webkit.WebView):
 					if not lastHighlight:
 						spacer = "1" # Dark Gray
 					else:
-						spacer = "4" if message else "6" # Dark Blue
+						spacer = "4" if message else "6" # Normal/Dark Blue
 				
 				# More mentions
 				elif mentioned:
@@ -166,9 +167,9 @@ class HTMLView(webkit.WebView):
 					if next and lastHighlight:
 						spacer = "1" # Dark Gray
 					else:
-						spacer = "6" if message else "4" # Normal Blue
-			
-		# Old Tweets		
+						spacer = "6" if message else "4" # Dark/Normal Blue
+		
+		# Old Tweets
 		else:	
 			# Name change
 			if lastname != user.screen_name or self.newTimline:
@@ -180,19 +181,19 @@ class HTMLView(webkit.WebView):
 					if not lastHighlight:
 						spacer = "" # Normal Gray
 					else:
-						spacer = "2" if message else "7" # White/Light Blue		
-			
+						spacer = "2" if message else "7" # White/Light Blue
+				
 				# More mentions
 				elif mentioned:
 					spacer = "5" # Yellow
-			
+				
 				# Just more normal tweets
 				else:
 					if next and lastHighlight:
 						spacer = "" # Normal Gray
 					else:
 						spacer = "7" if message else "2" # Light Blue/White		
-	
+		
 		return '<div class="spacer%s"></div>' % spacer
 	
 	
@@ -292,19 +293,27 @@ class HTMLView(webkit.WebView):
 		while len(self.updateList) > 0:
 			self.add(self.updateList.pop(0))
 	
+		while len(self.historyList) > 0:
+			self.add(self.historyList.pop(0), True)
+		
 		self.render()
-
+	
 	# Add items to the internal List
-	def add(self, tweet):		
+	def add(self, tweet, append = False):		
 		itemid = tweet[0].id
 		found = False
+		
+		# Check for ID
+		# When a sent tweet gets temporarily inserted this prevents it from 
+		# popping up twice after the next refresh
 		for i in self.items:
 			if i[0].id == itemid:
 				found = True
 				break
 		
 		if not found:
-			if tweet[2]:
+			# History entries
+			if append:
 				self.items.insert(0, tweet)
 
 			else:
