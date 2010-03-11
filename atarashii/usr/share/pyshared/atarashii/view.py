@@ -48,7 +48,7 @@ class HTMLView(webkit.WebView):
 		self.connect("focus-in-event", self.gui.text.htmlFocus)
 		self.scroll = scroll
 		self.set_maintains_back_forward_list(False)
-		self.mode = ""
+		self.mode = HTML_STATE_NONE
 		self.count = 0
 		self.formatter = format.Formatter()
 		self.getLatest = None
@@ -96,7 +96,8 @@ class HTMLView(webkit.WebView):
 		self.renderHTML("""
 			<body class="unloaded">
 				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
-			</body>""" % (self.main.getImage(), self.langLoading), "start")
+			</body>""" % (self.main.getImage(), self.langLoading),
+			HTML_STATE_START)
 	
 	
 	def splash(self):
@@ -104,7 +105,8 @@ class HTMLView(webkit.WebView):
 		self.renderHTML("""
 			<body class="unloaded">
 				<div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
-			</body>""" % (self.main.getImage(), lang.htmlWelcome), "splash")
+			</body>""" % (self.main.getImage(), lang.htmlWelcome),
+			HTML_STATE_SPLASH)
 
 
 	# Render the actual HTML ---------------------------------------------------
@@ -119,7 +121,7 @@ class HTMLView(webkit.WebView):
 		<link rel="stylesheet" type="text/css" media="screen" href="file://%s"/>
 		</head>
 		%s
-		</html>""" % (self.main.getResource("atarashii.css"), html), 
+		</html>""" % (self.main.getResource("atarashii.css"), html),
 						"text/html", "UTF-8", "file:///main/")
 	
 	def setHTML(self, renderitems):
@@ -130,13 +132,14 @@ class HTMLView(webkit.WebView):
 					<div><div id="newcontainer">%s</div>
 					<div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
 				</body>""" % ("".join(renderitems), 
-								self.items[0][0].id, self.langLoad), "render")
+								self.items[0][0].id, self.langLoad),
+								HTML_STATE_RENDER)
 		
 		else:
 			self.renderHTML("""
 				<body class="unloaded">
 					<div class="loading"><b>%s</b></div>
-				</body>""" % self.langEmpty, "render")
+				</body>""" % self.langEmpty, HTML_STATE_RENDER)
 	
 	
 	def insertSpacer(self, item, lastname, user, highlight, lastHighlight, 
@@ -253,13 +256,13 @@ class HTMLView(webkit.WebView):
 	# Fix Reloading
 	def onLoading(self, *args):
 		if not self.isRendering:
-			if self.mode == "render":
+			if self.mode == HTML_STATE_RENDER:
 				self.render()
 	
-			elif self.mode == "start":
+			elif self.mode == HTML_STATE_START:
 				self.start()
 			
-			elif self.mode == "splash":
+			elif self.mode == HTML_STATE_SPLASH:
 				self.splash()
 				
 			return True

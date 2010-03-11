@@ -39,3 +39,7 @@ HTML_RESET = -1			# Can be anything
 HTML_LOADING = 0		# Can be anything
 HTML_LOADED = 1			# Can be anything
 
+HTML_STATE_NONE = 0		# Can be anything
+HTML_STATE_START = 1	# Can be anything
+HTML_STATE_SPLASH = 2	# Can be anything
+HTML_STATE_RENDER = 3	# Can be anything
