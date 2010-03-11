@@ -345,12 +345,12 @@ class HTMLView(webkit.WebView):
 		
 		# Set the latest tweet for reloading on startup
 		if len(self.items) > 0:
-			id = len(self.items) - self.itemCount
-			if id < 0:
-				id = 0
+			itemid = len(self.items) - self.itemCount
+			if itemid < 0:
+				itemid = 0
 			
 			setting = self.firstSetting + self.main.username
-			self.main.settings[setting] = self.items[id][0].id - 1
+			self.main.settings[setting] = self.items[itemid][0].id - 1
 			
 		# Newest Stuff
 		if self.newestID == HTML_UNSET_ID:
