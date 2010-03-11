@@ -56,7 +56,7 @@ class HTML(view.HTMLView):
 		
 		# Do the rendering!
 		for num, obj in enumerate(self.items):
-			item, img, mode = obj
+			item, img = obj
 			self.isNewTimeline(item)
 			text = self.formatter.parse(item.text)
 			
