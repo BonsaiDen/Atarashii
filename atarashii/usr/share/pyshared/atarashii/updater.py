@@ -169,8 +169,8 @@ class Updater(threading.Thread):
 				gobject.idle_add(lambda: self.main.gui.showInput())
 			
 		elif self.main.gui.mode == MODE_MESSAGES:
-			self.getInitTweets()	
-			if not self.main.gui.mode == MODE_TWEETS:
+			self.getInitTweets()
+			if self.main.gui.mode == MODE_TWEETS:
 				gobject.idle_add(lambda: self.main.gui.showInput())
 		
 		else: # TODO implement loading of search
@@ -178,7 +178,6 @@ class Updater(threading.Thread):
 		
 		# Init Timer
 		self.main.refreshTime = calendar.timegm(time.gmtime())		
-		
 		gobject.idle_add(lambda: self.main.gui.checkRead())
 	
 	
@@ -201,8 +200,11 @@ class Updater(threading.Thread):
 				imgfile = self.getImage(i)
 				self.html.updateList.append((i, imgfile))
 		
-		self.html.loaded = HTML_LOADED
-		gobject.idle_add(lambda: self.html.pushUpdates())
+		def render():
+			self.html.pushUpdates()
+			self.html.loaded = HTML_LOADED
+		
+		gobject.idle_add(lambda: render())
 		return True
 	
 	
@@ -225,8 +227,11 @@ class Updater(threading.Thread):
 				imgfile = self.getImage(i, True)
 				self.message.updateList.append((i, imgfile))
 	
-		self.message.loaded = HTML_LOADED
-		gobject.idle_add(lambda: self.message.pushUpdates())
+		def render():
+			self.message.pushUpdates()
+			self.message.loaded = HTML_LOADED
+		
+		gobject.idle_add(lambda: render())
 		return True
 	
 	

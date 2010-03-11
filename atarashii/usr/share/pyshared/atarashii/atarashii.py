@@ -167,7 +167,7 @@ class Atarashii:
  			time.sleep(0.1)
 		
 		# Set Mode
-		self.gui.setMode(self.settings.isTrue('mode_' + self.username, False))
+		self.gui.setMode(self.settings['mode_' + self.username])
 		
 		# Progress
 		self.gui.hideAll(False)
@@ -188,13 +188,13 @@ class Atarashii:
 		# Reset
 		self.gui.updateStatus()
 		self.gui.html.init(True)
-		if self.gui.mode:
+		if self.gui.mode == MODE_MESSAGES:
 			self.gui.html.start()
 		
 		self.gui.settingsButton.set_sensitive(False)
 		self.gui.tray.settingsMenu.set_sensitive(False)
 		self.gui.message.init(True)
-		if not self.gui.mode:
+		if self.gui.mode == MODE_TWEETS:
 			self.gui.message.start()
 
 		self.updater.doInit = True
@@ -210,7 +210,7 @@ class Atarashii:
 		self.gui.showInput()
 		
 	def onLoginFailed(self, error = None):
-		self.gui.setMode(False)
+		self.gui.setMode(MODE_TWEETS)
 		self.loginError = True if error != None else False
 		self.loginStatus = False
 		self.isConnecting = False
@@ -225,7 +225,7 @@ class Atarashii:
 		gobject.idle_add(lambda: self.gui.html.init(True))
 	
 	def logout(self):
-		self.gui.setMode(False)
+		self.gui.setMode(MODE_TWEETS)
 		self.loginError = False
 		self.loginStatus = False
 		self.isSending = False
