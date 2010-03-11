@@ -22,7 +22,8 @@ import gtk
 import gobject
 
 from lang import lang
-from notify import canNotify
+from notify import CAN_NOTIFY
+from constants import *
 
 class Dialog:
 	resource = ""
@@ -203,7 +204,7 @@ class SettingsDialog(Dialog):
 		# Delete Action
 		def deleteDialog(*args):
 			name = self.userAccounts[drop.get_active()]
-			MessageDialog(self.dlg, "question",
+			MessageDialog(self.dlg, MESSAGE_QUESTION,
 							lang.accountDeleteDescription % name,
 							lang.accountDelete,
 							yesCallback = self.deleteAccount)
@@ -234,13 +235,13 @@ class SettingsDialog(Dialog):
 		# Notification Setting
 		notify.set_active(self.settings.isTrue("notify"))
 		sound.set_active(self.settings.isTrue("sound"))
-		notify.set_sensitive(canNotify)
+		notify.set_sensitive(CAN_NOTIFY)
 		
 		def toggle2():
 			fileWidget.set_sensitive(sound.get_active())
 		
 		def toggle():
-			sound.set_sensitive(notify.get_active() and canNotify)
+			sound.set_sensitive(notify.get_active() and CAN_NOTIFY)
 			fileWidget.set_sensitive(notify.get_active() and sound.get_active())
 		
 		toggle()
@@ -427,25 +428,25 @@ class AccountDialog(Dialog):
 # Message Dialog ---------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class MessageDialog(gtk.MessageDialog):
-	def __init__(self, parent, type, message, title, okCallback = None,
+	def __init__(self, parent, mt, message, title, okCallback = None,
 				yesCallback = None, noCallback = None):
 		
-		if type == "error":
+		if mt == MESSAGE_ERROR:
 			gtk.MessageDialog.__init__(self, parent, 
 						gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
 						gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, message)
 
-		elif type == "warning":
+		elif mt == MESSAGE_WARNING:
 			gtk.MessageDialog.__init__(self, parent,
 						gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
 						gtk.MESSAGE_WARNING, gtk.BUTTONS_OK, message)
 
-		elif type == "question":
+		elif mt == MESSAGE_QUESTION:
 			gtk.MessageDialog.__init__(self, parent,
 						gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
 						gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
 
-		elif type == "info":
+		elif mt == MESSAGE_INFO:
 			gtk.MessageDialog.__init__(self, parent,
 						gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
 						gtk.MESSAGE_INFO, gtk.BUTTONS_OK, message)

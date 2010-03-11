@@ -182,13 +182,13 @@ class GUI(gtk.Window):
 	# Retweet Stuff ------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def askForRetweet(self, name, yes, no):
-		dialog.MessageDialog(self, "question",
+		dialog.MessageDialog(self, MESSAGE_QUESTION,
 						lang.retweetQuestion,
 						lang.retweetTitle % name,
 						yesCallback = yes, noCallback = no)
 	
 	def showRetweetInfo(self, name):
-		dialog.MessageDialog(self, "info",
+		dialog.MessageDialog(self, MESSAGE_INFO,
 						lang.retweetInfo % name,
 						lang.retweetInfoTitle)
 	
@@ -435,7 +435,7 @@ class GUI(gtk.Window):
  		
  		# Show Warning on url error or error message for anything else 		
  		if code == -1 or code == 500 or code == 502 or code == 503:
- 			dialog.MessageDialog(self, "warning", 
+ 			dialog.MessageDialog(self, MESSAGE_WARNING, 
  									lang.warningURL, lang.warningTitle)
  		
  		else:
@@ -451,12 +451,12 @@ class GUI(gtk.Window):
 	 			502 : lang.errorDown,
 	 			503 : lang.errorOverload
 	 		}[code]
-	 		dialog.MessageDialog(self, "error", description, lang.errorTitle)
+	 		dialog.MessageDialog(self, MESSAGE_ERROR, description, lang.errorTitle)
 	 	
 	 	self.updateStatus()
 	
 	def showWarning(self, limit):
-		dialog.MessageDialog(self, "warning", lang.warningText % limit, 
+		dialog.MessageDialog(self, MESSAGE_WARNING, lang.warningText % limit, 
 								lang.warningTitle)
 	
 	# Helpers ------------------------------------------------------------------

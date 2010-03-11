@@ -43,3 +43,10 @@ HTML_STATE_NONE = 0		# Can be anything
 HTML_STATE_START = 1	# Can be anything
 HTML_STATE_SPLASH = 2	# Can be anything
 HTML_STATE_RENDER = 3	# Can be anything
+
+# Message Dialogs
+MESSAGE_ERROR = 1
+MESSAGE_WARNING = 2
+MESSAGE_QUESTION = 3
+MESSAGE_INFO = 4
+
