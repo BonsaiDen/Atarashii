@@ -45,133 +45,116 @@ class HTML(view.HTMLView):
 	
 	
 	# Render the Timeline ------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def render(self):
-		self.initRender()
+	# --------------------------------------------------------------------------	
+	def renderItem(self, num, item, img):
+		user, text = item.sender, self.formatter.parse(item.text)
 		
-		# Render
-		renderitems = []
-		lastname = ""
-		lastHighlight = False
 		
-		# Do the rendering!
-		for num, obj in enumerate(self.items):
-			item, img = obj
-			self.isNewTimeline(item)
-			user, text = item.sender, self.formatter.parse(item.text)
+		# Spacers ----------------------------------------------------------
+		highlight = item.recipient_screen_name != self.main.username
+		if num > 0:
+			nextHighlight = self.items[num + 1][0].recipient_screen_name != \
+				self.main.username if num < len(self.items) - 1 else False
 			
-			
-			# Spacers ----------------------------------------------------------
-			highlight = item.recipient_screen_name != self.main.username
-			if num > 0:
-				nextHighlight = self.items[num+1][0].recipient_screen_name != \
-					self.main.username if num < len(self.items) - 1 else False
-				
-				renderitems.insert(0, self.insertSpacer(item, lastname, 
-						user, highlight, lastHighlight, False, True, 
+			self.renderitems.insert(0, 
+						self.insertSpacer(item, user, highlight, False, True, 
 						nextHighlight))
-			
-			lastname = user.screen_name
-			lastHighlight = highlight
-			
-			
-			# Avatar -----------------------------------------------------------
-			self.isNewAvatar(num)
-			if (num < len(self.items) - 1 and \
-				(user.screen_name != self.items[num + 1][0].sender.screen_name \
-				or item.recipient_screen_name != \
-				self.items[num + 1][0].recipient_screen_name or self.newAvatar)\
-				) or num == len(self.items) - 1 or self.newTimeline:
-				
-				avatar = '''<a href="http://twitter.com/%s">
-							<img width="32" src="file://%s" title="''' + \
-							lang.htmlInfo + '''"/></a>'''
-				
-				avatar = avatar % (user.screen_name, img, 
-									user.name, 
-									user.followers_count, 
-									user.friends_count, 
-									user.statuses_count)
-			
-			else:
-				avatar = ""
-			
-			
-			# Background -------------------------------------------------------
-			cls = 'oldtweet' if item.id <= self.initID else 'tweet'
-			if item.recipient_screen_name.lower() != self.main.username.lower():
-				mode = lang.messageTo
-				name = item.recipient_screen_name
-				reply = "display: none;"
-			
-			else:
-				mode = lang.messageFrom
-				name = user.screen_name
-				reply = ""
-				cls = "highlightold" if item.id <= self.initID else "highlight"
-			
-			
-			# Protected --------------------------------------------------------
-			if hasattr(user, "protected") and user.protected:
-				locked = ('<span class="protected" title="' + \
-					lang.htmlProtected + '"></span>') % user.screen_name
-			else:
-				locked = ''
-			
-			
-			# HTML Snippet -----------------------------------------------------
-			html = '''
-			<div class="%s">
-			<div class="avatar">
-				%s
-			</div>
-			
-			<div class="actions">
-				<div class="doretweet" style="''' + reply + \
-				'''"><a href="message:%s:%d:%d" title="''' + \
-					(lang.htmlReply % user.screen_name) + '''"></a>
-				</div>
-			</div>
-			
-			<div class="inner-text">
-				<div>
-					<span class="name"><b>''' + mode + \
-					''' <a href="http://twitter.com/%s" title="''' + \
-					lang.htmlProfile + \
-					'''">%s</a></b></span> ''' + locked + ''' %s
-				</div>
-				<div class="time">
-					<a href="http://twitter.com/%s/statuses/%d" title="''' + \
-					(self.absolute_time(item.created_at)) + '''">%s</a>
-				</div>
-			</div>
-			</div>'''
-			
-			# Insert values
-			html = html % (
-					cls, 
-					avatar,
-					
-					# Actions
-					user.screen_name, user.id, num,
-					
-					# Text
-					user.screen_name,
-					user.name.strip(),
-					name,
-					text, 	
-					
-					# Time
-					user.screen_name,
-					item.id,
-					self.relative_time(item.created_at))
-			
-			# Close Newest Container
-			if item.id == self.newestID:
-				html = '</div>' + html
-			
-			renderitems.insert(0, html)
 		
-		# Render
-		self.setHTML(renderitems)
-	
+		self.lastname = user.screen_name
+		self.lastHighlight = highlight
+		
+		
+		# Avatar -----------------------------------------------------------
+		self.isNewAvatar(num)
+		if (num < len(self.items) - 1 and \
+			(user.screen_name != self.items[num + 1][0].sender.screen_name \
+			or item.recipient_screen_name != \
+			self.items[num + 1][0].recipient_screen_name or self.newAvatar)\
+			) or num == len(self.items) - 1 or self.newTimeline:
+			
+			avatar = '''<a href="http://twitter.com/%s">
+						<img width="32" src="file://%s" title="''' + \
+						lang.htmlInfo + '''"/></a>'''
+			
+			avatar = avatar % (user.screen_name, img, 
+								user.name, 
+								user.followers_count, 
+								user.friends_count, 
+								user.statuses_count)
+		
+		else:
+			avatar = ""
+		
+		
+		# Background -------------------------------------------------------
+		cls = 'oldtweet' if item.id <= self.initID else 'tweet'
+		if item.recipient_screen_name.lower() != self.main.username.lower():
+			mode = lang.messageTo
+			name = item.recipient_screen_name
+			reply = "display: none;"
+		
+		else:
+			mode = lang.messageFrom
+			name = user.screen_name
+			reply = ""
+			cls = "highlightold" if item.id <= self.initID else "highlight"
+		
+		
+		# Protected --------------------------------------------------------
+		if hasattr(user, "protected") and user.protected:
+			locked = ('<span class="protected" title="' + \
+				lang.htmlProtected + '"></span>') % user.screen_name
+		else:
+			locked = ''
+		
+		
+		# HTML Snippet -----------------------------------------------------
+		html = '''
+		<div class="%s">
+		<div class="avatar">
+			%s
+		</div>
+		
+		<div class="actions">
+			<div class="doretweet" style="''' + reply + \
+			'''"><a href="message:%s:%d:%d" title="''' + \
+				(lang.htmlReply % user.screen_name) + '''"></a>
+			</div>
+		</div>
+		
+		<div class="inner-text">
+			<div>
+				<span class="name"><b>''' + mode + \
+				''' <a href="http://twitter.com/%s" title="''' + \
+				lang.htmlProfile + \
+				'''">%s</a></b></span> ''' + locked + ''' %s
+			</div>
+			<div class="time">
+				<a href="http://twitter.com/%s/statuses/%d" title="''' + \
+				(self.absolute_time(item.created_at)) + '''">%s</a>
+			</div>
+		</div>
+		</div>'''
+		
+		# Insert values
+		html = html % (
+				cls, 
+				avatar,
+				
+				# Actions
+				user.screen_name, user.id, num,
+				
+				# Text
+				user.screen_name,
+				user.name.strip(),
+				name,
+				text, 	
+				
+				# Time
+				user.screen_name,
+				item.id,
+				self.relative_time(item.created_at))
+		
+		# Return the HTML string
+		return html
+

@@ -142,8 +142,8 @@ class HTMLView(webkit.WebView):
 				</body>""" % self.langEmpty, HTML_STATE_RENDER)
 	
 	
-	def insertSpacer(self, item, lastname, user, highlight, lastHighlight, 
-					mentioned, message = False, next = False):
+	def insertSpacer(self, item, user, highlight, mentioned, message = False, 
+					next = False):
 		
 		# Red spacer that indicates something did fall through
 		spacer = "foo"
@@ -152,13 +152,13 @@ class HTMLView(webkit.WebView):
 		# New Tweets
 		if item.id > self.initID:
 			# Name change
-			if lastname != user.screen_name or self.newTimeline:
+			if self.lastname != user.screen_name or self.newTimeline:
 				spacer = "1" # Dark Gray
 			
 			else:
 				# More @username
 				if highlight:
-					if not lastHighlight:
+					if not self.lastHighlight:
 						spacer = "1" # Dark Gray
 					else:
 						spacer = "4" if message else "6" # Normal/Dark Blue
@@ -169,7 +169,7 @@ class HTMLView(webkit.WebView):
 				
 				# Just more normal tweets
 				else:
-					if next and lastHighlight:
+					if next and self.lastHighlight:
 						spacer = "1" # Dark Gray
 					else:
 						spacer = "6" if message else "4" # Dark/Normal Blue
@@ -177,13 +177,13 @@ class HTMLView(webkit.WebView):
 		# Old Tweets
 		else:	
 			# Name change
-			if lastname != user.screen_name or self.newTimeline:
+			if self.lastname != user.screen_name or self.newTimeline:
 				spacer = "" # Normal Gray
 			
 			else:
 				# More @username
 				if highlight:
-					if not lastHighlight:
+					if not self.lastHighlight:
 						spacer = "" # Normal Gray
 					else:
 						spacer = "2" if message else "7" # White/Light Blue
@@ -194,7 +194,7 @@ class HTMLView(webkit.WebView):
 				
 				# Just more normal tweets
 				else:
-					if next and lastHighlight:
+					if next and self.lastHighlight:
 						spacer = "" # Normal Gray
 					else:
 						spacer = "7" if message else "2" # Light Blue/White		
@@ -363,6 +363,30 @@ class HTMLView(webkit.WebView):
 		self.newest = False
 		self.newestAvatar = False
 		self.newTimline = False
+	
+	
+	# Render the Timeline ------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def render(self):
+		self.initRender()
+		self.lastname = ""
+		self.lastHighlight = False
+
+		# Do the rendering!
+		self.renderitems = []
+		for num, obj in enumerate(self.items):
+			item, img = obj
+			self.isNewTimeline(item)		
+			html = self.renderItem(num, item, img)
+			
+			# Close Newest Container
+			if item.id == self.newestID:
+				html = '</div>' + html
+			
+			self.renderitems.insert(0, html)
+		
+		# Render
+		self.setHTML(self.renderitems)
 	
 	
 	# Helpers ------------------------------------------------------------------
