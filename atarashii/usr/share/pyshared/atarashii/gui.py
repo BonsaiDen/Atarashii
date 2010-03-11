@@ -159,9 +159,13 @@ class GUI(gtk.Window):
 	
 	# Set GUI Mode
 	def setMode(self, mode):
-		self.mode = mode
+		if mode == None:
+			self.mode = MODE_TWEETS
+		else:
+			self.mode = mode
+		
 		if self.mode == MODE_MESSAGES:
-			self.messageButton.set_active(self.mode)
+			self.messageButton.set_active(True)
 		
 		else:
 			self.onMode()
@@ -422,6 +426,10 @@ class GUI(gtk.Window):
  		else:
  			rateError = ""
  		
+ 		# 404's
+ 		if self.main.wasSending and code == 404:
+ 			code = -3
+ 		
  		self.main.wasSending = False
 		self.main.wasRetweeting = False
  		
@@ -432,9 +440,10 @@ class GUI(gtk.Window):
  		
  		else:
 	 		description = {
+	 			-3 : lang.errorUserNotFound,
 	 		    -2 : lang.errorAlreadyRetweeted,
 	 			0 : lang.errorInternal % str(error),
-	 			404 : lang.errorLogin % self.main.username,
+	 			404 : lang.errorLogin % self.main.username, 
 	 			401 : lang.errorLogin % self.main.username,
 	 			403 : rateError,
 	 			400 : rateError,

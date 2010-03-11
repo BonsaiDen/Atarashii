@@ -160,7 +160,8 @@ LANG = {
 		'errorOverload' : 'Twitter ist gerade überlastet.',
 		'errorInternal' : 'Atarashii Fehler: %s',
 		'errorAlreadyRetweeted' : 'Es ist entweder nicht möglich diesen Tweet zu retweeten oder er wurde bereits von ihnen retweeted.',
-	
+		'errorUserNotFound' : 'Der Benutzer "%s" existiert nicht.',
+		
 		# Warning Dialogs
 		'warningTitle' : 'Atarashii - Warnung',
 		'warningText' : 'Twitter hat das Ratelimit auf %d Requests pro Stunde reduziert, das Updateinterval wurde entsprechend angepasst.',
@@ -322,6 +323,7 @@ LANG = {
 		'errorOverload' : 'Twitter is over capacity.',
 		'errorInternal' : 'Atarashii error: %s',
 		'errorAlreadyRetweeted' : 'Either it\'s not possible to retweet this Tweet or you\'ve already retweeted it.',
+		'errorUserNotFound' : 'The user "%s" does not exist.',
 	
 		# Warning Dialogs
 		'warningTitle' : 'Atarashii - Warning',
