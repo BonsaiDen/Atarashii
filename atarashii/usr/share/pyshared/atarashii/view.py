@@ -31,8 +31,9 @@ import time
 import datetime
 import webbrowser
 
-from lang import lang
 import format
+from lang import lang
+from constants import *
 
 
 class HTMLView(webkit.WebView):
@@ -72,16 +73,16 @@ class HTMLView(webkit.WebView):
 		self.position = 0
 		self.offsetCount = 0
 		self.historyLoaded = False
-		self.historyPosition = -1
+		self.historyPosition = HTML_UNSET_ID
 		self.historyCount = 0
 		self.firstLoad = True
-		self.newestID = -1
+		self.newestID = HTML_UNSET_ID
 		self.newitems = False
 		self.loadHistory = False
-		self.loadHistoryID = -1
-		self.loaded = -1
-		self.initID = -1
-		self.lastID = -1
+		self.loadHistoryID = HTML_UNSET_ID
+		self.loaded = HTML_UNSET_ID
+		self.initID = HTML_UNSET_ID
+		self.lastID = HTML_UNSET_ID
 		self.count = 0
 		
 		if splash:
@@ -352,7 +353,7 @@ class HTMLView(webkit.WebView):
 			self.main.settings[setting] = self.items[id][0].id - 1
 			
 		# Newest Stuff
-		if self.newestID == -1:
+		if self.newestID == HTML_UNSET_ID:
 			self.newestID = self.initID
 	
 		# Newest Stuff
@@ -448,7 +449,7 @@ class HTMLView(webkit.WebView):
 		if uri.startswith("more:"):
 			if not self.main.isLoadingHistory:
 				self.loadHistoryID = int(uri.split(":")[1]) - 1
-				if self.loadHistoryID != -1:
+				if self.loadHistoryID != HTML_UNSET_ID:
 					self.main.isLoadingHistory = True
 					self.gui.showProgress()
 					gobject.idle_add(lambda: self.main.gui.updateStatus(True))
@@ -473,7 +474,6 @@ class HTMLView(webkit.WebView):
 			num, tweetid = int(num), long(tweetid)
 			name = self.getUser(num).screen_name
 			def oldRetweet():
-				self.main.retweetNum = num
 				self.main.retweetText = self.unescape(self.getText(num))
 				self.main.retweetUser = name
 				self.main.gui.text.retweet()
@@ -485,15 +485,15 @@ class HTMLView(webkit.WebView):
 			# Which style?
 			rt = self.main.settings["retweets"]
 			if name.lower() == self.main.username.lower():
-				rt = 2
+				rt = RETWEET_OLD
 			
-			if rt == 0:
+			if rt == RETWEET_ASK:
 				self.main.gui.askForRetweet(name, newRetweet, oldRetweet)
 			
-			elif rt == 1:
+			elif rt == RETWEET_NEW:
 				newRetweet()
 			
-			elif rt == 2:
+			elif rt == RETWEET_OLD:
 				oldRetweet()
 		
 		# Regular links

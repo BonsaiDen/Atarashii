@@ -26,6 +26,7 @@ import pango
 import re
 
 from lang import lang
+from constants import *
 
 class TextInput(gtk.TextView):
 	__gsignals__ = {
@@ -79,7 +80,7 @@ class TextInput(gtk.TextView):
 		self.resize()
 		if not self.hasTyped:
 			self.modify_text(gtk.STATE_NORMAL, self.defaultFG)
-			self.get_buffer().set_text("")
+			self.setText(UNSET_TEXT)
 			
 		else:
 			gobject.idle_add(lambda: self.checkLength())
@@ -90,8 +91,9 @@ class TextInput(gtk.TextView):
 			if not self.hasTyped:
 				self.modify_text(gtk.STATE_NORMAL, 
 								self.get_style().text[gtk.STATE_INSENSITIVE])
-				self.get_buffer().set_text(
-					lang.textEntryMessage if self.gui.mode else lang.textEntry)
+				self.setText(
+					lang.textEntryMessage if self.gui.mode == MODE_MESSAGES \
+					else lang.textEntry)
 
 		return False
 	
@@ -108,76 +110,79 @@ class TextInput(gtk.TextView):
 	# --------------------------------------------------------------------------
 	def submit(self, *args):
 		text = self.getText()
-		if len(text) <= 140 and text.strip() != "":
-			if self.gui.mode:
-				if self.main.messageUser != "":
+		if len(text) <= 140 and text.strip() != UNSET_TEXT:
+			if self.gui.mode == MODE_MESSAGES:
+				if self.main.messageUser != UNSET_TEXT:
 					text = text[2:]
 					text = text[len(self.main.messageUser):].strip()
 					self.main.send(text)
 				
-			else:
+			elif self.gui.mode == MODE_TWEETS:
 				self.main.send(text)
+				
+			else: # TODO implement search field submit
+				pass
 		
 	def changed(self, *args):
 		text = self.getText()
 	
 		# Message mode ---------------------------------------------------------
-		if self.gui.mode:
+		if self.gui.mode == MODE_MESSAGES:
 			# Cancel reply mode
 			if len(text) == 0 and not self.isChanging:
-				self.main.messageUser = ""
-				self.main.messageID = -1
-				self.main.messageText = ""
+				self.main.messageUser = UNSET_TEXT
+				self.main.messageID = UNSET_ID_NUM
+				self.main.messageText = UNSET_TEXT
 	
 			# check for @ Reply
 			msg = self.messageRegex.match(text)
 			if msg != None:
-				if self.main.messageID == -1:
+				if self.main.messageID == UNSET_ID_NUM:
 					self.main.messageUser = msg.group(1)
 				else:
 					if msg.group(1) != self.main.messageUser:
-						self.main.messageText = ""
+						self.main.messageText = UNSET_TEXT
 						self.main.messageUser = msg.group(1)
-						self.main.messageID = -1
+						self.main.messageID = UNSET_ID_NUM
 		
-			elif self.main.messageID == -1:
-				self.main.messageUser = ""
+			elif self.main.messageID == UNSET_ID_NUM:
+				self.main.messageUser = UNSET_TEXT
 	
 	
 		# Tweet Mode -----------------------------------------------------------
-		else:
+		elif self.gui.mode == MODE_TWEETS:
 			# Cancel reply mode
-			if text.strip()[0:1] != "@" and not self.isChanging:
-				self.main.replyText = ""
-				self.main.replyUser = ""
-				self.main.replyID = -1
+			if text.strip()[0:1] != "@" and not self.isChanging: # TODO fix unicode @ here
+				self.main.replyText = UNSET_TEXT
+				self.main.replyUser = UNSET_TEXT
+				self.main.replyID = UNSET_ID_NUM
 		
 			# Remove spaces only
-			if text.strip() == "":
-				self.setText("")
-				text = ""
+			if text.strip() == UNSET_TEXT:
+				self.setText(UNSET_TEXT)
+				text = UNSET_TEXT
 		
 			# Cancel all modes
 			if len(text) == 0 and not self.isChanging:
-				self.main.replyText = ""
-				self.main.replyUser = ""
-				self.main.replyID = -1
-				self.main.retweetNum = -1
-				self.main.retweetUser = ""
+				self.main.replyText = UNSET_TEXT
+				self.main.replyUser = UNSET_TEXT
+				self.main.replyID = UNSET_ID_NUM
+				self.main.reweetText = UNSET_TEXT
+				self.main.retweetUser = UNSET_TEXT
 		
 			# check for @ Reply
 			at = self.replyRegex.match(text)
 			if at != None:
-				if self.main.replyID == -1:
+				if self.main.replyID == UNSET_ID_NUM:
 					self.main.replyUser = at.group(1)
 				else:
 					if at.group(1) != self.main.replyUser:
-						self.main.replyText = ""
+						self.main.replyText = UNSET_TEXT
 						self.main.replyUser = at.group(1)
-						self.main.replyID = -1
+						self.main.replyID = UNSET_ID_NUM
 		
-			elif self.main.replyID == -1:
-				self.main.replyUser = ""
+			elif self.main.replyID == UNSET_ID_NUM:
+				self.main.replyUser = UNSET_TEXT
 		
 		# Resize
 		self.resize()	
@@ -220,15 +225,15 @@ class TextInput(gtk.TextView):
 	
 	def checkMode(self):
 		self.hasFocus = False
-		self.main.replyText = ""
-		self.main.replyUser = ""
-		self.main.replyID = -1
-		self.main.retweetNum = -1
-		self.main.retweetUser = ""
-		self.main.messageUser = ""
-		self.main.messageID = -1
-		self.main.messageText = ""
-		self.setText("")
+		self.main.replyText = UNSET_TEXT
+		self.main.replyUser = UNSET_TEXT
+		self.main.replyID = UNSET_ID_NUM
+		self.main.retweetText = UNSET_TEXT
+		self.main.retweetUser = UNSET_TEXT
+		self.main.messageUser = UNSET_TEXT
+		self.main.messageID = UNSET_ID_NUM
+		self.main.messageText = UNSET_TEXT
+		self.setText(UNSET_TEXT)
 	
 	# Reply / Retweet / Message ------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -239,11 +244,10 @@ class TextInput(gtk.TextView):
 		text = self.getText()
 		
 		# Cancel Retweet
-		if self.main.retweetNum > -1 or self.main.retweetText != "":
-			self.main.retweetNum = -1
-			self.main.retweetText = ""
-			self.main.retweetUser = ""
-			text = ""
+		if self.main.retweetText != UNSET_TEXT:
+			self.main.retweetText = UNSET_TEXT
+			self.main.retweetUser = UNSET_TEXT
+			text = UNSET_TEXT
 		
 		# Check for already existing reply
 		if text[0:1] == "@":
@@ -270,8 +274,8 @@ class TextInput(gtk.TextView):
 		self.hasFocus = True
 		
 		# Cancel reply
-		self.main.replyUser = ""
-		self.main.replyID = -1
+		self.main.replyUser = UNSET_TEXT
+		self.main.replyID = UNSET_ID_NUM
 		text = "RT @%s: %s" % (self.main.retweetUser, self.main.retweetText)
 		self.setText(text)
 		
