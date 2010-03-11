@@ -144,10 +144,11 @@ class HTMLView(webkit.WebView):
 		# Red spacer that indicates something did fall through
 		spacer = "foo"
 		
+		
 		# New Tweets
 		if item.id > self.initID:
 			# Name change
-			if lastname != user.screen_name or self.newTimline:
+			if lastname != user.screen_name or self.newTimeline:
 				spacer = "1" # Dark Gray
 			
 			else:
@@ -172,7 +173,7 @@ class HTMLView(webkit.WebView):
 		# Old Tweets
 		else:	
 			# Name change
-			if lastname != user.screen_name or self.newTimline:
+			if lastname != user.screen_name or self.newTimeline:
 				spacer = "" # Normal Gray
 			
 			else:
