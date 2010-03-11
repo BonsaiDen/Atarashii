@@ -58,7 +58,7 @@ try:
 			snd.setDaemon(True)
 			snd.start()
 	
-	canNotify = True		
+	CAN_NOTIFY = True		
 	
 except:
 	class Notifier():
@@ -68,5 +68,5 @@ except:
 		def show(self, objs, sound = False):
 			pass
 			
-	canNotify = False
+	CAN_NOTIFY = False
 
