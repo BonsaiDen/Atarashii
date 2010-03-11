@@ -336,13 +336,18 @@ class SettingsDialog(Dialog):
 			lt = self.main.settings['lasttweet_' + name]
 			fm = self.main.settings['firstmessage_' + name]
 			lm = self.main.settings['lastmessage_' + name]
+			lo = self.main.settings['mode_' + name]
 			
+			del self.main.settings['mode_' + name]
 			del self.main.settings['account_' + name]
 			del self.main.settings['firsttweet_' + name]
 			del self.main.settings['lasttweet_' + name]
 			del self.main.settings['firstmessage_' + name]
 			del self.main.settings['lastmessage_' + name]
+			del self.main.settings['xkey_' + name]
+			del self.main.settings['xsecret_' + name]
 			
+			self.main.settings['mode_' + username] = lo
 			self.main.settings['account_' + username] = ""
 			self.main.settings['firsttweet_' + username] = ft
 			self.main.settings['lasttweet_' + username] = lt
@@ -365,11 +370,14 @@ class SettingsDialog(Dialog):
 	
 	def deleteAccount(self):
 		name = self.userAccounts[self.drop.get_active()]
+		del self.main.settings['mode_' + name]
 		del self.main.settings['account_' + name]
 		del self.main.settings['firsttweet_' + name]
 		del self.main.settings['lasttweet_' + name]
 		del self.main.settings['firstmessage_' + name]
 		del self.main.settings['lastmessage_' + name]
+		del self.main.settings['xkey_' + name]
+		del self.main.settings['xsecret_' + name]
 		if self.main.username == name:
 			self.main.username = self.main.settings['username'] = ""
 			
