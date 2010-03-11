@@ -1,3 +1,13 @@
+atarashii (0.99.5-1) all;
+
+  * New regular expressions for hashtags, usernames and urls based on the 
+    official twitter ones.
+  * Some internal cleanup ragarding the html views.
+  * Fix for hyperspeeded progressbar in some cases.
+  * Yet again lots of small bugfixes by the kittens.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 11 Mar 2010 17:35:00 +0100
+
 atarashii (0.99.4-1) all;
 
   * Users are now able to actually use new style retweets.
