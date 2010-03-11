@@ -16,7 +16,8 @@
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
-import dbus, dbus.service
+import dbus
+import dbus.service
 import sys
 
 if 'org.Atarashii' in dbus.Interface(

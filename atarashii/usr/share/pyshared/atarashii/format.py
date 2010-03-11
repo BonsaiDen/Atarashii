@@ -16,7 +16,8 @@
 
 # Tweet Formatter --------------------------------------------------------------
 # ------------------------------------------------------------------------------
-import re, urllib
+import re
+import urllib
 
 # Some of this code has been translated from the twitter-text-java library:
 # <http://github.com/mzsanford/twitter-text-java>

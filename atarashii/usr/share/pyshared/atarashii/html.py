@@ -16,11 +16,6 @@
 
 # HTML View --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gobject
-
 import view
 
 from lang import lang

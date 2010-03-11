@@ -16,17 +16,11 @@
 
 # Basic HTML View --------------------------------------------------------------
 # ------------------------------------------------------------------------------
-import pygtk
-pygtk.require('2.0')
-import gtk
 import gobject
-
-import calendar
-import urllib
 import webkit
 
+import calendar
 import math
-
 import time
 import datetime
 import webbrowser
