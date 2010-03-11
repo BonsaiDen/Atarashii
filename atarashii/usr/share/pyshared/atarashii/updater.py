@@ -64,9 +64,11 @@ class Updater(threading.Thread):
 	# Init the Updater ---------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def init(self):
+		self.gui = self.main.gui
+		
 		# Init Views
-		self.html = self.main.gui.html
-		self.message = self.main.gui.message
+		self.html = self.gui.html
+		self.message = self.gui.message
 	
 		# Reset
 		self.messageCounter = 0
@@ -109,7 +111,7 @@ class Updater(threading.Thread):
 			
 			# Get a new token!
 			if not tokenOK:
-				gobject.idle_add(lambda: self.main.gui.enterPassword())
+				gobject.idle_add(lambda: self.gui.enterPassword())
 				
 				# Wait for password entry
 				while self.main.apiTempPassword == None:
@@ -142,13 +144,13 @@ class Updater(threading.Thread):
 		self.html.loaded = HTML_LOADING
 		
 		# Lazy loading
-		if self.main.gui.mode == MODE_MESSAGES:
+		if self.gui.mode == MODE_MESSAGES:
 			if not self.getInitMessages():
 				self.message.loaded = HTML_RESET
 				self.html.loaded = HTML_RESET
 				return
 			
-		elif self.main.gui.mode == MODE_TWEETS:
+		elif self.gui.mode == MODE_TWEETS:
 			if not self.getInitTweets():
 				self.message.loaded = HTML_RESET
 				self.html.loaded = HTML_RESET
@@ -160,25 +162,29 @@ class Updater(threading.Thread):
 		# Stuff ----------------------------------------------------------------
 		self.started = True
 		gobject.idle_add(lambda: self.main.onLogin())
-		gobject.idle_add(lambda: self.main.gui.checkRead())
+		gobject.idle_add(lambda: self.gui.checkRead())
 		
 		# Load other stuff
-		if self.main.gui.mode == MODE_TWEETS:
+		if self.gui.mode == MODE_TWEETS:
 			self.getInitMessages()
-			if self.main.gui.mode == MODE_MESSAGES:
-				gobject.idle_add(lambda: self.main.gui.showInput())
-			
-		elif self.main.gui.mode == MODE_MESSAGES:
+			if self.gui.mode == MODE_MESSAGES:
+				gobject.idle_add(lambda: self.gui.showInput())
+			else:
+				gobject.idle_add(lambda: self.gui.checkRefresh())	
+		
+		elif self.gui.mode == MODE_MESSAGES:
 			self.getInitTweets()
-			if self.main.gui.mode == MODE_TWEETS:
-				gobject.idle_add(lambda: self.main.gui.showInput())
+			if self.gui.mode == MODE_TWEETS:
+				gobject.idle_add(lambda: self.gui.showInput())
+			else:
+				gobject.idle_add(lambda: self.gui.checkRefresh())	
 		
 		else: # TODO implement loading of search
 			pass
 		
 		# Init Timer
 		self.main.refreshTime = calendar.timegm(time.gmtime())		
-		gobject.idle_add(lambda: self.main.gui.checkRead())
+		gobject.idle_add(lambda: self.gui.checkRead())
 	
 	
 	# Load initial tweets ------------------------------------------------------
@@ -267,14 +273,14 @@ class Updater(threading.Thread):
 			self.main.isUpdating = True
 			self.update()
 			gobject.idle_add(
-						lambda: self.main.gui.refreshButton.set_sensitive(True))
+						lambda: self.gui.refreshButton.set_sensitive(True))
 			
-			gobject.idle_add(lambda: self.main.gui.checkRead())
+			gobject.idle_add(lambda: self.gui.checkRead())
 			self.main.refreshTime = calendar.timegm(time.gmtime())
 			self.refreshMessages = False
 			self.refreshNow = False
 			self.main.isUpdating = False
-			gobject.idle_add(lambda: self.main.gui.updateStatus(True))
+			gobject.idle_add(lambda: self.gui.updateStatus(True))
 	
 	
 	def update(self):
@@ -283,10 +289,11 @@ class Updater(threading.Thread):
 		if not self.refreshMessages:
 			try:
 				updates = self.tryGetUpdates(self.html.lastID)
-		
+			
 			# Something went wrong...
 			except Exception, error:
-				gobject.idle_add(lambda: self.main.gui.showError(error))
+				gobject.idle_add(lambda: self.html.render())
+				gobject.idle_add(lambda: self.gui.showError(error))
 				self.main.refreshTimeout = 60
 				self.main.refreshTime = calendar.timegm(time.gmtime())
 				return
@@ -304,7 +311,8 @@ class Updater(threading.Thread):
 
 			# Something went wrong...
 			except Exception, error:
-				gobject.idle_add(lambda: self.main.gui.showError(error))
+				gobject.idle_add(lambda: self.message.render())	
+				gobject.idle_add(lambda: self.gui.showError(error))
 				return
 			
 			if len(messages) > 0:
@@ -390,7 +398,7 @@ class Updater(threading.Thread):
 		except Exception, error:
 			self.html.loadHistoryID = HTML_UNSET_ID
 			self.main.isLoadingHistory = False
-			gobject.idle_add(lambda: self.main.gui.showError(error))
+			gobject.idle_add(lambda: self.gui.showError(error))
 			return
 		
 		# Loaded
@@ -406,10 +414,10 @@ class Updater(threading.Thread):
 			self.html.loadHistory = True
 			self.html.historyLoaded = True
 			self.html.historyCount += len(updates)
-			self.main.gui.historyButton.set_sensitive(True)
+			self.gui.historyButton.set_sensitive(True)
 		
 		gobject.idle_add(lambda: self.html.pushUpdates())
-		gobject.idle_add(lambda: self.main.gui.showInput())
+		gobject.idle_add(lambda: self.gui.showInput())
 	
 	# Load Message History -----------------------------------------------------
 	def loadHistoryMessage(self):
@@ -422,7 +430,7 @@ class Updater(threading.Thread):
 		except Exception, error:
 			self.message.loadHistoryID = HTML_UNSET_ID
 			self.main.isLoadingHistory = False
-			gobject.idle_add(lambda: self.main.gui.showError(error))
+			gobject.idle_add(lambda: self.gui.showError(error))
 			return
 		
 		# Loaded
@@ -438,16 +446,16 @@ class Updater(threading.Thread):
 			self.message.loadHistory = True
 			self.message.historyLoaded = True
 			self.message.historyCount += len(messages)
-			self.main.gui.historyButton.set_sensitive(True)
+			self.gui.historyButton.set_sensitive(True)
 		
 		gobject.idle_add(lambda: self.message.pushUpdates())
-		gobject.idle_add(lambda: self.main.gui.showInput())
+		gobject.idle_add(lambda: self.gui.showInput())
 	
 	
 	# Main Function that fetches the updates -----------------------------------
 	# --------------------------------------------------------------------------
 	def getUpdates(self, sinceID = 0, maxID = None, maxCount = 200):
-		gobject.idle_add(lambda: self.main.gui.updateStatus(True))
+		gobject.idle_add(lambda: self.gui.updateStatus(True))
 		updates = []
 		mentions = []
 	
@@ -615,7 +623,7 @@ class Updater(threading.Thread):
 		if count < 350:
 			if not self.main.rateWarningShown:
 				self.main.rateWarningShown= True
-				gobject.idle_add(lambda: self.main.gui.showWarning(count))
+				gobject.idle_add(lambda: self.gui.showWarning(count))
 		
 		else:
 			self.main.rateWarningShown = False
