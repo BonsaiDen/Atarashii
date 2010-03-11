@@ -53,7 +53,7 @@ class Send(threading.Thread):
 				
 				# Insert temporary tweet
 				imgfile = self.main.updater.getImage(update)
-				self.main.gui.html.updateList.append((update, imgfile, False))
+				self.main.gui.html.updateList.append((update, imgfile))
 				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
 				
 				# Reset
@@ -81,7 +81,7 @@ class Send(threading.Thread):
 				
 				# Insert temporary tweet
 				imgfile = self.main.updater.getImage(update)
-				self.main.gui.html.updateList.append((update, imgfile, False))
+				self.main.gui.html.updateList.append((update, imgfile))
 				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
 
 				# Reset
@@ -114,7 +114,7 @@ class Send(threading.Thread):
 			
 			# Insert temporary message
 			imgfile = self.main.updater.getImage(message, True)
-			self.main.gui.message.updateList.append((message, imgfile, False))
+			self.main.gui.message.updateList.append((message, imgfile))
 			gobject.idle_add(lambda: self.main.gui.message.pushUpdates())
 			
 			# Reset
