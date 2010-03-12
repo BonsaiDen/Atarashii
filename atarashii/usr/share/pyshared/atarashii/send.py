@@ -27,124 +27,119 @@ from constants import *
 class Send(threading.Thread):
 	def __init__(self, main, mode, text):
 		threading.Thread.__init__(self)
+		self.gui = main.gui
 		self.main = main
 		self.mode = mode
 		self.text = text
-
+	
+	
+	# Do a send ----------------------------------------------------------------
 	def run(self):
 		self.main.wasSending = True
-		if self.mode == MODE_TWEETS:
-			self.sendTweet(self.text)
+		try:
+			if self.mode == MODE_TWEETS:
+				self.sendTweet(self.text)
 		
-		elif self.mode == MODE_MESSAGES:
-			self.sendMessage(self.text)
+			elif self.mode == MODE_MESSAGES:
+				self.sendMessage(self.text)
+		
+			else: # TODO implement search
+				pass
+			
+			# Reset GUI
+			gobject.idle_add(self.resetGUI)
+		
+		# Show Error Message
+		except Exception, error:
+			print error
+			gobject.idle_add(lambda: self.gui.showError(error))
+	
 		
 		self.main.isSending = False
-
-
+	
+	
+	# Reset GUI ----------------------------------------------------------------
+	def resetGUI(self):
+		# Reply
+		self.main.replyUser = UNSET_TEXT
+		self.main.replyText = UNSET_TEXT
+		self.main.replyID = UNSET_ID_NUM
+		
+		# Retweets
+		self.main.retweetUser = UNSET_TEXT	
+		self.main.retweetText = UNSET_TEXT
+		
+		# Message
+		self.main.messageUser = UNSET_TEXT
+		self.main.messageID = UNSET_ID_NUM
+		self.main.messageText = UNSET_TEXT
+		
+		# Reset Input
+		self.gui.text.setText(UNSET_TEXT)
+		self.gui.showInput(False)
+		if self.gui.mode == MODE_MESSAGES:
+			self.gui.message.grab_focus()
+		
+		elif self.gui.mode == MODE_TWEETS:
+			self.gui.html.grab_focus()	
+		
+		else: # TODO implement search
+			pass
+		
+		self.main.wasSending = False
+	
+		
 	# Send a Tweet -------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def sendTweet(self, text):
 		if self.main.replyID != UNSET_ID_NUM:
-			try:
-				# Send Tweet
-				update = self.main.api.update_status(text, 
-									in_reply_to_status_id = self.main.replyID)
-				self.main.updater.setLastTweet(update.id)
-				self.main.gui.readButton.set_sensitive(True)
-				
-				# Insert temporary tweet
-				imgfile = self.main.updater.getImage(update)
-				self.main.gui.html.updateList.append((update, imgfile))
-				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
-				
-				# Reset
-				self.main.replyUser = UNSET_TEXT
-				self.main.replyText = UNSET_TEXT
-				self.main.replyID = UNSET_ID_NUM
-				self.main.gui.text.setText(UNSET_TEXT)
-				
-				# Focus HTML
-				self.main.gui.showInput(False)
-				self.main.gui.html.grab_focus()
-				self.main.wasSending = False
+			# Send Tweet
+			update = self.main.api.update_status(text, 
+								in_reply_to_status_id = self.main.replyID)
+			self.main.updater.setLastTweet(update.id)
 			
-			except Exception, error:
-				print error
-				gobject.idle_add(lambda: self.main.gui.showError(error))
+			# Insert temporary tweet
+			imgfile = self.main.updater.getImage(update)
+			self.gui.html.updateList.append((update, imgfile))
+			gobject.idle_add(lambda: self.gui.html.pushUpdates())
 		
 		# Normal Tweet / Retweet
 		else:
-			try:
-				# Send Tweet
-				update = self.main.api.update_status(text)
-				self.main.updater.setLastTweet(update.id)
-				self.main.gui.readButton.set_sensitive(True)
-				
-				# Insert temporary tweet
-				imgfile = self.main.updater.getImage(update)
-				self.main.gui.html.updateList.append((update, imgfile))
-				gobject.idle_add(lambda: self.main.gui.html.pushUpdates())
-
-				# Reset
-				self.main.replyUser = UNSET_TEXT
-				self.main.replyText = UNSET_TEXT
-				self.main.replyID = UNSET_ID_NUM
-				self.main.retweetUser = UNSET_TEXT	
-				self.main.retweetText = UNSET_TEXT
-				self.main.gui.text.setText(UNSET_TEXT)
-				
-				# Focus HTML
-				self.main.gui.showInput(False)
-				self.main.gui.html.grab_focus()
-				self.main.wasSending = False
+			# Send Tweet
+			update = self.main.api.update_status(text)
+			self.main.updater.setLastTweet(update.id)
 			
-			except Exception, error:
-	 			print error
-				gobject.idle_add(lambda: self.main.gui.showError(error))				
+			# Insert temporary tweet
+			imgfile = self.main.updater.getImage(update)
+			self.gui.html.updateList.append((update, imgfile))
+			gobject.idle_add(lambda: self.gui.html.pushUpdates())
 	
 	
 	# Send a Direct Message ----------------------------------------------------
 	# --------------------------------------------------------------------------
 	def sendMessage(self, text):
-		try:
-			# Send Message
-			if self.main.messageID != UNSET_ID_NUM:
-				message = self.main.api.send_direct_message(text = text, 
-											user_id = self.main.messageID)
-			else:
-				message = self.main.api.send_direct_message(text = text, 
-											screen_name = self.main.messageUser)
-			
-			self.main.updater.setLastMessage(message.id)
-			self.main.gui.readButton.set_sensitive(True)
-			
-			# Insert temporary message
-			imgfile = self.main.updater.getImage(message, True)
-			self.main.gui.message.updateList.append((message, imgfile))
-			gobject.idle_add(lambda: self.main.gui.message.pushUpdates())
-			
-			# Reset
-			self.main.messageUser = UNSET_TEXT
-			self.main.messageID = UNSET_ID_NUM
-			self.main.messageText = UNSET_TEXT
-			self.main.gui.text.setText(UNSET_TEXT)
-			
-			# Focus HTML
-			self.main.gui.showInput(False)
-			self.main.gui.message.grab_focus()
-			self.main.wasSending = False
+		# Send Message
+		if self.main.messageID != UNSET_ID_NUM:
+			message = self.main.api.send_direct_message(text = text, 
+										user_id = self.main.messageID)
+		else:
+			message = self.main.api.send_direct_message(text = text, 
+										screen_name = self.main.messageUser)
 		
-		except Exception, error:
-			print error
-			gobject.idle_add(lambda: self.main.gui.showError(error))
-	
+		self.main.updater.setLastMessage(message.id)
+		
+		# Insert temporary message
+		imgfile = self.main.updater.getImage(message, True)
+		self.gui.message.updateList.append((message, imgfile))
+		gobject.idle_add(lambda: self.gui.message.pushUpdates())
+
 
 # New style Retweets -----------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Retweet(threading.Thread):
 	def __init__(self, main, name, tweetid):
 		threading.Thread.__init__(self)
+		self.gui = main.gui
 		self.main = main
 		self.name = name
 		self.tweetid = tweetid
@@ -153,19 +148,26 @@ class Retweet(threading.Thread):
 		self.main.wasSending = True
 		self.main.wasRetweeting = True
 		try:
-			# Send Tweet
+			# Retweet
 			self.main.api.retweet(self.tweetid)
 
 			# Focus HTML
-			self.main.gui.showInput(False)
-			self.main.gui.html.grab_focus()
+			self.gui.showInput(False)
+			if self.gui.mode == MODE_MESSAGES:
+				self.gui.message.grab_focus()
+		
+			elif self.gui.mode == MODE_TWEETS:
+				self.gui.html.grab_focus()	
+			
+			else: # TODO implement search
+				pass
+			
 			self.main.wasSending = False
-			gobject.idle_add(lambda: self.main.gui.showRetweetInfo(self.name))
+			gobject.idle_add(lambda: self.gui.showRetweetInfo(self.name))
 		
 		except Exception, error:
 			print error
-			gobject.idle_add(lambda: self.main.gui.showError(error))	
+			gobject.idle_add(lambda: self.gui.showError(error))	
 		
 		self.main.isSending = False
-
-
+	
