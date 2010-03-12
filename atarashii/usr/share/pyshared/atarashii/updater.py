@@ -106,7 +106,7 @@ class Updater(threading.Thread):
 					auth.get_username()
 					tokenOK = True
 				
-				except:
+				except tweepy.TweepError, error:
 					self.settings[keyName] = ""
 					self.settings[secretName] = ""
 			
@@ -132,7 +132,7 @@ class Updater(threading.Thread):
 					self.main.apiTempPassword = None
 					return
 		
-		except Exception, error:
+		except tweepy.TweepError, error:
 			self.main.apiTempPassword = None
 			gobject.idle_add(lambda: self.main.onLoginFailed(error))
 			return False
@@ -160,7 +160,7 @@ class Updater(threading.Thread):
 		else: # TODO implement loading of search
 			pass
 		
-		# Stuff ----------------------------------------------------------------
+		# Init the GUI
 		self.started = True
 		gobject.idle_add(lambda: self.main.onLogin())
 		gobject.idle_add(lambda: self.gui.checkRead())
@@ -194,7 +194,7 @@ class Updater(threading.Thread):
 		try:
 			updates = self.tryGetUpdates(self.main.getFirstID())
 		
-		except Exception, error:
+		except tweepy.TweepError, error:
 			gobject.idle_add(lambda: self.main.onLoginFailed(error))
 			return False
 	
@@ -221,7 +221,7 @@ class Updater(threading.Thread):
 		try:
 			messages = self.tryGetMessages(self.main.getFirstMessageID())
 		
-		except Exception, error:
+		except tweepy.TweepError, error:
 			gobject.idle_add(lambda: self.main.onLoginFailed(error))
 			return False
 		
@@ -292,7 +292,7 @@ class Updater(threading.Thread):
 				updates = self.tryGetUpdates(self.html.lastID)
 			
 			# Something went wrong...
-			except Exception, error:
+			except tweepy.TweepError, error:
 				gobject.idle_add(lambda: self.html.render())
 				gobject.idle_add(lambda: self.gui.showError(error))
 				self.main.refreshTimeout = 60
@@ -311,7 +311,7 @@ class Updater(threading.Thread):
 				messages = self.tryGetMessages(self.message.lastID)
 
 			# Something went wrong...
-			except Exception, error:
+			except tweepy.TweepError, error:
 				gobject.idle_add(lambda: self.message.render())	
 				gobject.idle_add(lambda: self.gui.showError(error))
 				return
@@ -387,74 +387,23 @@ class Updater(threading.Thread):
 			self.notify.show(tweetList, self.settings.isTrue("sound"))
 	
 	
-	# Load History -------------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def loadHistory(self):
-		updates = []
-		try:
-			updates = self.tryGetUpdates(maxID = self.html.loadHistoryID, 
-										maxCount = self.main.loadTweetCount)
-		
-		# Something went wrong...
-		except Exception, error:
-			self.html.loadHistoryID = HTML_UNSET_ID
-			self.main.isLoadingHistory = False
-			gobject.idle_add(lambda: self.gui.showError(error))
-			return
-		
-		# Loaded
-		self.main.maxTweetCount += len(updates)
-		for i in updates:
-			imgfile = self.getImage(i)
-			self.html.historyList.append((i, imgfile))
-		
-		self.html.loadHistoryID = HTML_UNSET_ID
-		self.main.isLoadingHistory = False
-		
-		if len(updates) > 0:
-			self.html.loadHistory = True
-			self.html.historyLoaded = True
-			self.html.historyCount += len(updates)
-			self.gui.historyButton.set_sensitive(True)
-		
-		gobject.idle_add(lambda: self.html.pushUpdates())
-		gobject.idle_add(lambda: self.gui.showInput())
-	
-	# Load Message History -----------------------------------------------------
-	def loadHistoryMessage(self):
-		messages = []
-		try:
-			messages = self.tryGetMessages(maxID = self.message.loadHistoryID, 
-										maxCount = self.main.loadMessageCount)
-		
-		# Something went wrong...
-		except Exception, error:
-			self.message.loadHistoryID = HTML_UNSET_ID
-			self.main.isLoadingHistory = False
-			gobject.idle_add(lambda: self.gui.showError(error))
-			return
-		
-		# Loaded
-		self.main.maxMessageCount += len(messages)
-		for i in messages:
-			imgfile = self.getImage(i, True)
-			self.message.historyList.append((i, imgfile))
-		
-		self.message.loadHistoryID = HTML_UNSET_ID
-		self.main.isLoadingHistory = False
-		
-		if len(messages) > 0:
-			self.message.loadHistory = True
-			self.message.historyLoaded = True
-			self.message.historyCount += len(messages)
-			self.gui.historyButton.set_sensitive(True)
-		
-		gobject.idle_add(lambda: self.message.pushUpdates())
-		gobject.idle_add(lambda: self.gui.showInput())
-	
-	
 	# Main Function that fetches the updates -----------------------------------
 	# --------------------------------------------------------------------------
+	def tryGetUpdates(self, sinceID = 0, maxID = None, maxCount = 200):
+		count = 0
+		while True:
+			count += 1
+			try:
+				# Try to get the updates and then break
+				return self.getUpdates(sinceID = sinceID, maxID = maxID, 
+								maxCount = maxCount)
+			
+			# Something went wrong, either try it again or break with the error
+			except tweepy.TweepError, error:
+				if count == 2:
+					raise error
+	
+	
 	def getUpdates(self, sinceID = 0, maxID = None, maxCount = 200):
 		gobject.idle_add(lambda: self.gui.updateStatus(True))
 		updates = []
@@ -483,7 +432,7 @@ class Updater(threading.Thread):
 				mentions = self.api.mentions(
 								since_id = updates[len(updates) - 1].id,
 								count = 200)
-				
+		
 		# Sort and Stuff
 		for i in mentions:
 			i.is_mentioned = True
@@ -492,8 +441,6 @@ class Updater(threading.Thread):
 		
 		# Ratelimit
 		self.updateLimit()
-		
-		# Return
 		updates = updates + mentions
 		if len(mentions) > 0:
 			return self.processUpdates(updates)
@@ -501,24 +448,56 @@ class Updater(threading.Thread):
 		else:
 			return updates
 	
-	# Try to get updates X times and then fail
-	def tryGetUpdates(self, sinceID = 0, maxID = None, maxCount = 200):
+	
+	def loadHistory(self):
+		updates = []
+		try:
+			updates = self.tryGetUpdates(maxID = self.html.loadHistoryID, 
+										maxCount = self.main.loadTweetCount)
+		
+		# Something went wrong...
+		except tweepy.TweepError, error:
+			self.html.loadHistoryID = HTML_UNSET_ID
+			self.main.isLoadingHistory = False
+			gobject.idle_add(lambda: self.gui.showError(error))
+			return
+		
+		# Loaded
+		self.main.maxTweetCount += len(updates)
+		for i in updates:
+			imgfile = self.getImage(i)
+			self.html.historyList.append((i, imgfile))
+		
+		self.html.loadHistoryID = HTML_UNSET_ID
+		self.main.isLoadingHistory = False
+		
+		if len(updates) > 0:
+			self.html.loadHistory = True
+			self.html.historyLoaded = True
+			self.html.historyCount += len(updates)
+			self.gui.historyButton.set_sensitive(True)
+		
+		gobject.idle_add(lambda: self.html.pushUpdates())
+		gobject.idle_add(lambda: self.gui.showInput())
+	
+	
+	# Main Function that fetches the messages ----------------------------------
+	# --------------------------------------------------------------------------
+	def tryGetMessages(self, sinceID = 0, maxID = None, maxCount = 200):
 		count = 0
 		while True:
 			count += 1
 			try:
 				# Try to get the updates and then break
-				return self.getUpdates(sinceID = sinceID, maxID = maxID, 
+				return self.getMessages(sinceID = sinceID, maxID = maxID, 
 								maxCount = maxCount)
 			
 			# Something went wrong, either try it again or break with the error
-			except Exception, error:
+			except tweepy.TweepError, error:
 				if count == 2:
 					raise error
 	
 	
-	# Main Function that fetches the messages ----------------------------------
-	# --------------------------------------------------------------------------
 	def getMessages(self, sinceID = 0, maxID = None, maxCount = 200):
 		messages = []
 	
@@ -547,24 +526,39 @@ class Updater(threading.Thread):
 		
 		# Ratelimit
 		self.updateLimit()
-		
-		# Return
 		return self.processUpdates(messages)
 	
-	# Try to get messages X times and then fail
-	def tryGetMessages(self, sinceID = 0, maxID = None, maxCount = 200):
-		count = 0
-		while True:
-			count += 1
-			try:
-				# Try to get the updates and then break
-				return self.getMessages(sinceID = sinceID, maxID = maxID, 
-								maxCount = maxCount)
-			
-			# Something went wrong, either try it again or break with the error
-			except Exception, error:
-				if count == 2:
-					raise error
+	
+	def loadHistoryMessage(self):
+		messages = []
+		try:
+			messages = self.tryGetMessages(maxID = self.message.loadHistoryID, 
+										maxCount = self.main.loadMessageCount)
+		
+		# Something went wrong...
+		except tweepy.TweepError, error:
+			self.message.loadHistoryID = HTML_UNSET_ID
+			self.main.isLoadingHistory = False
+			gobject.idle_add(lambda: self.gui.showError(error))
+			return
+		
+		# Loaded
+		self.main.maxMessageCount += len(messages)
+		for i in messages:
+			imgfile = self.getImage(i, True)
+			self.message.historyList.append((i, imgfile))
+		
+		self.message.loadHistoryID = HTML_UNSET_ID
+		self.main.isLoadingHistory = False
+		
+		if len(messages) > 0:
+			self.message.loadHistory = True
+			self.message.historyLoaded = True
+			self.message.historyCount += len(messages)
+			self.gui.historyButton.set_sensitive(True)
+		
+		gobject.idle_add(lambda: self.message.pushUpdates())
+		gobject.idle_add(lambda: self.gui.showInput())
 	
 	
 	# Helpers ------------------------------------------------------------------
@@ -575,12 +569,14 @@ class Updater(threading.Thread):
 		if len(self.html.items) > 0:
 			self.html.newestID = self.html.items[len(self.html.items) - 1][0].id
 	
+	
 	def setLastMessage(self, itemID):
 		self.message.lastID = itemID
 		self.settings['lastmessage_' + self.main.username] = itemID
 		if len(self.message.items) > 0:
 			self.message.newestID = self.message.items[
 											len(self.message.items) - 1][0].id
+	
 	
 	def processUpdates(self, updates):
 		def compare(x, y):
@@ -604,7 +600,7 @@ class Updater(threading.Thread):
 		updates.sort(compare)
 		return updates
 	
-	# Update the refreshTimeout
+	
 	def updateLimit(self):
 		ratelimit = self.api.oauth_rate_limit_status()
 		if ratelimit == None:
@@ -629,7 +625,7 @@ class Updater(threading.Thread):
 		else:
 			self.main.rateWarningShown = False
 	
-	# Cache a user avatar	
+	
 	def getImage(self, item, message = False):#url, userid):
 		if message:
 			url = item.sender.profile_image_url
@@ -653,4 +649,4 @@ class Updater(threading.Thread):
 			urllib.urlretrieve(url, imgfile)
 		
 		return imgfile		
-		
+	
