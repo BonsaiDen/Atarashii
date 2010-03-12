@@ -120,7 +120,7 @@ a, a:hover, a:active {
 .mentionedold {
 	padding-left: 6px;
 	padding-right: 2px;		
-	background-color: #ffffc8;
+	background-color: #ffffbd;
 }
 
 
@@ -273,7 +273,7 @@ a, a:hover, a:active {
 }
 
 .spacer5 {
-	border-bottom: 2px solid #ffffab; /*#ffffc8;*/
+	border-bottom: 2px solid #ffffab;
 }
 
 .spacer6 {
@@ -285,7 +285,7 @@ a, a:hover, a:active {
 }
 
 .spacer8 {
-	border-bottom: 2px solid #ffffc8;
+	border-bottom: 2px solid #ffffbd;
 }
 
 a {
