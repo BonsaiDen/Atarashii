@@ -47,13 +47,11 @@ class GUI(gtk.Window):
 		self.set_size_request(280, 400)
 		self.set_icon_from_file(main.getImage())
 		
-		
 		# Load Components
 		gt = gtk.Builder()
 		gt.add_from_file(main.getResource("main.glade"))
 		frame = gt.get_object("frame")
 		self.add(frame)
-		
 		
 		# Link Components
 		self.refreshButton = gt.get_object("refresh")
@@ -157,43 +155,8 @@ class GUI(gtk.Window):
 		# Show
 		self.showInput()
 	
-	# Set GUI Mode
-	def setMode(self, mode):
-		if mode == None:
-			self.mode = MODE_TWEETS
-		else:
-			self.mode = mode
-		
-		if self.mode == MODE_MESSAGES:
-			self.messageButton.set_active(True)
-		
-		else:
-			self.onMode()
 	
-	
-	# Enter as Password --------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def enterPassword(self):
-		self.main.apiTempPassword = None
-		dialog.PasswordDialog(self, lang.passwordTitle, 
-								lang.passwordQuestion % self.main.username)
-	
-	
-	# Retweet Stuff ------------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def askForRetweet(self, name, yes, no):
-		dialog.MessageDialog(self, MESSAGE_QUESTION,
-						lang.retweetQuestion,
-						lang.retweetTitle % name,
-						yesCallback = yes, noCallback = no)
-	
-	def showRetweetInfo(self, name):
-		dialog.MessageDialog(self, MESSAGE_INFO,
-						lang.retweetInfo % name,
-						lang.retweetInfoTitle)
-	
-	
-	# Main Functions -----------------------------------------------------------
+	# GUI Switchers ------------------------------------------------------------
 	# --------------------------------------------------------------------------
 	def showInput(self, resize = True):
 		self.progress.hide()
@@ -207,12 +170,6 @@ class GUI(gtk.Window):
 		self.checkRefresh()
 		self.messageButton.set_sensitive(True)
 		
-	def checkRefresh(self):
-		if not self.main.isUpdating:
-			self.refreshButton.set_sensitive(
-								self.message.loaded == HTML_LOADED and \
-								self.html.loaded == HTML_LOADED)
-	
 	def showProgress(self):
 		def progressActivity():
 			self.progress.pulse()
@@ -221,7 +178,7 @@ class GUI(gtk.Window):
 				(self.mode == MODE_MESSAGES and \
 				self.message.loaded == HTML_LOADING) or \
 				(self.mode == MODE_TWEETS and self.html.loaded == HTML_LOADING)
-	
+		
 		self.progress.set_fraction(0.0)
 		self.progress.show()
 		self.infoLabel.hide()
@@ -238,7 +195,9 @@ class GUI(gtk.Window):
 		self.historyButton.set_sensitive(False)
 		self.messageButton.set_sensitive(False)
 	
-	# Update Statusbar
+	
+	# Statusbar ----------------------------------------------------------------
+	# --------------------------------------------------------------------------
 	def updateStatus(self, once = False):
 		if self.text.hasTyped:
 			pass
@@ -317,17 +276,6 @@ class GUI(gtk.Window):
 		self.status.pop(0)
 		self.status.push(0, status)	
 	
-	def checkRead(self):
-		if self.mode == MODE_MESSAGES:
-			self.readButton.set_sensitive(
-									self.message.lastID > self.message.initID)
-			
-		elif self.mode == MODE_TWEETS:
-			self.readButton.set_sensitive(self.html.lastID > self.html.initID)
-			
-		else:
-			self.readButton.set_sensitive(False)
-	
 	
 	# Info Label ---------------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -383,6 +331,79 @@ class GUI(gtk.Window):
 		
 		else:
 			self.infoLabel.set_markup(text)
+	
+	
+	# Helpers ------------------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def getHeight(self, widget):
+		size = widget.get_allocation()
+		return size[3] - size[0]
+	
+	def setTitle(self):
+		if self.main.username == UNSET_TEXT:
+			self.set_title(lang.title)
+			
+		elif self.mode == MODE_MESSAGES:
+			if self.html.count > 0:
+				self.set_title((lang.titleTweets if self.html.count > 1 else \
+								lang.titleTweet) % self.html.count)
+			else:
+				self.set_title(lang.titleLoggedIn % self.main.username)
+			
+		elif self.mode == MODE_TWEETS:
+			if self.message.count > 0:
+				self.set_title((lang.titleMessages if self.html.count > 1 else \
+								lang.titleMessage) % self.message.count)
+			else:
+				self.set_title(lang.titleLoggedIn % self.main.username)
+	
+	def checkRefresh(self):
+		if not self.main.isUpdating:
+			self.refreshButton.set_sensitive(
+								self.message.loaded == HTML_LOADED and \
+								self.html.loaded == HTML_LOADED)
+	
+	def checkRead(self):
+		if self.mode == MODE_MESSAGES:
+			self.readButton.set_sensitive(
+									self.message.lastID > self.message.initID)
+			
+		elif self.mode == MODE_TWEETS:
+			self.readButton.set_sensitive(self.html.lastID > self.html.initID)
+			
+		else:
+			self.readButton.set_sensitive(False)
+	
+	def setMode(self, mode):
+		if mode == None:
+			self.mode = MODE_TWEETS
+		else:
+			self.mode = mode
+		
+		if self.mode == MODE_MESSAGES:
+			self.messageButton.set_active(True)
+		
+		else:
+			self.onMode()
+	
+	
+	# Message Dialogs ----------------------------------------------------------
+	# --------------------------------------------------------------------------
+	def enterPassword(self):
+		self.main.apiTempPassword = None
+		dialog.PasswordDialog(self, lang.passwordTitle, 
+								lang.passwordQuestion % self.main.username)
+	
+	def askForRetweet(self, name, yes, no):
+		dialog.MessageDialog(self, MESSAGE_QUESTION,
+						lang.retweetQuestion,
+						lang.retweetTitle % name,
+						yesCallback = yes, noCallback = no)
+	
+	def showRetweetInfo(self, name):
+		dialog.MessageDialog(self, MESSAGE_INFO,
+						lang.retweetInfo % name,
+						lang.retweetInfoTitle)
 	
 	
 	# Error & Warning ----------------------------------------------------------
@@ -474,29 +495,6 @@ class GUI(gtk.Window):
 		dialog.MessageDialog(self, MESSAGE_WARNING, lang.warningText % limit, 
 								lang.warningTitle)
 	
-	# Helpers ------------------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def getHeight(self, widget):
-		size = widget.get_allocation()
-		return size[3] - size[0]
-	
-	def setTitle(self):
-		if self.main.username == UNSET_TEXT:
-			self.set_title(lang.title)
-			
-		elif self.mode == MODE_MESSAGES:
-			if self.html.count > 0:
-				self.set_title((lang.titleTweets if self.html.count > 1 else \
-								lang.titleTweet) % self.html.count)
-			else:
-				self.set_title(lang.titleLoggedIn % self.main.username)
-			
-		elif self.mode == MODE_TWEETS:
-			if self.message.count > 0:
-				self.set_title((lang.titleMessages if self.html.count > 1 else \
-								lang.titleMessage) % self.message.count)
-			else:
-				self.set_title(lang.titleLoggedIn % self.main.username)
 	
 	# Handlers -----------------------------------------------------------------
 	# --------------------------------------------------------------------------
@@ -636,23 +634,4 @@ class GUI(gtk.Window):
 	def drawEvent(self, *args):
 		self.disconnect(self.initEvent)
 		gobject.idle_add(lambda: self.main.onInit())
-	
-	# Show and Stuff -----------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def forceFocus(self):
-		self.grab_focus()
-		self.present()
-		return not self.is_active()
-	
-	def onScreen(self):
-		screen = self.get_screen()
-		size = self.size_request()
-		position = self.get_position()
-		if position[0] < 0 - size[0] or position[0] > screen.get_width() \
-			or position[1] < 0 - size[1] or position[1] > screen.get_height():
-			return False
-			
-		else:
-			return True
-
 	
