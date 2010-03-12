@@ -38,6 +38,7 @@ class HTML(view.HTMLView):
 		
 		self.firstSetting = 'firsttweet_'
 	
+	
 	# Helpers for new style Retweets -------------------------------------------
 	# --------------------------------------------------------------------------
 	def getUser(self, num):
@@ -152,6 +153,7 @@ class HTML(view.HTMLView):
 		if hasattr(user, "protected") and user.protected:
 			locked = ('<span class="protected" title="' + \
 				lang.htmlProtected + '"></span>') % user.screen_name
+			
 		else:
 			locked = ''
 		
