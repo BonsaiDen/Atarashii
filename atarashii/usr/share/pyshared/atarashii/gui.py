@@ -168,6 +168,7 @@ class GUI(gtk.Window):
 		
 		self.text.set_sensitive(True)
 		self.checkRefresh()
+		self.checkRead()
 		self.messageButton.set_sensitive(True)
 		
 	def showProgress(self):
@@ -362,6 +363,8 @@ class GUI(gtk.Window):
 			self.refreshButton.set_sensitive(
 								self.message.loaded == HTML_LOADED and \
 								self.html.loaded == HTML_LOADED)
+								
+			self.updateStatus()
 	
 	def checkRead(self):
 		if self.mode == MODE_MESSAGES:
