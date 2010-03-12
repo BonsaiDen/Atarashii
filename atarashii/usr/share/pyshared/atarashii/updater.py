@@ -75,6 +75,7 @@ class Updater(threading.Thread):
 		self.doInit = False
 		self.started = False
 		self.refreshNow = False
+		self.main.refreshTime = UNSET_TIMEOUT
 		self.main.refreshTimeout = UNSET_TIMEOUT
 		self.html.loadHistoryID = HTML_UNSET_ID
 		self.message.loadHistoryID = HTML_UNSET_ID
