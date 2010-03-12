@@ -589,14 +589,16 @@ class Updater(threading.Thread):
 			else:
 				return 0
 	
-		# Remove double mentions
-		for i in range(0, len(updates)):
-			if updates[i] != None:
-				for e in range(i + 1, len(updates)):
-					if updates[e] != None and updates[i].id == updates[e].id:
-						updates[e] = None
+		# Remove doubled mentions
+		ids = []
+		def unique(i):
+			if i.id in ids:
+				return False
+			else:
+				ids.append(i.id)
+				return True
 		
-		updates = [i for i in updates if i != None]
+		updates = filter(unique, updates)
 		updates.sort(compare)
 		return updates
 	
@@ -630,15 +632,16 @@ class Updater(threading.Thread):
 		if message:
 			url = item.sender.profile_image_url
 			userid = item.sender.id
+		
 		else:
 			if hasattr(item, "retweeted_status"):
 				url = item.retweeted_status.user.profile_image_url
 				userid = item.retweeted_status.user.id	
+			
 			else:
 				url = item.user.profile_image_url
 				userid = item.user.id
-	
-	
+		
 		image = url[url.rfind('/')+1:]
 		imgdir = os.path.join(self.path, ".atarashii")
 		if not os.path.exists(imgdir):
