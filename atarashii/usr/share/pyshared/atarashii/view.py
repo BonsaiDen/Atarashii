@@ -154,19 +154,28 @@ class HTMLView(webkit.WebView):
 				if highlight:
 					if not self.lastHighlight:
 						spacer = "1" # Dark Gray
+					
 					else:
-						spacer = "4" if message else "6" # Normal/Dark Blue
+						spacer = "6" # Normal/Dark Blue
 				
 				# More mentions
 				elif mentioned:
-					spacer = "5" # Yellow
+					if not self.lastMentioned:
+						spacer = "1" # Dark Gray
+					
+					else:
+						spacer = "5" # Yellow
 				
 				# Just more normal tweets
 				else:
 					if next and self.lastHighlight:
 						spacer = "1" # Dark Gray
+						
+					elif next and self.lastMentioned:
+						spacer = "1" # Normal Gray
+						
 					else:
-						spacer = "6" if message else "4" # Dark/Normal Blue
+						spacer = "4" # Dark/Normal Blue
 		
 		# Old Tweets
 		else:	
@@ -179,19 +188,28 @@ class HTMLView(webkit.WebView):
 				if highlight:
 					if not self.lastHighlight:
 						spacer = "" # Normal Gray
+					
 					else:
-						spacer = "2" if message else "7" # White/Light Blue
+						spacer = "7" # White/Light Blue
 				
 				# More mentions
 				elif mentioned:
-					spacer = "5" # Yellow
+					if not self.lastMentioned:
+						spacer = "" # Dark Gray
+					
+					else:
+						spacer = "8" # Yellow
 				
 				# Just more normal tweets
 				else:
 					if next and self.lastHighlight:
 						spacer = "" # Normal Gray
+						
+					elif next and self.lastMentioned:
+						spacer = "" # Normal Gray
+
 					else:
-						spacer = "7" if message else "2" # Light Blue/White		
+						spacer = "2" # Light Blue/White		
 		
 		return '<div class="spacer%s"></div>' % spacer
 	
@@ -355,6 +373,7 @@ class HTMLView(webkit.WebView):
 		self.initRender()
 		self.lastname = ""
 		self.lastHighlight = False
+		self.lastMentioned = False
 
 		# Do the rendering!
 		self.renderitems = []

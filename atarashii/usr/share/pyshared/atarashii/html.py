@@ -91,6 +91,7 @@ class HTML(view.HTMLView):
 		
 		self.lastname = user.screen_name
 		self.lastHighlight = highlight
+		self.lastMentioned = mentioned
 		
 		# Is this tweet a reply?
 		if tweet.in_reply_to_screen_name and tweet.in_reply_to_status_id:
@@ -125,7 +126,7 @@ class HTML(view.HTMLView):
 		
 		# Background -------------------------------------------------------
 		if mentioned:
-			clas = 'mentioned'
+			clas = "mentionedold" if item.id <= self.initID else "mentioned"
 		
 		elif item.id <= self.initID:
 			clas = 'highlightold' if highlight else 'oldtweet'
