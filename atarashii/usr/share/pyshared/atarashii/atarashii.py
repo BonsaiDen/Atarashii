@@ -32,7 +32,6 @@ import sys
 gtk.gdk.threads_init()
 gtk.gdk.threads_enter()
 
-
 import send
 import gui
 import settings
@@ -40,6 +39,7 @@ import updater
 
 from lang import lang
 from constants import *
+
 
 class Atarashii:
 	def __init__(self, version, debug = None):

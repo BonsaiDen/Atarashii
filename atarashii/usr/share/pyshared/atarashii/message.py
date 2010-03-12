@@ -63,8 +63,8 @@ class HTML(view.HTMLView):
 		self.isNewAvatar(num)
 		if (num < len(self.items) - 1 and \
 			(user.screen_name != self.items[num + 1][0].sender.screen_name \
-			or item.recipient_screen_name != \
-			self.items[num + 1][0].recipient_screen_name or self.newAvatar)\
+				or item.recipient_screen_name != \
+				self.items[num + 1][0].recipient_screen_name or self.newAvatar)\
 			) or num == len(self.items) - 1 or self.newTimeline:
 			
 			avatar = '''<a href="http://twitter.com/%s">
@@ -88,7 +88,7 @@ class HTML(view.HTMLView):
 			name = item.recipient_screen_name
 			reply = "display: none;"
 			cls = "mentionedold" if item.id <= self.initID else "mentioned"
-						
+		
 		else:
 			mode = lang.messageFrom
 			name = user.screen_name
@@ -99,6 +99,7 @@ class HTML(view.HTMLView):
 		if hasattr(user, "protected") and user.protected:
 			locked = ('<span class="protected" title="' + \
 				lang.htmlProtected + '"></span>') % user.screen_name
+		
 		else:
 			locked = ''
 		

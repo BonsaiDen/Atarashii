@@ -32,5 +32,4 @@ def start():
 def debug(path):
 	from atarashii import Atarashii
 	Atarashii(__version__, path).start()
-	
 
