@@ -46,17 +46,17 @@ class HTML(view.HTMLView):
 		
 		
 		# Spacers ----------------------------------------------------------
-		highlight = item.recipient_screen_name != self.main.username
+		mentioned = item.recipient_screen_name != self.main.username
 		if num > 0:
 			nextHighlight = self.items[num + 1][0].recipient_screen_name != \
 				self.main.username if num < len(self.items) - 1 else False
 			
 			self.renderitems.insert(0, 
-						self.insertSpacer(item, user, highlight, False, True, 
+						self.insertSpacer(item, user, False, mentioned, True, 
 						nextHighlight))
 		
+		self.lastMentioned = mentioned
 		self.lastname = user.screen_name
-		self.lastHighlight = highlight
 		
 		
 		# Avatar -----------------------------------------------------------
@@ -87,12 +87,12 @@ class HTML(view.HTMLView):
 			mode = lang.messageTo
 			name = item.recipient_screen_name
 			reply = "display: none;"
-		
+			cls = "mentionedold" if item.id <= self.initID else "mentioned"
+						
 		else:
 			mode = lang.messageFrom
 			name = user.screen_name
 			reply = ""
-			cls = "highlightold" if item.id <= self.initID else "highlight"
 		
 		
 		# Protected --------------------------------------------------------
