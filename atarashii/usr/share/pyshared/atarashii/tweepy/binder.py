@@ -162,8 +162,12 @@ def bind_api(**config):
                 raise TweepError(error_msg, resp)
 
             # Save rate limit information if we are using OAuth
+            # Since this differs from the un-authenticated rate limit
+            # OAuth currently has a limit of 350 request per hour
+            # When using OAuth the normal API will most likely always return 150
+            # unless you're using some method that doesn't requie authentication
             if resp.getheader('x-ratelimit-class') != None:
-                self.api.rate_limit = {
+                self.api.oauth_rate_limit = {
                     'limit' : int(resp.getheader('x-ratelimit-limit')),
                     'remaining' : int(resp.getheader('x-ratelimit-remaining')),
                     'reset' : long(resp.getheader('x-ratelimit-reset'))
