@@ -117,6 +117,12 @@ a, a:hover, a:active {
 	background-color: #ffffab;
 }
 
+.mentionedold {
+	padding-left: 6px;
+	padding-right: 2px;		
+	background-color: #ffffc8;
+}
+
 
 /* Tweet Information -------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
@@ -267,7 +273,7 @@ a, a:hover, a:active {
 }
 
 .spacer5 {
-	border-bottom: 2px solid #ffffc8;
+	border-bottom: 2px solid #ffffab; /*#ffffc8;*/
 }
 
 .spacer6 {
@@ -276,6 +282,10 @@ a, a:hover, a:active {
 
 .spacer7 {
 	border-bottom: 2px solid #e4e9ed;
+}
+
+.spacer8 {
+	border-bottom: 2px solid #ffffc8;
 }
 
 a {
