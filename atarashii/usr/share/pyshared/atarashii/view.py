@@ -298,29 +298,19 @@ class HTMLView(webkit.WebView):
 		self.render()
 	
 	# Add items to the internal List
-	def add(self, tweet, append = False):		
-		itemid = tweet[0].id
-		found = False
-		
-		# Check for ID
-		# When a sent tweet gets temporarily inserted this prevents it from 
-		# popping up twice after the next refresh
-		for i in self.items:
-			if i[0].id == itemid:
-				found = True
-				break
-		
-		if not found:
-			# History entries
+	def add(self, item, append = False):		
+		# Don't add items with the same ID twice
+		if not item[0].id in [i[0].id for i in self.items]:
 			if append:
-				self.items.insert(0, tweet)
+				self.items.insert(0, item)
 
 			else:
-				self.items.append(tweet)
+				self.items.append(item)
 			
 			self.newitems = True
 			if len(self.items) > self.main.maxTweetCount:
 				self.items.pop(0)
+	
 	
 	def compare(self, x, y):
 		if x[0].id > y[0].id:
