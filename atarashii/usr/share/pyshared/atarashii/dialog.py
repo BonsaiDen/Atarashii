@@ -22,8 +22,8 @@ import gtk
 import gobject
 
 from lang import lang
-from notify import CAN_NOTIFY
-from constants import *
+from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \
+                      MESSAGE_INFO, RETWEET_ASK, RETWEET_OLD, RETWEET_NEW
 
 class Dialog:
     resource = ""
@@ -125,8 +125,8 @@ class AboutDialog(Dialog):
         # License toggling
         info = self.get("infobox")
         text = self.get("textwindow")
-        license = self.get("license")
-        license.set_label(lang.aboutLicenseButton)
+        licenseButton = self.get("license")
+        licenseButton.set_label(lang.aboutLicenseButton)
         
         def toggle(widget, *args):
             if widget.get_property("active"):
@@ -138,7 +138,7 @@ class AboutDialog(Dialog):
                 text.hide()
         
         text.hide()
-        license.connect("toggled", toggle)
+        licenseButton.connect("toggled", toggle)
         
     def onClose(self, *args):
         self.__class__.instance = None
@@ -235,13 +235,13 @@ class SettingsDialog(Dialog):
         # Notification Setting
         notify.set_active(self.settings.isTrue("notify"))
         sound.set_active(self.settings.isTrue("sound"))
-        notify.set_sensitive(CAN_NOTIFY)
+        notify.set_sensitive(True)
         
         def toggle2():
             fileWidget.set_sensitive(sound.get_active())
         
         def toggle():
-            sound.set_sensitive(notify.get_active() and CAN_NOTIFY)
+            sound.set_sensitive(notify.get_active())
             fileWidget.set_sensitive(notify.get_active() and sound.get_active())
         
         toggle()
@@ -258,13 +258,13 @@ class SettingsDialog(Dialog):
         newRT.set_label(lang.settingsRetweetsNew)
         oldRT.set_label(lang.settingsRetweetsOld)
         rt = self.settings['retweets']
-        if rt == 0:
+        if rt == RETWEET_ASK:
             askRT.set_active(True)
         
-        elif rt == 1:
+        elif rt == RETWEET_NEW:
             newRT.set_active(True)
         
-        elif rt == 2:
+        elif rt == RETWEET_OLD:
             oldRT.set_active(True)
         
         
@@ -277,13 +277,13 @@ class SettingsDialog(Dialog):
             self.settings['sound'] = sound.get_active()
             
             if askRT.get_active():
-                rt = 0
+                rt = RETWEET_ASK
                 
             elif newRT.get_active():
-                rt = 1
+                rt = RETWEET_NEW
                 
             elif oldRT.get_active():
-                rt = 2    
+                rt = RETWEET_OLD   
             
             self.settings['retweets'] = rt
             
