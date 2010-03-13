@@ -70,6 +70,7 @@ class Atarashii:
 		self.maxTweetCount = 200
 		self.loadMessageCount = 20
 		self.maxMessageCount = 200
+
 		
 		# Timer
 		self.refreshTime = UNSET_TIMEOUT
@@ -244,7 +245,7 @@ class Atarashii:
 	def reconnect(self):
 		ratelimit = self.api.oauth_rate_limit_status()
 		if ratelimit != None:
-			minutes = math.ceil((ratelimit['reset'] - \
+			minutes = math.ceil((ratelimit['reset_time_in_seconds'] - \
 						calendar.timegm(time.gmtime())) / 60.0)
 		else:
 			minutes = 5
