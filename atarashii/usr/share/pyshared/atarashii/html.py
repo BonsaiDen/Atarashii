@@ -22,200 +22,200 @@ from lang import lang
 
 
 class HTML(view.HTMLView):
-	def __init__(self, main, gui):
-		self.main = main
-		self.gui = gui
-		view.HTMLView.__init__(self, main, gui, self.gui.htmlScroll)
-		self.getLatest = self.main.getLatestID
-		self.itemCount = self.main.loadTweetCount
-		
-		self.getItemCount = self.main.getTweetCount
-		self.setItemCount = self.main.setTweetCount
-		
-		self.langLoading = lang.htmlLoading
-		self.langEmpty = lang.htmlEmpty
-		self.langLoad = lang.htmlLoadMore
-		
-		self.firstSetting = 'firsttweet_'
-	
-	
-	# Helpers for new style Retweets -------------------------------------------
-	# --------------------------------------------------------------------------
-	def getUser(self, num):
-		item = self.items[num][0]
-		if hasattr(item, "retweeted_status"):
-			return item.retweeted_status.user
-			
-		else:
-			return item.user
-	
-	def getText(self, num):
-		item = self.items[num][0]
-		if hasattr(item, "retweeted_status"):
-			return item.retweeted_status.text
-		
-		else:
-			return item.text
-	
-	
-	# Render the Timeline ------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def renderItem(self, num, item, img):
-		# Check for new style retweet
-		retweeted = False
-		retweet = ""
-		if hasattr(item, "retweeted_status"):
-			tweet = item.retweeted_status
-			retweeted = True
-			
-			# Retweet Info
-			retweet = '<a href="http://twitter.com/%s" title="''' + \
-					(self.relative_time(item.created_at)) + '">' + \
-					lang.htmlInRetweet + '</a>'
-			retweet = retweet % (item.user.screen_name, 
-									item.user.screen_name)
-		
-		else:
-			tweet = item
-		
-		# Get User and Text
-		user, text = tweet.user, self.formatter.parse(tweet.text)
-		
-		
-		# Spacers ----------------------------------------------------------
-		highlight = self.main.username.lower() in \
-						[i.lower() for i in self.formatter.users]
-		mentioned = hasattr(tweet, "is_mentioned") and tweet.is_mentioned
-		if num > 0:
-			self.renderitems.insert(0,
-						self.insertSpacer(item, user, highlight, mentioned))
-		
-		self.lastname = user.screen_name
-		self.lastHighlight = highlight
-		self.lastMentioned = mentioned
-		
-		# Is this tweet a reply?
-		if tweet.in_reply_to_screen_name and tweet.in_reply_to_status_id:
-			reply = '<a href="http://twitter.com/%s/statuses/%d">' + \
-					lang.htmlInReply + '</a>'
-			reply = reply % (tweet.in_reply_to_screen_name, 
-							tweet.in_reply_to_status_id,
-							tweet.in_reply_to_screen_name)
-		else:
-			reply = ""
-		
-		
-		# Avatar -----------------------------------------------------------
-		self.isNewAvatar(num)	
-		if (num < len(self.items) - 1 and \
-			(user.screen_name != self.getUser(num + 1).screen_name or \
-			self.newAvatar) \
-			) or num == len(self.items) - 1 or self.newTimeline:
-			
-			avatar = '''<a href="http://twitter.com/%s">
-						<img width="32" src="file://%s" title="''' + \
-						lang.htmlInfo + '''"/></a>'''
-			
-			avatar = avatar % (user.screen_name, img, 
-								user.name, user.followers_count,
-								user.friends_count,
-								user.statuses_count)
-		
-		else:
-			avatar = ""
-		
-		
-		# Background -------------------------------------------------------
-		if mentioned:
-			clas = "mentionedold" if item.id <= self.initID else "mentioned"
-		
-		elif item.id <= self.initID:
-			clas = 'highlightold' if highlight else 'oldtweet'
-		
-		else:
-			clas = 'highlight' if highlight else 'tweet'
-		
-		
-		# Source -----------------------------------------------------------
-		if tweet.source != "web":
-			if hasattr(tweet, "source_url") and tweet.source_url != "":
-				by = lang.htmlBy % ('<a href="%s" title="%s">%s</a>' % \
-						(tweet.source_url, tweet.source_url, tweet.source))
-			
-			else:
-				by =  lang.htmlBy % tweet.source
-		
-		else:
-			by = ""
-		
-		
-		# Protected --------------------------------------------------------
-		if hasattr(user, "protected") and user.protected:
-			locked = ('<span class="protected" title="' + \
-				lang.htmlProtected + '"></span>') % user.screen_name
-			
-		else:
-			locked = ''
-		
-		
-		# HTML Snippet -----------------------------------------------------
-		html = '''
-		<div class="%s">
-		<div class="avatar">
-			%s
-		</div>
-		
-		<div class="actions">
-			<div class="doreply">
-				<a href="reply:%s:%d:%d" title="''' + \
-				(lang.htmlReply % user.screen_name) + '''"> </a>
-			</div>
-			<div class="doretweet">
-				<a href="retweet:%d:%d" title="''' + \
-				(lang.htmlRetweet % user.screen_name) + '''"> </a>
-			</div>
-		</div>
-		
-		<div class="inner-text">
-			<div><span class="name">''' + \
-				("<b>RT</b>" if retweeted else "") + '''
-				<a href="http://twitter.com/%s" title="''' + \
-				lang.htmlProfile + '''">
-					<b>%s</b>
-				</a></span> ''' + locked + ''' %s
-			</div>
-			<div class="time">
-				<a href="http://twitter.com/%s/statuses/%d" title="''' + \
-				(self.absolute_time(tweet.created_at)) + '''">%s</a>
-				''' + by + '''
-			</div>
-			<div class="reply">%s</div>
-			<div class="reply">%s</div>
-		</div>
-		<div class="clearfloat"></div>
-		</div>'''	
-		
-		# Insert values
-		html = html % (
-				clas, 
-				avatar,
-				
-				# Actions
-				user.screen_name, tweet.id, num, 
-				num, tweet.id,		
-				
-				# Text
-				user.screen_name, 
-				user.name.strip(), 
-				user.screen_name, 
-				text, 	
-				
-				# Time
-				user.screen_name,
-				tweet.id,
-				self.relative_time(tweet.created_at),
-				reply, retweet)
-		
-		# Return the HTML string
-		return html
+    def __init__(self, main, gui):
+        self.main = main
+        self.gui = gui
+        view.HTMLView.__init__(self, main, gui, self.gui.htmlScroll)
+        self.getLatest = self.main.getLatestID
+        self.itemCount = self.main.loadTweetCount
+        
+        self.getItemCount = self.main.getTweetCount
+        self.setItemCount = self.main.setTweetCount
+        
+        self.langLoading = lang.htmlLoading
+        self.langEmpty = lang.htmlEmpty
+        self.langLoad = lang.htmlLoadMore
+        
+        self.firstSetting = 'firsttweet_'
+    
+    
+    # Helpers for new style Retweets -------------------------------------------
+    # --------------------------------------------------------------------------
+    def getUser(self, num):
+        item = self.items[num][0]
+        if hasattr(item, "retweeted_status"):
+            return item.retweeted_status.user
+            
+        else:
+            return item.user
+    
+    def getText(self, num):
+        item = self.items[num][0]
+        if hasattr(item, "retweeted_status"):
+            return item.retweeted_status.text
+        
+        else:
+            return item.text
+    
+    
+    # Render the Timeline ------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def renderItem(self, num, item, img):
+        # Check for new style retweet
+        retweeted = False
+        retweet = ""
+        if hasattr(item, "retweeted_status"):
+            tweet = item.retweeted_status
+            retweeted = True
+            
+            # Retweet Info
+            retweet = '<a href="http://twitter.com/%s" title="''' + \
+                    (self.relative_time(item.created_at)) + '">' + \
+                    lang.htmlInRetweet + '</a>'
+            retweet = retweet % (item.user.screen_name, 
+                                    item.user.screen_name)
+        
+        else:
+            tweet = item
+        
+        # Get User and Text
+        user, text = tweet.user, self.formatter.parse(tweet.text)
+        
+        
+        # Spacers ----------------------------------------------------------
+        highlight = self.main.username.lower() in \
+                        [i.lower() for i in self.formatter.users]
+        mentioned = hasattr(tweet, "is_mentioned") and tweet.is_mentioned
+        if num > 0:
+            self.renderitems.insert(0,
+                        self.insertSpacer(item, user, highlight, mentioned))
+        
+        self.lastname = user.screen_name
+        self.lastHighlight = highlight
+        self.lastMentioned = mentioned
+        
+        # Is this tweet a reply?
+        if tweet.in_reply_to_screen_name and tweet.in_reply_to_status_id:
+            reply = '<a href="http://twitter.com/%s/statuses/%d">' + \
+                    lang.htmlInReply + '</a>'
+            reply = reply % (tweet.in_reply_to_screen_name, 
+                            tweet.in_reply_to_status_id,
+                            tweet.in_reply_to_screen_name)
+        else:
+            reply = ""
+        
+        
+        # Avatar -----------------------------------------------------------
+        self.isNewAvatar(num)    
+        if (num < len(self.items) - 1 and \
+            (user.screen_name != self.getUser(num + 1).screen_name or \
+            self.newAvatar) \
+            ) or num == len(self.items) - 1 or self.newTimeline:
+            
+            avatar = '''<a href="http://twitter.com/%s">
+                        <img width="32" src="file://%s" title="''' + \
+                        lang.htmlInfo + '''"/></a>'''
+            
+            avatar = avatar % (user.screen_name, img, 
+                                user.name, user.followers_count,
+                                user.friends_count,
+                                user.statuses_count)
+        
+        else:
+            avatar = ""
+        
+        
+        # Background -------------------------------------------------------
+        if mentioned:
+            clas = "mentionedold" if item.id <= self.initID else "mentioned"
+        
+        elif item.id <= self.initID:
+            clas = 'highlightold' if highlight else 'oldtweet'
+        
+        else:
+            clas = 'highlight' if highlight else 'tweet'
+        
+        
+        # Source -----------------------------------------------------------
+        if tweet.source != "web":
+            if hasattr(tweet, "source_url") and tweet.source_url != "":
+                by = lang.htmlBy % ('<a href="%s" title="%s">%s</a>' % \
+                        (tweet.source_url, tweet.source_url, tweet.source))
+            
+            else:
+                by =  lang.htmlBy % tweet.source
+        
+        else:
+            by = ""
+        
+        
+        # Protected --------------------------------------------------------
+        if hasattr(user, "protected") and user.protected:
+            locked = ('<span class="protected" title="' + \
+                lang.htmlProtected + '"></span>') % user.screen_name
+            
+        else:
+            locked = ''
+        
+        
+        # HTML Snippet -----------------------------------------------------
+        html = '''
+        <div class="%s">
+        <div class="avatar">
+            %s
+        </div>
+        
+        <div class="actions">
+            <div class="doreply">
+                <a href="reply:%s:%d:%d" title="''' + \
+                (lang.htmlReply % user.screen_name) + '''"> </a>
+            </div>
+            <div class="doretweet">
+                <a href="retweet:%d:%d" title="''' + \
+                (lang.htmlRetweet % user.screen_name) + '''"> </a>
+            </div>
+        </div>
+        
+        <div class="inner-text">
+            <div><span class="name">''' + \
+                ("<b>RT</b>" if retweeted else "") + '''
+                <a href="http://twitter.com/%s" title="''' + \
+                lang.htmlProfile + '''">
+                    <b>%s</b>
+                </a></span> ''' + locked + ''' %s
+            </div>
+            <div class="time">
+                <a href="http://twitter.com/%s/statuses/%d" title="''' + \
+                (self.absolute_time(tweet.created_at)) + '''">%s</a>
+                ''' + by + '''
+            </div>
+            <div class="reply">%s</div>
+            <div class="reply">%s</div>
+        </div>
+        <div class="clearfloat"></div>
+        </div>'''    
+        
+        # Insert values
+        html = html % (
+                clas, 
+                avatar,
+                
+                # Actions
+                user.screen_name, tweet.id, num, 
+                num, tweet.id,        
+                
+                # Text
+                user.screen_name, 
+                user.name.strip(), 
+                user.screen_name, 
+                text,     
+                
+                # Time
+                user.screen_name,
+                tweet.id,
+                self.relative_time(tweet.created_at),
+                reply, retweet)
+        
+        # Return the HTML string
+        return html
 
