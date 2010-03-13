@@ -44,8 +44,11 @@ class TextInput(gtk.TextView):
         self.hasTyped = False
         self.isChanging = False
         self.changeContents = False
-        self.replyRegex = re.compile('@([^\s]+)\s.*')
-        self.messageRegex = re.compile('d ([^\s]+)\s.*')
+        self.replyRegex = re.compile(ur"\B[@\uFF20]([a-z0-9_]{1,20})\s.*",
+                                     re.UNICODE | re.IGNORECASE)
+        
+        self.messageRegex = re.compile('d ([a-z0-9_]{1,20})\s.*',
+                                       re.UNICODE | re.IGNORECASE)
         
         self.messageLength = 0
         self.goSendMessage = None
@@ -170,12 +173,12 @@ class TextInput(gtk.TextView):
                 self.main.replyText = UNSET_TEXT
                 self.main.replyUser = UNSET_TEXT
                 self.main.replyID = UNSET_ID_NUM
-        
+            
             # Remove spaces only
             if text.strip() == UNSET_TEXT:
                 self.setText(UNSET_TEXT)
                 text = UNSET_TEXT
-        
+            
             # Cancel all modes
             if len(text) == 0 and not self.isChanging:
                 self.main.replyText = UNSET_TEXT
@@ -183,7 +186,7 @@ class TextInput(gtk.TextView):
                 self.main.replyID = UNSET_ID_NUM
                 self.main.reweetText = UNSET_TEXT
                 self.main.retweetUser = UNSET_TEXT
-        
+            
             # check for @ Reply
             at = self.replyRegex.match(text)
             if at != None:
@@ -195,10 +198,10 @@ class TextInput(gtk.TextView):
                         self.main.replyText = UNSET_TEXT
                         self.main.replyUser = at.group(1)
                         self.main.replyID = UNSET_ID_NUM
-        
+            
             elif self.main.replyID == UNSET_ID_NUM:
                 self.main.replyUser = UNSET_TEXT
-        
+            
             # check for "d user" and switch to messaging
             msg = self.messageRegex.match(text)
             if msg != None:
