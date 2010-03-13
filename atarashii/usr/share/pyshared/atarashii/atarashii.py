@@ -38,7 +38,8 @@ import settings
 import updater
 
 from lang import lang
-from constants import *
+from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, RETWEET_ASK, \
+                      MODE_TWEETS, MODE_MESSAGES, HTML_UNSET_ID
 
 
 class Atarashii:
@@ -165,7 +166,7 @@ class Atarashii:
 
         # Wait until the last update is complete
         while self.isUpdating:
-             time.sleep(0.1)
+            time.sleep(0.1)
         
         # Switch User
         if changeUser != None:
@@ -329,7 +330,7 @@ class Atarashii:
         return self.maxMessageCount
 
 
-     # Start & Quit -------------------------------------------------------------
+    # Start & Quit -------------------------------------------------------------
     # --------------------------------------------------------------------------
     def start(self):
         gtk.main()
