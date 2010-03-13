@@ -8,7 +8,7 @@ import time
 import re
 
 from tweepy.error import TweepError
-from tweepy.utils import convert_to_utf8_str
+from tweepy.utils import convert_to_utf8_str, convert_to_timestamp
 
 re_path_template = re.compile('{\w+}')
 
@@ -161,17 +161,19 @@ def bind_api(**config):
                     error_msg = "Twitter error response: status code = %s" % resp.status
                 raise TweepError(error_msg, resp)
 
-            # Save rate limit information if we are using OAuth
-            # Since this differs from the un-authenticated rate limit
-            # OAuth currently has a limit of 350 request per hour
-            # When using OAuth the normal API will most likely always return 150
-            # unless you're using some method that doesn't requie authentication
+            # Save rate limit to the api instance in order to speed up access to
+            # the information
             if resp.getheader('x-ratelimit-class') != None:
-                self.api.oauth_rate_limit = {
-                    'limit' : int(resp.getheader('x-ratelimit-limit')),
-                    'remaining' : int(resp.getheader('x-ratelimit-remaining')),
-                    'reset' : long(resp.getheader('x-ratelimit-reset'))
+                reset = long(resp.getheader('x-ratelimit-reset'))
+                self.api.last_rate_limit_status = {
+                    'hourly_limit' : int(resp.getheader('x-ratelimit-limit')),
+                    'remaining_hits' : int(resp.getheader('x-ratelimit-remaining')),
+                    'reset_time_in_seconds' : reset,
+                    'reset_time' : convert_to_timestamp(reset)
                 }
+            
+            else:
+                self.api.last_rate_limit_status = None
 
             # Parse the response payload
             result = self.api.parser.parse(self, resp.read())

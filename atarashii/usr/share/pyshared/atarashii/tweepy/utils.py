@@ -77,6 +77,12 @@ def convert_to_utf8_str(arg):
     return arg
 
 
+def convert_to_timestamp(secs):
+    locale.setlocale(locale.LC_TIME, 'C')
+    date = time.strftime('%a %b %d %H:%M:%S +0000 %Y', time.gmtime(secs))
+    locale.setlocale(locale.LC_TIME, '')
+    return date
+
 
 def import_simplejson():
     try:

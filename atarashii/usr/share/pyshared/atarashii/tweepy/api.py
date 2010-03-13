@@ -28,7 +28,7 @@ class API(object):
         self.retry_count = retry_count
         self.retry_delay = retry_delay
         self.retry_errors = retry_errors
-        self.oauth_rate_limit = None
+        self.last_rate_limit_status = None
         self.parser = parser or ModelParser()
 
     """ statuses/public_timeline """
@@ -262,14 +262,17 @@ class API(object):
             return False
 
     """ account/rate_limit_status """
-    rate_limit_status = bind_api(
-        path = '/account/rate_limit_status.json',
-        payload_type = 'json'
-    )
-
-    """ access OAuth rate limit information"""
-    def oauth_rate_limit_status(self):
-    	return self.oauth_rate_limit
+    def rate_limit_status(self, force_request = False):
+    	if self.last_rate_limit_status == None or force_request:
+            try:
+        		self.last_rate_limit_status = bind_api(
+                    path = '/account/rate_limit_status.json',
+                    payload_type = 'json'
+                )(self)
+            except TweepError:
+                self.last_rate_limit_status = None
+        
+        return self.last_rate_limit_status
 
     """ account/update_delivery_device """
     set_delivery_device = bind_api(
