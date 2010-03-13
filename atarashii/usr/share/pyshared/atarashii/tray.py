@@ -9,7 +9,7 @@
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #  GNU General Public License for more details.
-# 
+#
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
@@ -31,70 +31,72 @@ class TrayIcon(gtk.StatusIcon):
         # Create Tray Icon
         gtk.StatusIcon.__init__(self)
         
-        self.set_from_file(gui.main.getImage())
+        self.set_from_file(gui.main.get_image())
         self.set_tooltip("Atarashii")
         self.set_visible(True)
-        self.connect("activate", self.onActivate)
+        self.connect("activate", self.on_activate)
         
         # Create Tray Menu
         menu = gtk.Menu()
         
         # Refresh
-        menuItem = gtk.ImageMenuItem(gtk.STOCK_REFRESH)
-        menuItem.set_label(lang.menuUpdate)
-        menuItem.connect('activate', self.gui.onRefresh, self)    
-        menu.append(menuItem)
+        menu_item = gtk.ImageMenuItem(gtk.STOCK_REFRESH)
+        menu_item.set_label(lang.menuUpdate)
+        menu_item.connect('activate', self.gui.on_refresh, self)
+        menu.append(menu_item)
         
         # Settings
-        menuItem = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
-        menuItem.set_label(lang.menuSettings)
-        menuItem.connect('activate', 
-                         lambda *args: self.gui.onSettings(True), self)    
+        menu_item = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
+        menu_item.set_label(lang.menuSettings)
+        menu_item.connect('activate',
+                          lambda *args: self.gui.on_settings(True), self)
         
-        menu.append(menuItem)
-        self.settingsMenu = menuItem
+        menu.append(menu_item)
+        self.settings_menu = menu_item
         
         # Abvout
-        menuItem = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
-        menuItem.set_label(lang.menuAbout)
-        menuItem.connect('activate', lambda *args: self.gui.onAbout(True), self)
-        menu.append(menuItem)
+        menu_item = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
+        menu_item.set_label(lang.menuAbout)
+        menu_item.connect('activate',
+                          lambda *args: self.gui.on_about(True), self)
+        
+        menu.append(menu_item)
         
         # Separator
         menu.append(gtk.SeparatorMenuItem())
         
         # Quit
-        menuItem = gtk.ImageMenuItem(gtk.STOCK_QUIT)
-        menuItem.set_label(lang.menuQuit)
-        menuItem.connect('activate', self.gui.onQuit, self)    
-        menu.append(menuItem)
+        menu_item = gtk.ImageMenuItem(gtk.STOCK_QUIT)
+        menu_item.set_label(lang.menuQuit)
+        menu_item.connect('activate', self.gui.on_quit, self)
+        menu.append(menu_item)
         
         # Popup
-        self.connect("popup-menu", self.onPopup, menu)    
-
-
+        self.connect("popup-menu", self.on_popup, menu)
+    
+    
     # Events -------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def onPopup(self, widget, button, time, data = None):
+    def on_popup(self, widget, button, time, data = None):
         if button == 3:
             if data:
                 data.show_all()
                 data.popup(None, None, None, 3, time)
     
-    def onActivate(self, *args):
+    def on_activate(self, *args):
         if self.gui.minimized:
             self.gui.deiconify()
             iconified = True
-         
+            
         else:
             iconified = False
-     
+        
         # Show!
         if not self.gui.get_property("visible"):
             self.gui.present()
-            self.gui.move(*self.gui.windowPosition)
+            self.gui.move(*self.gui.window_position)
             gobject.idle_add(lambda: self.gui.grab_focus())
-    
+            
         # Hide or move to other screen
         else:
             screen = self.gui.get_screen()
@@ -102,32 +104,32 @@ class TrayIcon(gtk.StatusIcon):
             pos = [pos[0], pos[1]]
             while pos[0] < 0:
                 pos[0] += screen.get_width()
-            
+        
             while pos[0] > screen.get_width():
                 pos[0] -= screen.get_width()
-                
+        
             while pos[1] < 0:
                 pos[1] += screen.get_height()
-            
+        
             while pos[1] > screen.get_height():
-                pos[1] -= screen.get_height()    
-            
+                pos[1] -= screen.get_height()
+        
             self.gui.main.settings['position'] = str(pos)
-            self.gui.windowPosition = pos
+            self.gui.window_position = pos
             
-            if self.onScreen() and not iconified:
+            if self.on_screen() and not iconified:
                 self.gui.hide()
                 
             else:
-                self.gui.move(*self.gui.windowPosition)
-                gobject.timeout_add(10, lambda: self.forceFocus())
+                self.gui.move(*self.gui.window_position)
+                gobject.timeout_add(10, lambda: self.force_focus())
     
-    def forceFocus(self):
+    def force_focus(self):
         self.gui.grab_focus()
         self.gui.present()
         return not self.gui.is_active()
     
-    def onScreen(self):
+    def on_screen(self):
         screen = self.gui.get_screen()
         size = self.gui.size_request()
         position = self.gui.get_position()
@@ -137,4 +139,4 @@ class TrayIcon(gtk.StatusIcon):
             
         else:
             return True
-    
+

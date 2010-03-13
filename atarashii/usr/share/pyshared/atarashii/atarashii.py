@@ -9,7 +9,7 @@
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #  GNU General Public License for more details.
-# 
+#
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
@@ -53,87 +53,87 @@ class Atarashii:
         
         # API
         self.api = None
-        self.apiTempPassword = None
+        self.api_temp_password = None
         
         # Variables
-        self.replyUser = UNSET_ID_NUM
-        self.replyText = UNSET_TEXT
-        self.replyID = UNSET_ID_NUM
+        self.reply_user = UNSET_ID_NUM
+        self.reply_text = UNSET_TEXT
+        self.reply_id = UNSET_ID_NUM
         
-        self.retweetUser = UNSET_TEXT    
-        self.retweetText = UNSET_TEXT
+        self.retweet_user = UNSET_TEXT
+        self.retweet_text = UNSET_TEXT
         
-        self.messageUser = UNSET_TEXT
-        self.messageID = UNSET_ID_NUM
-        self.messageText = UNSET_TEXT
+        self.message_user = UNSET_TEXT
+        self.message_id = UNSET_ID_NUM
+        self.message_text = UNSET_TEXT
         
-        self.loadTweetCount = 20
-        self.maxTweetCount = 200
-        self.loadMessageCount = 20
-        self.maxMessageCount = 200
-
+        self.load_tweet_count = 20
+        self.max_tweet_count = 200
+        self.load_message_count = 20
+        self.max_message_count = 200
+        
         
         # Timer
-        self.refreshTime = UNSET_TIMEOUT
-        self.refreshTimeout = UNSET_TIMEOUT
-        self.reconnectTime = UNSET_TIMEOUT
-        self.reconnectTimeout = None # The reconnect timer reference
+        self.refresh_time = UNSET_TIMEOUT
+        self.refresh_timeout = UNSET_TIMEOUT
+        self.reconnect_time = UNSET_TIMEOUT
+        self.reconnect_timeout = None # The reconnect timer reference
         
         # State
-        self.loginError = False
-        self.loginStatus = False
-        self.isSending = False
-        self.isConnecting = False
-        self.isReconnecting = False
-        self.isUpdating = False
-        self.isLoadingHistory = False
-        self.wasSending = False
-        self.wasRetweeting = False
-        self.rateWarningShown = False
-        self.requestWarningShown = False
+        self.login_error = False
+        self.login_status = False
+        self.is_sending = False
+        self.is_connecting = False
+        self.is_reconnecting = False
+        self.is_updating = False
+        self.is_loading_history = False
+        self.was_sending = False
+        self.was_retweeting = False
+        self.rate_warning_shown = False
+        self.request_warning_shown = False
         
         # Current Username
         self.username = self.settings['username'] or UNSET_TEXT
         
         # Retweet Style - 0 = ask, 1 = new, 2 = old
-        self.retweetStyle = self.settings['retweet'] or RETWEET_ASK
+        self.retweet_style = self.settings['retweet'] or RETWEET_ASK
         
         # Updater
         self.updater = updater.Updater(self)
-        self.updater.setDaemon(True)    
+        self.updater.setDaemon(True)
         
         # GUI
         self.gui = gui.GUI(self)
         
         # Start
         self.updater.start()
-        
-
+    
+    
     # Sending ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def send(self, text):
-        if self.isSending:
+        if self.is_sending:
             return
-        
+            
         # Send
-        self.isSending = True
+        self.is_sending = True
         self.gui.text.set_sensitive(False)
-        self.gui.messageButton.set_sensitive(False)
-        self.gui.showProgress()    
-        if self.replyUser != UNSET_TEXT:
-            self.gui.setStatus(lang.statusReply % self.replyUser)
-            
-        elif self.retweetUser != UNSET_TEXT:
-            self.gui.setStatus(lang.statusRetweet % self.retweetUser)
-            
-        elif self.messageText != UNSET_TEXT:
-            self.gui.setStatus(lang.statusMessageReply % self.messageUser)
-            
-        elif self.messageUser != UNSET_TEXT:
-            self.gui.setStatus(lang.statusMessage % self.messageUser)
+        self.gui.message_button.set_sensitive(False)
+        self.gui.show_progress()
+        if self.reply_user != UNSET_TEXT:
+            self.gui.set_status(lang.statusReply % self.reply_user)
+        
+        elif self.retweet_user != UNSET_TEXT:
+            self.gui.set_status(lang.statusRetweet % self.retweet_user)
+        
+        elif self.message_text != UNSET_TEXT:
+            self.gui.set_status(lang.statusMessageReply % self.message_user)
+        
+        elif self.message_user != UNSET_TEXT:
+            self.gui.set_status(lang.statusMessage % self.message_user)
             
         else:
-            self.gui.setStatus(lang.statusSend)
+            self.gui.set_status(lang.statusSend)
         
         # Sender
         sender = send.Send(self, self.gui.mode, text)
@@ -142,13 +142,13 @@ class Atarashii:
     
     # New style Retweet
     def retweet(self, name, tweetid):
-        if not self.isSending:
-            self.isSending = True
+        if not self.is_sending:
+            self.is_sending = True
             self.gui.text.set_sensitive(False)
-            self.gui.messageButton.set_sensitive(False)
-            self.gui.showProgress()    
-            self.gui.setStatus(lang.statusRetweet % name)
-        
+            self.gui.message_button.set_sensitive(False)
+            self.gui.show_progress()
+            self.gui.set_status(lang.statusRetweet % name)
+            
             # Sender
             sender = send.Retweet(self, name, tweetid)
             sender.setDaemon(True)
@@ -157,92 +157,93 @@ class Atarashii:
     
     # Login & Logout -----------------------------------------------------------
     # --------------------------------------------------------------------------
-    def onInit(self):
+    def on_init(self):
         self.login()
     
-    def login(self, changeUser = None):
-        if self.username == UNSET_TEXT:
+    def login(self, change_user = None):
+        if self.username == UNSET_TEXT and (change_user == None or \
+           change_user == UNSET_TEXT):
             return
-
+            
         # Wait until the last update is complete
-        while self.isUpdating:
+        while self.is_updating:
             time.sleep(0.1)
         
         # Switch User
-        if changeUser != None:
-            self.username = changeUser
-            self.settings['username'] = changeUser
-        
+        if change_user != None:
+            self.username = change_user
+            self.settings['username'] = change_user
+            
         # Set Mode
-        self.gui.setMode(self.settings['mode_' + self.username])
+        self.gui.set_mode(self.settings['mode_' + self.username])
         
         # Progress
-        self.gui.hideAll(False)
-        self.gui.showProgress()
+        self.gui.hide_all(False)
+        self.gui.show_progress()
         
         # Connect
-        if self.reconnectTimeout != None:
-            gobject.source_remove(self.reconnectTimeout)
-        
-        self.loginStatus = False
-        self.isSending = False
-        self.isConnecting = True
-        self.isReconnecting = False
-        self.reconnectTimeout = None
-        self.isUpdating = False
-        self.loginError = False
+        if self.reconnect_timeout != None:
+            gobject.source_remove(self.reconnect_timeout)
+            
+        self.login_status = False
+        self.is_sending = False
+        self.is_connecting = True
+        self.is_reconnecting = False
+        self.reconnect_timeout = None
+        self.is_updating = False
+        self.login_error = False
         
         # Reset
-        self.gui.updateStatus()
+        self.gui.update_status()
         self.gui.html.init(True)
         if self.gui.mode == MODE_MESSAGES:
             self.gui.html.start()
-        
-        self.gui.settingsButton.set_sensitive(False)
-        self.gui.tray.settingsMenu.set_sensitive(False)
+            
+        self.gui.settings_button.set_sensitive(False)
+        self.gui.tray.settings_menu.set_sensitive(False)
         self.gui.message.init(True)
         if self.gui.mode == MODE_TWEETS:
             self.gui.message.start()
-
-        self.updater.doInit = True
+            
+        self.updater.do_init = True
     
-    def onLogin(self):
-        self.loginError = False
-        self.loginStatus = True
-        self.isConnecting = False
-        self.gui.settingsButton.set_sensitive(True)
-        self.gui.tray.settingsMenu.set_sensitive(True)
+    def on_login(self):
+        self.login_error = False
+        self.login_status = True
+        self.is_connecting = False
+        self.gui.settings_button.set_sensitive(True)
+        self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_title(lang.titleLoggedIn % self.username)
-        self.gui.updateStatus()
-        self.gui.showInput()
-        
-    def onLoginFailed(self, error = None):
-        self.gui.setMode(MODE_TWEETS)
-        self.loginError = True if error != None else False
-        self.loginStatus = False
-        self.isConnecting = False
-        self.gui.settingsButton.set_sensitive(True)
-        self.gui.tray.settingsMenu.set_sensitive(True)
+        self.gui.update_status()
+        self.gui.show_input()
+    
+    def on_login_failed(self, error = None):
+        self.gui.set_mode(MODE_TWEETS)
+        self.login_error = True if error != None else False
+        self.login_status = False
+        self.is_connecting = False
+        self.gui.settings_button.set_sensitive(True)
+        self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_title(lang.title)
-        self.gui.hideAll()
-        self.gui.updateStatus()
+        self.gui.hide_all()
+        self.gui.update_status()
         if error:
-            self.gui.showError(error)
-        
+            self.gui.show_error(error)
+            
         gobject.idle_add(lambda: self.gui.html.init(True))
     
     def logout(self):
-        self.gui.setMode(MODE_TWEETS)
-        self.loginError = False
-        self.loginStatus = False
-        self.isSending = False
-        self.isConnecting = False
-        self.isReconnecting = False
-        self.isUpdating = False
-        self.gui.settingsButton.set_sensitive(True)
-        self.gui.updateStatus()
+        self.gui.set_mode(MODE_TWEETS)
+        self.login_error = False
+        self.login_status = False
+        self.is_sending = False
+        self.is_connecting = False
+        self.is_reconnecting = False
+        self.is_updating = False
+        self.gui.settings_button.set_sensitive(True)
+        self.gui.update_status()
         self.gui.set_title(lang.title)
-        self.gui.hideAll()
+        self.gui.hide_all()
         gobject.idle_add(lambda: self.gui.html.init(True))
     
     
@@ -256,101 +257,100 @@ class Atarashii:
         else:
             minutes = 5
         
-        self.refreshTimeout = int(minutes * 60 + 2)
+        self.refresh_timeout = int(minutes * 60 + 2)
         
         # Schedule a reconnect if the actual login failed
-        if not self.loginStatus:
-            self.reconnectTime = calendar.timegm(time.gmtime())
-            self.isReconnecting = True
-            self.reconnectTimeout = gobject.timeout_add(
-                                    int(self.refreshTimeout * 1000), 
+        if not self.login_status:
+            self.reconnect_time = calendar.timegm(time.gmtime())
+            self.is_reconnecting = True
+            self.reconnect_timeout = gobject.timeout_add(
+                                    int(self.refresh_timeout * 1000),
                                     lambda: self.login())
             
             return lang.errorRatelimitReconnect % math.ceil(minutes)
-        
+            
         # Just display an error if we exiced the ratelim while being logged in
         else:
-            return lang.errorRatelimit % math.ceil(minutes)    
-            
+            return lang.errorRatelimit % math.ceil(minutes)
+    
     
     # Helper Functions ---------------------------------------------------------
     # --------------------------------------------------------------------------
-    def getImage(self):
+    def get_image(self):
         if self.debug == None:
             return '/usr/share/icons/atarashii.png'
         else:
-            return os.path.join(self.debug, 
+            return os.path.join(self.debug,
                                 'atarashii/usr/share/icons/atarashii.png')
-        
-    def getResource(self, res):
+    
+    def get_resource(self, res):
         if self.debug == None:
             return os.path.join("/usr/share/atarashii", res)
         else:
-            return os.path.join(self.debug, "atarashii/usr/share/atarashii", 
+            return os.path.join(self.debug, "atarashii/usr/share/atarashii",
                                 res)
     
-    def getLatestID(self):
+    def get_latest_id(self):
         if self.settings.isset('lasttweet_' + self.username):
             return long(self.settings['lasttweet_' + self.username])
-        
+            
         else:
             return HTML_UNSET_ID
-            
-    def getFirstID(self):
+    
+    def get_first_id(self):
         if self.settings.isset('firsttweet_' + self.username):
             return long(self.settings['firsttweet_' + self.username])
-        
+            
         else:
             return HTML_UNSET_ID
-
-    def getLatestMessageID(self):
+    
+    def get_latest_message_id(self):
         if self.settings.isset('lastmessage_' + self.username):
             return long(self.settings['lastmessage_' + self.username])
-        
+            
         else:
             return HTML_UNSET_ID
     
-    def getFirstMessageID(self):
+    def get_first_message_id(self):
         if self.settings.isset('firstmessage_' + self.username):
             return long(self.settings['firstmessage_' + self.username])
-        
+            
         else:
             return HTML_UNSET_ID
-
-    def setTweetCount(self, count):
-        self.maxTweetCount = count
     
-    def getTweetCount(self):
-        return self.maxTweetCount
-
-    def setMessageCount(self, count):
-        self.maxMessageCount = count
+    def set_tweet_count(self, count):
+        self.max_tweet_count = count
     
-    def getMessageCount(self):
-        return self.maxMessageCount
-
-
+    def get_tweet_count(self):
+        return self.max_tweet_count
+    
+    def set_message_count(self, count):
+        self.max_message_count = count
+    
+    def get_message_count(self):
+        return self.max_message_count
+    
+    
     # Start & Quit -------------------------------------------------------------
     # --------------------------------------------------------------------------
     def start(self):
         gtk.main()
-        
-    def saveSettings(self):
+    
+    def save_settings(self):
         self.settings['position'] = str(self.gui.get_position())
         size = self.gui.get_allocation()
         self.settings['size'] = str((size[2], size[3]))
         self.settings['username'] = self.username
         self.settings.save()
-        
-    def saveMode(self):
+    
+    def save_mode(self):
         if self.username != UNSET_TEXT:
             self.settings['mode_' + self.username] = self.gui.mode
     
     def quit(self):
         self.updater.running = False
-        self.saveMode()
-        self.saveSettings()
+        self.save_mode()
+        self.save_settings()
         gtk.main_quit()
         sys.exit(1)
 
-    

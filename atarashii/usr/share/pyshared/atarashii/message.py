@@ -9,7 +9,7 @@
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #  GNU General Public License for more details.
-# 
+#
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
@@ -25,70 +25,72 @@ class HTML(view.HTMLView):
     def __init__(self, main, gui):
         self.main = main
         self.gui = gui
-        view.HTMLView.__init__(self, main, gui, self.gui.messageScroll)
-        self.getLatest = self.main.getLatestMessageID
-        self.itemCount = self.main.loadMessageCount
+        view.HTMLView.__init__(self, main, gui, self.gui.message_scroll)
+        self.get_latest = self.main.get_latest_message_id
+        self.item_count = self.main.load_message_count
         
-        self.getItemCount = self.main.getMessageCount
-        self.setItemCount = self.main.setMessageCount
+        self.get_item_count = self.main.get_message_count
+        self.set_item_count = self.main.set_message_count
         
-        self.langLoading = lang.messageLoading
-        self.langEmpty = lang.messageEmpty
-        self.langLoad = lang.messageLoadMore
+        self.lang_loading = lang.messageLoading
+        self.lang_empty = lang.messageEmpty
+        self.lang_load = lang.messageLoadMore
         
-        self.firstSetting = 'firstmessage_'
+        self.first_setting = 'firstmessage_'
     
     
     # Render the Timeline ------------------------------------------------------
     # --------------------------------------------------------------------------
-    def renderItem(self, num, item, img):
+    def render_item(self, num, item, img):
         user, text = item.sender, self.formatter.parse(item.text)
         
         
         # Spacers --------------------------------------------------------------
         mentioned = item.recipient_screen_name != self.main.username
         if num > 0:
-            nextHighlight = self.items[num + 1][0].recipient_screen_name != \
+            next_highlight = self.items[num + 1][0].recipient_screen_name != \
                 self.main.username if num < len(self.items) - 1 else False
             
-            self.renderitems.insert(0, 
-                        self.insertSpacer(item, user, False, mentioned, True, 
-                        nextHighlight))
-        
-        self.lastMentioned = mentioned
+            force = self.lastrecipient != item.recipient_screen_name
+            self.renderitems.insert(0,
+                        self.insert_spacer(item, user, False, mentioned, True,
+                        next_highlight, force = force))
+            
+        self.last_mentioned = mentioned
         self.lastname = user.screen_name
+        self.lastrecipient = item.recipient_screen_name
         
         
         # Avatar ---------------------------------------------------------------
-        self.isNewAvatar(num)
+        self.is_new_avatar(num)
         if (num < len(self.items) - 1 and \
-            (user.screen_name != self.items[num + 1][0].sender.screen_name \
-                or item.recipient_screen_name != \
-                self.items[num + 1][0].recipient_screen_name or self.newAvatar)\
-            ) or num == len(self.items) - 1 or self.newTimeline:
+           (user.screen_name != self.items[num + 1][0].sender.screen_name \
+           or item.recipient_screen_name != \
+           self.items[num + 1][0].recipient_screen_name or self.new_avatar) \
+           ) or num == len(self.items) - 1 or self.new_timeline:
             
             avatar = '''<a href="http://twitter.com/%s">
                         <img width="32" src="file://%s" title="''' + \
                         lang.htmlInfo + '''"/></a>'''
             
-            avatar = avatar % (user.screen_name, img, 
-                                user.name, 
-                                user.followers_count, 
-                                user.friends_count, 
+            avatar = avatar % (user.screen_name, img,
+                                user.name,
+                                user.followers_count,
+                                user.friends_count,
                                 user.statuses_count)
-        
+            
         else:
             avatar = ""
         
         
         # Background -----------------------------------------------------------
-        cls = 'oldtweet' if item.id <= self.initID else 'tweet'
+        cls = 'oldtweet' if item.id <= self.init_id else 'tweet'
         if item.recipient_screen_name.lower() != self.main.username.lower():
             mode = lang.messageTo
             name = item.recipient_screen_name
             reply = "display: none;"
-            cls = "mentionedold" if item.id <= self.initID else "mentioned"
-        
+            cls = "mentionedold" if item.id <= self.init_id else "mentioned"
+            
         else:
             mode = lang.messageFrom
             name = user.screen_name
@@ -99,7 +101,7 @@ class HTML(view.HTMLView):
         if hasattr(user, "protected") and user.protected:
             locked = ('<span class="protected" title="' + \
                 lang.htmlProtected + '"></span>') % user.screen_name
-        
+            
         else:
             locked = ''
         
@@ -134,18 +136,18 @@ class HTML(view.HTMLView):
         
         # Insert values
         html = html % (
-                cls, 
+                cls,
                 avatar,
-                
+        
                 # Actions
                 user.screen_name, user.id, num,
-                
+        
                 # Text
                 user.screen_name,
                 user.name.strip(),
                 name,
-                text,     
-                
+                text,
+        
                 # Time
                 user.screen_name,
                 item.id,
