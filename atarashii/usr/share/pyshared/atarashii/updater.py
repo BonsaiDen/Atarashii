@@ -26,7 +26,8 @@ import gobject
 import calendar
 
 from lang import lang
-from constants import *
+from constants import MODE_MESSAGES, MODE_TWEETS, HTML_UNSET_ID, UNSET_TIMEOUT,\
+                      HTML_RESET, HTML_LOADING, HTML_LOADED
 
 # Import local Tweepy
 try:
@@ -94,7 +95,8 @@ class Updater(threading.Thread):
         # Why should anyone else use the Atarashii App for posting from HIS 
         # client? :D
         auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q", 
-                    "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg", secure = True)        
+                                   "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg",
+                                   secure = True)
         try:
             # Try using an old token
             tokenOK = False
@@ -102,7 +104,7 @@ class Updater(threading.Thread):
             secretName = 'xsecret_' + self.main.username
             if self.settings.isset(keyName) and self.settings.isset(secretName):
                 auth.set_access_token(self.settings[keyName], 
-                                        self.settings[secretName])
+                                      self.settings[secretName])
                 try:
                     auth.get_username()
                     tokenOK = True
@@ -270,12 +272,12 @@ class Updater(threading.Thread):
             return
     
         if calendar.timegm(time.gmtime()) > self.main.refreshTime + \
-            self.main.refreshTimeout or self.refreshNow or self.refreshMessages:
+           self.main.refreshTimeout or self.refreshNow or self.refreshMessages:
             
             self.main.isUpdating = True
             self.update()
             gobject.idle_add(
-                        lambda: self.gui.refreshButton.set_sensitive(True))
+                             lambda: self.gui.refreshButton.set_sensitive(True))
             
             gobject.idle_add(lambda: self.gui.checkRead())
             self.main.refreshTime = calendar.timegm(time.gmtime())
