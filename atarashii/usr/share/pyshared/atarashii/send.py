@@ -28,7 +28,7 @@ try:
 finally:
     sys.path.pop(0)
 
-from constants import *
+from constants import MODE_TWEETS, MODE_MESSAGES, UNSET_TEXT, UNSET_ID_NUM
 
 
 # Send Tweets/Messages ---------------------------------------------------------
