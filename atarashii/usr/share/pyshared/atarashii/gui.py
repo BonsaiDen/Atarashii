@@ -19,7 +19,6 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
-import pango
 import gobject
 
 import calendar
@@ -34,7 +33,10 @@ import text
 import dialog
 
 from lang import lang
-from constants import *
+from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_TEXT, UNSET_ID_NUM, \
+                      HTML_LOADING, HTML_LOADED, MESSAGE_WARNING, \
+                      MESSAGE_ERROR, MESSAGE_QUESTION, MESSAGE_INFO, \
+                      UNSET_LABEL, UNSET_TIMEOUT, HTML_UNSET_ID
 
 
 class GUI(gtk.Window):
@@ -497,7 +499,8 @@ class GUI(gtk.Window):
                 502 : lang.errorDown,
                 503 : lang.errorOverload
             }[code]
-            dialog.MessageDialog(self, MESSAGE_ERROR, description, lang.errorTitle)
+            dialog.MessageDialog(self, MESSAGE_ERROR, description, 
+                                 lang.errorTitle)
         
         self.updateStatus()
     
@@ -616,10 +619,10 @@ class GUI(gtk.Window):
             self.aboutToggle = False
     
     def onQuit(self, widget = None, data = None):
-         if data:
-             data.set_visible(False)
+        if data:
+            data.set_visible(False)
          
-         self.main.quit()
+        self.main.quit()
     
     
     # Events -------------------------------------------------------------------
