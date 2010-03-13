@@ -1,30 +1,48 @@
+#  This file is part of Atarashii.
+#
+#  Atarashii is free software: you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Atarashii is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
+# 
+#  You should have received a copy of the GNU General Public License along with
+#  Atarashii. If not, see <http://www.gnu.org/licenses/>.
+
+
+# Debian Packager Creator ------------------------------------------------------
+# ------------------------------------------------------------------------------
 import sys, os, shutil, subprocess, hashlib
 
 def getFileMD5(file):
-	f = open(file, "rb")
-	md5 = hashlib.md5()
-	while True:
-		data = f.read(8192)
-		if not data:
-			break
-			
-		md5.update(data)
-	
-	f.close()
-	return md5.hexdigest()
+    f = open(file, "rb")
+    md5 = hashlib.md5()
+    while True:
+        data = f.read(8192)
+        if not data:
+            break
+            
+        md5.update(data)
+    
+    f.close()
+    return md5.hexdigest()
 
 # Gather Information about the project
 sys.path.insert(0, os.path.join(sys.path[0], "atarashii/usr/share/pyshared"))
 try:
-	import atarashii
+    import atarashii
 
 finally:
-	sys.path.pop(0)
+    sys.path.pop(0)
 
 # Create DEBIAN directory
 debDir = os.path.join(sys.path[0], "atarashii/DEBIAN")
 if not os.path.exists(debDir):
-	os.mkdir(debDir)
+    os.mkdir(debDir)
 
 
 print "\n---- Packing changelog ----"
@@ -39,17 +57,17 @@ shutil.copyfile(log, log2)
 shutil.copyfile(man, man1)
 print "Removing old logs and manpage..."
 try:
-	os.unlink(log1 + '.gz')
+    os.unlink(log1 + '.gz')
 except:
-	pass
+    pass
 try:
-	os.unlink(log2 + '.gz')
+    os.unlink(log2 + '.gz')
 except:
-	pass
+    pass
 try:
-	os.unlink(man1 + '.gz')
+    os.unlink(man1 + '.gz')
 except:
-	pass
+    pass
 print "Packing new logs and manpage..."
 subprocess.call(["gzip", "--best", log1])
 subprocess.call(["gzip", "--best", log2])
@@ -64,24 +82,24 @@ cur = os.path.join(sys.path[0], "atarashii/usr")
 dirs = os.walk(cur)
 tempFiles = []
 for i in dirs:
-	files = i[2]
-	path = os.path.join(cur, i[0])
-	for f in files:
-		file = os.path.join(path, f)
-		if f.startswith('.'):
-			print "- temping %s" % file
-			to = os.path.join(sys.path[0], 'tmp' + f)
-			tempFiles.append((file, to))
-			shutil.move(file, to)
-		
-		elif f.endswith("~") or f.endswith(".pyc"):
-			os.remove(file)
-			print "- deleting %s" % file
-		
-		else:
-			size += os.stat(file).st_size
-			cf = file[len(cur)-3:]
-			m.write("%s  %s\n" % (getFileMD5(file), cf))
+    files = i[2]
+    path = os.path.join(cur, i[0])
+    for f in files:
+        file = os.path.join(path, f)
+        if f.startswith('.'):
+            print "- temping %s" % file
+            to = os.path.join(sys.path[0], 'tmp' + f)
+            tempFiles.append((file, to))
+            shutil.move(file, to)
+        
+        elif f.endswith("~") or f.endswith(".pyc"):
+            os.remove(file)
+            print "- deleting %s" % file
+        
+        else:
+            size += os.stat(file).st_size
+            cf = file[len(cur)-3:]
+            m.write("%s  %s\n" % (getFileMD5(file), cf))
 
 
 m.close()
@@ -117,22 +135,22 @@ print ">> Created!"
 # Create package
 print "The kittens are building your package..."
 subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"], 
-				stdout = open("/dev/null", "wb"))
+                stdout = open("/dev/null", "wb"))
 shutil.move(os.path.join(sys.path[0], "atarashii.deb"), 
-			os.path.join(sys.path[0], 
-			"atarashii_%s-1_all.deb" % atarashii.__version__))
+            os.path.join(sys.path[0], 
+            "atarashii_%s-1_all.deb" % atarashii.__version__))
 
 print ">> Build complete!"
 
 # Move all those temp files back
 for file, to in tempFiles:
-	shutil.move(to, file)
+    shutil.move(to, file)
 
 # Check for errors
 try:
-	subprocess.call(["lintian"], stdout = open("/dev/null", "wb")) 
+    subprocess.call(["lintian"], stdout = open("/dev/null", "wb")) 
 except:
-	exit()
+    exit()
 
 print "\n---- Checking for Errors ----"
 subprocess.call(["lintian", "atarashii_%s-1_all.deb" % atarashii.__version__])

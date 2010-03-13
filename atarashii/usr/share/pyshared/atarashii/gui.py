@@ -1,13 +1,13 @@
 #  This file is part of Atarashii.
 #
-#  Atarashii is free software: you can redistribute it and/or 
+#  Atarashii is free software: you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
 #  Atarashii is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #  GNU General Public License for more details.
 # 
 #  You should have received a copy of the GNU General Public License along with
@@ -38,609 +38,610 @@ from constants import *
 
 
 class GUI(gtk.Window):
-	def __init__(self, main):
-		# Setup
-		self.main = main
-		gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)		
-		self.hide_on_delete()
-		self.set_border_width(2)
-		self.set_size_request(280, 400)
-		self.set_icon_from_file(main.getImage())
-		
-		# Load Components
-		gt = gtk.Builder()
-		gt.add_from_file(main.getResource("main.glade"))
-		frame = gt.get_object("frame")
-		self.add(frame)
-		
-		# Link Components
-		self.refreshButton = gt.get_object("refresh")
-		self.refreshButton.connect("clicked", self.onRefresh)
-		self.refreshButton.set_tooltip_text(lang.toolRefresh)
-		
-		self.historyButton = gt.get_object("history")
-		self.historyButton.connect("clicked", self.onHistory)
-		self.historyButton.set_tooltip_text(lang.toolHistory)
-		
-		self.readButton = gt.get_object("read")
-		self.readButton.connect("clicked", self.onRead)
-		self.readButton.set_tooltip_text(lang.toolRead)
-		
-		self.messageButton = gt.get_object("message")
-		self.messageButton.connect("clicked", self.onMode)
-		self.messageButton.set_tooltip_text(lang.toolMode)
-		
-		# Settings Button
-		self.settingsButton = gt.get_object("settings")
-		self.settingsButton.connect("toggled", 
-									lambda *args: self.onSettings(False))
-		self.settingsButton.set_tooltip_text(lang.toolSettings)
-		self.settingsToggle = False
-		
-		# About Button
-		self.aboutButton = gt.get_object("about")
-		self.aboutButton.connect("toggled", lambda *args: self.onAbout(False))
-		self.aboutButton.set_tooltip_text(lang.toolAbout)
-		self.aboutToggle = False
-		
-		self.quitButton = gt.get_object("quit")
-		self.quitButton.connect("clicked", self.onQuit)
-		self.quitButton.set_tooltip_text(lang.toolQuit)
-		
-		self.infoLabel = gt.get_object("label")
-		
-		# Text Input
-		self.textScroll = gt.get_object("textscroll")
-		self.text = text.TextInput(self)
-		self.textScroll.add(self.text)
-		
-		# HTML
-		self.htmlScroll = gt.get_object("htmlscroll")
-		self.html = html.HTML(self.main, self)
-		self.htmlScroll.add(self.html)
-		self.htmlScroll.set_shadow_type(gtk.SHADOW_IN)
-		
-		# Messages
-		self.messageScroll = gt.get_object("messagescroll")
-		self.message = message.HTML(self.main, self)
-		self.messageScroll.add(self.message)
-		self.messageScroll.set_shadow_type(gtk.SHADOW_IN)
-		
-		
-		self.content = gt.get_object("content")
-		self.content.set_border_width(2)
-		
-		# Bars
-		self.toolbar = gt.get_object("toolbar")
-		self.progress = gt.get_object("progressbar")
-		self.status = gt.get_object("statusbar")
-				
-		# Restore Position & Size
-		if main.settings.isset("position"):
-			self.windowPosition = main.settings['position'][1:-1].split(",")
-			self.move(int(self.windowPosition[0]), int(self.windowPosition[1]))
-		
-		if main.settings.isset("size"):
-			size = main.settings['size'][1:-1].split(",")
-			self.resize(int(size[0]), int(size[1]))
-		else:
-			self.resize(280,400)
-		
-		# Tray
-		self.tray = tray.TrayIcon(self)
-		
-		# Events
-		self.connect("delete_event", self.deleteEvent)
-		self.connect("destroy", self.destroyEvent)
-		self.connect("window-state-event", self.stateEvent)
-		self.initEvent = self.connect("expose-event", self.drawEvent)
-		
-		# Dialogs
-		self.aboutDialog = None
-		self.settingsDialog = None
-		
-		# Variables
-		self.mode = MODE_TWEETS
-		self.windowPosition = None
-		self.minimized = False
-		
-		self.show_all()
-		
-		self.setMode(self.mode)
-		
-		# Statusbar Updater
-		self.updateStatus()
-		gobject.timeout_add(1000, lambda: self.updateStatus())
-				
-		# Show
-		self.showInput()
-	
-	
-	# GUI Switchers ------------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def showInput(self, resize = True):
-		self.progress.hide()
-		self.textScroll.show()
-		if resize:
-			self.text.resize()
-		else:
-			self.text.resize(1)
-		
-		self.text.set_sensitive(True)
-		self.checkRefresh()
-		self.checkRead()
-		self.messageButton.set_sensitive(True)
-		
-	def showProgress(self):
-		def progressActivity():
-			self.progress.pulse()
-			return self.main.isSending or self.main.isConnecting or \
-				self.main.isLoadingHistory or \
-				(self.mode == MODE_MESSAGES and \
-				self.message.loaded == HTML_LOADING) or \
-				(self.mode == MODE_TWEETS and self.html.loaded == HTML_LOADING)
-		
-		self.progress.set_fraction(0.0)
-		self.progress.show()
-		self.infoLabel.hide()
-		self.textScroll.hide()
-		gobject.timeout_add(100, lambda: progressActivity())
-	
-	def hideAll(self, progress = True):
-		if progress:
-			self.progress.hide()
-		
-		self.textScroll.hide()
-		self.refreshButton.set_sensitive(False)
-		self.readButton.set_sensitive(False)
-		self.historyButton.set_sensitive(False)
-		self.messageButton.set_sensitive(False)
-	
-	
-	# Statusbar ----------------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def updateStatus(self, once = False):
-		if self.text.hasTyped:
-			pass
-	
-		elif self.main.isReconnecting:
-			wait = self.main.refreshTimeout - \
-					(calendar.timegm(time.gmtime()) - self.main.reconnectTime)
-			if wait < 60:
-				self.setStatus(lang.statusReconnectSeconds % wait)
-		
-			elif wait < 105:
-				self.setStatus(lang.statusReconnectMinute)
-			
-			else:
-				self.setStatus(
-					lang.statusReconnectMinutes % math.ceil(wait / 60.0))
-	
-		elif self.main.isLoadingHistory:
-			self.setStatus(
-				lang.statusLoadHistory if \
-				self.html.loadHistoryID != HTML_UNSET_ID else \
-				lang.statusLoadMessageHistory)
-	
-		elif self.main.isConnecting:
-			self.setStatus(lang.statusConnecting % self.main.username)
-			
-		elif self.main.loginError:
-			self.setStatus(lang.statusError)
-		
-		elif not self.main.loginStatus:
-			self.setStatus(lang.statusLogout)
-		
-		elif self.main.isUpdating:
-			self.refreshButton.set_sensitive(False)
-			self.readButton.set_sensitive(False)
-			self.setStatus(lang.statusUpdate)
-		
-		elif self.main.refreshTime == UNSET_TIMEOUT or \
-			(self.mode == MODE_MESSAGES and \
-			self.message.loaded == HTML_LOADING) or \
-			(self.mode == MODE_TWEETS and self.html.loaded == HTML_LOADING):
-			
-			self.setStatus(lang.statusConnected)
-		
-		elif (not self.text.isTyping or not self.text.hasFocus) and not \
-			self.main.isSending:
-			
-			wait = self.main.refreshTimeout - \
-				(calendar.timegm(time.gmtime()) - self.main.refreshTime)
-			
-			if wait == 0:
-				self.refreshButton.set_sensitive(False)
-				self.readButton.set_sensitive(False)
-				self.setStatus(lang.statusUpdate)
-			
-			elif wait == 1:
-				self.setStatus(lang.statusOneSecond)
-			
-			else:
-				if wait < 60:
-					self.setStatus(lang.statusSeconds % wait)
-				
-				elif wait < 105:
-					self.setStatus(lang.statusMinute)
-					
-				else:
-					self.setStatus(lang.statusMinutes % math.ceil(wait / 60.0))
-	
-		if once:
-			return False
-			
-		else:
-			return True
-	
-	def setStatus(self, status):
-		self.status.pop(0)
-		self.status.push(0, status)	
-	
-	
-	# Info Label ---------------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def setLabel(self):	
-		if self.main.isSending:
-			return
-	
-		if self.main.replyUser == UNSET_TEXT and \
-			self.main.retweetUser == UNSET_TEXT and \
-			self.main.messageUser == UNSET_TEXT:
-			
-			self.infoLabel.set_markup(UNSET_LABEL)
-			self.infoLabel.hide()
-			
-		elif self.main.retweetUser != UNSET_TEXT:
-			self.setLabelText(lang.labelRetweet % self.main.retweetUser)
-			self.infoLabel.show()			
-			
-		elif self.main.replyText != UNSET_TEXT:
-			self.setLabelText(lang.labelReplyText % self.main.replyText)
-			self.infoLabel.show()
-			
-		elif self.main.replyUser != UNSET_TEXT:
-			self.setLabelText(lang.labelReply % self.main.replyUser)
-			self.infoLabel.show()
-			
-		# Messages
-		elif self.main.messageText != UNSET_TEXT:
-			self.setLabelText(lang.labelMessageText % self.main.messageText)
-			self.infoLabel.show()		
-		
-		elif self.main.messageUser != UNSET_TEXT:
-			self.setLabelText(lang.labelMessage % self.main.messageUser)
-			self.infoLabel.show()
-	
-	def setLabelText(self, text):
-		# Get Font Width
-		font = self.infoLabel.create_pango_context().get_font_description()
-		layout = self.infoLabel.create_pango_layout("")
-		layout.set_markup(text)
-		layout.set_font_description(font)
-		
-		# Truncate till it fits
-		width = self.infoLabel.get_allocation()[2]
-		cur = layout.get_pixel_size()[0]
-		if cur > width:
-			while cur > width:
-				text = text[:-3]
-				layout.set_markup(text + "...")
-				cur = layout.get_pixel_size()[0]
-			
-			self.infoLabel.set_markup(text + "...")
-		
-		else:
-			self.infoLabel.set_markup(text)
-	
-	
-	# Helpers ------------------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def getHeight(self, widget):
-		size = widget.get_allocation()
-		return size[3] - size[0]
-	
-	def setTitle(self):
-		if self.main.username == UNSET_TEXT:
-			self.set_title(lang.title)
-			
-		elif self.mode == MODE_MESSAGES:
-			if self.html.count > 0:
-				self.set_title((lang.titleTweets if self.html.count > 1 else \
-								lang.titleTweet) % self.html.count)
-			else:
-				self.set_title(lang.titleLoggedIn % self.main.username)
-			
-		elif self.mode == MODE_TWEETS:
-			if self.message.count > 0:
-				self.set_title((lang.titleMessages if self.html.count > 1 else \
-								lang.titleMessage) % self.message.count)
-			else:
-				self.set_title(lang.titleLoggedIn % self.main.username)
-	
-	def checkRefresh(self):
-		if self.isReady():
-			self.refreshButton.set_sensitive(True)			
-			
-			# Check for goMessage
-			if self.text.goSendMessage != None:
-				self.setMode(MODE_MESSAGES)
-			
-			self.updateStatus()
-	
-	def checkRead(self):
-		if self.mode == MODE_MESSAGES:
-			self.readButton.set_sensitive(
-									self.message.lastID > self.message.initID)
-			
-		elif self.mode == MODE_TWEETS:
-			self.readButton.set_sensitive(self.html.lastID > self.html.initID)
-			
-		else:
-			self.readButton.set_sensitive(False)
-	
-	def setMode(self, mode):
-		if mode == None:
-			self.mode = MODE_TWEETS
-		else:
-			self.mode = mode
-		
-		if self.mode == MODE_MESSAGES:
-			self.messageButton.set_active(True)
-		
-		else:
-			self.onMode()
-	
-	def isReady(self):
-		return not self.main.isUpdating and self.message.loaded == HTML_LOADED \
-										and self.html.loaded == HTML_LOADED
-	
-	
-	# Message Dialogs ----------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def enterPassword(self):
-		self.main.apiTempPassword = None
-		dialog.PasswordDialog(self, lang.passwordTitle, 
-								lang.passwordQuestion % self.main.username)
-	
-	def askForRetweet(self, name, yes, no):
-		dialog.MessageDialog(self, MESSAGE_QUESTION,
-						lang.retweetQuestion,
-						lang.retweetTitle % name,
-						yesCallback = yes, noCallback = no)
-	
-	def showRetweetInfo(self, name):
-		dialog.MessageDialog(self, MESSAGE_INFO,
-						lang.retweetInfo % name,
-						lang.retweetInfoTitle)
-	
-	
-	# Error & Warning ----------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def showError(self, error):
-		if self.main.wasSending:
-			self.showInput()
-			
-			# Select Textbox?
-			if not self.main.wasRetweeting or \
-				(self.main.retweetText != UNSET_TEXT or \
-				self.main.replyUser != UNSET_TEXT or \
-				self.main.replyID != UNSET_ID_NUM):
-				self.text.grab_focus()
-		
-		try:
- 			code = error.response.status
- 			if error.reason.startswith("Share sharing"):
- 				code = -2
- 		
- 		except:
- 			try:
-	 			if error.reason.startswith("HTTP Error "):
-	 				code = int(error.reason[11:14])
-	 		
-	 			elif type(error) == exceptions.IOError:
-	 				code = -1
-	 			
-	 			else:
-	 				code = 0
-	 		except:
-	 			code = 0
-	 		
-		# Ratelimit error
- 		if (code == 400 and not self.main.wasSending) or \
- 			(code == 403 and self.main.wasSending):
- 			
- 			self.refreshButton.set_sensitive(False)
- 			rateError = self.main.reconnect()
- 			
- 		elif (code == 400 and self.main.wasSending) or \
- 			(code == 403 and not self.main.wasSending):
- 			
- 			code = 500
- 			rateError = ""
- 		
- 		else:
- 			rateError = ""
- 		
- 		# 404's
- 		if self.main.wasSending and code == 404:
- 			code = -3
- 		
- 		self.main.wasSending = False
-		self.main.wasRetweeting = False
- 		
- 		# Show Warning on url error or error message for anything else 		
- 		if code == -1 or code == 500 or code == 502 or code == 503:
- 		
- 			# Show only one warning at a time to prevent dialog cluttering
- 			if not self.main.requestWarningShown:
- 				self.main.requestWarningShown = True
- 				
- 				def unset():
- 					self.main.requestWarningShown = False
- 				
- 				dialog.MessageDialog(self, MESSAGE_WARNING,
- 					lang.warningURL, lang.warningTitle,
- 					okCallback = unset)
- 		
- 		else:
-	 		description = {
-	 			-3 : lang.errorUserNotFound,
-	 		    -2 : lang.errorAlreadyRetweeted,
-	 			0 : lang.errorInternal % str(error),
-	 			404 : lang.errorLogin % self.main.username, 
-	 			401 : lang.errorLogin % self.main.username,
-	 			403 : rateError,
-	 			400 : rateError,
-	 			500 : lang.errorTwitter,
-	 			502 : lang.errorDown,
-	 			503 : lang.errorOverload
-	 		}[code]
-	 		dialog.MessageDialog(self, MESSAGE_ERROR, description, lang.errorTitle)
-	 	
-	 	self.updateStatus()
-	
-	def showWarning(self, limit):
-		dialog.MessageDialog(self, MESSAGE_WARNING, lang.warningText % limit, 
-								lang.warningTitle)
-	
-	
-	# Handlers -----------------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def onRefresh(self, *args):
-		if self.mode == MODE_MESSAGES:
-			self.main.updater.refreshMessages = True
-		else:
-			self.main.updater.refreshNow = True
-	
-	def onHistory(self, *args):
-		if self.mode == MODE_MESSAGES:
-			gobject.idle_add(lambda: self.message.clear())
-			
-		else:
-			gobject.idle_add(lambda: self.html.clear())
-	
-	def onRead(self, *args):
-		if self.mode == MODE_MESSAGES:
-			gobject.idle_add(lambda: self.message.read())
-			
-		else:
-			gobject.idle_add(lambda: self.html.read())
-	
-	def onMode(self, *args):
-		if self.messageButton.get_active():
-			self.mode = MODE_MESSAGES
-		else: # TODO add case for searchbutton
-			self.mode = MODE_TWEETS
-		
-		if self.mode == MODE_MESSAGES:
-			self.historyButton.set_tooltip_text(lang.toolHistoryMessage)
-			self.readButton.set_tooltip_text(lang.toolReadMessage)
-			self.refreshButton.set_tooltip_text(lang.toolRefreshMessage)
-			self.htmlScroll.hide()
-			self.messageScroll.show()	
-			self.message.grab_focus()
-			self.readButton.set_sensitive(
-									self.message.lastID > self.message.initID)
-			
-			self.historyButton.set_sensitive(self.message.historyLoaded)
-			
-			if self.message.loaded == HTML_LOADING:
-				self.showProgress()
-				
-			elif self.message.loaded == HTML_LOADED:
-				self.showInput()
-		
-		elif self.mode == MODE_TWEETS:
-			self.historyButton.set_tooltip_text(lang.toolHistory)
-			self.readButton.set_tooltip_text(lang.toolRead)
-			self.refreshButton.set_tooltip_text(lang.toolRefresh)
-			self.messageScroll.hide()	
-			self.htmlScroll.show()	
-			self.html.grab_focus()
-			self.readButton.set_sensitive(self.html.lastID > self.html.initID)
-			self.historyButton.set_sensitive(self.html.historyLoaded)
-		
-			if self.html.loaded == HTML_LOADING:
-				self.showProgress()
-				
-			elif self.html.loaded == HTML_LOADED:
-				self.showInput()
-		
-		else: # TODO implement search here
-			pass
-		
-		
-		self.setTitle()
-		self.text.checkMode()
-		self.text.looseFocus()
-	
-	def onSettings(self, menu):
-		if not self.settingsToggle:
-			self.settingsToggle = True
-			if self.settingsButton.get_active() and not self.settingsDialog:
-				self.settingsDialog = dialog.SettingsDialog(self)
-		
-			elif menu and not self.settingsDialog:
-				self.settingsDialog = dialog.SettingsDialog(self)
-				self.settingsButton.set_active(True)
-			
-		
-			elif menu and self.settingsDialog:
-				self.settingsDialog.onClose()
-				self.settingsButton.set_active(False)
-		
-			elif self.settingsDialog:
-				self.settingsDialog.onClose()
-				
-			self.settingsToggle = False
-	
-	def onAbout(self, menu):
-		if not self.aboutToggle:
-			self.aboutToggle = True
-			if self.aboutButton.get_active() and not self.aboutDialog:
-				self.aboutDialog = dialog.AboutDialog(self)
-		
-			elif menu and not self.aboutDialog:
-				self.aboutDialog = dialog.AboutDialog(self)
-				self.aboutButton.set_active(True)
-		
-			elif menu and self.aboutDialog:
-				self.aboutDialog.onClose()
-				self.aboutButton.set_active(False)		
-		
-			elif self.aboutDialog:
-				self.aboutDialog.onClose()
-			
-			self.aboutToggle = False
-	
-	def onQuit(self, widget = None, data = None):
- 		if data:
- 			data.set_visible(False)
- 		
- 		self.main.quit()
-	
-	
-	# Events -------------------------------------------------------------------
-	# --------------------------------------------------------------------------
-	def deleteEvent(self, widget, event, data=None):
-		self.windowPosition = self.get_position()
-		self.main.settings['position'] = str(self.windowPosition)
-		self.hide()
-		return True
-	
-	def destroyEvent(self, widget, data=None):
-		self.windowPosition = self.get_position()
-		self.main.settings['position'] = str(self.windowPosition)
-		self.hide()
-		return True
-		
-	def stateEvent(self, window, event):
-		if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
-			self.minimized = event.new_window_state & \
-								gtk.gdk.WINDOW_STATE_ICONIFIED
-	
-	def drawEvent(self, *args):
-		self.disconnect(self.initEvent)
-		gobject.idle_add(lambda: self.main.onInit())
-	
+    def __init__(self, main):
+        # Setup
+        self.main = main
+        gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)        
+        self.hide_on_delete()
+        self.set_border_width(2)
+        self.set_size_request(280, 400)
+        self.set_icon_from_file(main.getImage())
+        
+        # Load Components
+        gt = gtk.Builder()
+        gt.add_from_file(main.getResource("main.glade"))
+        frame = gt.get_object("frame")
+        self.add(frame)
+        
+        # Link Components
+        self.refreshButton = gt.get_object("refresh")
+        self.refreshButton.connect("clicked", self.onRefresh)
+        self.refreshButton.set_tooltip_text(lang.toolRefresh)
+        
+        self.historyButton = gt.get_object("history")
+        self.historyButton.connect("clicked", self.onHistory)
+        self.historyButton.set_tooltip_text(lang.toolHistory)
+        
+        self.readButton = gt.get_object("read")
+        self.readButton.connect("clicked", self.onRead)
+        self.readButton.set_tooltip_text(lang.toolRead)
+        
+        self.messageButton = gt.get_object("message")
+        self.messageButton.connect("clicked", self.onMode)
+        self.messageButton.set_tooltip_text(lang.toolMode)
+        
+        # Settings Button
+        self.settingsButton = gt.get_object("settings")
+        self.settingsButton.connect("toggled", 
+                                    lambda *args: self.onSettings(False))
+        self.settingsButton.set_tooltip_text(lang.toolSettings)
+        self.settingsToggle = False
+        
+        # About Button
+        self.aboutButton = gt.get_object("about")
+        self.aboutButton.connect("toggled", lambda *args: self.onAbout(False))
+        self.aboutButton.set_tooltip_text(lang.toolAbout)
+        self.aboutToggle = False
+        
+        self.quitButton = gt.get_object("quit")
+        self.quitButton.connect("clicked", self.onQuit)
+        self.quitButton.set_tooltip_text(lang.toolQuit)
+        
+        self.infoLabel = gt.get_object("label")
+        
+        # Text Input
+        self.textScroll = gt.get_object("textscroll")
+        self.text = text.TextInput(self)
+        self.textScroll.add(self.text)
+        
+        # HTML
+        self.htmlScroll = gt.get_object("htmlscroll")
+        self.html = html.HTML(self.main, self)
+        self.htmlScroll.add(self.html)
+        self.htmlScroll.set_shadow_type(gtk.SHADOW_IN)
+        
+        # Messages
+        self.messageScroll = gt.get_object("messagescroll")
+        self.message = message.HTML(self.main, self)
+        self.messageScroll.add(self.message)
+        self.messageScroll.set_shadow_type(gtk.SHADOW_IN)
+        
+        
+        self.content = gt.get_object("content")
+        self.content.set_border_width(2)
+        
+        # Bars
+        self.toolbar = gt.get_object("toolbar")
+        self.progress = gt.get_object("progressbar")
+        self.status = gt.get_object("statusbar")
+                
+        # Restore Position & Size
+        if main.settings.isset("position"):
+            self.windowPosition = main.settings['position'][1:-1].split(",")
+            self.move(int(self.windowPosition[0]), int(self.windowPosition[1]))
+        
+        if main.settings.isset("size"):
+            size = main.settings['size'][1:-1].split(",")
+            self.resize(int(size[0]), int(size[1]))
+        else:
+            self.resize(280,400)
+        
+        # Tray
+        self.tray = tray.TrayIcon(self)
+        
+        # Events
+        self.connect("delete_event", self.deleteEvent)
+        self.connect("destroy", self.destroyEvent)
+        self.connect("window-state-event", self.stateEvent)
+        self.initEvent = self.connect("expose-event", self.drawEvent)
+        
+        # Dialogs
+        self.aboutDialog = None
+        self.settingsDialog = None
+        
+        # Variables
+        self.mode = MODE_TWEETS
+        self.windowPosition = None
+        self.minimized = False
+        
+        self.show_all()
+        
+        self.setMode(self.mode)
+        
+        # Statusbar Updater
+        self.updateStatus()
+        gobject.timeout_add(1000, lambda: self.updateStatus())
+                
+        # Show
+        self.showInput()
+    
+    
+    # GUI Switchers ------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def showInput(self, resize = True):
+        self.progress.hide()
+        self.textScroll.show()
+        if resize:
+            self.text.resize()
+        else:
+            self.text.resize(1)
+        
+        self.text.set_sensitive(True)
+        self.checkRefresh()
+        self.checkRead()
+        self.messageButton.set_sensitive(True)
+        
+    def showProgress(self):
+        def progressActivity():
+            self.progress.pulse()
+            return self.main.isSending or self.main.isConnecting or \
+                self.main.isLoadingHistory or \
+                (self.mode == MODE_MESSAGES and \
+                self.message.loaded == HTML_LOADING) or \
+                (self.mode == MODE_TWEETS and self.html.loaded == HTML_LOADING)
+        
+        self.progress.set_fraction(0.0)
+        self.progress.show()
+        self.infoLabel.hide()
+        self.textScroll.hide()
+        gobject.timeout_add(100, lambda: progressActivity())
+    
+    def hideAll(self, progress = True):
+        if progress:
+            self.progress.hide()
+        
+        self.textScroll.hide()
+        self.refreshButton.set_sensitive(False)
+        self.readButton.set_sensitive(False)
+        self.historyButton.set_sensitive(False)
+        self.messageButton.set_sensitive(False)
+    
+    
+    # Statusbar ----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def updateStatus(self, once = False):
+        if self.text.hasTyped:
+            pass
+    
+        elif self.main.isReconnecting:
+            wait = self.main.refreshTimeout - \
+                    (calendar.timegm(time.gmtime()) - self.main.reconnectTime)
+            if wait < 60:
+                self.setStatus(lang.statusReconnectSeconds % wait)
+        
+            elif wait < 105:
+                self.setStatus(lang.statusReconnectMinute)
+            
+            else:
+                self.setStatus(
+                    lang.statusReconnectMinutes % math.ceil(wait / 60.0))
+    
+        elif self.main.isLoadingHistory:
+            self.setStatus(
+                lang.statusLoadHistory if \
+                self.html.loadHistoryID != HTML_UNSET_ID else \
+                lang.statusLoadMessageHistory)
+    
+        elif self.main.isConnecting:
+            self.setStatus(lang.statusConnecting % self.main.username)
+            
+        elif self.main.loginError:
+            self.setStatus(lang.statusError)
+        
+        elif not self.main.loginStatus:
+            self.setStatus(lang.statusLogout)
+        
+        elif self.main.isUpdating:
+            self.refreshButton.set_sensitive(False)
+            self.readButton.set_sensitive(False)
+            self.setStatus(lang.statusUpdate)
+        
+        elif self.main.refreshTime == UNSET_TIMEOUT or \
+            (self.mode == MODE_MESSAGES and \
+            self.message.loaded == HTML_LOADING) or \
+            (self.mode == MODE_TWEETS and self.html.loaded == HTML_LOADING):
+            
+            self.setStatus(lang.statusConnected)
+        
+        elif (not self.text.isTyping or not self.text.hasFocus) and not \
+            self.main.isSending:
+            
+            wait = self.main.refreshTimeout - \
+                (calendar.timegm(time.gmtime()) - self.main.refreshTime)
+            
+            if wait == 0:
+                self.refreshButton.set_sensitive(False)
+                self.readButton.set_sensitive(False)
+                self.setStatus(lang.statusUpdate)
+            
+            elif wait == 1:
+                self.setStatus(lang.statusOneSecond)
+            
+            else:
+                if wait < 60:
+                    self.setStatus(lang.statusSeconds % wait)
+                
+                elif wait < 105:
+                    self.setStatus(lang.statusMinute)
+                    
+                else:
+                    self.setStatus(lang.statusMinutes % math.ceil(wait / 60.0))
+    
+        if once:
+            return False
+            
+        else:
+            return True
+    
+    def setStatus(self, status):
+        self.status.pop(0)
+        self.status.push(0, status)    
+    
+    
+    # Info Label ---------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def setLabel(self):    
+        if self.main.isSending:
+            return
+    
+        if self.main.replyUser == UNSET_TEXT and \
+            self.main.retweetUser == UNSET_TEXT and \
+            self.main.messageUser == UNSET_TEXT:
+            
+            self.infoLabel.set_markup(UNSET_LABEL)
+            self.infoLabel.hide()
+            
+        elif self.main.retweetUser != UNSET_TEXT:
+            self.setLabelText(lang.labelRetweet % self.main.retweetUser)
+            self.infoLabel.show()            
+            
+        elif self.main.replyText != UNSET_TEXT:
+            self.setLabelText(lang.labelReplyText % self.main.replyText)
+            self.infoLabel.show()
+            
+        elif self.main.replyUser != UNSET_TEXT:
+            self.setLabelText(lang.labelReply % self.main.replyUser)
+            self.infoLabel.show()
+            
+        # Messages
+        elif self.main.messageText != UNSET_TEXT:
+            self.setLabelText(lang.labelMessageText % self.main.messageText)
+            self.infoLabel.show()        
+        
+        elif self.main.messageUser != UNSET_TEXT:
+            self.setLabelText(lang.labelMessage % self.main.messageUser)
+            self.infoLabel.show()
+    
+    def setLabelText(self, text):
+        # Get Font Width
+        font = self.infoLabel.create_pango_context().get_font_description()
+        layout = self.infoLabel.create_pango_layout("")
+        layout.set_markup(text)
+        layout.set_font_description(font)
+        
+        # Truncate till it fits
+        width = self.infoLabel.get_allocation()[2]
+        cur = layout.get_pixel_size()[0]
+        if cur > width:
+            while cur > width:
+                text = text[:-3]
+                layout.set_markup(text + "...")
+                cur = layout.get_pixel_size()[0]
+            
+            self.infoLabel.set_markup(text + "...")
+        
+        else:
+            self.infoLabel.set_markup(text)
+    
+    
+    # Helpers ------------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def getHeight(self, widget):
+        size = widget.get_allocation()
+        return size[3] - size[0]
+    
+    def setTitle(self):
+        if self.main.username == UNSET_TEXT:
+            self.set_title(lang.title)
+            
+        elif self.mode == MODE_MESSAGES:
+            if self.html.count > 0:
+                self.set_title((lang.titleTweets if self.html.count > 1 else \
+                                lang.titleTweet) % self.html.count)
+            else:
+                self.set_title(lang.titleLoggedIn % self.main.username)
+            
+        elif self.mode == MODE_TWEETS:
+            if self.message.count > 0:
+                self.set_title((lang.titleMessages if self.html.count > 1 else \
+                                lang.titleMessage) % self.message.count)
+            else:
+                self.set_title(lang.titleLoggedIn % self.main.username)
+    
+    def checkRefresh(self):
+        if self.isReady():
+            self.refreshButton.set_sensitive(True)            
+            
+            # Check for goMessage
+            if self.text.goSendMessage != None:
+                self.setMode(MODE_MESSAGES)
+            
+            self.updateStatus()
+    
+    def checkRead(self):
+        if self.mode == MODE_MESSAGES:
+            self.readButton.set_sensitive(
+                                    self.message.lastID > self.message.initID)
+            
+        elif self.mode == MODE_TWEETS:
+            self.readButton.set_sensitive(self.html.lastID > self.html.initID)
+            
+        else:
+            self.readButton.set_sensitive(False)
+    
+    def setMode(self, mode):
+        if mode == None:
+            self.mode = MODE_TWEETS
+        else:
+            self.mode = mode
+        
+        if self.mode == MODE_MESSAGES:
+            self.messageButton.set_active(True)
+        
+        else:
+            self.onMode()
+    
+    def isReady(self):
+        return not self.main.isUpdating and self.message.loaded == HTML_LOADED \
+                                        and self.html.loaded == HTML_LOADED
+    
+    
+    # Message Dialogs ----------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def enterPassword(self):
+        self.main.apiTempPassword = None
+        dialog.PasswordDialog(self, lang.passwordTitle, 
+                                lang.passwordQuestion % self.main.username)
+    
+    def askForRetweet(self, name, yes, no):
+        dialog.MessageDialog(self, MESSAGE_QUESTION,
+                        lang.retweetQuestion,
+                        lang.retweetTitle % name,
+                        yesCallback = yes, noCallback = no)
+    
+    def showRetweetInfo(self, name):
+        dialog.MessageDialog(self, MESSAGE_INFO,
+                        lang.retweetInfo % name,
+                        lang.retweetInfoTitle)
+    
+    
+    # Error & Warning ----------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def showError(self, error):
+        if self.main.wasSending:
+            self.showInput()
+            
+            # Select Textbox?
+            if not self.main.wasRetweeting or \
+                (self.main.retweetText != UNSET_TEXT or \
+                self.main.replyUser != UNSET_TEXT or \
+                self.main.replyID != UNSET_ID_NUM):
+                self.text.grab_focus()
+        
+        try:
+            code = error.response.status
+            if error.reason.startswith("Share sharing"):
+                code = -2
+         
+        except:
+            try:
+                if error.reason.startswith("HTTP Error "):
+                    code = int(error.reason[11:14])
+             
+                elif type(error) == exceptions.IOError:
+                    code = -1
+                 
+                else:
+                    code = 0
+            
+            except:
+                code = 0
+             
+        # Ratelimit error
+        if (code == 400 and not self.main.wasSending) or \
+           (code == 403 and self.main.wasSending):
+             
+            self.refreshButton.set_sensitive(False)
+            rateError = self.main.reconnect()
+             
+        elif (code == 400 and self.main.wasSending) or \
+             (code == 403 and not self.main.wasSending):
+             
+            code = 500
+            rateError = ""
+         
+        else:
+            rateError = ""
+         
+        # 404's
+        if self.main.wasSending and code == 404:
+            code = -3
+         
+        self.main.wasSending = False
+        self.main.wasRetweeting = False
+         
+        # Show Warning on url error or error message for anything else         
+        if code == -1 or code == 500 or code == 502 or code == 503:
+         
+            # Show only one warning at a time to prevent dialog cluttering
+            if not self.main.requestWarningShown:
+                self.main.requestWarningShown = True
+                 
+                def unset():
+                    self.main.requestWarningShown = False
+                 
+                dialog.MessageDialog(self, MESSAGE_WARNING,
+                    lang.warningURL, lang.warningTitle,
+                    okCallback = unset)
+         
+        else:
+            description = {
+                -3 : lang.errorUserNotFound,
+                -2 : lang.errorAlreadyRetweeted,
+                0 : lang.errorInternal % str(error),
+                404 : lang.errorLogin % self.main.username, 
+                401 : lang.errorLogin % self.main.username,
+                403 : rateError,
+                400 : rateError,
+                500 : lang.errorTwitter,
+                502 : lang.errorDown,
+                503 : lang.errorOverload
+            }[code]
+            dialog.MessageDialog(self, MESSAGE_ERROR, description, lang.errorTitle)
+        
+        self.updateStatus()
+    
+    def showWarning(self, limit):
+        dialog.MessageDialog(self, MESSAGE_WARNING, lang.warningText % limit, 
+                                lang.warningTitle)
+    
+    
+    # Handlers -----------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def onRefresh(self, *args):
+        if self.mode == MODE_MESSAGES:
+            self.main.updater.refreshMessages = True
+        else:
+            self.main.updater.refreshNow = True
+    
+    def onHistory(self, *args):
+        if self.mode == MODE_MESSAGES:
+            gobject.idle_add(lambda: self.message.clear())
+            
+        else:
+            gobject.idle_add(lambda: self.html.clear())
+    
+    def onRead(self, *args):
+        if self.mode == MODE_MESSAGES:
+            gobject.idle_add(lambda: self.message.read())
+            
+        else:
+            gobject.idle_add(lambda: self.html.read())
+    
+    def onMode(self, *args):
+        if self.messageButton.get_active():
+            self.mode = MODE_MESSAGES
+        else: # TODO add case for searchbutton
+            self.mode = MODE_TWEETS
+        
+        if self.mode == MODE_MESSAGES:
+            self.historyButton.set_tooltip_text(lang.toolHistoryMessage)
+            self.readButton.set_tooltip_text(lang.toolReadMessage)
+            self.refreshButton.set_tooltip_text(lang.toolRefreshMessage)
+            self.htmlScroll.hide()
+            self.messageScroll.show()    
+            self.message.grab_focus()
+            self.readButton.set_sensitive(
+                                    self.message.lastID > self.message.initID)
+            
+            self.historyButton.set_sensitive(self.message.historyLoaded)
+            
+            if self.message.loaded == HTML_LOADING:
+                self.showProgress()
+                
+            elif self.message.loaded == HTML_LOADED:
+                self.showInput()
+        
+        elif self.mode == MODE_TWEETS:
+            self.historyButton.set_tooltip_text(lang.toolHistory)
+            self.readButton.set_tooltip_text(lang.toolRead)
+            self.refreshButton.set_tooltip_text(lang.toolRefresh)
+            self.messageScroll.hide()    
+            self.htmlScroll.show()    
+            self.html.grab_focus()
+            self.readButton.set_sensitive(self.html.lastID > self.html.initID)
+            self.historyButton.set_sensitive(self.html.historyLoaded)
+        
+            if self.html.loaded == HTML_LOADING:
+                self.showProgress()
+                
+            elif self.html.loaded == HTML_LOADED:
+                self.showInput()
+        
+        else: # TODO implement search here
+            pass
+        
+        
+        self.setTitle()
+        self.text.checkMode()
+        self.text.looseFocus()
+    
+    def onSettings(self, menu):
+        if not self.settingsToggle:
+            self.settingsToggle = True
+            if self.settingsButton.get_active() and not self.settingsDialog:
+                self.settingsDialog = dialog.SettingsDialog(self)
+        
+            elif menu and not self.settingsDialog:
+                self.settingsDialog = dialog.SettingsDialog(self)
+                self.settingsButton.set_active(True)
+            
+        
+            elif menu and self.settingsDialog:
+                self.settingsDialog.onClose()
+                self.settingsButton.set_active(False)
+        
+            elif self.settingsDialog:
+                self.settingsDialog.onClose()
+                
+            self.settingsToggle = False
+    
+    def onAbout(self, menu):
+        if not self.aboutToggle:
+            self.aboutToggle = True
+            if self.aboutButton.get_active() and not self.aboutDialog:
+                self.aboutDialog = dialog.AboutDialog(self)
+        
+            elif menu and not self.aboutDialog:
+                self.aboutDialog = dialog.AboutDialog(self)
+                self.aboutButton.set_active(True)
+        
+            elif menu and self.aboutDialog:
+                self.aboutDialog.onClose()
+                self.aboutButton.set_active(False)        
+        
+            elif self.aboutDialog:
+                self.aboutDialog.onClose()
+            
+            self.aboutToggle = False
+    
+    def onQuit(self, widget = None, data = None):
+         if data:
+             data.set_visible(False)
+         
+         self.main.quit()
+    
+    
+    # Events -------------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def deleteEvent(self, widget, event, data=None):
+        self.windowPosition = self.get_position()
+        self.main.settings['position'] = str(self.windowPosition)
+        self.hide()
+        return True
+    
+    def destroyEvent(self, widget, data=None):
+        self.windowPosition = self.get_position()
+        self.main.settings['position'] = str(self.windowPosition)
+        self.hide()
+        return True
+        
+    def stateEvent(self, window, event):
+        if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
+            self.minimized = event.new_window_state & \
+                                gtk.gdk.WINDOW_STATE_ICONIFIED
+    
+    def drawEvent(self, *args):
+        self.disconnect(self.initEvent)
+        gobject.idle_add(lambda: self.main.onInit())
+    

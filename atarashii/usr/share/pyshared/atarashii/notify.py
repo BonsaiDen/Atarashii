@@ -1,13 +1,13 @@
-#  This file is part of  Atarashii.
+#  This file is part of Atarashii.
 #
-#  Atarashii is free software: you can redistribute it and/or 
+#  Atarashii is free software: you can redistribute it and/or
 #  modify it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
 #  Atarashii is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
-#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #  GNU General Public License for more details.
 # 
 #  You should have received a copy of the GNU General Public License along with
@@ -17,53 +17,53 @@
 # Notifications ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 try:
-	import pynotify
-	import subprocess
-	import threading
+    import pynotify
+    import subprocess
+    import threading
 
-	class NotifierSound(threading.Thread):
-		def __init__(self, sound):
-			threading.Thread.__init__(self)
-			self.sound = sound
-	
-		def run(self):
-			try:
-				subprocess.call(["mplayer", self.sound])
+    class NotifierSound(threading.Thread):
+        def __init__(self, sound):
+            threading.Thread.__init__(self)
+            self.sound = sound
+    
+        def run(self):
+            try:
+                subprocess.call(["mplayer", self.sound])
 
-			finally:
-				pass
+            finally:
+                pass
 
-	pynotify.init("Atarashii")
-	class Notifier:
-		def __init__(self, main):
-			self.main = main
-	
-		def show(self, objs, sound = False):
-			if sound:
-				self.sound()
-		
-			for obj in objs:
-				self.notify(obj[0], obj[1], obj[2])
-	
-		def notify(self, title, text, icon = None):
-			caps = pynotify.get_server_caps()
-			notification = pynotify.Notification(title, text, icon)		
-			return notification.show()
-	
-		def sound(self):
-			snd = NotifierSound(self.main.settings['soundfile'])
-			snd.setDaemon(True)
-			snd.start()
-	
-	CAN_NOTIFY = True
+    pynotify.init("Atarashii")
+    class Notifier:
+        def __init__(self, main):
+            self.main = main
+    
+        def show(self, objs, sound = False):
+            if sound:
+                self.sound()
+        
+            for obj in objs:
+                self.notify(obj[0], obj[1], obj[2])
+    
+        def notify(self, title, text, icon = None):
+            caps = pynotify.get_server_caps()
+            notification = pynotify.Notification(title, text, icon)        
+            return notification.show()
+    
+        def sound(self):
+            snd = NotifierSound(self.main.settings['soundfile'])
+            snd.setDaemon(True)
+            snd.start()
+    
+    CAN_NOTIFY = True
 
 except:
-	class Notifier():
-		def __init__(self, main):
-			pass
-		
-		def show(self, objs, sound = False):
-			pass
-			
-	CAN_NOTIFY = False
+    class Notifier():
+        def __init__(self, main):
+            pass
+        
+        def show(self, objs, sound = False):
+            pass
+            
+    CAN_NOTIFY = False
 
