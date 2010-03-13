@@ -40,12 +40,12 @@ class HTML(view.HTMLView):
     
     
     # Render the Timeline ------------------------------------------------------
-    # --------------------------------------------------------------------------    
+    # --------------------------------------------------------------------------
     def renderItem(self, num, item, img):
         user, text = item.sender, self.formatter.parse(item.text)
         
         
-        # Spacers ----------------------------------------------------------
+        # Spacers --------------------------------------------------------------
         mentioned = item.recipient_screen_name != self.main.username
         if num > 0:
             nextHighlight = self.items[num + 1][0].recipient_screen_name != \
@@ -59,7 +59,7 @@ class HTML(view.HTMLView):
         self.lastname = user.screen_name
         
         
-        # Avatar -----------------------------------------------------------
+        # Avatar ---------------------------------------------------------------
         self.isNewAvatar(num)
         if (num < len(self.items) - 1 and \
             (user.screen_name != self.items[num + 1][0].sender.screen_name \
@@ -81,7 +81,7 @@ class HTML(view.HTMLView):
             avatar = ""
         
         
-        # Background -------------------------------------------------------
+        # Background -----------------------------------------------------------
         cls = 'oldtweet' if item.id <= self.initID else 'tweet'
         if item.recipient_screen_name.lower() != self.main.username.lower():
             mode = lang.messageTo
@@ -95,7 +95,7 @@ class HTML(view.HTMLView):
             reply = ""
         
         
-        # Protected --------------------------------------------------------
+        # Protected ------------------------------------------------------------
         if hasattr(user, "protected") and user.protected:
             locked = ('<span class="protected" title="' + \
                 lang.htmlProtected + '"></span>') % user.screen_name
@@ -104,7 +104,7 @@ class HTML(view.HTMLView):
             locked = ''
         
         
-        # HTML Snippet -----------------------------------------------------
+        # HTML Snippet ---------------------------------------------------------
         html = '''
         <div class="%s">
         <div class="avatar">
