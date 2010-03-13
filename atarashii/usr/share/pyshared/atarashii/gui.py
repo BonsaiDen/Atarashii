@@ -411,11 +411,11 @@ class GUI(gtk.Window):
         dialog.PasswordDialog(self, lang.passwordTitle,
                                 lang.passwordQuestion % self.main.username)
     
-    def ask_for_retweet(self, name, yes, no):
+    def ask_for_retweet(self, name, yes, noo):
         dialog.MessageDialog(self, MESSAGE_QUESTION,
                         lang.retweetQuestion,
                         lang.retweetTitle % name,
-                        yes_callback = yes, no_callback = no)
+                        yes_callback = yes, no_callback = noo)
     
     def show_retweet_info(self, name):
         dialog.MessageDialog(self, MESSAGE_INFO,

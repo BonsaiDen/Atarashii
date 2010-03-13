@@ -617,7 +617,8 @@ class Updater(threading.Thread):
             self.main.refresh_timeout = 60
             return
             
-        minutes = (ratelimit['reset_time_in_seconds'] - calendar.timegm(time.gmtime())) / 60
+        minutes = (ratelimit['reset_time_in_seconds'] - \
+                   calendar.timegm(time.gmtime())) / 60
         limit = ratelimit['remaining_hits']
         if limit > 0:
             limit = limit / (2.0 + (2.0 / 2))

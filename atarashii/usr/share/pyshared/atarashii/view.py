@@ -396,9 +396,9 @@ class HTMLView(webkit.WebView):
     
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def relative_time(self, t):
+    def relative_time(self, date):
         delta = long(calendar.timegm(time.gmtime())) - \
-                long(calendar.timegm(t.timetuple()))
+                long(calendar.timegm(date.timetuple()))
         if delta <= 1:
             return lang.htmlAboutSecond
         
@@ -427,18 +427,18 @@ class HTMLView(webkit.WebView):
             return lang.htmlDay % math.ceil(delta / (60.0 * 60.0 * 24.0))
             
         else:
-            t = time.localtime(calendar.timegm(t.timetuple()))
-            return time.strftime(lang.htmlExact, t)
+            date = time.localtime(calendar.timegm(date.timetuple()))
+            return time.strftime(lang.htmlExact, date)
     
-    def absolute_time(self, t):
+    def absolute_time(self, date):
         delta = long(calendar.timegm(time.gmtime())) - \
-                long(calendar.timegm(t.timetuple()))
-        t = time.localtime(calendar.timegm(t.timetuple()))
+                long(calendar.timegm(date.timetuple()))
+        date = time.localtime(calendar.timegm(date.timetuple()))
         if delta <= 60 * 60 * 24:
-            return time.strftime(lang.htmlTime, t)
+            return time.strftime(lang.htmlTime, date)
             
         else:
-            return time.strftime(lang.htmlTimeDay, t)
+            return time.strftime(lang.htmlTimeDay, date)
     
     # Checks for new Tweets
     def is_new_timeline(self, item):
@@ -515,17 +515,17 @@ class HTMLView(webkit.WebView):
                 self.main.retweet(name, tweetid)
                 
             # Which style?
-            rt = self.main.settings["retweets"]
+            rt_temp = self.main.settings["retweets"]
             if name.lower() == self.main.username.lower():
-                rt = RETWEET_OLD
+                rt_temp = RETWEET_OLD
             
-            if rt == RETWEET_ASK:
+            if rt_temp == RETWEET_ASK:
                 self.main.gui.ask_for_retweet(name, new_retweet, old_retweet)
             
-            elif rt == RETWEET_NEW:
+            elif rt_temp == RETWEET_NEW:
                 new_retweet()
             
-            elif rt == RETWEET_OLD:
+            elif rt_temp == RETWEET_OLD:
                 old_retweet()
                 
         # Regular links
@@ -543,8 +543,8 @@ class HTMLView(webkit.WebView):
             ">": "&gt;",
             "<": "&lt;"
         }
-        for k, v in ent.iteritems():
-            text = text.replace(v, k)
+        for key, value in ent.iteritems():
+            text = text.replace(value, key)
         
         return text
 

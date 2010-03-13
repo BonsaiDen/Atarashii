@@ -71,33 +71,33 @@ class Formatter:
         # Replace all the stuff
         result = []
         for i in self.text_parts:
-            t, c = i
-            if t == 0:
-                result.append(c)
+            ttype, data = i
+            if ttype == 0:
+                result.append(data)
             
             # URL
-            elif t == 1:
-                if len(c) > 30:
-                    text = c[0:27] + "..."
+            elif ttype == 1:
+                if len(data) > 30:
+                    text = data[0:27] + "..."
                 else:
-                    text = c
+                    text = data
                 
                 result.append(
                     '<a href="%s" title="%s">%s</a>' %
-                    (self.escape(c), self.escape(c), text))
+                    (self.escape(data), self.escape(data), text))
             
             # @
-            elif t == 2:
-                at = c[1:]
-                self.users.append(at)
+            elif ttype == 2:
+                at_user = data[1:]
+                self.users.append(at_user)
                 result.append(
                     ('<a href="http://twitter.com/%s" title="' + lang.htmlAt +\
-                    '">@%s</a>') % (at, at, at))
+                    '">@%s</a>') % (at_user, at_user, at_user))
             
             # tag
-            elif t == 3:
-                pos = c.rfind("#")
-                stuff, tag = c[:pos], c[pos + 1:]
+            elif ttype == 3:
+                pos = data.rfind("#")
+                stuff, tag = data[:pos], data[pos + 1:]
                 self.tags.append(tag)
                 result.append((
                     '%s<a href="http://search.twitter.com/search?%s" title="'+\
@@ -107,20 +107,25 @@ class Formatter:
         return "".join(result)
     
     # Crazy filtering and splitting :O
-    def filter_by(self, regex, o):
-        e = 0
-        while e < len(self.text_parts):
-            t, c = self.text_parts[e]
-            if t == 0:
-                m = regex.search(c)
-                if m != None:
-                    self.text_parts.pop(e)
-                    self.text_parts.insert(e, (0, c[:m.start()]))
-                    self.text_parts.insert(e + 1, (o, c[m.start():m.end()]))
-                    self.text_parts.insert(e + 2, (0, c[m.end():]))
-                    e += 1
+    def filter_by(self, regex, stype):
+        pos = 0
+        while pos < len(self.text_parts):
+            ttype, data = self.text_parts[pos]
+            if ttype == 0:
+                match = regex.search(data)
+                if match != None:
+                    self.text_parts.pop(pos)
+                    self.text_parts.insert(pos, 
+                                    (0, data[:match.start()]))
                     
-            e += 1
+                    self.text_parts.insert(pos + 1,
+                                    (stype, data[match.start():match.end()]))
+                    
+                    self.text_parts.insert(pos + 2,
+                                    (0, data[match.end():]))
+                    pos += 1
+            
+            pos += 1
     
     def url(self, match):
         self.urls.append(match)
