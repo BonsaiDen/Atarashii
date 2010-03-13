@@ -22,12 +22,13 @@ import webkit
 import calendar
 import math
 import time
-import datetime
 import webbrowser
 
-import format
+import formatter
 from lang import lang
-from constants import *
+from constants import HTML_STATE_NONE, HTML_UNSET_ID, HTML_STATE_START, \
+                      HTML_STATE_SPLASH, HTML_STATE_RENDER, RETWEET_ASK, \
+                      RETWEET_NEW, RETWEET_OLD
 
 
 class HTMLView(webkit.WebView):
@@ -44,7 +45,7 @@ class HTMLView(webkit.WebView):
         self.set_maintains_back_forward_list(False)
         self.mode = HTML_STATE_NONE
         self.count = 0
-        self.formatter = format.Formatter()
+        self.formatter = formatter.Formatter()
         self.getLatest = None
         self.itemCount = 20
         self.getItemCount = None
@@ -104,7 +105,7 @@ class HTMLView(webkit.WebView):
 
 
     # Render the actual HTML ---------------------------------------------------
-    # --------------------------------------------------------------------------    
+    # --------------------------------------------------------------------------
     def renderHTML(self, html, mode):
         self.mode = mode
         self.isRendering = True
