@@ -23,7 +23,7 @@ import urllib
 # <http://github.com/mzsanford/twitter-text-java>
 AT_REGEX = re.compile(ur"\B[@\uFF20]([a-z0-9_]{1,20})",
                       re.UNICODE | re.IGNORECASE)
-TAG_REGEX = re.compile(ur"(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+[a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\\u00f8-\u00ff]*)",
+TAG_REGEX = re.compile(ur"(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+[a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff]*)",
                        re.UNICODE | re.IGNORECASE)
 
 PRE_CHARS = "(?:[^/\"':!=]|^|\\:)"
