@@ -25,7 +25,7 @@ import pango
 import re
 
 from lang import lang
-from constants import *
+from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, MODE_TWEETS
 
 class TextInput(gtk.TextView):
     __gsignals__ = {
@@ -165,7 +165,8 @@ class TextInput(gtk.TextView):
             self.messageLength = 0
             
             # Cancel reply mode
-            if text.strip()[0:1] != "@" and not self.isChanging: # TODO fix unicode @ here
+            if not unicode(text.strip())[0:1] in u"@\uFF20" and \
+               not self.isChanging:
                 self.main.replyText = UNSET_TEXT
                 self.main.replyUser = UNSET_TEXT
                 self.main.replyID = UNSET_ID_NUM
@@ -242,7 +243,7 @@ class TextInput(gtk.TextView):
     def checkColor(self, count):
         if count > 140 + self.messageLength:
             self.modify_base(gtk.STATE_NORMAL, 
-                                gtk.gdk.Color(255 * 255, 200 * 255, 200 * 255))
+                             gtk.gdk.Color(255 * 255, 200 * 255, 200 * 255))
             
         else:
             self.modify_base(gtk.STATE_NORMAL, self.defaultBG)
@@ -258,6 +259,7 @@ class TextInput(gtk.TextView):
         self.main.messageID = UNSET_ID_NUM
         self.main.messageText = UNSET_TEXT
         self.setText(UNSET_TEXT)
+    
     
     # Reply / Retweet / Message ------------------------------------------------
     # --------------------------------------------------------------------------
@@ -358,7 +360,6 @@ class TextInput(gtk.TextView):
         lines = lineCount if self.hasFocus else 1 
         
         # Resize
-        height = self.gui.getHeight(self.gui.content)
         self.inputSize = (textSize + 4) * lines
         if self.inputError != None:
             self.inputSize += self.inputError
