@@ -47,6 +47,8 @@ class TextInput(gtk.TextView):
 		self.replyRegex = re.compile('@([^\s]+)\s.*')
 		self.messageRegex = re.compile('d ([^\s]+)\s.*')
 		
+		self.goSendMessage = None
+		
 		# Sizes
 		self.inputSize = None
 		self.inputError = None
@@ -87,7 +89,14 @@ class TextInput(gtk.TextView):
 	def looseFocus(self):
 		if not self.hasFocus and self.inputError != None:
 			self.resize()
-			if not self.hasTyped:
+			
+			
+			# Check if we need to toggle to message mode
+			if self.goSendMessage != None:
+				self.switchToMessage(self.goSendMessage)
+				self.goSendMessage = None
+			
+			elif not self.hasTyped:
 				self.modify_text(gtk.STATE_NORMAL, 
 								self.get_style().text[gtk.STATE_INSENSITIVE])
 				self.setText(
@@ -133,7 +142,7 @@ class TextInput(gtk.TextView):
 				self.main.messageID = UNSET_ID_NUM
 				self.main.messageText = UNSET_TEXT
 	
-			# check for @ Reply
+			# check for "d user"
 			msg = self.messageRegex.match(text)
 			if msg != None:
 				if self.main.messageID == UNSET_ID_NUM:
@@ -174,6 +183,7 @@ class TextInput(gtk.TextView):
 			if at != None:
 				if self.main.replyID == UNSET_ID_NUM:
 					self.main.replyUser = at.group(1)
+				
 				else:
 					if at.group(1) != self.main.replyUser:
 						self.main.replyText = UNSET_TEXT
@@ -182,6 +192,15 @@ class TextInput(gtk.TextView):
 		
 			elif self.main.replyID == UNSET_ID_NUM:
 				self.main.replyUser = UNSET_TEXT
+		
+			# check for "d user" and switch to messaging
+			msg = self.messageRegex.match(text)
+			if msg != None:
+				if self.gui.isReady():
+					self.switchToMessage(self.getText())
+				
+				else:
+					self.goSendMessage = self.getText()
 		
 		# Resize
 		self.resize()	
@@ -306,6 +325,14 @@ class TextInput(gtk.TextView):
 		self.modify_text(gtk.STATE_NORMAL, self.defaultFG)
 		self.resize()
 	
+	def switchToMessage(self, text):
+		self.changeContents = True
+		self.gui.setMode(MODE_MESSAGES)
+		self.changeContents = True
+		self.isChanging = True
+		self.grab_focus()
+		self.setText(text)
+		self.isChanging = False
 	
 	# Sizing -------------------------------------------------------------------
 	# --------------------------------------------------------------------------

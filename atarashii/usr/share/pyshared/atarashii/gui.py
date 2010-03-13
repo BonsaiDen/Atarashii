@@ -359,11 +359,13 @@ class GUI(gtk.Window):
 				self.set_title(lang.titleLoggedIn % self.main.username)
 	
 	def checkRefresh(self):
-		if not self.main.isUpdating:
-			self.refreshButton.set_sensitive(
-								self.message.loaded == HTML_LOADED and \
-								self.html.loaded == HTML_LOADED)
-								
+		if self.isReady():
+			self.refreshButton.set_sensitive(True)			
+			
+			# Check for goMessage
+			if self.text.goSendMessage != None:
+				self.setMode(MODE_MESSAGES)
+			
 			self.updateStatus()
 	
 	def checkRead(self):
@@ -388,6 +390,10 @@ class GUI(gtk.Window):
 		
 		else:
 			self.onMode()
+	
+	def isReady(self):
+		return not self.main.isUpdating and self.message.loaded == HTML_LOADED \
+										and self.html.loaded == HTML_LOADED
 	
 	
 	# Message Dialogs ----------------------------------------------------------
