@@ -1,3 +1,16 @@
+atarashii (0.99.6-1) all;
+
+  * Bugfixes for the GUI were some buttons would be in a bad state in some rare
+    conditions-
+  * Messages that you have sent to somebody else do now have the same color as
+    mentions(yellow).
+  * Fixed display issues with mentions in the timeline.
+  * Prevent warning dialog on over capacity from being spammed.
+  * Lots of internal refactoring and cleanup e.g. converted all magic values
+    into constants.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 13 Mar 2010 01:19:00 +0100
+
 atarashii (0.99.5-1) all;
 
   * New regular expressions for hashtags, usernames and urls based on the 
