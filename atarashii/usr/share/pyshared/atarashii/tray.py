@@ -49,14 +49,15 @@ class TrayIcon(gtk.StatusIcon):
         menuItem = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
         menuItem.set_label(lang.menuSettings)
         menuItem.connect('activate', 
-                            lambda *args: self.gui.onSettings(True), self)    
+                         lambda *args: self.gui.onSettings(True), self)    
+        
         menu.append(menuItem)
         self.settingsMenu = menuItem
         
         # Abvout
         menuItem = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
         menuItem.set_label(lang.menuAbout)
-        menuItem.connect('activate', lambda *args: self.gui.onAbout(True), self)    
+        menuItem.connect('activate', lambda *args: self.gui.onAbout(True), self)
         menu.append(menuItem)
         
         # Separator
@@ -131,7 +132,7 @@ class TrayIcon(gtk.StatusIcon):
         size = self.gui.size_request()
         position = self.gui.get_position()
         if position[0] < 0 - size[0] or position[0] > screen.get_width() \
-            or position[1] < 0 - size[1] or position[1] > screen.get_height():
+           or position[1] < 0 - size[1] or position[1] > screen.get_height():
             return False
             
         else:
