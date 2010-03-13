@@ -91,7 +91,7 @@ class Formatter:
                 at_user = data[1:]
                 self.users.append(at_user)
                 result.append(
-                    ('<a href="http://twitter.com/%s" title="' + lang.htmlAt +\
+                    ('<a href="http://twitter.com/%s" title="' + lang.html_at +\
                     '">@%s</a>') % (at_user, at_user, at_user))
             
             # tag
@@ -101,7 +101,7 @@ class Formatter:
                 self.tags.append(tag)
                 result.append((
                     '%s<a href="http://search.twitter.com/search?%s" title="'+\
-                    lang.htmlSearch + '">#%s</a>') %
+                    lang.html_search + '">#%s</a>') %
                     (stuff, urllib.urlencode({'q': '#' + tag}), tag, tag))
                 
         return "".join(result)

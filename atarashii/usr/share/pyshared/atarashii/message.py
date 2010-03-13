@@ -32,9 +32,9 @@ class HTML(view.HTMLView):
         self.get_item_count = self.main.get_message_count
         self.set_item_count = self.main.set_message_count
         
-        self.lang_loading = lang.messageLoading
-        self.lang_empty = lang.messageEmpty
-        self.lang_load = lang.messageLoadMore
+        self.lang_loading = lang.message_loading
+        self.lang_empty = lang.message_empty
+        self.lang_load = lang.message_load_more
         
         self.first_setting = 'firstmessage_'
     
@@ -71,7 +71,7 @@ class HTML(view.HTMLView):
             
             avatar = '''<a href="http://twitter.com/%s">
                         <img width="32" src="file://%s" title="''' + \
-                        lang.htmlInfo + '''"/></a>'''
+                        lang.html_info + '''"/></a>'''
             
             avatar = avatar % (user.screen_name, img,
                                 user.name,
@@ -86,13 +86,13 @@ class HTML(view.HTMLView):
         # Background -----------------------------------------------------------
         cls = 'oldtweet' if item.id <= self.init_id else 'tweet'
         if item.recipient_screen_name.lower() != self.main.username.lower():
-            mode = lang.messageTo
+            mode = lang.message_to
             name = item.recipient_screen_name
             reply = "display: none;"
             cls = "mentionedold" if item.id <= self.init_id else "mentioned"
             
         else:
-            mode = lang.messageFrom
+            mode = lang.message_from
             name = user.screen_name
             reply = ""
         
@@ -100,7 +100,7 @@ class HTML(view.HTMLView):
         # Protected ------------------------------------------------------------
         if hasattr(user, "protected") and user.protected:
             locked = ('<span class="protected" title="' + \
-                lang.htmlProtected + '"></span>') % user.screen_name
+                lang.html_protected + '"></span>') % user.screen_name
             
         else:
             locked = ''
@@ -116,7 +116,7 @@ class HTML(view.HTMLView):
         <div class="actions">
             <div class="doretweet" style="''' + reply + \
             '''"><a href="message:%s:%d:%d" title="''' + \
-                (lang.htmlReply % user.screen_name) + '''"></a>
+                (lang.html_reply % user.screen_name) + '''"></a>
             </div>
         </div>
         
@@ -124,7 +124,7 @@ class HTML(view.HTMLView):
             <div>
                 <span class="name"><b>''' + mode + \
                 ''' <a href="http://twitter.com/%s" title="''' + \
-                lang.htmlProfile + \
+                lang.html_profile + \
                 '''">%s</a></b></span> ''' + locked + ''' %s
             </div>
             <div class="time">

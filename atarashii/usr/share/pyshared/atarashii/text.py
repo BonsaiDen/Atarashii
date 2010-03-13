@@ -103,8 +103,8 @@ class TextInput(gtk.TextView):
                 self.modify_text(gtk.STATE_NORMAL,
                                 self.get_style().text[gtk.STATE_INSENSITIVE])
                 self.set_text(
-                    lang.textEntryMessage if self.gui.mode == MODE_MESSAGES \
-                    else lang.textEntry)
+                    lang.text_entry_message if self.gui.mode == MODE_MESSAGES \
+                    else lang.text_entry)
                         
         return False
     
@@ -237,10 +237,10 @@ class TextInput(gtk.TextView):
         text = self.get_text()
         max_length = 140 + self.message_len
         if len(text) <= max_length:
-            self.gui.set_status(lang.statusLeft % (max_length - len(text)))
+            self.gui.set_status(lang.status_left % (max_length - len(text)))
             
         else:
-            self.gui.set_status(lang.statusMore % (len(text) - max_length))
+            self.gui.set_status(lang.status_more % (len(text) - max_length))
     
     # Check the length of the text and change color if needed
     def check_color(self, count):

@@ -32,9 +32,9 @@ class HTML(view.HTMLView):
         self.get_item_count = self.main.get_tweet_count
         self.set_item_count = self.main.set_tweet_count
         
-        self.lang_loading = lang.htmlLoading
-        self.lang_empty = lang.htmlEmpty
-        self.lang_load = lang.htmlLoadMore
+        self.lang_loading = lang.html_loading
+        self.lang_empty = lang.html_empty
+        self.lang_load = lang.html_load_more
         
         self.first_setting = 'firsttweet_'
     
@@ -71,7 +71,7 @@ class HTML(view.HTMLView):
             # Retweet Info
             retweet = '<a href="http://twitter.com/%s" title="''' + \
                     (self.relative_time(item.created_at)) + '">' + \
-                    lang.htmlInRetweet + '</a>'
+                    lang.html_in_retweet + '</a>'
             retweet = retweet % (item.user.screen_name,
                                     item.user.screen_name)
             
@@ -97,7 +97,7 @@ class HTML(view.HTMLView):
         # Is this tweet a reply?
         if tweet.in_reply_to_screen_name and tweet.in_reply_to_status_id:
             reply = '<a href="http://twitter.com/%s/statuses/%d">' + \
-                    lang.htmlInReply + '</a>'
+                    lang.html_in_reply + '</a>'
             reply = reply % (tweet.in_reply_to_screen_name,
                             tweet.in_reply_to_status_id,
                             tweet.in_reply_to_screen_name)
@@ -114,7 +114,7 @@ class HTML(view.HTMLView):
             
             avatar = '''<a href="http://twitter.com/%s">
                         <img width="32" src="file://%s" title="''' + \
-                        lang.htmlInfo + '''"/></a>'''
+                        lang.html_info + '''"/></a>'''
             
             avatar = avatar % (user.screen_name, img,
                                 user.name, user.followers_count,
@@ -139,11 +139,11 @@ class HTML(view.HTMLView):
         # Source -----------------------------------------------------------
         if tweet.source != "web":
             if hasattr(tweet, "source_url") and tweet.source_url != "":
-                by_user = lang.htmlBy % ('<a href="%s" title="%s">%s</a>' % \
+                by_user = lang.html_by % ('<a href="%s" title="%s">%s</a>' % \
                         (tweet.source_url, tweet.source_url, tweet.source))
                 
             else:
-                by_user =  lang.htmlBy % tweet.source
+                by_user =  lang.html_by % tweet.source
             
         else:
             by_user = ""
@@ -152,7 +152,7 @@ class HTML(view.HTMLView):
         # Protected --------------------------------------------------------
         if hasattr(user, "protected") and user.protected:
             locked = ('<span class="protected" title="' + \
-                lang.htmlProtected + '"></span>') % user.screen_name
+                lang.html_protected + '"></span>') % user.screen_name
             
         else:
             locked = ''
@@ -168,11 +168,11 @@ class HTML(view.HTMLView):
         <div class="actions">
             <div class="doreply">
                 <a href="reply:%s:%d:%d" title="''' + \
-                (lang.htmlReply % user.screen_name) + '''"> </a>
+                (lang.html_reply % user.screen_name) + '''"> </a>
             </div>
             <div class="doretweet">
                 <a href="retweet:%d:%d" title="''' + \
-                (lang.htmlRetweet % user.screen_name) + '''"> </a>
+                (lang.html_retweet % user.screen_name) + '''"> </a>
             </div>
         </div>
         
@@ -180,7 +180,7 @@ class HTML(view.HTMLView):
             <div><span class="name">''' + \
                 ("<b>RT</b>" if retweeted else "") + '''
                 <a href="http://twitter.com/%s" title="''' + \
-                lang.htmlProfile + '''">
+                lang.html_profile + '''">
                     <b>%s</b>
                 </a></span> ''' + locked + ''' %s
             </div>

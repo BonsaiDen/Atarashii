@@ -41,13 +41,13 @@ class TrayIcon(gtk.StatusIcon):
         
         # Refresh
         menu_item = gtk.ImageMenuItem(gtk.STOCK_REFRESH)
-        menu_item.set_label(lang.menuUpdate)
+        menu_item.set_label(lang.menu_update)
         menu_item.connect('activate', self.gui.on_refresh, self)
         menu.append(menu_item)
         
         # Settings
         menu_item = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
-        menu_item.set_label(lang.menuSettings)
+        menu_item.set_label(lang.menu_settings)
         menu_item.connect('activate',
                           lambda *args: self.gui.on_settings(True), self)
         
@@ -56,7 +56,7 @@ class TrayIcon(gtk.StatusIcon):
         
         # Abvout
         menu_item = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
-        menu_item.set_label(lang.menuAbout)
+        menu_item.set_label(lang.menu_about)
         menu_item.connect('activate',
                           lambda *args: self.gui.on_about(True), self)
         
@@ -67,7 +67,7 @@ class TrayIcon(gtk.StatusIcon):
         
         # Quit
         menu_item = gtk.ImageMenuItem(gtk.STOCK_QUIT)
-        menu_item.set_label(lang.menuQuit)
+        menu_item.set_label(lang.menu_quit)
         menu_item.connect('activate', self.gui.on_quit, self)
         menu.append(menu_item)
         

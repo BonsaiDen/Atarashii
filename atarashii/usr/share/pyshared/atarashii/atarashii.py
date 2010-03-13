@@ -121,19 +121,19 @@ class Atarashii:
         self.gui.message_button.set_sensitive(False)
         self.gui.show_progress()
         if self.reply_user != UNSET_TEXT:
-            self.gui.set_status(lang.statusReply % self.reply_user)
+            self.gui.set_status(lang.status_reply % self.reply_user)
         
         elif self.retweet_user != UNSET_TEXT:
-            self.gui.set_status(lang.statusRetweet % self.retweet_user)
+            self.gui.set_status(lang.status_retweet % self.retweet_user)
         
         elif self.message_text != UNSET_TEXT:
-            self.gui.set_status(lang.statusMessageReply % self.message_user)
+            self.gui.set_status(lang.status_message_reply % self.message_user)
         
         elif self.message_user != UNSET_TEXT:
-            self.gui.set_status(lang.statusMessage % self.message_user)
+            self.gui.set_status(lang.status_message % self.message_user)
             
         else:
-            self.gui.set_status(lang.statusSend)
+            self.gui.set_status(lang.status_send)
         
         # Sender
         sender = send.Send(self, self.gui.mode, text)
@@ -147,7 +147,7 @@ class Atarashii:
             self.gui.text.set_sensitive(False)
             self.gui.message_button.set_sensitive(False)
             self.gui.show_progress()
-            self.gui.set_status(lang.statusRetweet % name)
+            self.gui.set_status(lang.status_retweet % name)
             
             # Sender
             sender = send.Retweet(self, name, tweetid)
@@ -213,7 +213,7 @@ class Atarashii:
         self.is_connecting = False
         self.gui.settings_button.set_sensitive(True)
         self.gui.tray.settings_menu.set_sensitive(True)
-        self.gui.set_title(lang.titleLoggedIn % self.username)
+        self.gui.set_title(lang.title_logged_in % self.username)
         self.gui.update_status()
         self.gui.show_input()
     
@@ -267,11 +267,11 @@ class Atarashii:
                                     int(self.refresh_timeout * 1000),
                                     lambda: self.login())
             
-            return lang.errorRatelimitReconnect % math.ceil(minutes)
+            return lang.error_ratelimit_reconnect % math.ceil(minutes)
             
         # Just display an error if we exiced the ratelim while being logged in
         else:
-            return lang.errorRatelimit % math.ceil(minutes)
+            return lang.error_ratelimit % math.ceil(minutes)
     
     
     # Helper Functions ---------------------------------------------------------

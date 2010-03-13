@@ -100,7 +100,7 @@ class HTMLView(webkit.WebView):
         self.render_html("""
             <body class="unloaded">
                 <div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
-            </body>""" % (self.main.get_image(), lang.htmlWelcome),
+            </body>""" % (self.main.get_image(), lang.html_welcome),
             HTML_STATE_SPLASH)
     
     
@@ -400,45 +400,45 @@ class HTMLView(webkit.WebView):
         delta = long(calendar.timegm(time.gmtime())) - \
                 long(calendar.timegm(date.timetuple()))
         if delta <= 1:
-            return lang.htmlAboutSecond
+            return lang.html_about_second
         
         elif delta <= 45:
-            return lang.htmlSecond % delta
+            return lang.html_second % delta
         
         elif delta <= 90:
-            return lang.htmlAboutMinute
+            return lang.html_about_minute
         
         elif delta <= 60 * 45:
-            return lang.htmlMinute % math.ceil(delta / 60.0)
+            return lang.html_minute % math.ceil(delta / 60.0)
         
         elif delta <= 60 * 60 * 1.5:
-            return lang.htmlAboutHour
+            return lang.html_about_hour
         
         elif delta <= 60 * 60 * 20:
-            return lang.htmlHour % math.ceil(delta / (60.0 * 60.0))
+            return lang.html_hour % math.ceil(delta / (60.0 * 60.0))
         
         elif delta <= 60 * 60 * 24 * 1.5:
-            return lang.htmlAboutDay
+            return lang.html_about_day
         
         elif delta <= 60 * 60 * 48:
-            return lang.htmlYesterday
+            return lang.html_yesterday
         
         elif delta <= 60 * 60 * 72:
-            return lang.htmlDay % math.ceil(delta / (60.0 * 60.0 * 24.0))
+            return lang.html_day % math.ceil(delta / (60.0 * 60.0 * 24.0))
             
         else:
             date = time.localtime(calendar.timegm(date.timetuple()))
-            return time.strftime(lang.htmlExact, date)
+            return time.strftime(lang.html_exact, date)
     
     def absolute_time(self, date):
         delta = long(calendar.timegm(time.gmtime())) - \
                 long(calendar.timegm(date.timetuple()))
         date = time.localtime(calendar.timegm(date.timetuple()))
         if delta <= 60 * 60 * 24:
-            return time.strftime(lang.htmlTime, date)
+            return time.strftime(lang.html_time, date)
             
         else:
-            return time.strftime(lang.htmlTimeDay, date)
+            return time.strftime(lang.html_time_day, date)
     
     # Checks for new Tweets
     def is_new_timeline(self, item):

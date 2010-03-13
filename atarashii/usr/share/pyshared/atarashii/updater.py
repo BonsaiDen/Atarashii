@@ -357,7 +357,7 @@ class Updater(threading.Thread):
                 if not i.id in message_ids:
                     message_ids.append(i.id)
                     tweet_list.append([
-                        lang.notificationMessage % i.sender.screen_name,
+                        lang.notification_message % i.sender.screen_name,
                         i.text, imgfile])
                     
             self.message.update_list.append((i, imgfile))
@@ -385,7 +385,7 @@ class Updater(threading.Thread):
             tweet_list.reverse()
             if count > 1:
                 for num, i in enumerate(tweet_list):
-                    tweet_list[num][0] = lang.notificationIndex % (
+                    tweet_list[num][0] = lang.notification_index % (
                                         tweet_list[num][0], num+1, count)
                 
             self.notify.show(tweet_list, self.settings.is_true("sound"))

@@ -84,9 +84,9 @@ class PasswordDialog(Dialog):
         self.get("info").set_label(info)
     
     def on_init(self):
-        self.close_button.set_label(lang.passwordButton)
+        self.close_button.set_label(lang.password_button)
         cancel_button = self.get("cancelbutton")
-        cancel_button.set_label(lang.passwordButtonCancel)
+        cancel_button.set_label(lang.password_button_cancel)
         
         def save(*args):
             password = self.get("password").get_text().strip()
@@ -117,8 +117,8 @@ class AboutDialog(Dialog):
     instance = None
     
     def on_init(self):
-        self.dlg.set_title(lang.aboutTitle)
-        self.close_button.set_label(lang.aboutOKButton)
+        self.dlg.set_title(lang.about_title)
+        self.close_button.set_label(lang.about_okbutton)
         self.get("title").set_markup(
         '<span size="x-large"><b>Atarashii %s</b></span>' % self.main.version)
         self.get("image").set_from_file(self.main.get_image())
@@ -127,7 +127,7 @@ class AboutDialog(Dialog):
         info = self.get("infobox")
         text = self.get("textwindow")
         license_button = self.get("license")
-        license_button.set_label(lang.aboutLicenseButton)
+        license_button.set_label(lang.about_license_button)
         
         def toggle(widget, *args):
             if widget.get_property("active"):
@@ -155,19 +155,19 @@ class SettingsDialog(Dialog):
     instance = None
     
     def on_init(self):
-        self.dlg.set_title(lang.settingsTitle)
+        self.dlg.set_title(lang.settings_title)
         self.close_button.set_label(lang.settings_button)
         cancel_button = self.get("cancelbutton")
         cancel_button.set_label(lang.settings_buttonCancel)
         
         # Accounts
-        self.get("accounts").set_text(lang.settingsAccounts)
+        self.get("accounts").set_text(lang.settings_accounts)
         add = self.get("add")
-        add.set_label(lang.settingsAdd)
+        add.set_label(lang.settings_add)
         edit = self.get("edit")
-        edit.set_label(lang.settingsEdit)
+        edit.set_label(lang.settings_edit)
         delete = self.get("delete")
-        delete.set_label(lang.settingsDelete)
+        delete.set_label(lang.settings_delete)
         
         # Setup Account List
         def drop_changed(*args):
@@ -192,13 +192,13 @@ class SettingsDialog(Dialog):
         # Edit Action
         def edit_dialog(*args):
             name = self.user_accounts[drop.get_active()]
-            AccountDialog(self, name, lang.accountEdit, self.edit_account)
+            AccountDialog(self, name, lang.account_edit, self.edit_account)
             
         edit.connect("clicked", edit_dialog)
         
         # Add Action
         def create_dialog(*args):
-            AccountDialog(self, "", lang.accountCreate, self.create_account)
+            AccountDialog(self, "", lang.account_create, self.create_account)
             
         add.connect("clicked", create_dialog)
         
@@ -206,30 +206,30 @@ class SettingsDialog(Dialog):
         def delete_dialog(*args):
             name = self.user_accounts[drop.get_active()]
             MessageDialog(self.dlg, MESSAGE_QUESTION,
-                            lang.accountDeleteDescription % name,
-                            lang.accountDelete,
+                            lang.account_delete_description % name,
+                            lang.account_delete,
                             yes_callback = self.delete_account)
             
         delete.connect("clicked", delete_dialog)
         
         
         # Notifications
-        self.get("notifications").set_text(lang.settingsNotifications)
+        self.get("notifications").set_text(lang.settings_notifications)
         notify = self.get("notify")
         sound = self.get("sound")
-        notify.set_label(lang.settingsNotify)
-        sound.set_label(lang.settingsSound)
+        notify.set_label(lang.settings_notify)
+        sound.set_label(lang.settings_sound)
         
         
         # Sound File
         file_widget = self.get("soundfile")
         file_filter = gtk.FileFilter()
-        file_filter.set_name(lang.settingsFileFilter)
+        file_filter.set_name(lang.settings_file_filter)
         file_filter.add_pattern("*.mp3")
         file_filter.add_pattern("*.wav")
         file_filter.add_pattern("*.ogg")
         file_widget.add_filter(file_filter)
-        file_widget.set_title(lang.settingsFile)
+        file_widget.set_title(lang.settings_file)
         file_widget.set_filename(str(self.settings['soundfile']))
         
         
@@ -251,14 +251,14 @@ class SettingsDialog(Dialog):
         sound.connect("toggled", lambda *a: toggle2())
         
         # Retweet settings
-        self.get("retweets").set_text(lang.settingsRetweets)
+        self.get("retweets").set_text(lang.settings_retweets)
         self.get("retweet_ask")
         ask_rt = self.get("retweet_ask")
         new_rt = self.get("retweet_new")
         old_rt = self.get("retweet_old")
-        ask_rt.set_label(lang.settingsRetweetsAsk)
-        new_rt.set_label(lang.settingsRetweetsNew)
-        old_rt.set_label(lang.settingsRetweetsOld)
+        ask_rt.set_label(lang.settings_retweets_ask)
+        new_rt.set_label(lang.settings_retweets_new)
+        old_rt.set_label(lang.settings_retweets_old)
         rt_tmp = self.settings['retweets']
         if rt_tmp == RETWEET_ASK:
             ask_rt.set_active(True)
@@ -406,11 +406,11 @@ class AccountDialog(Dialog):
         self.get("username").grab_focus()
     
     def on_init(self):
-        self.close_button.set_label(lang.accountButton)
+        self.close_button.set_label(lang.account_button)
         cancel_button = self.get("cancelbutton")
-        cancel_button.set_label(lang.accountButtonCancel)
+        cancel_button.set_label(lang.account_button_cancel)
         
-        self.get("user").set_text(lang.accountUsername)
+        self.get("user").set_text(lang.account_username)
         
         def save(*args):
             username = self.get("username").get_text().strip()

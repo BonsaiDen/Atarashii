@@ -58,26 +58,26 @@ class GUI(gtk.Window):
         # Link Components
         self.refresh_button = gtb.get_object("refresh")
         self.refresh_button.connect("clicked", self.on_refresh)
-        self.refresh_button.set_tooltip_text(lang.toolRefresh)
+        self.refresh_button.set_tooltip_text(lang.tool_refresh)
         
         self.history_button = gtb.get_object("history")
         self.history_button.connect("clicked", self.on_history)
-        self.history_button.set_tooltip_text(lang.toolHistory)
+        self.history_button.set_tooltip_text(lang.tool_history)
         
         self.read_button = gtb.get_object("read")
         self.read_button.connect("clicked", self.on_read)
-        self.read_button.set_tooltip_text(lang.toolRead)
+        self.read_button.set_tooltip_text(lang.tool_read)
         
         self.message_button = gtb.get_object("message")
         self.message_button.connect("clicked", self.on_mode)
-        self.message_button.set_tooltip_text(lang.toolMode)
+        self.message_button.set_tooltip_text(lang.tool_mode)
         
         # Settings Button
         self.settings_button = gtb.get_object("settings")
         self.settings_button.connect("toggled",
                                      lambda *args: self.on_settings(False))
         
-        self.settings_button.set_tooltip_text(lang.toolSettings)
+        self.settings_button.set_tooltip_text(lang.tool_settings)
         self.settings_toggle = False
         
         # About Button
@@ -85,12 +85,12 @@ class GUI(gtk.Window):
         self.about_button.connect("toggled",
                                   lambda *args: self.on_about(False))
         
-        self.about_button.set_tooltip_text(lang.toolAbout)
+        self.about_button.set_tooltip_text(lang.tool_about)
         self.about_toggle = False
         
         self.quit_button = gtb.get_object("quit")
         self.quit_button.connect("clicked", self.on_quit)
-        self.quit_button.set_tooltip_text(lang.toolQuit)
+        self.quit_button.set_tooltip_text(lang.tool_quit)
         
         self.info_label = gtb.get_object("label")
         
@@ -213,41 +213,41 @@ class GUI(gtk.Window):
             wait = self.main.refresh_timeout - \
                     (calendar.timegm(time.gmtime()) - self.main.reconnect_time)
             if wait < 60:
-                self.set_status(lang.statusReconnectSeconds % wait)
+                self.set_status(lang.status_reconnect_seconds % wait)
             
             elif wait < 105:
-                self.set_status(lang.statusReconnectMinute)
+                self.set_status(lang.status_reconnect_minute)
                 
             else:
                 self.set_status(
-                    lang.statusReconnectMinutes % math.ceil(wait / 60.0))
+                    lang.status_reconnect_minutes % math.ceil(wait / 60.0))
         
         elif self.main.is_loading_history:
             self.set_status(
-                lang.statusLoadHistory if \
+                lang.status_load_history if \
                 self.html.load_history_id != HTML_UNSET_ID else \
-                lang.statusLoadMessageHistory)
+                lang.status_load_message_history)
         
         elif self.main.is_connecting:
-            self.set_status(lang.statusConnecting % self.main.username)
+            self.set_status(lang.status_connecting % self.main.username)
         
         elif self.main.login_error:
-            self.set_status(lang.statusError)
+            self.set_status(lang.status_error)
         
         elif not self.main.login_status:
-            self.set_status(lang.statusLogout)
+            self.set_status(lang.status_logout)
         
         elif self.main.is_updating:
             self.refresh_button.set_sensitive(False)
             self.read_button.set_sensitive(False)
-            self.set_status(lang.statusUpdate)
+            self.set_status(lang.status_update)
         
         elif self.main.refresh_time == UNSET_TIMEOUT or \
             (self.mode == MODE_MESSAGES and \
             self.message.loaded == HTML_LOADING) or \
             (self.mode == MODE_TWEETS and self.html.loaded == HTML_LOADING):
             
-            self.set_status(lang.statusConnected)
+            self.set_status(lang.status_connected)
         
         elif (not self.text.is_typing or not self.text.has_focus) and not \
             self.main.is_sending:
@@ -258,20 +258,20 @@ class GUI(gtk.Window):
             if wait == 0:
                 self.refresh_button.set_sensitive(False)
                 self.read_button.set_sensitive(False)
-                self.set_status(lang.statusUpdate)
+                self.set_status(lang.status_update)
             
             elif wait == 1:
-                self.set_status(lang.statusOneSecond)
+                self.set_status(lang.status_one_second)
                 
             else:
                 if wait < 60:
-                    self.set_status(lang.statusSeconds % wait)
+                    self.set_status(lang.status_seconds % wait)
                 
                 elif wait < 105:
-                    self.set_status(lang.statusMinute)
+                    self.set_status(lang.status_minute)
                     
                 else:
-                    self.set_status(lang.statusMinutes % math.ceil(wait / 60.0))
+                    self.set_status(lang.status_minutes % math.ceil(wait / 60.0))
         
         if once:
             return False
@@ -298,24 +298,24 @@ class GUI(gtk.Window):
             self.info_label.hide()
         
         elif self.main.retweet_user != UNSET_TEXT:
-            self.set_label_text(lang.labelRetweet % self.main.retweet_user)
+            self.set_label_text(lang.label_retweet % self.main.retweet_user)
             self.info_label.show()
         
         elif self.main.reply_text != UNSET_TEXT:
-            self.set_label_text(lang.labelReplyText % self.main.reply_text)
+            self.set_label_text(lang.label_reply_text % self.main.reply_text)
             self.info_label.show()
         
         elif self.main.reply_user != UNSET_TEXT:
-            self.set_label_text(lang.labelReply % self.main.reply_user)
+            self.set_label_text(lang.label_reply % self.main.reply_user)
             self.info_label.show()
         
         # Messages
         elif self.main.message_text != UNSET_TEXT:
-            self.set_label_text(lang.labelMessageText % self.main.message_text)
+            self.set_label_text(lang.label_message_text % self.main.message_text)
             self.info_label.show()
         
         elif self.main.message_user != UNSET_TEXT:
-            self.set_label_text(lang.labelMessage % self.main.message_user)
+            self.set_label_text(lang.label_message % self.main.message_user)
             self.info_label.show()
     
     def set_label_text(self, text):
@@ -352,17 +352,17 @@ class GUI(gtk.Window):
         
         elif self.mode == MODE_MESSAGES:
             if self.html.count > 0:
-                self.set_title((lang.titleTweets if self.html.count > 1 else \
-                                lang.titleTweet) % self.html.count)
+                self.set_title((lang.title_tweets if self.html.count > 1 else \
+                                lang.title_tweet) % self.html.count)
             else:
-                self.set_title(lang.titleLoggedIn % self.main.username)
+                self.set_title(lang.title_logged_in % self.main.username)
         
         elif self.mode == MODE_TWEETS:
             if self.message.count > 0:
-                self.set_title((lang.titleMessages if self.html.count > 1 else \
-                                lang.titleMessage) % self.message.count)
+                self.set_title((lang.title_messages if self.html.count > 1 else \
+                                lang.title_message) % self.message.count)
             else:
-                self.set_title(lang.titleLoggedIn % self.main.username)
+                self.set_title(lang.title_logged_in % self.main.username)
     
     def check_refresh(self):
         if self.is_ready():
@@ -408,19 +408,19 @@ class GUI(gtk.Window):
     # --------------------------------------------------------------------------
     def enter_password(self):
         self.main.api_temp_password = None
-        dialog.PasswordDialog(self, lang.passwordTitle,
-                                lang.passwordQuestion % self.main.username)
+        dialog.PasswordDialog(self, lang.password_title,
+                                lang.password_question % self.main.username)
     
     def ask_for_retweet(self, name, yes, noo):
         dialog.MessageDialog(self, MESSAGE_QUESTION,
-                        lang.retweetQuestion,
-                        lang.retweetTitle % name,
+                        lang.retweet_question,
+                        lang.retweet_title % name,
                         yes_callback = yes, no_callback = noo)
     
     def show_retweet_info(self, name):
         dialog.MessageDialog(self, MESSAGE_INFO,
-                        lang.retweetInfo % name,
-                        lang.retweetInfoTitle)
+                        lang.retweet_info % name,
+                        lang.retweet_info_title)
     
     
     # Error & Warning ----------------------------------------------------------
@@ -489,30 +489,30 @@ class GUI(gtk.Window):
                     self.main.request_warning_shown = False
                     
                 dialog.MessageDialog(self, MESSAGE_WARNING,
-                    lang.warningURL, lang.warningTitle,
+                    lang.warning_url, lang.warning_title,
                     ok_callback = unset)
                 
         else:
             description = {
-                -3 : lang.errorUserNotFound,
-                -2 : lang.errorAlreadyRetweeted,
-                0 : lang.errorInternal % str(error),
-                404 : lang.errorLogin % self.main.username,
-                401 : lang.errorLogin % self.main.username,
+                -3 : lang.error_user_not_found,
+                -2 : lang.error_already_retweeted,
+                0 : lang.error_internal % str(error),
+                404 : lang.error_login % self.main.username,
+                401 : lang.error_login % self.main.username,
                 403 : rate_error,
                 400 : rate_error,
-                500 : lang.errorTwitter,
-                502 : lang.errorDown,
-                503 : lang.errorOverload
+                500 : lang.error_twitter,
+                502 : lang.error_down,
+                503 : lang.error_overload
             }[code]
             dialog.MessageDialog(self, MESSAGE_ERROR, description,
-                                 lang.errorTitle)
+                                 lang.error_title)
         
         self.update_status()
     
     def show_warning(self, limit):
-        dialog.MessageDialog(self, MESSAGE_WARNING, lang.warningText % limit,
-                                lang.warningTitle)
+        dialog.MessageDialog(self, MESSAGE_WARNING, lang.warning_text % limit,
+                                lang.warning_title)
     
     
     # Handlers -----------------------------------------------------------------
@@ -544,9 +544,9 @@ class GUI(gtk.Window):
             self.mode = MODE_TWEETS
         
         if self.mode == MODE_MESSAGES:
-            self.history_button.set_tooltip_text(lang.toolHistoryMessage)
-            self.read_button.set_tooltip_text(lang.toolReadMessage)
-            self.refresh_button.set_tooltip_text(lang.toolRefreshMessage)
+            self.history_button.set_tooltip_text(lang.tool_history_message)
+            self.read_button.set_tooltip_text(lang.tool_read_message)
+            self.refresh_button.set_tooltip_text(lang.tool_refresh_message)
             self.html_scroll.hide()
             self.message_scroll.show()
             self.message.grab_focus()
@@ -562,9 +562,9 @@ class GUI(gtk.Window):
                 self.show_input()
         
         elif self.mode == MODE_TWEETS:
-            self.history_button.set_tooltip_text(lang.toolHistory)
-            self.read_button.set_tooltip_text(lang.toolRead)
-            self.refresh_button.set_tooltip_text(lang.toolRefresh)
+            self.history_button.set_tooltip_text(lang.tool_history)
+            self.read_button.set_tooltip_text(lang.tool_read)
+            self.refresh_button.set_tooltip_text(lang.tool_refresh)
             self.message_scroll.hide()
             self.html_scroll.show()
             self.html.grab_focus()
