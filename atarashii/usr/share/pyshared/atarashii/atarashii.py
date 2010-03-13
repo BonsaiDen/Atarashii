@@ -159,13 +159,18 @@ class Atarashii:
     def onInit(self):
         self.login()
     
-    def login(self):
+    def login(self, changeUser = None):
         if self.username == UNSET_TEXT:
             return
 
         # Wait until the last update is complete
         while self.isUpdating:
              time.sleep(0.1)
+        
+        # Switch User
+        if changeUser != None:
+            self.username = changeUser
+            self.settings['username'] = changeUser
         
         # Set Mode
         self.gui.setMode(self.settings['mode_' + self.username])

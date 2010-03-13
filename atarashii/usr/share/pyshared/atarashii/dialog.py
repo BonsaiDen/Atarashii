@@ -292,17 +292,19 @@ class SettingsDialog(Dialog):
             
             # Set new Username
             if drop.get_active() != -1:
-                self.main.username = self.userAccounts[drop.get_active()]
-                self.settings['username'] = self.main.username
+                username = self.userAccounts[drop.get_active()]
+            
             
             # Save Settings
             self.main.saveSettings()
-            if self.main.username == "":
+            if username == "":
+                self.main.username = ""
+                self.settings['username'] = ""
                 self.main.logout()
             
-            elif self.main.username != oldusername or not self.main.loginStatus:
-                self.main.login()
-                        
+            elif username != oldusername or not self.main.loginStatus:
+                self.main.login(username)
+            
             self.onClose()
         
         self.closeButton.connect("clicked", save)
