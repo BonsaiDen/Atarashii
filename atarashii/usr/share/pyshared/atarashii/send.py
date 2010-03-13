@@ -18,6 +18,15 @@
 # ------------------------------------------------------------------------------
 import gobject
 import threading
+import sys
+
+# Import local Tweepy
+try:
+	sys.path.insert(0, __file__[:__file__.rfind('/')])
+	from tweepy.error import TweepError
+	
+finally:
+	sys.path.pop(0)
 
 from constants import *
 
@@ -50,8 +59,7 @@ class Send(threading.Thread):
 			gobject.idle_add(self.resetGUI)
 		
 		# Show Error Message
-		except Exception, error:
-			print error
+		except TweepError, error:
 			gobject.idle_add(lambda: self.gui.showError(error))
 	
 		
@@ -165,8 +173,7 @@ class Retweet(threading.Thread):
 			self.main.wasSending = False
 			gobject.idle_add(lambda: self.gui.showRetweetInfo(self.name))
 		
-		except Exception, error:
-			print error
+		except TweepError, error:
 			gobject.idle_add(lambda: self.gui.showError(error))	
 		
 		self.main.isSending = False
