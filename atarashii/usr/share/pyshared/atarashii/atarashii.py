@@ -225,6 +225,8 @@ class Atarashii:
         self.gui.show_start_notifications()
     
     def on_login_failed(self, error = None):
+        self.refresh_time = UNSET_TIMEOUT
+        self.refresh_timeout = UNSET_TIMEOUT
         self.gui.set_mode(MODE_TWEETS)
         self.login_error = True if error != None else False
         self.login_status = False
@@ -240,6 +242,8 @@ class Atarashii:
         gobject.idle_add(lambda: self.gui.html.init(True))
     
     def logout(self):
+        self.refresh_time = UNSET_TIMEOUT
+        self.refresh_timeout = UNSET_TIMEOUT
         self.gui.set_mode(MODE_TWEETS)
         self.login_error = False
         self.login_status = False
@@ -284,6 +288,9 @@ class Atarashii:
     
     # Helper Functions ---------------------------------------------------------
     # --------------------------------------------------------------------------
+    def set_user_picture(self, img):
+        self.settings['picture_' + self.username] = img
+    
     def get_image(self):
         if self.debug == None:
             return '/usr/share/icons/atarashii.png'
