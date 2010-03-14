@@ -169,6 +169,9 @@ class HTMLView(webkit.WebView):
                     elif next and self.last_mentioned:
                         spacer = "1" # Normal Gray
                     
+                    elif self.last_highlight:
+                        spacer = "1" # Dark Gray
+                    
                     else:
                         spacer = "4" # Dark/Normal Blue
         
@@ -201,6 +204,9 @@ class HTMLView(webkit.WebView):
                         spacer = "" # Normal Gray
                     
                     elif next and self.last_mentioned:
+                        spacer = "" # Normal Gray
+                    
+                    elif self.last_highlight:
                         spacer = "" # Normal Gray
                     
                     else:
