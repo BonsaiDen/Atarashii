@@ -611,9 +611,10 @@ class Updater(threading.Thread):
         
         minutes = (ratelimit['reset_time_in_seconds'] - \
                    calendar.timegm(time.gmtime())) / 60
+        
         limit = ratelimit['remaining_hits']
         if limit > 0:
-            limit = limit / (2.0 + (2.0 / 2))
+            limit = limit / (2.0 + 2.0 / 2)
             self.main.refresh_timeout = int(minutes / limit * 60 * 1.10)
             if self.main.refresh_timeout < 45:
                 self.main.refresh_timeout = 45
@@ -642,7 +643,7 @@ class Updater(threading.Thread):
                 url = item.user.profile_image_url
                 userid = item.user.id
         
-        image = url[url.rfind('/')+1:]
+        image = url[url.rfind('/') + 1:]
         imgdir = os.path.join(self.path, ".atarashii")
         if not os.path.exists(imgdir):
             os.mkdir(imgdir)
