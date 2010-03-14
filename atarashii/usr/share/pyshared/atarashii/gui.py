@@ -25,6 +25,8 @@ import calendar
 import time
 import math
 import exceptions
+import sys
+import traceback
 
 import html
 import message
@@ -464,6 +466,11 @@ class GUI(gtk.Window):
             
             except:
                 code = 0
+        
+        # Get information about the internal error
+        if code == 0:
+            excp = sys.exc_info()[2]
+            error = traceback.format_tb(excp)
         
         # Ratelimit error
         if (code == 400 and not self.main.was_sending) or \
