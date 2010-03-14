@@ -39,6 +39,7 @@ class TextInput(gtk.TextView):
         self.main = gui.main
         
         # Variables
+        self.initiated = False
         self.typing = False
         self.has_focus = False
         self.is_typing = False
@@ -55,10 +56,6 @@ class TextInput(gtk.TextView):
         self.go_send_message = None
         self.go_send_tweet = None
         
-        # Sizes
-        self.input_size = None
-        self.input_error = None
-        
         # Colors
         self.default_bg = self.get_style().base[gtk.STATE_NORMAL]
         self.default_fg = self.get_style().text[gtk.STATE_NORMAL]
@@ -68,6 +65,7 @@ class TextInput(gtk.TextView):
         self.set_wrap_mode(gtk.WRAP_WORD_CHAR)
         self.set_pixels_above_lines(2)
         self.set_pixels_below_lines(2)
+        self.set_pixels_inside_wrap(0)
         self.set_left_margin(2)
         self.set_right_margin(2)
         self.set_accepts_tab(True)
@@ -93,7 +91,7 @@ class TextInput(gtk.TextView):
             gobject.idle_add(lambda: self.check_length())
     
     def loose_focus(self):
-        if not self.has_focus and self.input_error != None:
+        if not self.has_focus and self.initiated:
             self.resize()
             
             # Check if we need to toggle to message/tweet mode
@@ -122,6 +120,35 @@ class TextInput(gtk.TextView):
                 self.has_focus = False
             
             self.change_contents = False
+    
+    
+    # Sizing -------------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def resize(self, line_count = 5):
+        # Set Label Text
+        self.gui.set_label()
+        
+        # Get Font Height
+        font = self.create_pango_context().get_font_description()
+        layout = self.create_pango_layout("")
+        layout.set_markup("WTF?!")
+        layout.set_font_description(font)
+        text_size = layout.get_pixel_size()[1]
+        
+        # Resize
+        lines = line_count if self.has_focus else 1
+        input_size = int((text_size + (6 if lines == 1 else 1.5)) * lines)
+        self.gui.text_scroll.set_size_request(0, input_size)
+        
+        if lines == 1:
+            self.gui.progress.set_size_request(0, input_size)
+        
+        if not self.initiated:
+            self.initiated = True
+            self.loose_focus()
+        
+        if not self.main.login_status and not self.main.is_connecting:
+            self.gui.hide_all()
     
     
     # Events -------------------------------------------------------------------
@@ -357,40 +384,6 @@ class TextInput(gtk.TextView):
         self.grab_focus()
         self.set_text(text)
         self.is_changing = False
-    
-    
-    # Sizing -------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def fix_size(self):
-        self.input_error = self.input_size - self.gui.get_height(self)
-        self.resize()
-        self.loose_focus()
-    
-    def resize(self, line_count = 5):
-        # Set Label Text
-        self.gui.set_label()
-        
-        # Calculate Textinput Size
-        psize = self.create_pango_context().get_font_description().get_size()
-        text_size = psize / pango.SCALE
-        lines = line_count if self.has_focus else 1
-        
-        # Resize
-        self.input_size = (text_size + 4) * lines
-        if self.input_error != None:
-            self.input_size += self.input_error
-        
-        self.gui.text_scroll.set_size_request(0, self.input_size)
-        
-        if lines == 1:
-            self.gui.progress.set_size_request(0, self.input_size)
-        
-        # Detect Error
-        if self.input_error == None:
-            gobject.idle_add(lambda: self.fix_size())
-        
-        elif not self.main.login_status and not self.main.is_connecting:
-            self.gui.hide_all()
     
     
     # Helpers ------------------------------------------------------------------
