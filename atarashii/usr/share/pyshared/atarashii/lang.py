@@ -71,6 +71,11 @@ LANG = {
         # Notifications
         'notification_message' : 'Nachricht von %s',
         'notification_index' : '%s (%d von %d)',
+        'notification_login' : "%s wurde eingeloggt",
+        'notification_login_tweet' : "%d neuer Tweet",
+        'notification_login_message' : "%d neue Nachricht",
+        'notification_login_tweets' : "%d neue Tweets",
+        'notification_login_messages' : "%d neue Nachrichten",
         
         # Textbox
         'text_entry' : 'Was passiert gerade?',
@@ -120,6 +125,10 @@ LANG = {
         'settings_retweets_ask' : 'Immer fragen',
         'settings_retweets_new' : 'Immer neue Retweets verwenden',
         'settings_retweets_old' : 'Immer alte Retweets verwenden',
+        'settings_general' : "Allgemein",
+        'settings_autostart' : "Atarashii beim Login starten",
+        'settings_tray' : "Minimiert starten(System Tray)",
+        'settings_taskbar' : "Atarashii in der Taskleiste anzeigen",
         'settings_add' : 'Erstellen',
         'settings_edit' : 'Bearbeiten',
         'settings_delete' : 'Löschen',
@@ -236,6 +245,11 @@ LANG = {
         # Notifications
         'notification_message' : 'Message from %s',
         'notification_index' : '%s (%d of %d)',
+        'notification_login' : "%s has logged in",
+        'notification_login_tweet' : "%d new Tweet",
+        'notification_login_message' : "%d new Message",
+        'notification_login_tweets' : "%d new Tweets",
+        'notification_login_messages' : "%d new Messages",
         
         # Textbox
         'text_entry' : 'What\'s happening?',
@@ -285,6 +299,10 @@ LANG = {
         'settings_retweets_ask' : 'Always ask which style to use',
         'settings_retweets_new' : 'Always use new style',
         'settings_retweets_old' : 'Always use old style',
+        'settings_general' : "General",
+        'settings_autostart' : "Launch Atarashii on user login",
+        'settings_tray' : "Start minimized(system tray)",
+        'settings_taskbar' : "Show Atarashii in the Taskbar",
         'settings_add' : 'Add',
         'settings_edit' : 'Edit',
         'settings_delete' : 'Delete',
