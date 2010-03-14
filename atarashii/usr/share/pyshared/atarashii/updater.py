@@ -295,7 +295,7 @@ class Updater(threading.Thread):
                     lambda: self.gui.refresh_button.set_sensitive(True))
             
             gobject.idle_add(
-                    lambda: self.tray.refresh_menu.set_sensitive(True))
+                    lambda: self.gui.tray.refresh_menu.set_sensitive(True))
             
             gobject.idle_add(lambda: self.gui.check_read())
             self.main.refresh_time = calendar.timegm(time.gmtime())
