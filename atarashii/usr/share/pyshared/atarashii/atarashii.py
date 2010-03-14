@@ -32,6 +32,7 @@ import sys
 gtk.gdk.threads_init()
 gtk.gdk.threads_enter()
 
+import notify
 import send
 import gui
 import settings
@@ -98,6 +99,9 @@ class Atarashii:
         # Retweet Style
         self.retweet_style = self.settings['retweet'] or RETWEET_ASK
         
+        # Notifier
+        self.notifier = notify.Notifier(self)
+        
         # Updater
         self.updater = updater.Updater(self)
         self.updater.setDaemon(True)
@@ -162,6 +166,7 @@ class Atarashii:
         self.login()
     
     def login(self, change_user = None):
+        # We need a username!
         if self.username == UNSET_TEXT and (change_user == None or \
            change_user == UNSET_TEXT):
             return
@@ -217,6 +222,7 @@ class Atarashii:
         self.gui.set_title(lang.title_logged_in % self.username)
         self.gui.update_status()
         self.gui.show_input()
+        self.gui.show_start_notifications()
     
     def on_login_failed(self, error = None):
         self.gui.set_mode(MODE_TWEETS)
