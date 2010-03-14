@@ -223,6 +223,19 @@ class SettingsDialog(Dialog):
         notify.set_label(lang.settings_notify)
         sound.set_label(lang.settings_sound)
         
+        # General
+        self.get("general").set_text(lang.settings_general)
+        autostart = self.get("autostart")
+        taskbar = self.get("taskbar")
+        tray = self.get("tray")
+        
+        autostart.set_label(lang.settings_autostart)
+        taskbar.set_label(lang.settings_taskbar)
+        tray.set_label(lang.settings_tray)
+        
+        autostart.set_active(self.settings.is_true('autostart', False))
+        taskbar.set_active(self.settings.is_true('taskbar'))
+        tray.set_active(self.settings.is_true('tray', False))
         
         # Sound File
         file_widget = self.get("soundfile")
@@ -279,6 +292,10 @@ class SettingsDialog(Dialog):
             self.settings['soundfile'] = str(file_widget.get_filename())
             self.settings['notify'] = notify.get_active()
             self.settings['sound'] = sound.get_active()
+            self.settings['tray'] = tray.get_active()
+            
+            self.settings.set_autostart(autostart.get_active())
+            self.gui.show_taskbar(taskbar.get_active())
             
             if ask_rt.get_active():
                 rt_tmp = RETWEET_ASK
