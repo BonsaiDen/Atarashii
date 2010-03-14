@@ -40,8 +40,8 @@ class Notifier:
     def __init__(self, main):
         self.main = main
     
-    def show(self, objs, sound = False):
-        if sound:
+    def show(self, objs):
+        if self.main.settings.is_true("sound"):
             self.sound()
         
         for obj in objs:
