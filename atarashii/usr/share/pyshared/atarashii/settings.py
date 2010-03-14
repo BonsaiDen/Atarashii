@@ -19,6 +19,11 @@
 import os
 import urllib
 
+# File Paths
+DESKTOP_FILE = os.path.join(os.path.expanduser('~'), '.config',
+                            'autostart', 'atarashii.desktop')
+
+COPY_FILE = '/usr/share/applications/atarashii.desktop'
 
 class Settings:
     def __init__(self):
@@ -60,6 +65,9 @@ class Settings:
         
         except Exception, detail:
             self.values = {}
+    
+        # Check autostart
+        self.check_autostart()
     
     
     # Save ---------------------------------------------------------------------
@@ -122,3 +130,34 @@ class Settings:
         accounts.sort()
         return accounts
 
+
+    # Manage Autostart ---------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def set_autostart(self, mode):
+        # Do nothing
+        if mode == self['autostart']:
+            return
+           
+        # Create/Delete .desktop file
+        try:
+            if mode:
+                cfp = open(COPY_FILE, "rb")
+                text = cfp.read()
+                cfp.close()
+                
+                dfp = open(DESKTOP_FILE, "wb")
+                dfp.write(text)
+                dfp.close()
+                
+            else:
+                os.unlink(DESKTOP_FILE)
+            
+            # Only save if we succeeded
+            self['autostart'] = mode
+        
+        except:
+            print "Could not set autostart"
+    
+    def check_autostart(self):
+        self.autostart = os.path.exists(DESKTOP_FILE)
+    
