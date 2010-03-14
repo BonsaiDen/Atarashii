@@ -171,20 +171,30 @@ class Updater(threading.Thread):
         
         # Load other stuff
         if self.gui.mode == MODE_TWEETS:
-            self.get_init_messages()
-            if self.gui.mode == MODE_MESSAGES:
-                gobject.idle_add(lambda: self.gui.show_input())
+            if self.get_init_messages():
+                if self.gui.mode == MODE_MESSAGES:
+                    gobject.idle_add(lambda: self.gui.show_input())
+                
+                else:
+                    gobject.idle_add(lambda: self.gui.check_refresh())
             
             else:
-                gobject.idle_add(lambda: self.gui.check_refresh())
+                self.message.loaded = HTML_RESET
+                self.html.loaded = HTML_RESET
+                return
         
         elif self.gui.mode == MODE_MESSAGES:
-            self.get_init_tweets()
-            if self.gui.mode == MODE_TWEETS:
-                gobject.idle_add(lambda: self.gui.show_input())
+            if self.get_init_tweets():
+                if self.gui.mode == MODE_TWEETS:
+                    gobject.idle_add(lambda: self.gui.show_input())
+                
+                else:
+                    gobject.idle_add(lambda: self.gui.check_refresh())
             
             else:
-                gobject.idle_add(lambda: self.gui.check_refresh())
+                self.message.loaded = HTML_RESET
+                self.html.loaded = HTML_RESET
+                return 
         
         else: # TODO implement loading of search
             pass
@@ -212,7 +222,6 @@ class Updater(threading.Thread):
             if i != None:
                 imgfile = self.get_image(i)
                 self.html.update_list.append((i, imgfile))
-        
         
         def render():
             self.html.push_updates()
@@ -264,7 +273,7 @@ class Updater(threading.Thread):
                 elif self.message.load_history_id != HTML_UNSET_ID:
                     self.load_history_message()
                 
-                elif self.main.refresh_timeout != HTML_UNSET_ID:
+                elif self.main.refresh_timeout != UNSET_TIMEOUT:
                     self.check_for_update()
             
             time.sleep(0.1)
@@ -594,6 +603,7 @@ class Updater(threading.Thread):
         # Remove doubled mentions
         ids = []
         def unique(i):
+            # Check if this item is already in the list
             if i.id in ids:
                 return False
             
@@ -635,15 +645,18 @@ class Updater(threading.Thread):
         if message:
             url = item.sender.profile_image_url
             userid = item.sender.id
+            name = item.sender.screen_name
         
         else:
             if hasattr(item, "retweeted_status"):
                 url = item.retweeted_status.user.profile_image_url
                 userid = item.retweeted_status.user.id
+                name = item.retweeted_status.user.screen_name
             
             else:
                 url = item.user.profile_image_url
                 userid = item.user.id
+                name = item.user.screen_name
         
         image = url[url.rfind('/') + 1:]
         imgdir = os.path.join(self.path, ".atarashii")
@@ -653,6 +666,10 @@ class Updater(threading.Thread):
         imgfile = os.path.join(imgdir, str(userid) + '_' + image)
         if not os.path.exists(imgfile):
             urllib.urlretrieve(url, imgfile)
+        
+        # Check for user picture!
+        if name.lower() == self.main.username.lower():
+           self.main.set_user_picture(imgfile)        
         
         return imgfile
 
