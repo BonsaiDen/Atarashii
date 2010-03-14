@@ -44,6 +44,7 @@ class TrayIcon(gtk.StatusIcon):
         menu_item.set_label(lang.menu_update)
         menu_item.connect('activate', self.gui.on_refresh, self)
         menu.append(menu_item)
+        self.refresh_menu = menu_item
         
         # Settings
         menu_item = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
@@ -84,6 +85,12 @@ class TrayIcon(gtk.StatusIcon):
                 data.popup(None, None, None, 3, time)
     
     def on_activate(self, *args):
+        # Show GUI if started in tray
+        if not self.gui.is_shown:
+            self.gui.show_gui()
+            return
+        
+        # Toggle minimized
         if self.gui.minimized:
             self.gui.deiconify()
             iconified = True
