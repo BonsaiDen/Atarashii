@@ -141,11 +141,20 @@ print ">> Created!"
 
 # Create package
 print "The kittens are building your package..."
-subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"], 
-                stdout = open("/dev/null", "wb"))
-shutil.move(os.path.join(sys.path[0], "atarashii.deb"), 
-            os.path.join(sys.path[0], 
-            "atarashii_%s-1_all.deb" % atarashii.__version__))
+try:
+    subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"], 
+                    stdout = open("/dev/null", "wb"))
+    shutil.move(os.path.join(sys.path[0], "atarashii.deb"), 
+                os.path.join(sys.path[0], 
+                "atarashii_%s-1_all.deb" % atarashii.__version__))
+
+except:
+    print """ERROR: Could not build Atarashii package due to missing 'fakeroot'.\n       Please install 'fakeroot' via the package manager and try again."""
+    # Move all those temp files back
+    for file, to in tempFiles:
+        shutil.move(to, file)
+    
+    exit()
 
 print ">> Build complete!"
 
