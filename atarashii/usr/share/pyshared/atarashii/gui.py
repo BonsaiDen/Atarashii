@@ -25,7 +25,7 @@ import calendar
 import time
 import math
 import exceptions
-import sys
+import os
 import traceback
 
 import html
@@ -456,6 +456,10 @@ class GUI(gtk.Window):
         if self.main.settings.is_true("notify"):
             text = []
             
+            # Image
+            img = self.main.settings['picture_' + self.main.username] or \
+                  self.main.get_image()
+            
             # Tweet Info
             if self.html.count > 0:
                 text.append(
@@ -470,7 +474,7 @@ class GUI(gtk.Window):
             
             # Create notification
             info = [(lang.notification_login % self.main.username,
-                    "\n".join(text), self.main.get_image())]
+                    "\n".join(text), img)]
             
             self.main.notifier.show(info)
     
@@ -507,29 +511,33 @@ class GUI(gtk.Window):
                 self.main.reply_id != UNSET_ID_NUM):
                 self.text.grab_focus()
         
-        try:
+        # Try to find out what the error was!
+        if hasattr(error, "response") and error.response != None:
             code = error.response.status
             if error.reason.startswith("Share sharing"):
                 code = -2
         
-        except:
-            try:
-                if error.reason.startswith("HTTP Error "):
-                    code = int(error.reason[11:14])
-                
-                elif type(error) == exceptions.IOError:
-                    code = -1
-                
-                else:
-                    code = 0
+        elif hasattr(error, "reason") and error.reason != None:
+            if error.reason.startswith("HTTP Error "):
+                code = int(error.reason[11:14])
             
-            except:
+            elif type(error) == exceptions.IOError:
+                code = -1
+            
+            else:
                 code = 0
+        
+        else:
+            code = 0
         
         # Get information about the internal error
         if code == 0:
-            excp = sys.exc_info()[2]
-            error = traceback.format_tb(excp)
+            top = traceback.extract_stack()[-1]
+            error = "%s @ %s line %s\n%s" % (
+                    type(error).__name__,
+                    os.path.basename(top[0]),
+                    str(top[1]),
+                    str(error))
         
         # Ratelimit error
         if (code == 400 and not self.main.was_sending) or \
