@@ -137,19 +137,19 @@ class Send(threading.Thread):
 # New style Retweets -----------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Retweet(threading.Thread):
-    def __init__(self, main, name, tweetid):
+    def __init__(self, main, name, tweet_id):
         threading.Thread.__init__(self)
         self.gui = main.gui
         self.main = main
         self.name = name
-        self.tweetid = tweetid
+        self.tweet_id = tweet_id
     
     def run(self):
         self.main.was_sending = True
         self.main.was_retweeting = True
         try:
             # Retweet
-            self.main.api.retweet(self.tweetid)
+            self.main.api.retweet(self.tweet_id)
         
             # Focus HTML
             self.gui.show_input(False)

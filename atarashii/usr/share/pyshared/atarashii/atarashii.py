@@ -95,7 +95,7 @@ class Atarashii:
         # Current Username
         self.username = self.settings['username'] or UNSET_TEXT
         
-        # Retweet Style - 0 = ask, 1 = new, 2 = old
+        # Retweet Style
         self.retweet_style = self.settings['retweet'] or RETWEET_ASK
         
         # Updater
@@ -141,7 +141,7 @@ class Atarashii:
         sender.start()
     
     # New style Retweet
-    def retweet(self, name, tweetid):
+    def retweet(self, name, tweet_id):
         if not self.is_sending:
             self.is_sending = True
             self.gui.text.set_sensitive(False)
@@ -150,7 +150,7 @@ class Atarashii:
             self.gui.set_status(lang.status_retweet % name)
             
             # Sender
-            sender = send.Retweet(self, name, tweetid)
+            sender = send.Retweet(self, name, tweet_id)
             sender.setDaemon(True)
             sender.start()
     
@@ -253,7 +253,7 @@ class Atarashii:
         ratelimit = self.api.oauth_rate_limit_status()
         if ratelimit != None:
             minutes = math.ceil((ratelimit['reset_time_in_seconds'] - \
-                        calendar.timegm(time.gmtime())) / 60.0)
+                                 calendar.timegm(time.gmtime())) / 60.0)
         else:
             minutes = 5
         
@@ -264,8 +264,8 @@ class Atarashii:
             self.reconnect_time = calendar.timegm(time.gmtime())
             self.is_reconnecting = True
             self.reconnect_timeout = gobject.timeout_add(
-                                    int(self.refresh_timeout * 1000),
-                                    lambda: self.login())
+                                     int(self.refresh_timeout * 1000),
+                                     lambda: self.login())
             
             return lang.error_ratelimit_reconnect % math.ceil(minutes)
             
@@ -279,6 +279,7 @@ class Atarashii:
     def get_image(self):
         if self.debug == None:
             return '/usr/share/icons/atarashii.png'
+            
         else:
             return os.path.join(self.debug,
                                 'atarashii/usr/share/icons/atarashii.png')
@@ -286,9 +287,10 @@ class Atarashii:
     def get_resource(self, res):
         if self.debug == None:
             return os.path.join("/usr/share/atarashii", res)
+            
         else:
-            return os.path.join(self.debug, "atarashii/usr/share/atarashii",
-                                res)
+            return os.path.join(self.debug,
+                                "atarashii/usr/share/atarashii", res)
     
     def get_latest_id(self):
         if self.settings.isset('lasttweet_' + self.username):
