@@ -116,7 +116,7 @@ class HTMLView(webkit.WebView):
         </head>
         %s
         </html>""" % (self.main.get_resource("atarashii.css"), html),
-                        "text/html", "UTF-8", "file:///main/")
+                        "text/html", "UTF-8", "file:///")
     
     def set_html(self, renderitems):
         self.main.gui.set_app_title()
