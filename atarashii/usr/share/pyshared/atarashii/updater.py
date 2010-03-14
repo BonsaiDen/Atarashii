@@ -21,7 +21,6 @@ import threading
 import urllib
 import sys
 import os
-import notify
 import gobject
 import calendar
 
@@ -45,7 +44,7 @@ class Updater(threading.Thread):
         self.settings = main.settings
         
         # Notifier
-        self.notify = notify.Notifier(main)
+        self.notifier = self.main.notifier
         
         # Variables
         self.running = True
@@ -286,6 +285,9 @@ class Updater(threading.Thread):
             gobject.idle_add(
                     lambda: self.gui.refresh_button.set_sensitive(True))
             
+            gobject.idle_add(
+                    lambda: self.tray.refresh_menu.set_sensitive(True))
+            
             gobject.idle_add(lambda: self.gui.check_read())
             self.main.refresh_time = calendar.timegm(time.gmtime())
             self.refresh_messages = False
@@ -393,7 +395,7 @@ class Updater(threading.Thread):
                     tweet_list[num][0] = lang.notification_index % (
                                         tweet_list[num][0], num+1, count)
             
-            self.notify.show(tweet_list, self.settings.is_true("sound"))
+            self.notifier.show(tweet_list)
     
     
     # Main Function that fetches the updates -----------------------------------
