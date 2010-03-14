@@ -55,7 +55,7 @@ class HTML(view.HTMLView):
             self.renderitems.insert(0,
                         self.insert_spacer(item, user, False, mentioned, True,
                         next_highlight, force = force))
-            
+        
         self.last_mentioned = mentioned
         self.lastname = user.screen_name
         self.lastrecipient = item.recipient_screen_name
@@ -90,7 +90,7 @@ class HTML(view.HTMLView):
             name = item.recipient_screen_name
             reply = "display: none;"
             cls = "mentionedold" if item.id <= self.init_id else "mentioned"
-            
+        
         else:
             mode = lang.message_from
             name = user.screen_name
@@ -101,7 +101,7 @@ class HTML(view.HTMLView):
         if hasattr(user, "protected") and user.protected:
             locked = ('<span class="protected" title="' + \
                 lang.html_protected + '"></span>') % user.screen_name
-            
+        
         else:
             locked = ''
         
@@ -138,16 +138,16 @@ class HTML(view.HTMLView):
         html = html % (
                 cls,
                 avatar,
-        
+                
                 # Actions
                 user.screen_name, user.id, num,
-        
+                
                 # Text
                 user.screen_name,
                 user.name.strip(),
                 name,
                 text,
-        
+                
                 # Time
                 user.screen_name,
                 item.id,

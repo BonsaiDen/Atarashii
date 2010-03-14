@@ -27,6 +27,7 @@ import re
 from lang import lang
 from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, MODE_TWEETS
 
+
 class TextInput(gtk.TextView):
     __gsignals__ = {
         "submit": (gobject.SIGNAL_RUN_LAST | gobject.SIGNAL_ACTION, None, ())
@@ -86,7 +87,7 @@ class TextInput(gtk.TextView):
         if not self.has_typed:
             self.modify_text(gtk.STATE_NORMAL, self.default_fg)
             self.set_text(UNSET_TEXT)
-            
+        
         else:
             gobject.idle_add(lambda: self.check_length())
     
@@ -102,10 +103,11 @@ class TextInput(gtk.TextView):
             elif not self.has_typed:
                 self.modify_text(gtk.STATE_NORMAL,
                                 self.get_style().text[gtk.STATE_INSENSITIVE])
+                
                 self.set_text(
                     lang.text_entry_message if self.gui.mode == MODE_MESSAGES \
                     else lang.text_entry)
-                        
+        
         return False
     
     def html_focus(self, *args):
@@ -113,7 +115,7 @@ class TextInput(gtk.TextView):
             if not self.change_contents:
                 gobject.timeout_add(50, lambda: self.loose_focus())
                 self.has_focus = False
-                
+            
             self.change_contents = False
     
     
@@ -130,7 +132,7 @@ class TextInput(gtk.TextView):
             
             elif self.gui.mode == MODE_TWEETS:
                 self.main.send(text)
-                
+            
             else: # TODO implement search field submit
                 pass
     
@@ -144,7 +146,7 @@ class TextInput(gtk.TextView):
                 self.main.message_user = UNSET_TEXT
                 self.main.message_id = UNSET_ID_NUM
                 self.main.message_text = UNSET_TEXT
-                
+            
             # check for "d user"
             msg = self.message_regex.match(text)
             self.message_len = 0
@@ -186,13 +188,13 @@ class TextInput(gtk.TextView):
                 self.main.reply_id = UNSET_ID_NUM
                 self.main.reweetText = UNSET_TEXT
                 self.main.retweet_user = UNSET_TEXT
-                
+            
             # check for @ Reply
             at_user = self.reply_regex.match(text)
             if at_user != None:
                 if self.main.reply_id == UNSET_ID_NUM:
                     self.main.reply_user = at_user.group(1)
-                    
+                
                 else:
                     if at_user.group(1) != self.main.reply_user:
                         self.main.reply_text = UNSET_TEXT
@@ -201,16 +203,16 @@ class TextInput(gtk.TextView):
             
             elif self.main.reply_id == UNSET_ID_NUM:
                 self.main.reply_user = UNSET_TEXT
-                
+            
             # check for "d user" and switch to messaging
             msg = self.message_regex.match(text)
             if msg != None:
                 if self.gui.is_ready():
                     self.switch_to_message(self.get_text())
-                    
+                
                 else:
                     self.go_send_message = self.get_text()
-                
+        
         # Resize
         self.resize()
         self.is_typing = len(text) > 0
@@ -221,33 +223,30 @@ class TextInput(gtk.TextView):
             if self.has_focus:
                 self.modify_text(gtk.STATE_NORMAL, self.default_fg)
                 self.check_length()
-                
+        
         else:
             if not self.is_changing:
                 self.change_contents = False
-                
+            
             self.has_typed = False
             self.gui.update_status()
-            
-        # Color
+        
         self.check_color(len(text))
-    
     
     def check_length(self):
         text = self.get_text()
         max_length = 140 + self.message_len
         if len(text) <= max_length:
             self.gui.set_status(lang.status_left % (max_length - len(text)))
-            
+        
         else:
             self.gui.set_status(lang.status_more % (len(text) - max_length))
     
-    # Check the length of the text and change color if needed
     def check_color(self, count):
         if count > 140 + self.message_len:
             self.modify_base(gtk.STATE_NORMAL,
                              gtk.gdk.Color(255 * 255, 200 * 255, 200 * 255))
-            
+        
         else:
             self.modify_base(gtk.STATE_NORMAL, self.default_bg)
     
@@ -283,9 +282,9 @@ class TextInput(gtk.TextView):
             space = text.find(" ")
             if space == -1:
                 space = len(text)
-                
-            text = ("@%s " % self.main.reply_user) + text[space + 1:]
             
+            text = ("@%s " % self.main.reply_user) + text[space + 1:]
+        
         else:
             text = ("@%s " % self.main.reply_user) + text
         
@@ -325,7 +324,7 @@ class TextInput(gtk.TextView):
         if msg != None:
             space = 2 + len(msg.group(1))
             text = ("d %s " % self.main.message_user) + text[space + 1:]
-            
+        
         else:
             text = ("d %s " % self.main.message_user) + text
         
@@ -345,13 +344,13 @@ class TextInput(gtk.TextView):
         self.set_text(text)
         self.is_changing = False
     
+    
     # Sizing -------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def fix_size(self):
         self.input_error = self.input_size - self.gui.get_height(self)
         self.resize()
         self.loose_focus()
-    
     
     def resize(self, line_count = 5):
         # Set Label Text
@@ -366,7 +365,7 @@ class TextInput(gtk.TextView):
         self.input_size = (text_size + 4) * lines
         if self.input_error != None:
             self.input_size += self.input_error
-            
+        
         self.gui.text_scroll.set_size_request(0, self.input_size)
         
         if lines == 1:
@@ -379,6 +378,7 @@ class TextInput(gtk.TextView):
         elif not self.main.login_status and not self.main.is_connecting:
             self.gui.hide_all()
     
+    
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def get_text(self):
@@ -386,8 +386,8 @@ class TextInput(gtk.TextView):
     
     def set_text(self, text):
         self.get_buffer().set_text(text)
-        
-        
+
+
 gtk.binding_entry_add_signal(TextInput, gtk.keysyms.Return, 0, "submit")
 gtk.binding_entry_add_signal(TextInput, gtk.keysyms.KP_Enter, 0, "submit")
 

@@ -19,12 +19,12 @@
 # Translations -----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import locale
-
 LANG = {
-
+    
     # German -------------------------------------------------------------------
     # --------------------------------------------------------------------------
     'de_DE' : {
+        
         # Title
         'title' : 'Atarashii',
         'title_logged_in' : '%s - Atarashii',
@@ -32,7 +32,7 @@ LANG = {
         'title_messages' : '%d neue Nachrichten',
         'title_tweet' : '%d neuer Tweet',
         'title_tweets' : '%d neue Tweets',
-
+        
         # HTML
         'html_welcome' : 'Willkommen bei Atarashii!',
         'html_loading' : 'Tweets werden geladen...',
@@ -60,22 +60,22 @@ LANG = {
         'html_day' : 'vor %d Tagen',
         'html_yesterday' : 'von Gestern',
         'html_exact' : 'vom %d.%m.%Y',
-
+        
         # Messages
         'message_loading' : 'Nachrichten werden geladen...',
         'message_load_more' : 'Mehr',
         'message_empty' : 'Keine Nachrichten',
         'message_from' : 'Von',
         'message_to' : 'An',
-
+        
         # Notifications
         'notification_message' : 'Nachricht von %s',
         'notification_index' : '%s (%d von %d)',
-
+        
         # Textbox
         'text_entry' : 'Was passiert gerade?',
         'text_entry_message' : 'Nachricht eingeben...',
-
+        
         # Statusbar
         'status_logout' : 'Nicht verbunden.',
         'status_connecting' : 'Verbinde als %s...',
@@ -98,14 +98,14 @@ LANG = {
         'status_reconnect_seconds' : 'Automatischer Reconnect in %d Sekunden.',
         'status_reconnect_minute' : 'Automatischer Reconnect in einer Minute.',
         'status_reconnect_minutes' : 'Automatischer Reconnect in %d Minuten.',
-
+        
         # Info Label
         'label_reply' : '<b>Antwort an %s:</b>',
         'label_reply_text' : '<b>Antwort auf:</b> %s',
         'label_retweet' : '<b>%s retweeten:</b>',
         'label_message' : '<b>Nachricht an %s:</b>',
         'label_message_text' : '<b>Antwort auf:</b> %s',
-
+        
         # Settings Dialog
         'settings_title' : 'Atarashii - Einstellungen',
         'settings_button' : 'Speichern',
@@ -123,12 +123,12 @@ LANG = {
         'settings_add' : 'Erstellen',
         'settings_edit' : 'Bearbeiten',
         'settings_delete' : 'Löschen',
-
+        
         # About Dialog
         'about_title' : 'Über Atarashii',
         'about_license_button' : 'Lizenz',
         'about_okbutton' : 'OK',
-
+        
         # Account Dialog
         'account_edit' : 'Benutzer bearbeiten',
         'account_create' : 'Benutzer erstellen',
@@ -137,19 +137,19 @@ LANG = {
         'account_button' : 'OK',
         'account_button_cancel' : 'Abbrechen',
         'account_username' : 'Benutzername:',
-
+        
         # Password Dialog
         'password_button' : 'OK',
         'password_button_cancel' : 'Abbrechen',
         'password_title' : 'Passwort',
         'password_question' : '%s\'s Passwort:',
-
+        
         # Retweet Dialogs
         'retweet_title' : '%s retweeten',
         'retweet_question' : 'Möchten sie einen neuen Retweet verwenden?',
         'retweet_info_title' : 'Retweet erfolgreich',
         'retweet_info' : '"%s" wurde erfolgreich retweeted!',
-
+        
         # Error Dialogs
         'error_title' : 'Atarashii - Fehler',
         'error_login' : 'Die Anmeldung als "%s" ist fehlgeschlagen.',
@@ -161,12 +161,12 @@ LANG = {
         'error_internal' : 'Atarashii Fehler: %s',
         'error_already_retweeted' : 'Es ist entweder nicht möglich diesen Tweet zu retweeten oder er wurde bereits von ihnen retweeted.',
         'error_user_not_found' : 'Der Benutzer "%s" existiert nicht.',
-
+        
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warnung',
         'warning_text' : 'Twitter hat das Ratelimit auf %d Requests pro Stunde reduziert, das Updateinterval wurde entsprechend angepasst.',
         'warning_url' : 'Atarashii konnte Twitter nicht erreichen, dies ist in den meisten Fällen lediglich ein temporäres Problem aufgrund von Überlastung seitens Twitter.',
-
+        
         # Toolbar Items
         'tool_refresh' : 'Tweets aktualisieren',
         'tool_history' : 'Ältere Tweets entfernen',
@@ -178,18 +178,18 @@ LANG = {
         'tool_refresh_message' : 'Nachrichten aktualisieren',
         'tool_history_message' : 'Ältere Nachrichten entfernen',
         'tool_read_message' : 'Alle Nachrichten als gelesen markieren',
-
+        
         # Tray Menu
         'menu_update' : 'Aktualisieren',
         'menu_settings' : 'Einstellungen',
         'menu_about' : 'Über Atarashii',
         'menu_quit' : 'Beenden'
     },
-
-
+    
     # English ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     'en_US' : {
+        
         # Title
         'title' : 'Atarashii',
         'title_logged_in' : '%s - Atarashii',
@@ -197,7 +197,7 @@ LANG = {
         'title_messages' : '%d new Messages',
         'title_tweet' : '%d new Tweet',
         'title_tweets' : '%d new Tweets',
-
+        
         # HTML
         'html_welcome' : 'Welcome to Atarashii!',
         'html_loading' : 'Loading Tweets...',
@@ -225,22 +225,22 @@ LANG = {
         'html_day' : '%d days ago',
         'html_yesterday' : 'from yesterday',
         'html_exact' : 'from %m.%d.%Y',
-
+        
         # Messages
         'message_loading' : 'Loading messages...',
         'message_load_more' : 'More',
         'message_empty' : 'No Messages',
         'message_from' : 'From',
         'message_to' : 'To',
-
+        
         # Notifications
         'notification_message' : 'Message from %s',
         'notification_index' : '%s (%d of %d)',
-
+        
         # Textbox
         'text_entry' : 'What\'s happening?',
         'text_entry_message' : 'Enter Message...',
-
+        
         # Statusbar
         'status_logout' : 'Not connected.',
         'status_connecting' : 'Connecting as %s...',
@@ -263,14 +263,14 @@ LANG = {
         'status_reconnect_seconds' : 'Automatic reconnect in %d seconds.',
         'status_reconnect_minute' : 'Automatic reconnect in one minute.',
         'status_reconnect_minutes' : 'Automatic reconnect in %d minutes.',
-
+        
         # Info Label
         'label_reply' : '<b>Reply to %s:</b>',
         'label_reply_text' : '<b>Reply on:</b> %s',
         'label_retweet' : '<b>Retweet %s:</b>',
         'label_message' : '<b>Message to %s:</b>',
         'label_message_text' : '<b>Message on:</b> %s',
-
+        
         # Settings Dialog
         'settings_title' : 'Atarashii - Preferences',
         'settings_button' : 'Save',
@@ -288,12 +288,12 @@ LANG = {
         'settings_add' : 'Add',
         'settings_edit' : 'Edit',
         'settings_delete' : 'Delete',
-
+        
         # About Dialog
         'about_title' : 'About Atarashii',
         'about_license_button' : 'License',
         'about_okbutton' : 'OK',
-
+        
         # Account Dialog
         'account_edit' : 'Edit user',
         'account_create' : 'Create a new user',
@@ -306,13 +306,13 @@ LANG = {
         'password_button_cancel' : 'Cancel',
         'password_title' : 'Password',
         'password_question' : '%s\'s password:',
-
+        
         # Retweet Dialogs
         'retweet_title' : 'Retweet %s',
         'retweet_question' : 'Do you want to use a new style Retweet?',
         'retweet_info_title' : 'Retweet successful',
         'retweet_info' : '"%s" has been successfully retweeted!',
-
+        
         # Error Dialogs
         'error_title' : 'Atarashii - Error',
         'error_login' : 'The login as "%s" has failed.',
@@ -324,12 +324,12 @@ LANG = {
         'error_internal' : 'Atarashii error: %s',
         'error_already_retweeted' : 'Either it\'s not possible to retweet this Tweet or you\'ve already retweeted it.',
         'error_user_not_found' : 'The user "%s" does not exist.',
-
+        
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warning',
         'warning_text' : 'Twitter has lowered the rate limit to %d requests per hour, the update interval has been adjusted accordingly.',
         'warning_url' : 'Atarashii couldn\'t connect to Twitter, in most cases this is just a temporary issue due to Twitter being too busy at the moment.',
-
+        
         # Toolbar items
         'tool_refresh' : 'Refresh Tweets',
         'tool_history' : 'Remove History',
@@ -341,7 +341,7 @@ LANG = {
         'tool_refresh_message' : 'Refresh Message',
         'tool_history_message' : 'Remove History',
         'tool_read_message' : 'Mark all Messages as read',
-
+        
         # Tray Menu
         'menu_update' : 'Refresh',
         'menu_settings' : 'Preferences',
@@ -350,11 +350,12 @@ LANG = {
     }
 }
 
+
 class Language:
     def __init__(self, code):
         if LANG.has_key(code):
             stuff = LANG[code]
-            
+        
         else:
             stuff = LANG['en_US']
         

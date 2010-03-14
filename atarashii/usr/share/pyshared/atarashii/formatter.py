@@ -18,31 +18,32 @@
 # ------------------------------------------------------------------------------
 import re
 import urllib
-
+                      
 # Some of this code has been translated from the twitter-text-java library:
 # <http://github.com/mzsanford/twitter-text-java>
 AT_REGEX = re.compile(ur"\B[@\uFF20]([a-z0-9_]{1,20})",
                       re.UNICODE | re.IGNORECASE)
 TAG_REGEX = re.compile(ur"(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+[a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff]*)",
                        re.UNICODE | re.IGNORECASE)
-
+                       
 PRE_CHARS = "(?:[^/\"':!=]|^|\\:)"
 DOMAIN_CHARS = "(?:[\\.-]|[^\\s])+\\.[a-z]{2,}(?::[0-9]+)?"
 PATH_CHARS = "(?:[\\.,]?[a-z0-9!\\*'\\(\\);:=\\+\\$/%#\\[\\]\\-_,~@])"
 QUERY_CHARS = "[a-z0-9!\\*'\\(\\);:&=\\+\\$/%#\\[\\]\\-_\\.,~]"
-
+                       
 # Valid end-of-path chracters (so /foo. does not gobble the period).
 # 1. Allow ) for Wikipedia URLs.
 # 2. Allow =&# for empty URL parameters and other URL-join artifacts
 PATH_ENDING_CHARS = "[a-z0-9\\)=#/]"
 QUERY_ENDING_CHARS = "[a-z0-9_&=#]"
-
+                       
 URL_REGEX = re.compile("((" + PRE_CHARS + ")((https?://|www\\.)(" + \
                        DOMAIN_CHARS + ")(/" + PATH_CHARS + "*" + \
                        PATH_ENDING_CHARS + "?)?(\\?" + QUERY_CHARS + "*" + \
                        QUERY_ENDING_CHARS + ")?))", re.UNICODE | re.IGNORECASE)
 
 from lang import lang
+
 
 class Formatter:
     def parse(self, text):
@@ -103,8 +104,9 @@ class Formatter:
                     '%s<a href="http://search.twitter.com/search?%s" title="'+\
                     lang.html_search + '">#%s</a>') %
                     (stuff, urllib.urlencode({'q': '#' + tag}), tag, tag))
-                
+        
         return "".join(result)
+    
     
     # Crazy filtering and splitting :O
     def filter_by(self, regex, stype):
@@ -115,7 +117,7 @@ class Formatter:
                 match = regex.search(data)
                 if match != None:
                     self.text_parts.pop(pos)
-                    self.text_parts.insert(pos, 
+                    self.text_parts.insert(pos,
                                     (0, data[:match.start()]))
                     
                     self.text_parts.insert(pos + 1,
@@ -129,6 +131,7 @@ class Formatter:
     
     def url(self, match):
         self.urls.append(match)
+    
     
     # Regex stuff
     def escape(self, text):

@@ -114,7 +114,7 @@ class Atarashii:
     def send(self, text):
         if self.is_sending:
             return
-            
+        
         # Send
         self.is_sending = True
         self.gui.text.set_sensitive(False)
@@ -131,7 +131,7 @@ class Atarashii:
         
         elif self.message_user != UNSET_TEXT:
             self.gui.set_status(lang.status_message % self.message_user)
-            
+        
         else:
             self.gui.set_status(lang.status_send)
         
@@ -139,6 +139,7 @@ class Atarashii:
         sender = send.Send(self, self.gui.mode, text)
         sender.setDaemon(True)
         sender.start()
+    
     
     # New style Retweet
     def retweet(self, name, tweet_id):
@@ -173,7 +174,7 @@ class Atarashii:
         if change_user != None:
             self.username = change_user
             self.settings['username'] = change_user
-            
+        
         # Set Mode
         self.gui.set_mode(self.settings['mode_' + self.username])
         
@@ -184,7 +185,7 @@ class Atarashii:
         # Connect
         if self.reconnect_timeout != None:
             gobject.source_remove(self.reconnect_timeout)
-            
+        
         self.login_status = False
         self.is_sending = False
         self.is_connecting = True
@@ -198,13 +199,13 @@ class Atarashii:
         self.gui.html.init(True)
         if self.gui.mode == MODE_MESSAGES:
             self.gui.html.start()
-            
+        
         self.gui.settings_button.set_sensitive(False)
         self.gui.tray.settings_menu.set_sensitive(False)
         self.gui.message.init(True)
         if self.gui.mode == MODE_TWEETS:
             self.gui.message.start()
-            
+        
         self.updater.do_init = True
     
     def on_login(self):
@@ -229,7 +230,7 @@ class Atarashii:
         self.gui.update_status()
         if error:
             self.gui.show_error(error)
-            
+        
         gobject.idle_add(lambda: self.gui.html.init(True))
     
     def logout(self):
@@ -268,7 +269,7 @@ class Atarashii:
                                      lambda: self.login())
             
             return lang.error_ratelimit_reconnect % math.ceil(minutes)
-            
+        
         # Just display an error if we exiced the ratelim while being logged in
         else:
             return lang.error_ratelimit % math.ceil(minutes)
@@ -279,7 +280,7 @@ class Atarashii:
     def get_image(self):
         if self.debug == None:
             return '/usr/share/icons/atarashii.png'
-            
+        
         else:
             return os.path.join(self.debug,
                                 'atarashii/usr/share/icons/atarashii.png')
@@ -287,7 +288,7 @@ class Atarashii:
     def get_resource(self, res):
         if self.debug == None:
             return os.path.join("/usr/share/atarashii", res)
-            
+        
         else:
             return os.path.join(self.debug,
                                 "atarashii/usr/share/atarashii", res)
@@ -295,28 +296,28 @@ class Atarashii:
     def get_latest_id(self):
         if self.settings.isset('lasttweet_' + self.username):
             return long(self.settings['lasttweet_' + self.username])
-            
+        
         else:
             return HTML_UNSET_ID
     
     def get_first_id(self):
         if self.settings.isset('firsttweet_' + self.username):
             return long(self.settings['firsttweet_' + self.username])
-            
+        
         else:
             return HTML_UNSET_ID
     
     def get_latest_message_id(self):
         if self.settings.isset('lastmessage_' + self.username):
             return long(self.settings['lastmessage_' + self.username])
-            
+        
         else:
             return HTML_UNSET_ID
     
     def get_first_message_id(self):
         if self.settings.isset('firstmessage_' + self.username):
             return long(self.settings['firstmessage_' + self.username])
-            
+        
         else:
             return HTML_UNSET_ID
     

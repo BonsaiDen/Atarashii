@@ -19,14 +19,16 @@
 import os
 import urllib
 
+
 class Settings:
     def __init__(self):
         self.dir = os.path.join(os.path.expanduser('~'), ".atarashii")
         if not os.path.exists(self.dir):
             os.mkdir(self.dir)
-            
+        
         self.values = {}
         self.load()
+    
     
     # Load ---------------------------------------------------------------------
     def load(self):
@@ -52,12 +54,13 @@ class Settings:
                     
                     if name != "":
                         self.values[urllib.unquote(name)] = value
-                        
+                
                 except Exception, detail:
                     print detail
-            
+        
         except Exception, detail:
             self.values = {}
+    
     
     # Save ---------------------------------------------------------------------
     def save(self):
@@ -72,14 +75,15 @@ class Settings:
             
             elif cls == bool:
                 vtype = "bool"
-                
+            
             else:
                 vtype = "str"
             
             settings_file.write("%s %s %s\n" % (urllib.quote(name), vtype,
                                 value))
-            
+        
         settings_file.close()
+    
     
     # Get / Set ----------------------------------------------------------------
     def __getitem__(self, key):
@@ -105,7 +109,7 @@ class Settings:
     def is_true(self, key, default = True):
         if self[key] == None:
             return default
-            
+        
         else:
             return self[key]
     
@@ -114,7 +118,7 @@ class Settings:
         for i in self.values.keys():
             if i.startswith("account_"):
                 accounts.append(i[8:])
-                
+        
         accounts.sort()
         return accounts
 

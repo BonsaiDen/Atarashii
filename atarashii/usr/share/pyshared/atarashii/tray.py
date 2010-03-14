@@ -87,7 +87,7 @@ class TrayIcon(gtk.StatusIcon):
         if self.gui.minimized:
             self.gui.deiconify()
             iconified = True
-            
+        
         else:
             iconified = False
         
@@ -96,7 +96,7 @@ class TrayIcon(gtk.StatusIcon):
             self.gui.present()
             self.gui.move(*self.gui.window_position)
             gobject.idle_add(lambda: self.gui.grab_focus())
-            
+        
         # Hide or move to other screen
         else:
             screen = self.gui.get_screen()
@@ -104,22 +104,22 @@ class TrayIcon(gtk.StatusIcon):
             pos = [pos[0], pos[1]]
             while pos[0] < 0:
                 pos[0] += screen.get_width()
-        
+            
             while pos[0] > screen.get_width():
                 pos[0] -= screen.get_width()
-        
+            
             while pos[1] < 0:
                 pos[1] += screen.get_height()
-        
+            
             while pos[1] > screen.get_height():
                 pos[1] -= screen.get_height()
-        
+            
             self.gui.main.settings['position'] = str(pos)
             self.gui.window_position = pos
             
             if self.on_screen() and not iconified:
                 self.gui.hide()
-                
+            
             else:
                 self.gui.move(*self.gui.window_position)
                 gobject.timeout_add(10, lambda: self.force_focus())

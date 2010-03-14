@@ -45,7 +45,7 @@ class HTML(view.HTMLView):
         item = self.items[num][0]
         if hasattr(item, "retweeted_status"):
             return item.retweeted_status.user
-            
+        
         else:
             return item.user
     
@@ -53,7 +53,7 @@ class HTML(view.HTMLView):
         item = self.items[num][0]
         if hasattr(item, "retweeted_status"):
             return item.retweeted_status.text
-            
+        
         else:
             return item.text
     
@@ -74,7 +74,7 @@ class HTML(view.HTMLView):
                     lang.html_in_retweet + '</a>'
             retweet = retweet % (item.user.screen_name,
                                     item.user.screen_name)
-            
+        
         else:
             tweet = item
         
@@ -89,7 +89,7 @@ class HTML(view.HTMLView):
         if num > 0:
             self.renderitems.insert(0,
                         self.insert_spacer(item, user, highlight, mentioned))
-            
+        
         self.lastname = user.screen_name
         self.last_highlight = highlight
         self.last_mentioned = mentioned
@@ -120,7 +120,7 @@ class HTML(view.HTMLView):
                                 user.name, user.followers_count,
                                 user.friends_count,
                                 user.statuses_count)
-            
+        
         else:
             avatar = ""
         
@@ -131,7 +131,7 @@ class HTML(view.HTMLView):
         
         elif item.id <= self.init_id:
             clas = 'highlightold' if highlight else 'oldtweet'
-            
+        
         else:
             clas = 'highlight' if highlight else 'tweet'
         
@@ -141,10 +141,10 @@ class HTML(view.HTMLView):
             if hasattr(tweet, "source_url") and tweet.source_url != "":
                 by_user = lang.html_by % ('<a href="%s" title="%s">%s</a>' % \
                         (tweet.source_url, tweet.source_url, tweet.source))
-                
+            
             else:
                 by_user =  lang.html_by % tweet.source
-            
+        
         else:
             by_user = ""
         
@@ -153,7 +153,7 @@ class HTML(view.HTMLView):
         if hasattr(user, "protected") and user.protected:
             locked = ('<span class="protected" title="' + \
                 lang.html_protected + '"></span>') % user.screen_name
-            
+        
         else:
             locked = ''
         
@@ -199,17 +199,17 @@ class HTML(view.HTMLView):
         html = html % (
                 clas,
                 avatar,
-        
+                
                 # Actions
                 user.screen_name, tweet.id, num,
                 num, tweet.id,
-        
+                
                 # Text
                 user.screen_name,
                 user.name.strip(),
                 user.screen_name,
                 text,
-        
+                
                 # Time
                 user.screen_name,
                 tweet.id,

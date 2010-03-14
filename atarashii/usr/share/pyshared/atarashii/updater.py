@@ -96,6 +96,7 @@ class Updater(threading.Thread):
         auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q",
                                    "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg",
                                    secure = True)
+        
         try:
             # Try using an old token
             token_ok = False
@@ -105,6 +106,7 @@ class Updater(threading.Thread):
                self.settings.isset(secret_name):
                 auth.set_access_token(self.settings[key_name],
                                       self.settings[secret_name])
+                
                 try:
                     auth.get_username()
                     token_ok = True
@@ -129,12 +131,12 @@ class Updater(threading.Thread):
                     self.main.api_temp_password = None
                     self.settings[key_name] = token.key
                     self.settings[secret_name] = token.secret
-                    
+                
                 else:
                     gobject.idle_add(lambda: self.main.on_login_failed())
                     self.main.api_temp_password = None
                     return
-                
+        
         except Exception, error:
             self.main.api_temp_password = None
             gobject.idle_add(lambda: self.main.on_login_failed(error))
@@ -159,7 +161,7 @@ class Updater(threading.Thread):
                 self.message.loaded = HTML_RESET
                 self.html.loaded = HTML_RESET
                 return
-                
+        
         else: # TODO implement loading of search
             pass
         
@@ -173,6 +175,7 @@ class Updater(threading.Thread):
             self.get_init_messages()
             if self.gui.mode == MODE_MESSAGES:
                 gobject.idle_add(lambda: self.gui.show_input())
+            
             else:
                 gobject.idle_add(lambda: self.gui.check_refresh())
         
@@ -180,9 +183,10 @@ class Updater(threading.Thread):
             self.get_init_tweets()
             if self.gui.mode == MODE_TWEETS:
                 gobject.idle_add(lambda: self.gui.show_input())
+            
             else:
                 gobject.idle_add(lambda: self.gui.check_refresh())
-            
+        
         else: # TODO implement loading of search
             pass
         
@@ -203,17 +207,18 @@ class Updater(threading.Thread):
         
         if len(updates) > 0:
             self.set_last_tweet(updates[0].id)
-            
+        
         updates.reverse()
         for i in updates:
             if i != None:
                 imgfile = self.get_image(i)
                 self.html.update_list.append((i, imgfile))
         
+        
         def render():
             self.html.push_updates()
             self.html.loaded = HTML_LOADED
-            
+        
         gobject.idle_add(lambda: render())
         return True
     
@@ -230,17 +235,18 @@ class Updater(threading.Thread):
         
         if len(messages) > 0:
             self.set_last_message(messages[0].id)
-            
+        
         messages.reverse()
         for i in messages:
             if i != None:
                 imgfile = self.get_image(i, True)
                 self.message.update_list.append((i, imgfile))
         
+        
         def render():
             self.message.push_updates()
             self.message.loaded = HTML_LOADED
-            
+        
         gobject.idle_add(lambda: render())
         return True
     
@@ -261,7 +267,7 @@ class Updater(threading.Thread):
                 
                 elif self.main.refresh_timeout != HTML_UNSET_ID:
                     self.check_for_update()
-                    
+            
             time.sleep(0.1)
     
     
@@ -286,8 +292,7 @@ class Updater(threading.Thread):
             self.refresh_now = False
             self.main.is_updating = False
             gobject.idle_add(lambda: self.gui.update_status(True))
-            
-            
+    
     def update(self):
         # Fetch Tweets
         updates = []
@@ -305,7 +310,7 @@ class Updater(threading.Thread):
             
             if len(updates) > 0:
                 self.set_last_tweet(updates[0].id)
-                
+        
         # Messages
         messages = []
         if (self.message_counter > 1 or self.refresh_messages) and \
@@ -322,25 +327,25 @@ class Updater(threading.Thread):
             
             if len(messages) > 0:
                 self.set_last_message(messages[0].id)
-                
+            
             self.message_counter = 0
         
         elif not self.refresh_now:
             self.message_counter += 1
-            
+        
         # Notify
         self.show_notifications(updates, messages)
         
         # Update View
         if len(updates) > 0:
             gobject.idle_add(lambda: self.html.push_updates())
-            
+        
         else:
             gobject.idle_add(lambda: self.html.render())
         
         if len(messages) > 0:
             gobject.idle_add(lambda: self.message.push_updates())
-            
+        
         else:
             gobject.idle_add(lambda: self.message.render())
     
@@ -359,9 +364,9 @@ class Updater(threading.Thread):
                     tweet_list.append([
                         lang.notification_message % i.sender.screen_name,
                         i.text, imgfile])
-                    
-            self.message.update_list.append((i, imgfile))
             
+            self.message.update_list.append((i, imgfile))
+        
         for i in updates:
             imgfile = self.get_image(i)
             if i.user.screen_name.lower() != self.main.username.lower():
@@ -376,9 +381,9 @@ class Updater(threading.Thread):
                         text = i.text
                     
                     tweet_list.append([name, text, imgfile])
-                    
-            self.html.update_list.append((i, imgfile))
             
+            self.html.update_list.append((i, imgfile))
+        
         # Show Notifications
         count = len(tweet_list)
         if count > 0 and self.settings.is_true("notify"):
@@ -387,7 +392,7 @@ class Updater(threading.Thread):
                 for num, i in enumerate(tweet_list):
                     tweet_list[num][0] = lang.notification_index % (
                                         tweet_list[num][0], num+1, count)
-                
+            
             self.notify.show(tweet_list, self.settings.is_true("sound"))
     
     
@@ -401,19 +406,17 @@ class Updater(threading.Thread):
                 # Try to get the updates and then break
                 return self.get_updates(since_id = since_id, max_id = max_id,
                                 max_count = max_count)
-        
+            
             # Something went wrong, either try it again or break with the error
             except Exception, error:
                 if count == 2:
                     raise error
     
-    
+    # Tweets
     def get_updates(self, since_id = 0, max_id = None, max_count = 200):
         gobject.idle_add(lambda: self.gui.update_status(True))
         updates = []
         mentions = []
-        
-        # Get new Tweets
         if since_id != HTML_UNSET_ID:
             if max_id == None:
                 mentions = self.api.mentions(since_id = since_id,
@@ -421,7 +424,7 @@ class Updater(threading.Thread):
                 
                 updates = self.api.home_timeline(since_id = since_id,
                                                  count = max_count)
-                
+            
             else:
                 updates = self.api.home_timeline(max_id = max_id,
                                                  count = max_count)
@@ -430,45 +433,40 @@ class Updater(threading.Thread):
                                         max_id = max_id,
                                         since_id = updates[len(updates) - 1].id,
                                         count = max_count)
-                    
-        # Init the Timeline
+        
         else:
             updates = self.api.home_timeline(count = self.main.load_tweet_count)
             if len(updates) > 0:
                 mentions = self.api.mentions(
                                 since_id = updates[len(updates) - 1].id,
                                 count = 200)
-                
-        # Sort and Stuff
+        
         for i in mentions:
             i.is_mentioned = True
         
         self.refresh_now = False
         
-        # Ratelimit
         self.update_limit()
         updates = updates + mentions
         if len(mentions) > 0:
             return self.process_updates(updates)
-            
+        
         else:
             return updates
     
-    
+    # Tweet History
     def load_history(self):
         updates = []
         try:
             updates = self.try_get_updates(max_id = self.html.load_history_id,
                                         max_count = self.main.load_tweet_count)
         
-        # Something went wrong...
         except Exception, error:
             self.html.load_history_id = HTML_UNSET_ID
             self.main.is_loading_history = False
             gobject.idle_add(lambda: self.gui.show_error(error))
             return
         
-        # Loaded
         self.main.max_tweet_count += len(updates)
         for i in updates:
             imgfile = self.get_image(i)
@@ -482,7 +480,7 @@ class Updater(threading.Thread):
             self.html.history_loaded = True
             self.html.history_count += len(updates)
             self.gui.history_button.set_sensitive(True)
-            
+        
         gobject.idle_add(lambda: self.html.push_updates())
         gobject.idle_add(lambda: self.gui.show_input())
     
@@ -497,17 +495,15 @@ class Updater(threading.Thread):
                 # Try to get the updates and then break
                 return self.get_messages(since_id = since_id, max_id = max_id,
                                 max_count = max_count)
-        
+            
             # Something went wrong, either try it again or break with the error
             except Exception, error:
                 if count == 2:
                     raise error
     
-    
+    # Messages
     def get_messages(self, since_id = 0, max_id = None, max_count = 200):
         messages = []
-        
-        # Get new Tweets
         if since_id != HTML_UNSET_ID:
             if max_id == None:
                 messages = self.api.direct_messages(since_id = since_id,
@@ -515,14 +511,14 @@ class Updater(threading.Thread):
                 
                 messages += self.api.sent_direct_messages(since_id = since_id,
                                                     count = max_count)
-                
+            
             else:
                 messages = self.api.direct_messages(max_id = max_id,
                                                     count = max_count)
+                
                 messages += self.api.sent_direct_messages(max_id = max_id,
                                                     count = max_count)
-            
-        # Init the Timeline
+        
         else:
             messages = self.api.direct_messages(
                                 count = self.main.load_message_count // 2)
@@ -531,12 +527,10 @@ class Updater(threading.Thread):
                                  count = self.main.load_message_count // 2)
         
         self.refresh_messages = False
-        
-        # Ratelimit
         self.update_limit()
         return self.process_updates(messages)
     
-    
+    # Message History
     def load_history_message(self):
         messages = []
         try:
@@ -544,14 +538,12 @@ class Updater(threading.Thread):
                             max_id = self.message.load_history_id,
                             max_count = self.main.load_message_count)
         
-        # Something went wrong...
         except Exception, error:
             self.message.load_history_id = HTML_UNSET_ID
             self.main.is_loading_history = False
             gobject.idle_add(lambda: self.gui.show_error(error))
             return
         
-        # Loaded
         self.main.max_message_count += len(messages)
         for i in messages:
             imgfile = self.get_image(i, True)
@@ -565,7 +557,7 @@ class Updater(threading.Thread):
             self.message.history_loaded = True
             self.message.history_count += len(messages)
             self.gui.history_button.set_sensitive(True)
-            
+        
         gobject.idle_add(lambda: self.message.push_updates())
         gobject.idle_add(lambda: self.gui.show_input())
     
@@ -593,30 +585,30 @@ class Updater(threading.Thread):
             
             elif x.id < y.id:
                 return 1
-                
+            
             else:
                 return 0
-            
+        
         # Remove doubled mentions
         ids = []
         def unique(i):
             if i.id in ids:
                 return False
+            
             else:
                 ids.append(i.id)
                 return True
-            
+        
         updates = filter(unique, updates)
         updates.sort(compare)
         return updates
-    
     
     def update_limit(self):
         ratelimit = self.api.rate_limit_status()
         if ratelimit == None:
             self.main.refresh_timeout = 60
             return
-            
+        
         minutes = (ratelimit['reset_time_in_seconds'] - \
                    calendar.timegm(time.gmtime())) / 60
         limit = ratelimit['remaining_hits']
@@ -625,40 +617,39 @@ class Updater(threading.Thread):
             self.main.refresh_timeout = int(minutes / limit * 60 * 1.10)
             if self.main.refresh_timeout < 45:
                 self.main.refresh_timeout = 45
-                
+        
         # Check for ratelimit
         count = ratelimit['hourly_limit']
         if count < 350:
             if not self.main.rate_warning_shown:
                 self.main.rate_warning_shown= True
                 gobject.idle_add(lambda: self.gui.show_warning(count))
-                
+        
         else:
             self.main.rate_warning_shown = False
-    
     
     def get_image(self, item, message = False):#url, userid):
         if message:
             url = item.sender.profile_image_url
             userid = item.sender.id
-            
+        
         else:
             if hasattr(item, "retweeted_status"):
                 url = item.retweeted_status.user.profile_image_url
                 userid = item.retweeted_status.user.id
-                
+            
             else:
                 url = item.user.profile_image_url
                 userid = item.user.id
-            
+        
         image = url[url.rfind('/')+1:]
         imgdir = os.path.join(self.path, ".atarashii")
         if not os.path.exists(imgdir):
             os.mkdir(imgdir)
-            
+        
         imgfile = os.path.join(imgdir, str(userid) + '_' + image)
         if not os.path.exists(imgfile):
             urllib.urlretrieve(url, imgfile)
-            
+        
         return imgfile
 

@@ -43,13 +43,13 @@ class Send(threading.Thread):
             
             elif self.mode == MODE_MESSAGES:
                 self.send_message(self.text)
-                
+            
             else: # TODO implement search
                 pass
             
             # Reset GUI
             gobject.idle_add(self.reset_gui)
-            
+        
         # Show Error Message
         except Exception, error:
             gobject.idle_add(lambda: self.gui.show_error(error))
@@ -82,7 +82,7 @@ class Send(threading.Thread):
         
         elif self.gui.mode == MODE_TWEETS:
             self.gui.html.grab_focus()
-            
+        
         else: # TODO implement search
             pass
         
@@ -102,13 +102,13 @@ class Send(threading.Thread):
             imgfile = self.main.updater.get_image(update)
             self.gui.html.update_list.append((update, imgfile))
             gobject.idle_add(lambda: self.gui.html.push_updates())
-            
+        
         # Normal Tweet / Retweet
         else:
             # Send Tweet
             update = self.main.api.update_status(text)
             self.main.updater.set_last_tweet(update.id)
-        
+            
             # Insert temporary tweet
             imgfile = self.main.updater.get_image(update)
             self.gui.html.update_list.append((update, imgfile))
@@ -134,6 +134,7 @@ class Send(threading.Thread):
         gobject.idle_add(lambda: self.gui.message.push_updates())
 
 
+
 # New style Retweets -----------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Retweet(threading.Thread):
@@ -150,7 +151,7 @@ class Retweet(threading.Thread):
         try:
             # Retweet
             self.main.api.retweet(self.tweet_id)
-        
+            
             # Focus HTML
             self.gui.show_input(False)
             if self.gui.mode == MODE_MESSAGES:
@@ -158,13 +159,13 @@ class Retweet(threading.Thread):
             
             elif self.gui.mode == MODE_TWEETS:
                 self.gui.html.grab_focus()
-                
+            
             else: # TODO implement search
                 pass
             
             self.main.was_sending = False
             gobject.idle_add(lambda: self.gui.show_retweet_info(self.name))
-            
+        
         except Exception, error:
             gobject.idle_add(lambda: self.gui.show_error(error))
         

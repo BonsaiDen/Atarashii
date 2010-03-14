@@ -20,6 +20,9 @@ import pynotify
 import subprocess
 import threading
 
+pynotify.init("Atarashii")
+
+
 class NotifierSound(threading.Thread):
     def __init__(self, sound):
         threading.Thread.__init__(self)
@@ -31,8 +34,8 @@ class NotifierSound(threading.Thread):
         
         finally:
             pass
-        
-pynotify.init("Atarashii")
+
+
 class Notifier:
     def __init__(self, main):
         self.main = main
@@ -40,7 +43,7 @@ class Notifier:
     def show(self, objs, sound = False):
         if sound:
             self.sound()
-            
+        
         for obj in objs:
             self.notify(obj[0], obj[1], obj[2])
     

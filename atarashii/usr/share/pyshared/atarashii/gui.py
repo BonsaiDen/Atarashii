@@ -151,7 +151,6 @@ class GUI(gtk.Window):
         self.minimized = False
         
         self.show_all()
-        
         self.set_mode(self.mode)
         
         # Statusbar Updater
@@ -169,6 +168,7 @@ class GUI(gtk.Window):
         self.text_scroll.show()
         if resize:
             self.text.resize()
+        
         else:
             self.text.resize(1)
         
@@ -185,7 +185,7 @@ class GUI(gtk.Window):
                 (self.mode == MODE_MESSAGES and \
                 self.message.loaded == HTML_LOADING) or \
                 (self.mode == MODE_TWEETS and self.html.loaded == HTML_LOADING)
-            
+        
         self.progress.set_fraction(0.0)
         self.progress.show()
         self.info_label.hide()
@@ -195,7 +195,7 @@ class GUI(gtk.Window):
     def hide_all(self, progress = True):
         if progress:
             self.progress.hide()
-            
+        
         self.text_scroll.hide()
         self.refresh_button.set_sensitive(False)
         self.read_button.set_sensitive(False)
@@ -217,7 +217,7 @@ class GUI(gtk.Window):
             
             elif wait < 105:
                 self.set_status(lang.status_reconnect_minute)
-                
+            
             else:
                 self.set_status(
                     lang.status_reconnect_minutes % math.ceil(wait / 60.0))
@@ -262,20 +262,20 @@ class GUI(gtk.Window):
             
             elif wait == 1:
                 self.set_status(lang.status_one_second)
-                
+            
             else:
                 if wait < 60:
                     self.set_status(lang.status_seconds % wait)
                 
                 elif wait < 105:
                     self.set_status(lang.status_minute)
-                    
+                
                 else:
                     self.set_status(lang.status_minutes % math.ceil(wait / 60.0))
         
         if once:
             return False
-            
+        
         else:
             return True
     
@@ -335,7 +335,7 @@ class GUI(gtk.Window):
                 cur = layout.get_pixel_size()[0]
             
             self.info_label.set_markup(text + "...")
-            
+        
         else:
             self.info_label.set_markup(text)
     
@@ -371,7 +371,7 @@ class GUI(gtk.Window):
             # Check for goMessage
             if self.text.go_send_message != None:
                 self.set_mode(MODE_MESSAGES)
-                
+            
             self.update_status()
     
     def check_read(self):
@@ -382,19 +382,20 @@ class GUI(gtk.Window):
         elif self.mode == MODE_TWEETS:
             self.read_button.set_sensitive(
                              self.html.last_id > self.html.init_id)
-            
+        
         else:
             self.read_button.set_sensitive(False)
     
     def set_mode(self, mode):
         if mode == None:
             self.mode = MODE_TWEETS
+        
         else:
             self.mode = mode
         
         if self.mode == MODE_MESSAGES:
             self.message_button.set_active(True)
-            
+        
         else:
             self.on_mode()
     
@@ -435,12 +436,12 @@ class GUI(gtk.Window):
                 self.main.reply_user != UNSET_TEXT or \
                 self.main.reply_id != UNSET_ID_NUM):
                 self.text.grab_focus()
-                
+        
         try:
             code = error.response.status
             if error.reason.startswith("Share sharing"):
                 code = -2
-                
+        
         except:
             try:
                 if error.reason.startswith("HTTP Error "):
@@ -448,10 +449,10 @@ class GUI(gtk.Window):
                 
                 elif type(error) == exceptions.IOError:
                     code = -1
-                    
+                
                 else:
                     code = 0
-                
+            
             except:
                 code = 0
         
@@ -467,31 +468,30 @@ class GUI(gtk.Window):
             
             code = 500
             rate_error = ""
-            
+        
         else:
             rate_error = ""
         
         # 404's
         if self.main.was_sending and code == 404:
             code = -3
-            
+        
         self.main.was_sending = False
         self.main.was_retweeting = False
         
         # Show Warning on url error or error message for anything else
         if code == -1 or code == 500 or code == 502 or code == 503:
-            
             # Show only one warning at a time to prevent dialog cluttering
             if not self.main.request_warning_shown:
                 self.main.request_warning_shown = True
                 
                 def unset():
                     self.main.request_warning_shown = False
-                    
+                
                 dialog.MessageDialog(self, MESSAGE_WARNING,
                     lang.warning_url, lang.warning_title,
                     ok_callback = unset)
-                
+        
         else:
             description = {
                 -3 : lang.error_user_not_found,
@@ -520,26 +520,28 @@ class GUI(gtk.Window):
     def on_refresh(self, *args):
         if self.mode == MODE_MESSAGES:
             self.main.updater.refresh_messages = True
+        
         else:
             self.main.updater.refresh_now = True
     
     def on_history(self, *args):
         if self.mode == MODE_MESSAGES:
             gobject.idle_add(lambda: self.message.clear())
-            
+        
         else:
             gobject.idle_add(lambda: self.html.clear())
     
     def on_read(self, *args):
         if self.mode == MODE_MESSAGES:
             gobject.idle_add(lambda: self.message.read())
-            
+        
         else:
             gobject.idle_add(lambda: self.html.read())
     
     def on_mode(self, *args):
         if self.message_button.get_active():
             self.mode = MODE_MESSAGES
+        
         else: # TODO add case for searchbutton
             self.mode = MODE_TWEETS
         
@@ -578,7 +580,7 @@ class GUI(gtk.Window):
             
             elif self.html.loaded == HTML_LOADED:
                 self.show_input()
-                
+        
         else: # TODO implement search here
             pass
         
@@ -604,7 +606,7 @@ class GUI(gtk.Window):
             
             elif self.settings_dialog:
                 self.settings_dialog.on_close()
-                
+            
             self.settings_toggle = False
     
     def on_about(self, menu):
@@ -623,13 +625,13 @@ class GUI(gtk.Window):
             
             elif self.about_dialog:
                 self.about_dialog.on_close()
-                
+            
             self.about_toggle = False
     
     def on_quit(self, widget = None, data = None):
         if data:
             data.set_visible(False)
-            
+        
         self.main.quit()
     
     

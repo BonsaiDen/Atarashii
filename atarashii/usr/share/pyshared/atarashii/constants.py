@@ -12,11 +12,8 @@
 #
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
-
-
 # Constants --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-
 # Rewteets
 RETWEET_ASK = 0          # Can be anything
 RETWEET_NEW = 1          # Can be anything
@@ -38,15 +35,14 @@ HTML_UNSET_ID = -1       # Must be lower than 0
 HTML_RESET = -1          # Can be anything
 HTML_LOADING = 0         # Can be anything
 HTML_LOADED = 1          # Can be anything
-
 HTML_STATE_NONE = 0      # Can be anything
 HTML_STATE_START = 1     # Can be anything
 HTML_STATE_SPLASH = 2    # Can be anything
 HTML_STATE_RENDER = 3    # Can be anything
 
 # Message Dialogs
-MESSAGE_ERROR = 1
-MESSAGE_WARNING = 2
-MESSAGE_QUESTION = 3
-MESSAGE_INFO = 4
+MESSAGE_ERROR = 1        # Can be anything
+MESSAGE_WARNING = 2      # Can be anything
+MESSAGE_QUESTION = 3     # Can be anything
+MESSAGE_INFO = 4         # Can be anything
 

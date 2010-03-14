@@ -47,13 +47,13 @@ class Dialog:
             
             if close:
                 self.close_button.connect("clicked", self.on_close)
-                
+            
             self.__class__.instance = self.dlg
             self.dlg.show_all()
             self.on_init()
             
             self.close_button.grab_focus()
-            
+        
         else:
             gobject.idle_add(lambda: self.__class__.instance.present())
     
@@ -66,8 +66,6 @@ class Dialog:
     
     def get(self, widget):
         return self.gtb.get_object(widget)
-
-
 
 # Password Dialog --------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -88,27 +86,29 @@ class PasswordDialog(Dialog):
         cancel_button = self.get("cancelbutton")
         cancel_button.set_label(lang.password_button_cancel)
         
+        
         def save(*args):
             password = self.get("password").get_text().strip()
             if password == "":
                 self.get("password").grab_focus()
-                
+            
             else:
                 self.main.api_temp_password = password
                 self.on_close()
+        
         
         def abort(*args):
             self.main.api_temp_password = ""
             self.on_close()
         
+        
         def key(widget, event, *args):
             if event.keyval == gtk.keysyms.Return:
                 save()
-                
+        
         self.get("password").connect("key-press-event", key)
         self.close_button.connect("clicked", save)
         cancel_button.connect("clicked", abort)
-
 
 # About Dialog -----------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -129,15 +129,16 @@ class AboutDialog(Dialog):
         license_button = self.get("license")
         license_button.set_label(lang.about_license_button)
         
+        
         def toggle(widget, *args):
             if widget.get_property("active"):
                 text.show()
                 info.hide()
-                
+            
             else:
                 info.show()
                 text.hide()
-            
+        
         text.hide()
         license_button.connect("toggled", toggle)
     
@@ -146,7 +147,6 @@ class AboutDialog(Dialog):
         self.gui.about_dialog = None
         self.gui.about_button.set_active(False)
         self.dlg.hide()
-
 
 # Settings Dialog --------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -169,17 +169,18 @@ class SettingsDialog(Dialog):
         delete = self.get("delete")
         delete.set_label(lang.settings_delete)
         
+        
         # Setup Account List
         def drop_changed(*args):
             i = drop.get_active()
             if i != -1:
                 edit.set_sensitive(True)
                 delete.set_sensitive(True)
-                
+            
             else:
                 edit.set_sensitive(False)
                 delete.set_sensitive(False)
-            
+        
         self.drop = drop = self.get("dropbox")
         drop.connect("changed", drop_changed)
         cell = gtk.CellRendererText()
@@ -187,20 +188,22 @@ class SettingsDialog(Dialog):
         self.drop.add_attribute(cell, 'text', 0)
         self.create_drop_list()
         drop_changed()
-        
+
         
         # Edit Action
         def edit_dialog(*args):
             name = self.user_accounts[drop.get_active()]
             AccountDialog(self, name, lang.account_edit, self.edit_account)
-            
+        
         edit.connect("clicked", edit_dialog)
+
         
         # Add Action
         def create_dialog(*args):
             AccountDialog(self, "", lang.account_create, self.create_account)
-            
+        
         add.connect("clicked", create_dialog)
+
         
         # Delete Action
         def delete_dialog(*args):
@@ -209,7 +212,7 @@ class SettingsDialog(Dialog):
                             lang.account_delete_description % name,
                             lang.account_delete,
                             yes_callback = self.delete_account)
-            
+        
         delete.connect("clicked", delete_dialog)
         
         
@@ -245,7 +248,7 @@ class SettingsDialog(Dialog):
             sound.set_sensitive(notify.get_active())
             file_widget.set_sensitive(
                         notify.get_active() and sound.get_active())
-            
+        
         toggle()
         notify.connect("toggled", lambda *a: toggle())
         sound.connect("toggled", lambda *a: toggle2())
@@ -268,8 +271,8 @@ class SettingsDialog(Dialog):
         
         elif rt_tmp == RETWEET_OLD:
             old_rt.set_active(True)
-            
-            
+        
+        
         # Save -----------------------------------------------------------------
         oldusername = self.main.username
         def save(*args):
@@ -285,7 +288,7 @@ class SettingsDialog(Dialog):
             
             elif old_rt.get_active():
                 rt_tmp = RETWEET_OLD
-                
+            
             self.settings['retweets'] = rt_tmp
             
             # Save GUI Mode
@@ -294,7 +297,6 @@ class SettingsDialog(Dialog):
             # Set new Username
             if drop.get_active() != -1:
                 username = self.user_accounts[drop.get_active()]
-                
             
             # Save Settings
             self.main.save_settings()
@@ -305,9 +307,9 @@ class SettingsDialog(Dialog):
             
             elif username != oldusername or not self.main.login_status:
                 self.main.login(username)
-                
-            self.on_close()
             
+            self.on_close()
+        
         self.close_button.connect("clicked", save)
         cancel_button.connect("clicked", self.on_close)
     
@@ -317,7 +319,8 @@ class SettingsDialog(Dialog):
         self.gui.settings_button.set_active(False)
         self.dlg.hide()
     
-    # Generate Account List
+    
+    # Generate Account List ----------------------------------------------------
     def create_drop_list(self, name = None):
         self.user_accounts = self.main.settings.get_accounts()
         self.accounts_list = gtk.ListStore(str)
@@ -329,11 +332,12 @@ class SettingsDialog(Dialog):
             
             elif name == None and user == self.main.username:
                 selected = num
-                
+        
         self.drop.set_model(self.accounts_list)
         self.drop.set_active(selected)
     
-    # Edit a User Account
+    
+    # Edit a User Account ------------------------------------------------------
     def edit_account(self, username):
         name = self.user_accounts[self.drop.get_active()]
         if name != username:
@@ -361,17 +365,15 @@ class SettingsDialog(Dialog):
             
             if self.main.username == name:
                 self.main.username = self.main.settings['username'] = username
-                
+            
             self.main.settings.save()
             self.create_drop_list(username)
-    
     
     def create_account(self, username):
         self.main.settings['account_' + username] = ""
         self.create_drop_list()
         if len(self.user_accounts) == 1:
             self.drop.set_active(0)
-    
     
     def delete_account(self):
         name = self.user_accounts[self.drop.get_active()]
@@ -385,7 +387,7 @@ class SettingsDialog(Dialog):
         del self.main.settings['xsecret_' + name]
         if self.main.username == name:
             self.main.username = self.main.settings['username'] = ""
-            
+        
         self.create_drop_list()
 
 
@@ -412,6 +414,7 @@ class AccountDialog(Dialog):
         
         self.get("user").set_text(lang.account_username)
         
+        
         def save(*args):
             username = self.get("username").get_text().strip()
             if username == "":
@@ -420,11 +423,11 @@ class AccountDialog(Dialog):
             elif username in self.parent.user_accounts and \
                 username != self.username:
                 self.get("username").grab_focus()
-                
+            
             else:
                 self.callback(username)
                 self.on_close()
-            
+        
         self.close_button.connect("clicked", save)
         cancel_button.connect("clicked", self.on_close)
 
@@ -454,7 +457,7 @@ class MessageDialog(gtk.MessageDialog):
             gtk.MessageDialog.__init__(self, parent,
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         gtk.MESSAGE_INFO, gtk.BUTTONS_OK, message)
-            
+        
         self.set_title(title)
         self.ok_callback = ok_callback
         self.yes_callback = yes_callback

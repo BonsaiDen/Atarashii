@@ -94,7 +94,6 @@ class HTMLView(webkit.WebView):
             </body>""" % (self.main.get_image(), self.lang_loading),
             HTML_STATE_START)
     
-    
     def splash(self):
         self.offset_count = 0
         self.render_html("""
@@ -129,33 +128,28 @@ class HTMLView(webkit.WebView):
                 </body>""" % ("".join(renderitems),
                                 self.items[0][0].id, self.lang_load),
                                 HTML_STATE_RENDER)
-            
+        
         else:
             self.render_html("""
                 <body class="unloaded">
                     <div class="loading"><b>%s</b></div>
                 </body>""" % self.lang_empty, HTML_STATE_RENDER)
     
-    
     def insert_spacer(self, item, user, highlight, mentioned, message = False, 
                     next = False, force = False):
         
-        # Red spacer that indicates something did fall through
         spacer = "foo"
-        
-        
-        # New Tweets
         if item.id > self.init_id:
             # Name change
             if self.lastname != user.screen_name or self.new_timeline or force:
                 spacer = "1" # Dark Gray
-                
+            
             else:
                 # More @username
                 if highlight:
                     if not self.last_highlight:
                         spacer = "1" # Dark Gray
-                        
+                    
                     else:
                         spacer = "6" # Normal/Dark Blue
                 
@@ -163,10 +157,10 @@ class HTMLView(webkit.WebView):
                 elif mentioned:
                     if not self.last_mentioned:
                         spacer = "1" # Dark Gray
-                        
+                    
                     else:
                         spacer = "5" # Yellow
-                    
+                
                 # Just more normal tweets
                 else:
                     if next and self.last_highlight:
@@ -174,22 +168,22 @@ class HTMLView(webkit.WebView):
                     
                     elif next and self.last_mentioned:
                         spacer = "1" # Normal Gray
-                        
+                    
                     else:
                         spacer = "4" # Dark/Normal Blue
-                    
+        
         # Old Tweets
         else:
             # Name change
             if self.lastname != user.screen_name or self.new_timeline or force:
                 spacer = "" # Normal Gray
-                
+            
             else:
                 # More @username
                 if highlight:
                     if not self.last_highlight:
                         spacer = "" # Normal Gray
-                        
+                    
                     else:
                         spacer = "7" # White/Light Blue
                 
@@ -197,10 +191,10 @@ class HTMLView(webkit.WebView):
                 elif mentioned:
                     if not self.last_mentioned:
                         spacer = "" # Dark Gray
-                        
+                    
                     else:
                         spacer = "8" # Yellow
-                    
+                
                 # Just more normal tweets
                 else:
                     if next and self.last_highlight:
@@ -208,10 +202,10 @@ class HTMLView(webkit.WebView):
                     
                     elif next and self.last_mentioned:
                         spacer = "" # Normal Gray
-                        
+                    
                     else:
                         spacer = "2" # Light Blue/White
-                    
+        
         return '<div class="spacer%s"></div>' % spacer
     
     
@@ -231,7 +225,7 @@ class HTMLView(webkit.WebView):
         self.is_rendering = False
         if len(self.items) > 0 and self.newitems and not self.load_history:
             offset = self.get_offset()
-            
+        
         else:
             offset = 0
         
@@ -250,7 +244,7 @@ class HTMLView(webkit.WebView):
         
         if len(self.items) > 0:
             self.first_load = False
-            
+        
         self.load_history = False
         self.newitems = False
     
@@ -277,7 +271,7 @@ class HTMLView(webkit.WebView):
             
             elif self.mode == HTML_STATE_SPLASH:
                 self.splash()
-                
+            
             return True
     
     
@@ -299,9 +293,9 @@ class HTMLView(webkit.WebView):
                 pos = len(self.items) - self.item_count
                 if pos < 0:
                     pos = 0
-                    
-                self.items = self.items[pos:]
                 
+                self.items = self.items[pos:]
+            
             self.render()
     
     
@@ -316,13 +310,14 @@ class HTMLView(webkit.WebView):
         
         self.render()
     
+    
     # Add items to the internal List
     def add(self, item, append = False):        
         # Don't add items with the same ID twice
         if not item[0].id in [i[0].id for i in self.items]:
             if append:
                 self.items.insert(0, item)
-                
+            
             else:
                 self.items.append(item)
             
@@ -330,14 +325,13 @@ class HTMLView(webkit.WebView):
             if len(self.items) > self.main.max_tweet_count:
                 self.items.pop(0)
     
-    
     def compare(self, x, y):
         if x[0].id > y[0].id:
             return 1
         
         elif x[0].id < y[0].id:
             return -1
-            
+        
         else:
             return 0
     
@@ -354,14 +348,14 @@ class HTMLView(webkit.WebView):
             itemid = len(self.items) - self.item_count
             if itemid < 0:
                 itemid = 0
-                
+            
             setting = self.first_setting + self.main.username
             self.main.settings[setting] = self.items[itemid][0].id - 1
         
         # Newest Stuff
         if self.newest_id == HTML_UNSET_ID:
             self.newest_id = self.init_id
-            
+        
         # Newest Stuff
         self.newest = False
         self.newest_avatar = False
@@ -387,9 +381,9 @@ class HTMLView(webkit.WebView):
             # Close Newest Container
             if item.id == self.newest_id:
                 html = '</div>' + html
-                
-            self.renderitems.insert(0, html)
             
+            self.renderitems.insert(0, html)
+        
         # Render
         self.set_html(self.renderitems)
     
@@ -399,6 +393,7 @@ class HTMLView(webkit.WebView):
     def relative_time(self, date):
         delta = long(calendar.timegm(time.gmtime())) - \
                 long(calendar.timegm(date.timetuple()))
+        
         if delta <= 1:
             return lang.html_about_second
         
@@ -425,7 +420,7 @@ class HTMLView(webkit.WebView):
         
         elif delta <= 60 * 60 * 72:
             return lang.html_day % math.ceil(delta / (60.0 * 60.0 * 24.0))
-            
+        
         else:
             date = time.localtime(calendar.timegm(date.timetuple()))
             return time.strftime(lang.html_exact, date)
@@ -433,12 +428,14 @@ class HTMLView(webkit.WebView):
     def absolute_time(self, date):
         delta = long(calendar.timegm(time.gmtime())) - \
                 long(calendar.timegm(date.timetuple()))
+        
         date = time.localtime(calendar.timegm(date.timetuple()))
         if delta <= 60 * 60 * 24:
             return time.strftime(lang.html_time, date)
-            
+        
         else:
             return time.strftime(lang.html_time_day, date)
+    
     
     # Checks for new Tweets
     def is_new_timeline(self, item):
@@ -455,6 +452,7 @@ class HTMLView(webkit.WebView):
     def is_new_avatar(self, num):
         if num < len(self.items) - 1:
             self.new_avatar = self.items[num + 1][0].id > self.init_id
+        
         else:
             self.new_avatar = False
         
@@ -505,15 +503,17 @@ class HTMLView(webkit.WebView):
             foo, num, tweetid = uri.split(":")
             num, tweetid = int(num), long(tweetid)
             name = self.get_user(num).screen_name
+            
             def old_retweet():
                 self.main.retweet_text = self.unescape(self.get_text(num))
                 self.main.retweet_user = name
                 self.main.gui.text.retweet()
                 self.main.gui.text.html_focus()
             
+            
             def new_retweet():
                 self.main.retweet(name, tweetid)
-                
+            
             # Which style?
             rt_temp = self.main.settings["retweets"]
             if name.lower() == self.main.username.lower():
@@ -527,12 +527,13 @@ class HTMLView(webkit.WebView):
             
             elif rt_temp == RETWEET_OLD:
                 old_retweet()
-                
+        
         # Regular links
         else:
             webbrowser.open(uri)
         
         return True
+    
     
     # Unescape chars
     def unescape(self, text):
