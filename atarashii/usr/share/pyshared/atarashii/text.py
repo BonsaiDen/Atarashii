@@ -53,6 +53,7 @@ class TextInput(gtk.TextView):
         
         self.message_len = 0
         self.go_send_message = None
+        self.go_send_tweet = None
         
         # Sizes
         self.input_size = None
@@ -95,10 +96,14 @@ class TextInput(gtk.TextView):
         if not self.has_focus and self.input_error != None:
             self.resize()
             
-            # Check if we need to toggle to message mode
+            # Check if we need to toggle to message/tweet mode
             if self.go_send_message != None:
-                self.switch_to_message(self.go_send_message)
+                self.switch(self.go_send_message, MODE_MESSAGES)
                 self.go_send_message = None
+            
+            elif self.go_send_tweet != None:
+                self.switch(self.go_send_tweet, MODE_TWEETS)
+                self.go_send_tweet = None
             
             elif not self.has_typed:
                 self.modify_text(gtk.STATE_NORMAL,
@@ -164,6 +169,15 @@ class TextInput(gtk.TextView):
             elif self.main.message_id == UNSET_ID_NUM:
                 self.main.message_user = UNSET_TEXT
         
+            # check for "d user" and switch to messaging
+            at_user = self.reply_regex.match(text)
+            if at_user != None:
+                if self.gui.is_loaded():
+                    self.switch(self.get_text(), MODE_TWEETS)
+                
+                else:
+                    self.go_send_tweet = self.get_text()
+        
         
         # Tweet Mode -----------------------------------------------------------
         elif self.gui.mode == MODE_TWEETS:
@@ -207,8 +221,8 @@ class TextInput(gtk.TextView):
             # check for "d user" and switch to messaging
             msg = self.message_regex.match(text)
             if msg != None:
-                if self.gui.is_ready():
-                    self.switch_to_message(self.get_text())
+                if self.gui.is_loaded():
+                    self.switch(self.get_text(), MODE_MESSAGES)
                 
                 else:
                     self.go_send_message = self.get_text()
@@ -335,9 +349,9 @@ class TextInput(gtk.TextView):
         self.modify_text(gtk.STATE_NORMAL, self.default_fg)
         self.resize()
     
-    def switch_to_message(self, text):
+    def switch(self, text, mode):
         self.change_contents = True
-        self.gui.set_mode(MODE_MESSAGES)
+        self.gui.set_mode(mode)
         self.change_contents = True
         self.is_changing = True
         self.grab_focus()

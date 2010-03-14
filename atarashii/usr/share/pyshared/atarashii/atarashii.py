@@ -255,6 +255,7 @@ class Atarashii:
         if ratelimit != None:
             minutes = math.ceil((ratelimit['reset_time_in_seconds'] - \
                                  calendar.timegm(time.gmtime())) / 60.0)
+        
         else:
             minutes = 5
         

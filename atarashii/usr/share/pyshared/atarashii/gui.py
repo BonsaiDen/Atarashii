@@ -152,6 +152,7 @@ class GUI(gtk.Window):
         
         self.show_all()
         self.set_mode(self.mode)
+        self.on_mode()
         
         # Statusbar Updater
         self.update_status()
@@ -368,9 +369,12 @@ class GUI(gtk.Window):
         if self.is_ready():
             self.refresh_button.set_sensitive(True)
             
-            # Check for goMessage
+            # Check for message/tweet switch
             if self.text.go_send_message != None:
                 self.set_mode(MODE_MESSAGES)
+            
+            elif self.text.go_send_tweet != None:
+                self.set_mode(MODE_TWEETS)
             
             self.update_status()
     
@@ -387,6 +391,9 @@ class GUI(gtk.Window):
             self.read_button.set_sensitive(False)
     
     def set_mode(self, mode):
+        if mode == self.mode:
+            return
+        
         if mode == None:
             self.mode = MODE_TWEETS
         
@@ -396,13 +403,15 @@ class GUI(gtk.Window):
         if self.mode == MODE_MESSAGES:
             self.message_button.set_active(True)
         
-        else:
-            self.on_mode()
+        elif self.mode == MODE_TWEETS:
+            self.message_button.set_active(False)
     
     def is_ready(self):
-        return not self.main.is_updating and \
-                   self.message.loaded == HTML_LOADED and \
-                   self.html.loaded == HTML_LOADED
+        return not self.main.is_updating and self.is_loaded()
+    
+    def is_loaded(self):
+        return self.message.loaded == HTML_LOADED and \
+               self.html.loaded == HTML_LOADED
     
     
     # Message Dialogs ----------------------------------------------------------
