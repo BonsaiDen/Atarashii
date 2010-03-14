@@ -84,6 +84,7 @@ tempFiles = []
 for i in dirs:
     files = i[2]
     path = os.path.join(cur, i[0])
+    subprocess.call(["chmod", "755", path])
     for f in files:
         file = os.path.join(path, f)
         if f.startswith('.'):
@@ -97,6 +98,12 @@ for i in dirs:
             print "- deleting %s" % file
         
         else:
+            if f == "atarashii":
+                subprocess.call(["chmod", "644", file])
+                subprocess.call(["chmod", "+x", file])
+            else:
+                subprocess.call(["chmod", "644", file])
+            
             size += os.stat(file).st_size
             cf = file[len(cur)-3:]
             m.write("%s  %s\n" % (getFileMD5(file), cf))
@@ -134,14 +141,8 @@ print ">> Created!"
 
 # Create package
 print "The kittens are building your package..."
-try:
-    subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"], 
-                    stdout = open("/dev/null", "wb"))
-         
-except:
-    print 'ERROR: Missing either "fakeroot" or "dpkg-deb"!'
-    exit()
-
+subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"], 
+                stdout = open("/dev/null", "wb"))
 shutil.move(os.path.join(sys.path[0], "atarashii.deb"), 
             os.path.join(sys.path[0], 
             "atarashii_%s-1_all.deb" % atarashii.__version__))
