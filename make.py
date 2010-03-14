@@ -134,8 +134,14 @@ print ">> Created!"
 
 # Create package
 print "The kittens are building your package..."
-subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"], 
-                stdout = open("/dev/null", "wb"))
+try:
+    subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"], 
+                    stdout = open("/dev/null", "wb"))
+         
+except:
+    print 'ERROR: Missing either "fakeroot" or "dpkg-deb"!'
+    exit()
+
 shutil.move(os.path.join(sys.path[0], "atarashii.deb"), 
             os.path.join(sys.path[0], 
             "atarashii_%s-1_all.deb" % atarashii.__version__))

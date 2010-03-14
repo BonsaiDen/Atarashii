@@ -10,6 +10,9 @@ Installation
 Run "python make.py" to create the debian package, after that just install it.
 To start Atarashii without installing it run "python debug.py".
 
+Note: You may need to install "fakeroot" via the package manager in order to be
+      able to create the package.
+
 Contributing
 ------------
 The source is available on GitHub <http://github.com/BonsaiDen/Atarashii>, to
