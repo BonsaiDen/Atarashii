@@ -51,6 +51,9 @@ class GUI(gtk.Window):
         self.set_size_request(280, 400)
         self.set_icon_from_file(main.get_image())
         
+        # Hide in Taskbar?
+        self.show_taskbar(main.settings.is_true('taskbar'))
+        
         # Load Components
         gtb = gtk.Builder()
         gtb.add_from_file(main.get_resource("main.glade"))
@@ -141,7 +144,6 @@ class GUI(gtk.Window):
         self.connect("delete_event", self.delete_event)
         self.connect("destroy", self.destroy_event)
         self.connect("window-state-event", self.state_event)
-        self.init_event = self.connect("expose-event", self.draw_event)
         
         # Dialogs
         self.about_dialog = None
@@ -151,9 +153,25 @@ class GUI(gtk.Window):
         self.mode = MODE_TWEETS
         self.window_position = None
         self.minimized = False
+        self.is_shown = False
+        self.progress_visible = False
         
-        self.show_all()
+        # Enable Mode
         self.set_mode(self.mode)
+        self.on_mode()
+        
+        # Show GUI
+        if not main.settings.is_true("tray", False):
+            self.init_event = self.connect("expose-event", self.draw_event)
+            self.show_gui()
+        
+        else:
+            gobject.idle_add(lambda: self.main.on_init())
+    
+    
+    # Initial Show -------------------------------------------------------------
+    def show_gui(self):
+        self.show_all()
         self.on_mode()
         
         # Statusbar Updater
@@ -161,13 +179,20 @@ class GUI(gtk.Window):
         gobject.timeout_add(1000, lambda: self.update_status())
         
         # Show
-        self.show_input()
+        if not self.main.is_connecting:
+            self.show_input()
+        
+        else:
+            self.show_progress()
+        
+        self.is_shown = True
     
     
     # GUI Switchers ------------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_input(self, resize = True):
         self.progress.hide()
+        self.progress_visible = False
         self.text_scroll.show()
         if resize:
             self.text.resize()
@@ -193,14 +218,19 @@ class GUI(gtk.Window):
         self.progress.show()
         self.info_label.hide()
         self.text_scroll.hide()
-        gobject.timeout_add(100, lambda: progress_activity())
+        if not self.progress_visible:
+            gobject.timeout_add(100, lambda: progress_activity())
+        
+        self.progress_visible = True
     
     def hide_all(self, progress = True):
         if progress:
             self.progress.hide()
+            self.progress_visible = False
         
         self.text_scroll.hide()
         self.refresh_button.set_sensitive(False)
+        self.tray.refresh_menu.set_sensitive(False)
         self.read_button.set_sensitive(False)
         self.history_button.set_sensitive(False)
         self.message_button.set_sensitive(False)
@@ -242,6 +272,7 @@ class GUI(gtk.Window):
         
         elif self.main.is_updating:
             self.refresh_button.set_sensitive(False)
+            self.tray.refresh_menu.set_sensitive(False)
             self.read_button.set_sensitive(False)
             self.set_status(lang.status_update)
         
@@ -260,6 +291,7 @@ class GUI(gtk.Window):
             
             if wait == 0:
                 self.refresh_button.set_sensitive(False)
+                self.tray.refresh_menu.set_sensitive(False)
                 self.read_button.set_sensitive(False)
                 self.set_status(lang.status_update)
             
@@ -370,6 +402,7 @@ class GUI(gtk.Window):
     def check_refresh(self):
         if self.is_ready():
             self.refresh_button.set_sensitive(True)
+            self.tray.refresh_menu.set_sensitive(True)
             
             # Check for message/tweet switch
             if self.text.go_send_message != None:
@@ -414,6 +447,32 @@ class GUI(gtk.Window):
     def is_loaded(self):
         return self.message.loaded == HTML_LOADED and \
                self.html.loaded == HTML_LOADED
+    
+    def show_taskbar(self, mode):
+        self.main.settings['taskbar'] = mode
+        self.set_property('skip-taskbar-hint', not mode)
+    
+    def show_start_notifications(self):
+        if self.main.settings.is_true("notify"):
+            text = []
+            
+            # Tweet Info
+            if self.html.count > 0:
+                text.append(
+                  (lang.notification_login_tweets if self.html.count > 1 else \
+                   lang.notification_login_tweet) % self.html.count)  
+            
+            # Message Info
+            if self.message.count > 0:
+                text.append(
+                  (lang.notification_login_messages if self.message.count > 1 \
+                   else lang.notification_login_message) % self.message.count)  
+            
+            # Create notification
+            info = [(lang.notification_login % self.main.username,
+                    "\n".join(text), self.main.get_image())]
+            
+            self.main.notifier.show(info)
     
     
     # Message Dialogs ----------------------------------------------------------
@@ -477,6 +536,7 @@ class GUI(gtk.Window):
            (code == 403 and self.main.was_sending):
             
             self.refresh_button.set_sensitive(False)
+            self.tray.refresh_menu.set_sensitive(False)
             rate_error = self.main.reconnect()
             
         elif (code == 400 and self.main.was_sending) or \
