@@ -121,10 +121,6 @@ LANG = {
         'settings_sound' : 'Sound abspielen',
         'settings_file' : 'Sounddatei',
         'settings_file_filter' : 'Soundateien',
-        'settings_retweets' : 'Retweets',
-        'settings_retweets_ask' : 'Immer fragen',
-        'settings_retweets_new' : 'Immer neue Retweets verwenden',
-        'settings_retweets_old' : 'Immer alte Retweets verwenden',
         'settings_general' : "Allgemein",
         'settings_autostart' : "Atarashii beim Login starten",
         'settings_tray' : "Minimiert starten(System Tray)",
@@ -154,8 +150,6 @@ LANG = {
         'password_question' : '%s\'s Passwort:',
         
         # Retweet Dialogs
-        'retweet_title' : '%s retweeten',
-        'retweet_question' : 'Möchten sie einen neuen Retweet verwenden?',
         'retweet_info_title' : 'Retweet erfolgreich',
         'retweet_info' : '"%s" wurde erfolgreich retweeted!',
         
@@ -306,10 +300,6 @@ LANG = {
         'settings_sound' : 'Play sound',
         'settings_file' : 'Soundfile',
         'settings_file_filter' : 'Soundfiles',
-        'settings_retweets' : 'Retweets',
-        'settings_retweets_ask' : 'Always ask which style to use',
-        'settings_retweets_new' : 'Always use new style',
-        'settings_retweets_old' : 'Always use old style',
         'settings_general' : "General",
         'settings_autostart' : "Launch Atarashii on user login",
         'settings_tray' : "Start minimized(system tray)",
@@ -337,8 +327,6 @@ LANG = {
         'password_question' : '%s\'s password:',
         
         # Retweet Dialogs
-        'retweet_title' : 'Retweet %s',
-        'retweet_question' : 'Do you want to use a new style Retweet?',
         'retweet_info_title' : 'Retweet successful',
         'retweet_info' : '"%s" has been successfully retweeted!',
         
