@@ -16,7 +16,7 @@ Alternatively, you can check for a recent DEBIAN-Package at the downloads sectio
 > You may need to install `fakeroot` via the package manager in order to be able to create the package by yourself
 
 ## TODO
-- Add more translations(see Contributing)
+- Add more translations(See <http://github.com/BonsaiDen/Atarashii/issues#issue/6>)
 - Implement search view
 
 ## Contributing
@@ -27,16 +27,16 @@ Everyone is welcome to make improvements to **Atarashii**!
 ## License
 Copyright (c) 2010 Ivo Wetzel
 
-Atarashii is free software: you can redistribute it and/or 
+**Atarashii** is free software: you can redistribute it and/or 
 modify it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Atarashii is distributed in the hope that it will be useful,
+**Atarashii** is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-Atarashii. If not, see <http://www.gnu.org/licenses/>.
+**Atarashii**. If not, see <http://www.gnu.org/licenses/>.
 
