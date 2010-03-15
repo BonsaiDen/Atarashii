@@ -41,61 +41,6 @@ class HTML(view.HTMLView):
         self.first_setting = 'firsttweet_'
     
     
-    # Helpers for new style Retweets -------------------------------------------
-    # --------------------------------------------------------------------------
-    def get_user(self, num):
-        if type(num) in (int, long):
-            item = self.items[num][0]
-        
-        else:
-            item = num
-        
-        if hasattr(item, "retweeted_status"):
-            return item.retweeted_status.user
-        
-        else:
-            return item.user
-    
-    def get_text(self, num):
-        if type(num) in (int, long):
-            item = self.items[num][0]
-        
-        else:
-            item = num
-        
-        if hasattr(item, "retweeted_status"):
-            return item.retweeted_status.text
-        
-        else:
-            return item.text
-    
-    def get_source(self, num):
-        if type(num) in (int, long):
-            item = self.items[num][0]
-        
-        else:
-            item = num
-        
-        if hasattr(item, "retweeted_status"):
-            return item.retweeted_status.source
-        
-        else:
-            return item.source
-    
-    def get_id(self, num):
-        if type(num) in (int, long):
-            item = self.items[num][0]
-        
-        else:
-            item = num
-        
-        if hasattr(item, "retweeted_status"):
-            return item.retweeted_status.id
-        
-        else:
-            return item.id 
-    
-    
     # Render the Timeline ------------------------------------------------------
     # --------------------------------------------------------------------------
     def render_item(self, num, item, img):
@@ -332,3 +277,4 @@ class HTML(view.HTMLView):
                                                                extra = item))
                 
                 mitem.set_sensitive(False)
+        
