@@ -89,7 +89,7 @@ class PasswordDialog(Dialog):
         
         def save(*args):
             password = self.get("password").get_text().strip()
-            if password == "":
+            if len(password) < 6:
                 self.get("password").grab_focus()
             
             else:
