@@ -192,7 +192,18 @@ LANG = {
         'menu_update' : 'Aktualisieren',
         'menu_settings' : 'Einstellungen',
         'menu_about' : 'Über Atarashii',
-        'menu_quit' : 'Beenden'
+        'menu_quit' : 'Beenden',
+        
+        # Tray Tooltip
+        'tray_title' : 'Atarashii',
+        'tray_logging_in' : 'Verbinde als <b>%s</b>...',
+        'tray_logged_out' : 'Nicht eingeloggt.',
+        'tray_logged_in' : 'Eingeloggt als <b>%s</b>.',
+        
+        'tray_tweet' : "<b>%d</b> neuer Tweet",
+        'tray_message' : "<b>%d</b> neue Nachricht",
+        'tray_tweets' : "<b>%d</b> neue Tweets",
+        'tray_messages' : "<b>%d</b> neue Nachrichten" 
     },
     
     # English ------------------------------------------------------------------
@@ -364,7 +375,18 @@ LANG = {
         'menu_update' : 'Refresh',
         'menu_settings' : 'Preferences',
         'menu_about' : 'About Atarashii',
-        'menu_quit' : 'Quit'
+        'menu_quit' : 'Quit',
+        
+        # Tray Tooltip
+        'tray_title' : 'Atarashii',
+        'tray_logging_in' : 'Connecting as <b>%s</b>...',
+        'tray_logged_out' : 'Not logged in.',
+        'tray_logged_in' : 'Logged in as <b>%s</b>.',
+        
+        'tray_tweet' : "<b>%d</b> new Tweet",
+        'tray_message' : "<b>%d</b> new Message",
+        'tray_tweets' : "<b>%d</b> new Tweets",
+        'tray_messages' : "<b>%d</b> new Messages" 
     }
 }
 

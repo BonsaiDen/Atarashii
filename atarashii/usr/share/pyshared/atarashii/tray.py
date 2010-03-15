@@ -27,14 +27,24 @@ from lang import lang
 class TrayIcon(gtk.StatusIcon):
     def __init__(self, gui):
         self.gui = gui
+        self.main = gui.main
+        
+        # Tooltip
+        gtb = gtk.Builder()
+        gtb.add_from_file(self.main.get_resource("tooltip.glade"))
+        self.tooltip = gtb.get_object("tooltip")  
+        self.tooltip_label = gtb.get_object("label") 
+        self.tooltip_img = gtb.get_object("image")
+        self.img = None
+        self.tooltip.show_all()
         
         # Create Tray Icon
-        gtk.StatusIcon.__init__(self)
-        
+        gtk.StatusIcon.__init__(self) 
         self.set_from_file(gui.main.get_image())
-        self.set_tooltip("Atarashii")
         self.set_visible(True)
+        self.set_property("has-tooltip", True)
         self.connect("activate", self.on_activate)
+        self.connect("query-tooltip", self.on_tooltip)
         
         # Create Tray Menu
         menu = gtk.Menu()
@@ -75,9 +85,33 @@ class TrayIcon(gtk.StatusIcon):
         # Popup
         self.connect("popup-menu", self.on_popup, menu)
     
+    # Update the Tooltip
+    def set_tooltip(self, status, twt = 0, msg = 0):
+        text = []
+        if twt > 0:
+            text.append((lang.tray_tweets if twt > 1 else \
+                                lang.tray_tweet) % twt)
+        
+        if msg > 0:
+            text.append((lang.tray_messages if msg > 1 else \
+                                lang.tray_message) % msg)
+        
+        self.tooltip_label.set_markup(
+                           '<span size="large"><b>%s</b></span>\n%s\n%s' % \
+                           (lang.tray_title, status, "\n".join(text)))
+        
+        img = self.main.get_user_picture()
+        if img != self.img:
+            self.tooltip_img.set_from_file(img)
+            self.img = img
+    
     
     # Events -------------------------------------------------------------------
     # --------------------------------------------------------------------------
+    def on_tooltip(self, icon, x, y, key, tip, *args):
+        tip.set_custom(self.tooltip)
+        return True
+    
     def on_popup(self, widget, button, time, data = None):
         if button == 3:
             if data:

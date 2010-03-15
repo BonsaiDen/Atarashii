@@ -384,11 +384,13 @@ class GUI(gtk.Window):
     def set_app_title(self):
         if self.main.username == UNSET_TEXT:
             self.set_title(lang.title)
+            
         
         elif self.mode == MODE_MESSAGES:
             if self.html.count > 0:
                 self.set_title((lang.title_tweets if self.html.count > 1 else \
                                 lang.title_tweet) % self.html.count)
+            
             else:
                 self.set_title(lang.title_logged_in % self.main.username)
         
@@ -396,8 +398,26 @@ class GUI(gtk.Window):
             if self.message.count > 0:
                 self.set_title((lang.title_messages if self.html.count > 1 else \
                                 lang.title_message) % self.message.count)
+            
             else:
                 self.set_title(lang.title_logged_in % self.main.username)
+        
+        # Tray Tooltip
+        if not self.main.is_connecting:
+            if self.main.username == UNSET_TEXT:
+                self.tray.set_tooltip(lang.tray_logged_out)
+            
+            elif self.mode == MODE_MESSAGES:
+                self.tray.set_tooltip(lang.tray_logged_in % self.main.username,
+                                      self.html.count, self.message.count)
+            
+            elif self.mode == MODE_TWEETS:                
+                self.tray.set_tooltip(lang.tray_logged_in % self.main.username,
+                                      self.html.count, self.message.count)
+        
+        else:
+            self.tray.set_tooltip(lang.tray_logging_in % self.main.username)
+    
     
     def check_refresh(self):
         if self.is_ready():
@@ -456,10 +476,6 @@ class GUI(gtk.Window):
         if self.main.settings.is_true("notify"):
             text = []
             
-            # Image
-            img = self.main.settings['picture_' + self.main.username] or \
-                  self.main.get_image()
-            
             # Tweet Info
             if self.html.count > 0:
                 text.append(
@@ -474,7 +490,7 @@ class GUI(gtk.Window):
             
             # Create notification
             info = [(lang.notification_login % self.main.username,
-                    "\n".join(text), img)]
+                    "\n".join(text), self.main.get_user_picture())]
             
             self.main.notifier.show(info)
     
