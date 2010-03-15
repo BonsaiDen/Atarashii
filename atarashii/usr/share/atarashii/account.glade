@@ -47,6 +47,7 @@
                   <object class="GtkEntry" id="username">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="max_length">15</property>
                     <property name="invisible_char">&#x25CF;</property>
                   </object>
                   <packing>
