@@ -421,7 +421,14 @@ class HTMLView(webkit.WebView):
             return True
         
         # Create the Menu!
+        self.custom_menu = False
         self.create_menu(menu, tweet)
+        if not self.custom_menu:
+            menu.hide()
+            menu.cancel()
+            menu.destroy()
+            return True
+        
         menu.connect("hide", self.on_popup_close)
     
     def on_popup_close(self, *args):
@@ -487,6 +494,7 @@ class HTMLView(webkit.WebView):
             return None
     
     def add_menu_link(self, menu, name, callback):
+        self.custom_menu = True
         item = gtk.MenuItem()
         item.set_label(name)
         item.connect('activate', callback)
@@ -625,7 +633,16 @@ class HTMLView(webkit.WebView):
         # Send a message
         elif uri.startswith("message:"):
             o, self.main.message_user, self.main.message_id, num = uri.split(":")
-            self.main.message_text = self.unescape(self.items[int(num)][0].text)
+            num = int(num)
+            if extra != None:
+                self.main.message_text = self.unescape(self.get_text(extra))
+            
+            elif num != -1:
+                self.main.message_text = self.unescape(self.get_text(num))
+            
+            else:
+                self.main.message_text = UNSET_TEXT
+            
             self.main.gui.text.message()
             self.main.gui.text.html_focus()
         
@@ -696,4 +713,59 @@ class HTMLView(webkit.WebView):
             text = text.replace(value, key)
         
         return text
-
+    
+    
+    # Helpers for new style Retweets -------------------------------------------
+    # --------------------------------------------------------------------------
+    def get_user(self, num):
+        if type(num) in (int, long):
+            item = self.items[num][0]
+        
+        else:
+            item = num
+        
+        if hasattr(item, "retweeted_status"):
+            return item.retweeted_status.user
+        
+        else:
+            return item.user
+    
+    def get_text(self, num):
+        if type(num) in (int, long):
+            item = self.items[num][0]
+        
+        else:
+            item = num
+        
+        if hasattr(item, "retweeted_status"):
+            return item.retweeted_status.text
+        
+        else:
+            return item.text
+    
+    def get_source(self, num):
+        if type(num) in (int, long):
+            item = self.items[num][0]
+        
+        else:
+            item = num
+        
+        if hasattr(item, "retweeted_status"):
+            return item.retweeted_status.source
+        
+        else:
+            return item.source
+    
+    def get_id(self, num):
+        if type(num) in (int, long):
+            item = self.items[num][0]
+        
+        else:
+            item = num
+        
+        if hasattr(item, "retweeted_status"):
+            return item.retweeted_status.id
+        
+        else:
+            return item.id
+    
