@@ -1,3 +1,16 @@
+atarashii (0.99.8b-1) all;
+
+  * Added new tooltip for the tray icon.
+  * Fixed the "popping" of the input text box.
+  * When pressing Escape in the input text box, it will now loose its focus.
+  * Fix for a bug that caused the login notification to not display the count of
+    new messages.
+  * Added min/max lengths to username and password fields, in order to make it 
+    compliant with Twitter.com.
+  * New .markdown README for GitHub.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 15 Mar 2010 04:32:00 +0100
+
 atarashii (0.99.8-1) all;
 
   * New notification on login that wraps up info about new Tweets and Messages.
