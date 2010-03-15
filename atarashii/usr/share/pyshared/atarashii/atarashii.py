@@ -169,6 +169,7 @@ class Atarashii:
         # We need a username!
         if self.username == UNSET_TEXT and (change_user == None or \
            change_user == UNSET_TEXT):
+            self.gui.set_app_title()
             return
             
         # Wait until the last update is complete
@@ -211,6 +212,7 @@ class Atarashii:
         if self.gui.mode == MODE_TWEETS:
             self.gui.message.start()
         
+        self.gui.set_app_title()
         self.updater.do_init = True
     
     def on_login(self):
@@ -232,7 +234,7 @@ class Atarashii:
         self.is_connecting = False
         self.gui.settings_button.set_sensitive(True)
         self.gui.tray.settings_menu.set_sensitive(True)
-        self.gui.set_title(lang.title)
+        self.gui.set_app_title()
         self.gui.hide_all()
         self.gui.update_status()
         if error:
@@ -252,7 +254,7 @@ class Atarashii:
         self.is_updating = False
         self.gui.settings_button.set_sensitive(True)
         self.gui.update_status()
-        self.gui.set_title(lang.title)
+        self.gui.set_app_title()
         self.gui.hide_all()
         gobject.idle_add(lambda: self.gui.html.init(True))
     
@@ -289,6 +291,14 @@ class Atarashii:
     # --------------------------------------------------------------------------
     def set_user_picture(self, img):
         self.settings['picture_' + self.username] = img
+        
+    def get_user_picture(self):
+        img = self.settings['picture_' + self.username]
+        if img == None or not os.path.exists(img):
+            return self.get_image()
+        
+        else:
+            return img
     
     def get_image(self):
         if self.debug == None:
