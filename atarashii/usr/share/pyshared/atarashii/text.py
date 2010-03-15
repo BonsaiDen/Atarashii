@@ -319,7 +319,10 @@ class TextInput(gtk.TextView):
         self.change_contents = True
         self.is_changing = True
         self.grab_focus()
+        self.has_focus = True
         text = self.get_text()
+        if not self.has_typed:
+            text = ""
         
         # Cancel Retweet
         if self.main.retweet_text != UNSET_TEXT:
@@ -367,7 +370,10 @@ class TextInput(gtk.TextView):
         self.change_contents = True
         self.is_changing = True
         self.grab_focus()
+        self.has_focus = True
         text = self.get_text()
+        if not self.has_typed:
+            text = ""
         
         # Check for already existing message
         msg = self.message_regex.match(text)
