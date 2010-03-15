@@ -273,7 +273,10 @@ class HTML(view.HTMLView):
         if link == "link":
             self.add_menu_link(menu, "Open in Browser",
                                lambda *args: self.context_link(full))
-        
+            
+            self.add_menu_link(menu, "Copy",
+                               lambda *args: self.copy_link(full))  
+                
         # User Options
         elif link == "user" or link == "profile":
             user = full[full.rfind("/") + 1:]
@@ -299,7 +302,12 @@ class HTML(view.HTMLView):
         
         # Status
         elif link == "status":
-            self.add_menu_link(menu, "This Tweet on Twitter.com",
+            self.add_menu_link(menu, "View on Twitter.com",
+                               lambda *args: self.context_link(full))   
+        
+        # Tag
+        elif link == "tag":
+            self.add_menu_link(menu, "Search on Twitter.com",
                                lambda *args: self.context_link(full))   
         
         # Retweet / Delete
@@ -312,16 +320,15 @@ class HTML(view.HTMLView):
             
             if name.lower() != self.main.username.lower():
                 full2 = "retweet:%s" % RETWEET_NEW
-                self.add_menu_link(menu, "Retweet %s via Twitter.com" % name,
+                self.add_menu_link(menu, "Retweet %s via Twitter" % name,
                                    lambda *args: self.context_link(full2,
                                                                extra = item))
             
             if name.lower() == self.main.username.lower():
                 self.add_menu_separator(menu)
                 full3 = "delete:t:%d" % item_id
-                self.add_menu_link(menu, "Delete this Tweet",
+                mitem = self.add_menu_link(menu, "Delete this Tweet",
                                    lambda *args: self.context_link(full3,
                                                                extra = item))
-            
-            
-        
+                
+                mitem.set_sensitive(False)

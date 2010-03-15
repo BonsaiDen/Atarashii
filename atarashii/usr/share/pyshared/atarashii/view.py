@@ -476,7 +476,8 @@ class HTMLView(webkit.WebView):
             delete pos;
             delete items;
             var link = document.elementFromPoint(%d, %d);
-            document.title = sizes.join(";") + "|" + (link.href != undefined ? link.href : link.parentNode.href);
+            document.title = sizes.join(";") + "|" + 
+            (link.href != undefined ? link.href : link.parentNode.href);
             delete link;
             delete sizes;''' % (x, y))
             title = self.get_main_frame().get_title()
@@ -491,6 +492,7 @@ class HTMLView(webkit.WebView):
         item.connect('activate', callback)
         menu.append(item)
         item.show()
+        return item
     
     def add_menu_separator(self, menu):
         item = gtk.SeparatorMenuItem()
@@ -670,9 +672,16 @@ class HTMLView(webkit.WebView):
         elif uri.startswith("status:"):
             return "status", uri[7:], uri
         
+        elif uri.startswith("tag:"):
+            return "tag", uri[4:], uri
+        
         else:
             return "link", uri, uri
     
+    def copy_link(self, url):
+        display = gtk.gdk.display_manager_get().get_default_display()
+        clipboard = gtk.Clipboard(display, "CLIPBOARD")
+        clipboard.set_text(url)
     
     # Unescape chars
     def unescape(self, text):
