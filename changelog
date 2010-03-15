@@ -1,3 +1,14 @@
+atarashii (0.99.8-1) all;
+
+  * New notification on login that wraps up info about new Tweets and Messages.
+  * It's now possible to add Atarashii to the Autostart.
+  * Atarashii can now be started minimized(in the system tray).
+  * There's now an option to hide Atarashii from the Taskbar.
+  * Fixed wrong size of the text input box under some font size configurations.
+  * The kittens applied a lot of fixes to the error handling.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 15 Mar 2010 01:02:00 +0100
+
 atarashii (0.99.7-1) all;
 
   * New auto switch to message/tweet view when typing in a message/reply.
