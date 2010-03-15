@@ -25,6 +25,7 @@ from lang import lang
 from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \
                       MESSAGE_INFO, RETWEET_ASK, RETWEET_OLD, RETWEET_NEW
 
+
 class Dialog:
     resource = ""
     instance = None
@@ -66,6 +67,7 @@ class Dialog:
     
     def get(self, widget):
         return self.gtb.get_object(widget)
+
 
 # Password Dialog --------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -110,6 +112,7 @@ class PasswordDialog(Dialog):
         self.close_button.connect("clicked", save)
         cancel_button.connect("clicked", abort)
 
+
 # About Dialog -----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class AboutDialog(Dialog):
@@ -147,6 +150,7 @@ class AboutDialog(Dialog):
         self.gui.about_dialog = None
         self.gui.about_button.set_active(False)
         self.dlg.hide()
+
 
 # Settings Dialog --------------------------------------------------------------
 # ------------------------------------------------------------------------------
