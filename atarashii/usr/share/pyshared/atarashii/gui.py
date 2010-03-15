@@ -333,31 +333,31 @@ class GUI(gtk.Window):
             self.info_label.hide()
         
         elif self.main.retweet_user != UNSET_TEXT:
-            self.set_label_text(lang.label_retweet % self.main.retweet_user)
+            self.set_label_text(lang.label_retweet, self.main.retweet_user)
             self.info_label.show()
         
         elif self.main.reply_text != UNSET_TEXT:
-            self.set_label_text(lang.label_reply_text % self.main.reply_text)
+            self.set_label_text(lang.label_reply_text, self.main.reply_text)
             self.info_label.show()
         
         elif self.main.reply_user != UNSET_TEXT:
-            self.set_label_text(lang.label_reply % self.main.reply_user)
+            self.set_label_text(lang.label_reply, self.main.reply_user)
             self.info_label.show()
         
         # Messages
         elif self.main.message_text != UNSET_TEXT:
-            self.set_label_text(lang.label_message_text % self.main.message_text)
+            self.set_label_text(lang.label_message_text, self.main.message_text)
             self.info_label.show()
         
         elif self.main.message_user != UNSET_TEXT:
-            self.set_label_text(lang.label_message % self.main.message_user)
+            self.set_label_text(lang.label_message, self.main.message_user)
             self.info_label.show()
     
-    def set_label_text(self, text):
+    def set_label_text(self, info, text):
         # Get Font Width
         font = self.info_label.create_pango_context().get_font_description()
         layout = self.info_label.create_pango_layout("")
-        layout.set_markup(text)
+        layout.set_markup(info % self.escape(text))
         layout.set_font_description(font)
         
         # Truncate till it fits
@@ -366,14 +366,24 @@ class GUI(gtk.Window):
         if cur > width:
             while cur > width:
                 text = text[:-3]
-                layout.set_markup(text + "...")
+                layout.set_markup(info % self.escape(text) + "...")
                 cur = layout.get_pixel_size()[0]
             
-            self.info_label.set_markup(text + "...")
+            self.info_label.set_markup(info % self.escape(text) + "...")
         
         else:
-            self.info_label.set_markup(text)
+            self.info_label.set_markup(info % self.escape(text))
     
+    def escape(self, text):
+        ent = {
+            "&": "&amp;",
+            '"': "&quot;",
+            "'": "&apos;",
+            ">": "&gt;",
+            "<": "&lt;"
+        }
+        return "".join(ent.get(c, c) for c in text)
+
     
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -502,12 +512,6 @@ class GUI(gtk.Window):
         dialog.PasswordDialog(self, lang.password_title,
                                 lang.password_question % self.main.username)
     
-    def ask_for_retweet(self, name, yes, noo):
-        dialog.MessageDialog(self, MESSAGE_QUESTION,
-                        lang.retweet_question,
-                        lang.retweet_title % name,
-                        yes_callback = yes, no_callback = noo)
-    
     def show_retweet_info(self, name):
         dialog.MessageDialog(self, MESSAGE_INFO,
                         lang.retweet_info % name,
@@ -522,9 +526,13 @@ class GUI(gtk.Window):
             
             # Select Textbox?
             if not self.main.was_retweeting or \
-                (self.main.retweet_text != UNSET_TEXT or \
-                self.main.reply_user != UNSET_TEXT or \
-                self.main.reply_id != UNSET_ID_NUM):
+               (self.main.retweet_text != UNSET_TEXT or \
+               self.main.reply_user != UNSET_TEXT or \
+               self.main.reply_id != UNSET_ID_NUM):
+                if not self.main.was_new_retweeting:
+                    self.text.grab_focus()
+                    
+            if self.text.has_typed and self.main.was_new_retweeting:
                 self.text.grab_focus()
         
         # Try to find out what the error was!
@@ -578,6 +586,7 @@ class GUI(gtk.Window):
         
         self.main.was_sending = False
         self.main.was_retweeting = False
+        self.main.was_new_retweeting = False
         
         # Show Warning on url error or error message for anything else
         if code == -1 or code == 500 or code == 502 or code == 503:
