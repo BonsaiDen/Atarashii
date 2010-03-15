@@ -92,7 +92,7 @@ class Formatter:
                 at_user = data[1:]
                 self.users.append(at_user)
                 result.append(
-                    ('<a href="http://twitter.com/%s" title="' + lang.html_at +\
+                    ('<a href="user:http://twitter.com/%s" title="' + lang.html_at +\
                     '">@%s</a>') % (at_user, at_user, at_user))
             
             # tag
@@ -132,8 +132,6 @@ class Formatter:
     def url(self, match):
         self.urls.append(match)
     
-    
-    # Regex stuff
     def escape(self, text):
         ent = {
             "&": "&amp;",
