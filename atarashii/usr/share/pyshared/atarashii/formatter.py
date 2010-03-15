@@ -25,18 +25,18 @@ AT_REGEX = re.compile(ur"\B[@\uFF20]([a-z0-9_]{1,20})",
                       re.UNICODE | re.IGNORECASE)
 TAG_REGEX = re.compile(ur"(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+[a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff]*)",
                        re.UNICODE | re.IGNORECASE)
-                       
+
 PRE_CHARS = "(?:[^/\"':!=]|^|\\:)"
 DOMAIN_CHARS = "(?:[\\.-]|[^\\s])+\\.[a-z]{2,}(?::[0-9]+)?"
 PATH_CHARS = "(?:[\\.,]?[a-z0-9!\\*'\\(\\);:=\\+\\$/%#\\[\\]\\-_,~@])"
 QUERY_CHARS = "[a-z0-9!\\*'\\(\\);:&=\\+\\$/%#\\[\\]\\-_\\.,~]"
-                       
+
 # Valid end-of-path chracters (so /foo. does not gobble the period).
 # 1. Allow ) for Wikipedia URLs.
 # 2. Allow =&# for empty URL parameters and other URL-join artifacts
 PATH_ENDING_CHARS = "[a-z0-9\\)=#/]"
 QUERY_ENDING_CHARS = "[a-z0-9_&=#]"
-                       
+
 URL_REGEX = re.compile("((" + PRE_CHARS + ")((https?://|www\\.)(" + \
                        DOMAIN_CHARS + ")(/" + PATH_CHARS + "*" + \
                        PATH_ENDING_CHARS + "?)?(\\?" + QUERY_CHARS + "*" + \
@@ -78,14 +78,25 @@ class Formatter:
             
             # URL
             elif ttype == 1:
+                # Fix a bug in the Regex
+                start = data.find("http")
+                if start == -1:
+                    start = data.find("www")
+                
+                foo = ""
+                if start != -1:
+                    foo = data[:start]
+                    data = data[start:]
+                
+                # Shorten URLS
                 if len(data) > 30:
                     text = data[0:27] + "..."
                 else:
                     text = data
-                
+
                 result.append(
-                    '<a href="%s" title="%s">%s</a>' %
-                    (self.escape(data), self.escape(data), text))
+                    '%s<a href="%s" title="%s">%s</a>' %
+                    (foo, self.escape(data), self.escape(data), text))
             
             # @
             elif ttype == 2:
@@ -101,7 +112,7 @@ class Formatter:
                 stuff, tag = data[:pos], data[pos + 1:]
                 self.tags.append(tag)
                 result.append((
-                    '%s<a href="http://search.twitter.com/search?%s" title="'+\
+                    '%s<a href="tag:http://search.twitter.com/search?%s" title="'+\
                     lang.html_search + '">#%s</a>') %
                     (stuff, urllib.urlencode({'q': '#' + tag}), tag, tag))
         
