@@ -269,27 +269,7 @@ class SettingsDialog(Dialog):
         toggle()
         notify.connect("toggled", lambda *a: toggle())
         sound.connect("toggled", lambda *a: toggle2())
-        
-        # Retweet settings
-        self.get("retweets").set_text(lang.settings_retweets)
-        self.get("retweet_ask")
-        ask_rt = self.get("retweet_ask")
-        new_rt = self.get("retweet_new")
-        old_rt = self.get("retweet_old")
-        ask_rt.set_label(lang.settings_retweets_ask)
-        new_rt.set_label(lang.settings_retweets_new)
-        old_rt.set_label(lang.settings_retweets_old)
-        rt_tmp = self.settings['retweets']
-        if rt_tmp == RETWEET_ASK:
-            ask_rt.set_active(True)
-        
-        elif rt_tmp == RETWEET_NEW:
-            new_rt.set_active(True)
-        
-        elif rt_tmp == RETWEET_OLD:
-            old_rt.set_active(True)
-        
-        
+                
         # Save -----------------------------------------------------------------
         oldusername = self.main.username
         def save(*args):
@@ -300,17 +280,6 @@ class SettingsDialog(Dialog):
             
             self.settings.set_autostart(autostart.get_active())
             self.gui.show_taskbar(taskbar.get_active())
-            
-            if ask_rt.get_active():
-                rt_tmp = RETWEET_ASK
-            
-            elif new_rt.get_active():
-                rt_tmp = RETWEET_NEW
-            
-            elif old_rt.get_active():
-                rt_tmp = RETWEET_OLD
-            
-            self.settings['retweets'] = rt_tmp
             
             # Save GUI Mode
             self.main.save_mode()
