@@ -159,15 +159,14 @@ class GUI(gtk.Window):
         
         # Enable Mode
         self.set_mode(self.mode)
+        self.set_app_title()
         self.on_mode()
         
         # Show GUI
         if not main.settings.is_true("tray", False):
-            self.init_event = self.connect("expose-event", self.draw_event)
             self.show_gui()
         
-        else:
-            gobject.idle_add(lambda: self.main.on_init())
+        gobject.idle_add(lambda: self.main.on_init())
     
     
     # Initial Show -------------------------------------------------------------
@@ -730,6 +729,8 @@ class GUI(gtk.Window):
             self.about_toggle = False
     
     def on_quit(self, widget = None, data = None):
+        # TODO check if this get's called when the application is closed by
+        # logging out
         if data:
             data.set_visible(False)
         
@@ -754,8 +755,4 @@ class GUI(gtk.Window):
         if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
             self.minimized = event.new_window_state & \
                                 gtk.gdk.WINDOW_STATE_ICONIFIED
-    
-    def draw_event(self, *args):
-        self.disconnect(self.init_event)
-        gobject.idle_add(lambda: self.main.on_init())
-
+        

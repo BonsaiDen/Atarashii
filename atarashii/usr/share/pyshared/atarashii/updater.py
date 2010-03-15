@@ -199,6 +199,9 @@ class Updater(threading.Thread):
         else: # TODO implement loading of search
             pass
         
+        # Force Title Update
+        gobject.idle_add(lambda: self.gui.set_app_title())
+        
         # Init Timer
         self.main.refresh_time = calendar.timegm(time.gmtime())
         gobject.idle_add(lambda: self.gui.check_read())
