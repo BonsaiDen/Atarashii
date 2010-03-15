@@ -76,6 +76,7 @@ class TextInput(gtk.TextView):
         self.connect("submit", self.submit)
         self.get_buffer().connect("changed", self.changed)
         self.connect("focus-in-event", self.focus)
+        self.connect("key-press-event", self.check_escape)
     
     
     # Focus Events -------------------------------------------------------------
@@ -120,6 +121,14 @@ class TextInput(gtk.TextView):
                 self.has_focus = False
             
             self.change_contents = False
+    
+    def check_escape(self, text, event, *args):
+        if event.keyval == gtk.keysyms.Escape:
+            if self.gui.mode == MODE_TWEETS:
+                self.gui.html.focus_me()
+            
+            elif self.gui.mode == MODE_MESSAGES:
+                self.gui.message.focus_me()
     
     
     # Sizing -------------------------------------------------------------------
