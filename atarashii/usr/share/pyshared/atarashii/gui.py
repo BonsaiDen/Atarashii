@@ -134,6 +134,7 @@ class GUI(gtk.Window):
         if main.settings.isset("size"):
             size = main.settings['size'][1:-1].split(",")
             self.resize(int(size[0]), int(size[1]))
+        
         else:
             self.resize(280, 400)
         

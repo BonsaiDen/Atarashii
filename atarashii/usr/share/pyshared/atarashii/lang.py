@@ -105,7 +105,7 @@ LANG = {
         'status_reconnect_minutes' : 'Automatischer Reconnect in %d Minuten.',
         
         # Info Label
-        'label_reply' : '<b>Antwort an %s:</b>',
+        'label_reply' : '<b>Tweet an %s:</b>',
         'label_reply_text' : '<b>Antwort auf:</b> %s',
         'label_retweet' : '<b>%s retweeten:</b>',
         'label_message' : '<b>Nachricht an %s:</b>',
@@ -290,7 +290,7 @@ LANG = {
         'status_reconnect_minutes' : 'Automatic reconnect in %d minutes.',
         
         # Info Label
-        'label_reply' : '<b>Reply to %s:</b>',
+        'label_reply' : '<b>Tweet to %s:</b>',
         'label_reply_text' : '<b>Reply on:</b> %s',
         'label_retweet' : '<b>Retweet %s:</b>',
         'label_message' : '<b>Message to %s:</b>',
