@@ -20,6 +20,8 @@ import view
 
 from lang import lang
 
+from constants import RETWEET_NEW, RETWEET_OLD
+
 
 class HTML(view.HTMLView):
     def __init__(self, main, gui):
@@ -42,7 +44,12 @@ class HTML(view.HTMLView):
     # Helpers for new style Retweets -------------------------------------------
     # --------------------------------------------------------------------------
     def get_user(self, num):
-        item = self.items[num][0]
+        if type(num) in (int, long):
+            item = self.items[num][0]
+        
+        else:
+            item = num
+        
         if hasattr(item, "retweeted_status"):
             return item.retweeted_status.user
         
@@ -50,12 +57,43 @@ class HTML(view.HTMLView):
             return item.user
     
     def get_text(self, num):
-        item = self.items[num][0]
+        if type(num) in (int, long):
+            item = self.items[num][0]
+        
+        else:
+            item = num
+        
         if hasattr(item, "retweeted_status"):
             return item.retweeted_status.text
         
         else:
             return item.text
+    
+    def get_source(self, num):
+        if type(num) in (int, long):
+            item = self.items[num][0]
+        
+        else:
+            item = num
+        
+        if hasattr(item, "retweeted_status"):
+            return item.retweeted_status.source
+        
+        else:
+            return item.source
+    
+    def get_id(self, num):
+        if type(num) in (int, long):
+            item = self.items[num][0]
+        
+        else:
+            item = num
+        
+        if hasattr(item, "retweeted_status"):
+            return item.retweeted_status.id
+        
+        else:
+            return item.id 
     
     
     # Render the Timeline ------------------------------------------------------
@@ -69,7 +107,7 @@ class HTML(view.HTMLView):
             retweeted = True
             
             # Retweet Info
-            retweet = '<a href="http://twitter.com/%s" title="''' + \
+            retweet = '<a href="user:http://twitter.com/%s" title="''' + \
                     (self.relative_time(item.created_at)) + '">' + \
                     lang.html_in_retweet + '</a>'
             retweet = retweet % (item.user.screen_name,
@@ -96,7 +134,7 @@ class HTML(view.HTMLView):
         
         # Is this tweet a reply?
         if tweet.in_reply_to_screen_name and tweet.in_reply_to_status_id:
-            reply = '<a href="http://twitter.com/%s/statuses/%d">' + \
+            reply = '<a href="status:http://twitter.com/%s/statuses/%d">' + \
                     lang.html_in_reply + '</a>'
             reply = reply % (tweet.in_reply_to_screen_name,
                             tweet.in_reply_to_status_id,
@@ -112,7 +150,7 @@ class HTML(view.HTMLView):
             self.new_avatar) \
             ) or num == len(self.items) - 1 or self.new_timeline:
             
-            avatar = '''<a href="http://twitter.com/%s">
+            avatar = '''<a href="profile:http://twitter.com/%s">
                         <img width="32" src="file://%s" title="''' + \
                         lang.html_info + '''"/></a>'''
             
@@ -139,7 +177,7 @@ class HTML(view.HTMLView):
         # Source -----------------------------------------------------------
         if tweet.source != "web":
             if hasattr(tweet, "source_url") and tweet.source_url != "":
-                by_user = lang.html_by % ('<a href="%s" title="%s">%s</a>' % \
+                by_user = lang.html_by % ('<a href="source:%s" title="%s">%s</a>' % \
                         (tweet.source_url, tweet.source_url, tweet.source))
             
             else:
@@ -160,7 +198,7 @@ class HTML(view.HTMLView):
         
         # HTML Snippet -----------------------------------------------------
         html = '''
-        <div class="viewitem %s">
+        <div class="viewitem %s" id="%d">
         <div class="avatar">
             %s
         </div>
@@ -170,22 +208,18 @@ class HTML(view.HTMLView):
                 <a href="reply:%s:%d:%d" title="''' + \
                 (lang.html_reply % user.screen_name) + '''"> </a>
             </div>
-            <div class="doretweet">
-                <a href="retweet:%d:%d" title="''' + \
-                (lang.html_retweet % user.screen_name) + '''"> </a>
-            </div>
         </div>
         
         <div class="inner-text">
             <div><span class="name">''' + \
                 ("<b>RT</b>" if retweeted else "") + '''
-                <a href="http://twitter.com/%s" title="''' + \
+                 <b><a href="profile:http://twitter.com/%s" title="''' + \
                 lang.html_profile + '''">
-                    <b>%s</b>
-                </a></span> ''' + locked + ''' %s
+                   %s
+                </a></b></span> ''' + locked + ''' %s
             </div>
             <div class="time">
-                <a href="http://twitter.com/%s/statuses/%d" title="''' + \
+                <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
                 (self.absolute_time(tweet.created_at)) + '''">%s</a>
                 ''' + by_user + '''
             </div>
@@ -195,14 +229,20 @@ class HTML(view.HTMLView):
         <div class="clearfloat"></div>
         </div>'''
         
+        #             <div class="doretweet">
+        #        <a href="retweet:%d:%d:-1" title="''' + \
+        #        (lang.html_retweet % user.screen_name) + '''"> </a>
+        #    </div>
+        
         # Insert values
         html = html % (
                 clas,
+                num,
                 avatar,
                 
                 # Actions
                 user.screen_name, tweet.id, num,
-                num, tweet.id,
+                #num, tweet.id,
                 
                 # Text
                 user.screen_name,
@@ -218,4 +258,70 @@ class HTML(view.HTMLView):
         
         # Return the HTML string
         return html
-
+        
+        
+    # Create Popup Items -------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def create_menu(self, menu, item):
+        link, url, full = self.get_link_type(self.clicked_link)
+        
+        # Get the real ID
+        if item != None:
+            item_id = self.get_id(item)
+        
+        # Link options
+        if link == "link":
+            self.add_menu_link(menu, "Open in Browser",
+                               lambda *args: self.context_link(full))
+        
+        # User Options
+        elif link == "user" or link == "profile":
+            user = full[full.rfind("/") + 1:]
+            self.add_menu_link(menu, "Visit %s's Profile" % user,
+                               lambda *args: self.context_link(full))
+            
+            if link == "profile":
+                reply = "reply:%s:%d:-1" % (user, item_id)
+                self.add_menu_link(menu, "Reply to %s" % user,
+                                   lambda *args: self.context_link(reply, 
+                                                              extra = item))
+            
+            else:
+                reply = "reply:%s:-1:-1" % user
+                self.add_menu_link(menu, "Tweet to %s" % user,
+                                   lambda *args: self.context_link(reply))    
+        
+        # Source
+        elif link == "source":
+            by = self.get_source(item)
+            self.add_menu_link(menu, "%s's Homepage" % by,
+                               lambda *args: self.context_link(full))
+        
+        # Status
+        elif link == "status":
+            self.add_menu_link(menu, "This Tweet on Twitter.com",
+                               lambda *args: self.context_link(full))   
+        
+        # Retweet / Delete
+        else:
+            name = self.get_user(item).screen_name
+            full1 = "retweet:%s" % RETWEET_OLD
+            self.add_menu_link(menu, "Retweet %s via RT" % name,
+                               lambda *args: self.context_link(full1,
+                                                           extra = item))
+            
+            if name.lower() != self.main.username.lower():
+                full2 = "retweet:%s" % RETWEET_NEW
+                self.add_menu_link(menu, "Retweet %s via Twitter.com" % name,
+                                   lambda *args: self.context_link(full2,
+                                                               extra = item))
+            
+            if name.lower() == self.main.username.lower():
+                self.add_menu_separator(menu)
+                full3 = "delete:t:%d" % item_id
+                self.add_menu_link(menu, "Delete this Tweet",
+                                   lambda *args: self.context_link(full3,
+                                                               extra = item))
+            
+            
+        
