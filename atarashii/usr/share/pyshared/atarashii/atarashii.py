@@ -90,6 +90,7 @@ class Atarashii:
         self.is_loading_history = False
         self.was_sending = False
         self.was_retweeting = False
+        self.was_new_retweeting = False
         self.rate_warning_shown = False
         self.request_warning_shown = False
         
@@ -146,8 +147,11 @@ class Atarashii:
     
     
     # New style Retweet
-    def retweet(self, name, tweet_id):
+    def retweet(self, name, tweet_id, new_style = False):
         if not self.is_sending:
+            if new_style:
+                self.was_new_retweeting = True
+            
             self.is_sending = True
             self.gui.text.set_sensitive(False)
             self.gui.message_button.set_sensitive(False)
