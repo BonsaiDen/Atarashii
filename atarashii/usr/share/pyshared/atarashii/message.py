@@ -69,7 +69,7 @@ class HTML(view.HTMLView):
            self.items[num + 1][0].recipient_screen_name or self.new_avatar) \
            ) or num == len(self.items) - 1 or self.new_timeline:
             
-            avatar = '''<a href="http://twitter.com/%s">
+            avatar = '''<a href="profile:http://twitter.com/%s">
                         <img width="32" src="file://%s" title="''' + \
                         lang.html_info + '''"/></a>'''
             
@@ -108,7 +108,7 @@ class HTML(view.HTMLView):
         
         # HTML Snippet ---------------------------------------------------------
         html = '''
-        <div class="viewitem %s">
+        <div class="viewitem %s" id="%d">
         <div class="avatar">
             %s
         </div>
@@ -123,12 +123,12 @@ class HTML(view.HTMLView):
         <div class="inner-text">
             <div>
                 <span class="name"><b>''' + mode + \
-                ''' <a href="http://twitter.com/%s" title="''' + \
+                ''' <a href="profile:http://twitter.com/%s" title="''' + \
                 lang.html_profile + \
                 '''">%s</a></b></span> ''' + locked + ''' %s
             </div>
             <div class="time">
-                <a href="http://twitter.com/%s/statuses/%d" title="''' + \
+                <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
                 (self.absolute_time(item.created_at)) + '''">%s</a>
             </div>
         </div>
@@ -137,6 +137,7 @@ class HTML(view.HTMLView):
         # Insert values
         html = html % (
                 cls,
+                num,
                 avatar,
                 
                 # Actions
@@ -155,4 +156,13 @@ class HTML(view.HTMLView):
         
         # Return the HTML string
         return html
+    
+    
+    # Create Popup Items -------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def create_menu(self, menu, item):
+        print item
+        pass
+
+
 
