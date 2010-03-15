@@ -40,7 +40,7 @@ class HTMLView(webkit.WebView):
         self.connect("navigation-requested", self.open_link)
         self.connect("load-finished", self.loaded)
         self.connect("load-started", self.on_loading)
-        self.connect("focus-in-event", self.gui.text.html_focus)
+        self.connect("button-release-event", self.gui.text.html_focus)
         self.scroll = scroll
         self.set_maintains_back_forward_list(False)
         self.mode = HTML_STATE_NONE
@@ -470,6 +470,10 @@ class HTMLView(webkit.WebView):
         
         if self.new_avatar:
             self.newest_avatar = True
+    
+    def focus_me(self):
+        self.grab_focus()
+        self.gui.text.html_focus()
     
     
     # Handle the opening of links ----------------------------------------------

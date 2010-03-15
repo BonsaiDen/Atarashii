@@ -651,7 +651,7 @@ class GUI(gtk.Window):
             self.refresh_button.set_tooltip_text(lang.tool_refresh_message)
             self.html_scroll.hide()
             self.message_scroll.show()
-            self.message.grab_focus()
+            self.message.focus_me()
             self.read_button.set_sensitive(
                              self.message.last_id > self.message.init_id)
             
@@ -669,7 +669,7 @@ class GUI(gtk.Window):
             self.refresh_button.set_tooltip_text(lang.tool_refresh)
             self.message_scroll.hide()
             self.html_scroll.show()
-            self.html.grab_focus()
+            self.html.focus_me()
             self.read_button.set_sensitive(
                              self.html.last_id > self.html.init_id)
             

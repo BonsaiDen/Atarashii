@@ -78,10 +78,10 @@ class Send(threading.Thread):
         self.gui.text.set_text(UNSET_TEXT)
         self.gui.show_input(False)
         if self.gui.mode == MODE_MESSAGES:
-            self.gui.message.grab_focus()
+            self.gui.message.focus_me()
         
         elif self.gui.mode == MODE_TWEETS:
-            self.gui.html.grab_focus()
+            self.gui.html.focus_me()
         
         else: # TODO implement search
             pass
@@ -155,10 +155,10 @@ class Retweet(threading.Thread):
             # Focus HTML
             self.gui.show_input(False)
             if self.gui.mode == MODE_MESSAGES:
-                self.gui.message.grab_focus()
+                self.gui.message.focus_me()
             
             elif self.gui.mode == MODE_TWEETS:
-                self.gui.html.grab_focus()
+                self.gui.html.focus_me()
             
             else: # TODO implement search
                 pass
