@@ -270,6 +270,9 @@ class GUI(gtk.Window):
         elif not self.main.login_status:
             self.set_status(lang.status_logout)
         
+        elif self.main.is_sending:
+            pass
+        
         elif self.main.is_updating:
             self.refresh_button.set_sensitive(False)
             self.tray.refresh_menu.set_sensitive(False)
