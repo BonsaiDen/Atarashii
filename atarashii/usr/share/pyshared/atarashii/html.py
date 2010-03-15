@@ -160,7 +160,7 @@ class HTML(view.HTMLView):
         
         # HTML Snippet -----------------------------------------------------
         html = '''
-        <div class="%s">
+        <div class="viewitem %s">
         <div class="avatar">
             %s
         </div>
