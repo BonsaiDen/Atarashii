@@ -5,22 +5,22 @@ It uses *GTK+* and *Webkit* to archive a slim and functional design.
 The code itself is written in *Python* and uses the corresponding *Python* bindings for the *GTK+* libraries.
 
 ## Installation
-To install Atarashii from source run "python make.py" to create the debian package, after that just install the package that was created. 
+To install **Atarashii** from source run `python make.py` to create the debian package, after that just install the package that was created. 
 
-Alternatively, you can check for a recent DEBIAN-Package at the downloads section at GitHub <http://github.com/BonsaiDen/Atarashii/downloads>.
+Alternatively, you can check for a recent DEBIAN-Package at the downloads section on GitHub (<http://github.com/BonsaiDen/Atarashii/downloads>)
 
 ### Notes
-> If you've downloaded the source you can start Atarashii without installing it by running "python debug.py".  
-> You may need to install "fakeroot" via the package manager in order to beable to create the package by yourself.
+> If you've downloaded the source you can start **Atarashii** without installing it by running `python debug.py`  
+> You may need to install `fakeroot` via the package manager in order to be able to create the package by yourself
 
 ## TODO
-- Add more translations
+- Add more translations(see Contributing)
 - Implement search view
 
 ## Contributing
-The source is available on GitHub <http://github.com/BonsaiDen/Atarashii>, to
+The source is available on GitHub (<http://github.com/BonsaiDen/Atarashii>), to
 contribute to the project, fork it on GitHub and send a pull request.
-Everyone is welcome to make improvements to Atarashii!
+Everyone is welcome to make improvements to **Atarashii**!
 
 ## License
 Copyright (c) 2010 Ivo Wetzel
