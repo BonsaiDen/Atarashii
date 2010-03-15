@@ -171,7 +171,7 @@ class Updater(threading.Thread):
         
         # Load other stuff
         if self.gui.mode == MODE_TWEETS:
-            if self.get_init_messages():
+            if self.get_init_messages(True):
                 if self.gui.mode == MODE_MESSAGES:
                     gobject.idle_add(lambda: self.gui.show_input())
                 
@@ -184,7 +184,7 @@ class Updater(threading.Thread):
                 return
         
         elif self.gui.mode == MODE_MESSAGES:
-            if self.get_init_tweets():
+            if self.get_init_tweets(True):
                 if self.gui.mode == MODE_TWEETS:
                     gobject.idle_add(lambda: self.gui.show_input())
                 
@@ -205,7 +205,7 @@ class Updater(threading.Thread):
     
     
     # Load initial tweets ------------------------------------------------------
-    def get_init_tweets(self):
+    def get_init_tweets(self, last = False):
         updates = []
         try:
             updates = self.try_get_updates(self.main.get_first_id())
@@ -226,13 +226,17 @@ class Updater(threading.Thread):
         def render():
             self.html.push_updates()
             self.html.loaded = HTML_LOADED
+                    
+            # Show login message
+            if last:
+                self.gui.show_start_notifications()
         
         gobject.idle_add(lambda: render())
         return True
     
     
     # Load initial messages ----------------------------------------------------
-    def get_init_messages(self):
+    def get_init_messages(self, last = False):
         messages = []
         try:
             messages = self.try_get_messages(self.main.get_first_message_id())
@@ -254,6 +258,10 @@ class Updater(threading.Thread):
         def render():
             self.message.push_updates()
             self.message.loaded = HTML_LOADED
+                    
+            # Show login message
+            if last:
+                self.gui.show_start_notifications()
         
         gobject.idle_add(lambda: render())
         return True

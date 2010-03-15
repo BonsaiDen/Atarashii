@@ -222,7 +222,6 @@ class Atarashii:
         self.gui.set_title(lang.title_logged_in % self.username)
         self.gui.update_status()
         self.gui.show_input()
-        self.gui.show_start_notifications()
     
     def on_login_failed(self, error = None):
         self.refresh_time = UNSET_TIMEOUT
