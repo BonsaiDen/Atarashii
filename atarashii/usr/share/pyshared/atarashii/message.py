@@ -90,11 +90,17 @@ class HTML(view.HTMLView):
             name = item.recipient_screen_name
             reply = "display: none;"
             cls = "mentionedold" if item.id <= self.init_id else "mentioned"
+            username = item.recipient_screen_name
+            user_realname = item.recipient.name.strip()
+            ltype = "user"
         
         else:
             mode = lang.message_from
             name = user.screen_name
             reply = ""
+            username = user.screen_name
+            user_realname = user.name.strip()
+            ltype = "profile"
         
         
         # Protected ------------------------------------------------------------
@@ -123,7 +129,8 @@ class HTML(view.HTMLView):
         <div class="inner-text">
             <div>
                 <span class="name"><b>''' + mode + \
-                ''' <a href="profile:http://twitter.com/%s" title="''' + \
+                ''' <a href="''' + ltype + \
+                ''':http://twitter.com/%s" title="''' + \
                 lang.html_profile + \
                 '''">%s</a></b></span> ''' + locked + ''' %s
             </div>
@@ -144,8 +151,8 @@ class HTML(view.HTMLView):
                 user.screen_name, user.id, num,
                 
                 # Text
-                user.screen_name,
-                user.name.strip(),
+                username,
+                user_realname,
                 name,
                 text,
                 
@@ -161,8 +168,57 @@ class HTML(view.HTMLView):
     # Create Popup Items -------------------------------------------------------
     # --------------------------------------------------------------------------
     def create_menu(self, menu, item):
-        print item
-        pass
-
+        link, url, full = self.get_link_type(self.clicked_link)
+        
+        # Get the real ID
+        if item != None:
+            item_id = self.get_id(item)
+        
+        # Link options
+        if link == "link":
+            self.add_menu_link(menu, "Open in Browser",
+                               lambda *args: self.context_link(full))
+            
+            self.add_menu_link(menu, "Copy",
+                               lambda *args: self.copy_link(full))  
+        
+        # User Options
+        elif link == "user" or link == "profile":
+            user = full[full.rfind("/") + 1:]
+            self.add_menu_link(menu, "Visit %s's Profile" % user,
+                               lambda *args: self.context_link(full))
+            
+            if link == "profile" and user.lower() != self.main.username.lower():
+                reply = "message:%s:%d:-1" % (user, item_id)
+                self.add_menu_link(menu, "Reply to %s" % user,
+                                   lambda *args: self.context_link(reply,
+                                                              extra = item))
+            
+            elif link == "user":
+                reply = "message:%s:-1:-1" % user
+                self.add_menu_link(menu, "Message to %s" % user,
+                                   lambda *args: self.context_link(reply))    
+        
+        # Status
+        elif link == "status":
+            self.add_menu_link(menu, "View on Twitter.com",
+                               lambda *args: self.context_link(full))   
+        
+        # Tag
+        elif link == "tag":
+            self.add_menu_link(menu, "Search on Twitter.com",
+                               lambda *args: self.context_link(full))   
+        
+        # Retweet / Delete
+        else:
+            name = item.sender.screen_name
+            if name.lower() == self.main.username.lower():
+                full3 = "delete:t:%d" % item_id
+                mitem = self.add_menu_link(menu, "Delete this Message",
+                                   lambda *args: self.context_link(full3,
+                                                               extra = item))
+                
+                mitem.set_sensitive(False)
+        
 
 
