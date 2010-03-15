@@ -138,7 +138,7 @@ Description: Twitter Client for the GNOME Desktop
 """)
 c.close()
 print ">> Created!"
-
+print ""
 # Create package
 print "The kittens are building your package..."
 try:
