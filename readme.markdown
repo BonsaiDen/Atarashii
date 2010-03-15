@@ -1,19 +1,21 @@
 # Atarashii
-Twitter on your GNOME Desktop!
+**Atarashii** is a simple Twitter Client for your GNOME Desktop.
 
-Atarashii(Japanese for "New") is a simple Twitter Client for the GNOME Desktop.
-It uses GTK+ and webkit to archive a slim and functional design.
-The code itself is written in Python and uses the corresponding Python bindings for the GTK+ libraries.
+It uses *GTK+* and *Webkit* to archive a slim and functional design.  
+The code itself is written in *Python* and uses the corresponding *Python* bindings for the *GTK+* libraries.
 
 ## Installation
 To install Atarashii from source run "python make.py" to create the debian package, after that just install the package that was created. 
 
-Alternatively, you can check for a recent DEBIAN-Package at the downloads
-section at GitHub <http://github.com/BonsaiDen/Atarashii/downloads>.
+Alternatively, you can check for a recent DEBIAN-Package at the downloads section at GitHub <http://github.com/BonsaiDen/Atarashii/downloads>.
 
 ### Notes
-> If you've downloaded the source you can start Atarashii without installing it by running "python debug.py".
+> If you've downloaded the source you can start Atarashii without installing it by running "python debug.py".  
 > You may need to install "fakeroot" via the package manager in order to beable to create the package by yourself.
+
+## TODO
+- Add more translations
+- Implement search view
 
 ## Contributing
 The source is available on GitHub <http://github.com/BonsaiDen/Atarashii>, to
