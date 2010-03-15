@@ -85,7 +85,9 @@ class TrayIcon(gtk.StatusIcon):
         # Popup
         self.connect("popup-menu", self.on_popup, menu)
     
-    # Update the Tooltip
+    
+    # Tooltip ------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     def set_tooltip(self, status, twt = 0, msg = 0):
         text = []
         if twt > 0:
@@ -102,7 +104,8 @@ class TrayIcon(gtk.StatusIcon):
         
         img = self.main.get_user_picture()
         if img != self.img:
-            self.tooltip_img.set_from_file(img)
+            buf = gtk.gdk.pixbuf_new_from_file_at_size(img, 48, 48)
+            self.tooltip_img.set_from_pixbuf(buf)
             self.img = img
     
     
