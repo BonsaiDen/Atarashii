@@ -18,6 +18,7 @@
 # ------------------------------------------------------------------------------
 import gobject
 import webkit
+import gtk
 
 import calendar
 import math
@@ -27,8 +28,8 @@ import webbrowser
 import formatter
 from lang import lang
 from constants import HTML_STATE_NONE, HTML_UNSET_ID, HTML_STATE_START, \
-                      HTML_STATE_SPLASH, HTML_STATE_RENDER, RETWEET_ASK, \
-                      RETWEET_NEW, RETWEET_OLD
+                      HTML_STATE_SPLASH, HTML_STATE_RENDER, \
+                      RETWEET_NEW, RETWEET_OLD, UNSET_TEXT
 
 
 class HTMLView(webkit.WebView):
@@ -41,6 +42,8 @@ class HTMLView(webkit.WebView):
         self.connect("load-finished", self.loaded)
         self.connect("load-started", self.on_loading)
         self.connect("button-release-event", self.gui.text.html_focus)
+        self.connect("button-press-event", self.on_button)
+        self.connect("populate-popup", self.on_popup)
         self.scroll = scroll
         self.set_maintains_back_forward_list(False)
         self.mode = HTML_STATE_NONE
@@ -50,7 +53,10 @@ class HTMLView(webkit.WebView):
         self.item_count = 20
         self.get_item_count = None
         self.set_item_count = None
+        self.popup_items = None
+        self.clicked_link = None
         
+        self.button_position = None
         self.lang_loading = ""
         self.lang_load = ""
         self.lang_empty = ""
@@ -394,6 +400,104 @@ class HTMLView(webkit.WebView):
         self.set_html(self.renderitems)
     
     
+    # Popup Menu ---------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def on_button(self, view, event, *args):
+        self.button_position = (int(event.x), int(event.y))
+    
+    def on_popup(self, view, menu, *args):
+        for i in menu.get_children():
+            i.hide()
+        
+        # Save items!
+        self.popup_items = self.items[:]
+        
+        # Calculate on which tweet the user clicked
+        tweet = self.get_clicked_item(self.get_sizes())
+        if tweet == None:
+            menu.hide()
+            menu.cancel()
+            menu.destroy()
+            return True
+        
+        # Create the Menu!
+        self.create_menu(menu, tweet)
+        menu.connect("hide", self.on_popup_close)
+    
+    def on_popup_close(self, *args):
+        self.gui.text.html_focus()
+    
+    def get_clicked_item(self, items):
+        self.clicked_link = None
+        if items == None:
+            return None
+        
+        # Get Positions and Link
+        items, self.clicked_link = items.split("|")
+        if self.clicked_link == "undefined":
+            self.clicked_link = None
+        
+        items = items.split(";")
+        my = self.button_position[1] + self.scroll.get_vscrollbar().get_value();
+        item_num = -1
+        last_pos = 0
+        for i in items:
+            data = i.split(",")
+            if len(data) > 1:
+                pos = int(data[1])
+                if my >= last_pos and my < pos:
+                    item_num = int(data[0])
+                    break
+                
+                last_pos = pos
+        
+        # Get Tweet!
+        if item_num != -1:
+            return self.popup_items[item_num][0]
+        
+        else:
+            return None
+    
+    def get_sizes(self):
+        x = self.button_position[0]
+        y = self.button_position[1];
+        try:
+            self.execute_script('''
+            var sizes = [];
+            var items = document.getElementsByClassName("viewitem");
+            var pos = 0;
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                pos += item.offsetHeight;
+                sizes.push([item.getAttribute("id"), pos])
+                pos += 2;
+                delete item;
+            };
+            delete pos;
+            delete items;
+            var link = document.elementFromPoint(%d, %d);
+            document.title = sizes.join(";") + "|" + (link.href != undefined ? link.href : link.parentNode.href);
+            delete link;
+            delete sizes;''' % (x, y))
+            title = self.get_main_frame().get_title()
+            return title
+        
+        except:
+            return None
+    
+    def add_menu_link(self, menu, name, callback):
+        item = gtk.MenuItem()
+        item.set_label(name)
+        item.connect('activate', callback)
+        menu.append(item)
+        item.show()
+    
+    def add_menu_separator(self, menu):
+        item = gtk.SeparatorMenuItem()
+        menu.append(item)
+        item.show()
+    
+    
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def relative_time(self, date):
@@ -478,8 +582,13 @@ class HTMLView(webkit.WebView):
     
     # Handle the opening of links ----------------------------------------------
     # --------------------------------------------------------------------------
-    def open_link(self, view, frame, req):
-        uri = req.get_uri()
+    def context_link(self, uri, extra = None):
+        self.open_link(None, None, None, uri, extra)
+    
+    def open_link(self, view, frame, req, uri = None, extra = None):
+        # Get URI
+        if uri == None:
+            uri = req.get_uri()
         
         # Local links
         if uri.startswith("file:///"):
@@ -498,6 +607,16 @@ class HTMLView(webkit.WebView):
         # Replies
         elif uri.startswith("reply:"):
             foo, self.main.reply_user, self.main.reply_id, num = uri.split(":")
+            num = int(num)
+            if extra != None:
+                self.main.reply_text = self.unescape(self.get_text(extra))
+            
+            elif num != -1:
+                self.main.reply_text = self.unescape(self.get_text(num))
+            
+            else:
+                self.main.reply_text = UNSET_TEXT
+            
             self.main.gui.text.reply()
             self.main.gui.text.html_focus()
         
@@ -510,39 +629,49 @@ class HTMLView(webkit.WebView):
         
         # Retweet someone
         elif uri.startswith("retweet:"):
-            foo, num, tweetid = uri.split(":")
-            num, tweetid = int(num), long(tweetid)
-            name = self.get_user(num).screen_name
+            foo, ttype = uri.split(":")
+            tweet_id = self.get_id(extra)
+            name = self.get_user(extra).screen_name
             
-            def old_retweet():
-                self.main.retweet_text = self.unescape(self.get_text(num))
+            # Which style?
+            if int(ttype) == RETWEET_NEW:
+                self.main.retweet(name, tweet_id, True)
+            
+            elif int(ttype) == RETWEET_OLD:
+                self.main.retweet_text = self.unescape(self.get_text(extra))
                 self.main.retweet_user = name
                 self.main.gui.text.retweet()
                 self.main.gui.text.html_focus()
-            
-            
-            def new_retweet():
-                self.main.retweet(name, tweetid)
-            
-            # Which style?
-            rt_temp = self.main.settings["retweets"]
-            if name.lower() == self.main.username.lower():
-                rt_temp = RETWEET_OLD
-            
-            if rt_temp == RETWEET_ASK:
-                self.main.gui.ask_for_retweet(name, new_retweet, old_retweet)
-            
-            elif rt_temp == RETWEET_NEW:
-                new_retweet()
-            
-            elif rt_temp == RETWEET_OLD:
-                old_retweet()
+        
+        # Delete
+        elif uri.startswith("delete:"):
+            o, dtype, item_id = uri.split(":")
+            print "delete", int(item_id), self.unescape(self.get_text(extra))
         
         # Regular links
         else:
-            webbrowser.open(uri)
+            webbrowser.open(self.get_link_type(uri)[1])
         
         return True
+    
+    def get_link_type(self, uri):
+        if uri == None:
+            return None, None, None
+    
+        if uri.startswith("profile:"):
+            return "profile", uri[8:], uri
+        
+        elif uri.startswith("user:"):
+            return "user", uri[5:], uri
+        
+        elif uri.startswith("source:"):
+            return "source", uri[7:], uri
+        
+        elif uri.startswith("status:"):
+            return "status", uri[7:], uri
+        
+        else:
+            return "link", uri, uri
     
     
     # Unescape chars
