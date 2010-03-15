@@ -4,6 +4,8 @@
 It uses *GTK+* and *Webkit* to archive a slim and functional design.  
 The code itself is written in *Python* and uses the corresponding *Python* bindings for the *GTK+* libraries.
 
+*And **Kittens** like it!*
+
 ## Installation
 To install **Atarashii** from source run `python make.py` to create the debian package, after that just install the package that was created. 
 
