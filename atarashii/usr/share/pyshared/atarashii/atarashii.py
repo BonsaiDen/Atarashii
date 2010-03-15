@@ -291,7 +291,7 @@ class Atarashii:
     # --------------------------------------------------------------------------
     def set_user_picture(self, img):
         self.settings['picture_' + self.username] = img
-        
+    
     def get_user_picture(self):
         img = self.settings['picture_' + self.username]
         if img == None or not os.path.exists(img):
