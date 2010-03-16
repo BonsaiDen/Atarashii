@@ -163,6 +163,8 @@ a:active, a:hover, a, .protected {
 	background: url("file:///usr/share/atarashii/at.png")
 }
 
+
+
 .doreply a, .doretweet a {
 	background: no-repeat;
 	color: transparent;
@@ -174,8 +176,10 @@ a:active, a:hover, a, .protected {
 	margin-bottom: 4px
 }
 
-.doreply a:hover, .doretweet a:hover {
-	background: -12px 0
+.highlightold:hover .doreply a:hover, .oldtweet:hover .doreply a:hover, 
+.mentioned:hover .doreply a:hover, .highlight:hover .doreply a:hover, 
+.tweet:hover .doreply a:hover {
+	background-position: -12px 0;
 }
 
 .highlightold:hover .doretweet a, .oldtweet:hover .doretweet a, 
