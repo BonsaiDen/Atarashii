@@ -170,7 +170,7 @@ class HTMLView(webkit.WebView):
                 </body>""" % ("".join(renderitems),
                                 self.items[0][0].id, self.lang_load))
         
-        else:
+        elif self.main.login_status:
             self.render_html("""
                 <body class="unloaded" ondragstart="return false">
                     <div class="loading"><b>%s</b></div>
