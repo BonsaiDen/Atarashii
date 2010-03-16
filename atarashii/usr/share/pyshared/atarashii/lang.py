@@ -106,6 +106,8 @@ LANG = {
         'status_reconnect_seconds' : 'Automatischer Reconnect in %d Sekunden.',
         'status_reconnect_minute' : 'Automatischer Reconnect in einer Minute.',
         'status_reconnect_minutes' : 'Automatischer Reconnect in %d Minuten.',
+        'status_deleting_tweet' : 'Lösche Tweet...',
+        'status_deleting_message' : 'Lösche Nachricht...',
         
         # Info Label
         'label_reply' : '<b>Tweet an %s:</b>',
@@ -154,7 +156,15 @@ LANG = {
         
         # Retweet Dialogs
         'retweet_info_title' : 'Retweet erfolgreich',
-        'retweet_info' : '%s wurde erfolgreich retweeted!',
+        'retweet_info' : '%s wurde erfolgreich retweeted.',
+        
+        # Delete Dialogs
+        'delete_title' : 'Löschen bestätigen',
+        'delete_tweet_question' : 'Diesen Tweet wirklich löschen?\n\n%s',
+        'delete_message_question' : 'Diese Nachricht wirklich löschen?\n\n%s',
+        'delete_info_title' : 'Löschen erfolgreich',
+        'delete_info_tweet' : 'Der Tweet wurde erfolgreich gelöscht.',    
+        'delete_info_message' : 'Die Nachricht wurde erfolgreich gelöscht.',    
         
         # Error Dialogs
         'error_title' : 'Atarashii - Fehler',
@@ -212,12 +222,12 @@ LANG = {
         'context_tweet' : 'Tweet an %s...',
         'context_message' : 'Nachricht an %s...',
         'context_source' : '%s Homepage',
-        'context_view' : 'Auf Twitter.com anschauen',
+        'context_view' : 'Auf Twitter.com aufrufen',
         'context_search' : 'Auf Twitter.com suchen',
         'context_retweet_old' : '%s via RT retweeten',
         'context_retweet_new' : '%s via Twitter retweeten',
-        'context_delete_tweet' : 'Diesen Tweet löschen',
-        'context_delete_message' : 'Diese Nachricht löschen'
+        'context_delete_tweet' : 'Tweet löschen',
+        'context_delete_message' : 'Nachricht löschen'
     },
     
     # English ------------------------------------------------------------------
@@ -305,6 +315,8 @@ LANG = {
         'status_reconnect_seconds' : 'Automatic reconnect in %d seconds.',
         'status_reconnect_minute' : 'Automatic reconnect in one minute.',
         'status_reconnect_minutes' : 'Automatic reconnect in %d minutes.',
+        'status_deleting_tweet' : 'Deleting Tweet...',
+        'status_deleting_message' : 'Deleting Message...',
         
         # Info Label
         'label_reply' : '<b>Tweet to %s:</b>',
@@ -351,7 +363,15 @@ LANG = {
         
         # Retweet Dialogs
         'retweet_info_title' : 'Retweet successful',
-        'retweet_info' : '%s has been successfully retweeted!',
+        'retweet_info' : '%s has been successfully retweeted.',
+        
+        # Delete Dialogs
+        'delete_title' : 'Confirm delete',
+        'delete_tweet_question' : 'Are you sure to delete this Tweet?\n\n%s',
+        'delete_message_question' : 'Are you sure to delete this Message?\n\n%s',
+        'delete_info_title' : 'Deletion successful',
+        'delete_info_tweet' : 'The Tweet has been successfully deleted.',    
+        'delete_info_message' : 'The Message has been successfully deleted.',  
         
         # Error Dialogs
         'error_title' : 'Atarashii - Error',
@@ -413,8 +433,8 @@ LANG = {
         'context_search' : 'Search on Twitter.com',
         'context_retweet_old' : 'Retweet %s via RT',
         'context_retweet_new' : 'Retweet %s via Twitter',
-        'context_delete_tweet' : 'Delete this Tweet',
-        'context_delete_message' : 'Delete this Message'
+        'context_delete_tweet' : 'Delete Tweet',
+        'context_delete_message' : 'Delete Message'
     }
 }
 
