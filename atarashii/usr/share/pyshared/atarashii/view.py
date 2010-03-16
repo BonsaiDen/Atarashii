@@ -686,6 +686,10 @@ class HTMLView(webkit.WebView):
         display = gtk.gdk.display_manager_get().get_default_display()
         clipboard = gtk.Clipboard(display, "CLIPBOARD")
         clipboard.set_text(url)
+        
+        # Make sure the textbox doesn't loose focus if it's opened
+        if self.gui.text.has_focus:
+            gobject.idle_add(lambda *args: self.gui.text.grab_focus())
     
     
     # Helpers ------------------------------------------------------------------
