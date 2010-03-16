@@ -193,8 +193,8 @@ class HTML(view.HTMLView):
         
     # Create Popup Items -------------------------------------------------------
     # --------------------------------------------------------------------------
-    def create_menu(self, menu, item):
-        link, url, full = self.get_link_type(self.clicked_link)
+    def create_menu(self, menu, item, link):
+        link, url, full = self.get_link_type(link)
         
         # Get the real ID
         if item != None:

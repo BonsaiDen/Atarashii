@@ -50,10 +50,7 @@ class HTMLView(webkit.WebView):
         self.item_count = 20
         self.get_item_count = None
         self.set_item_count = None
-        self.popup_items = None
-        self.clicked_link = None
         
-        self.button_position = None
         self.lang_loading = ""
         self.lang_load = ""
         self.lang_empty = ""
@@ -90,6 +87,7 @@ class HTMLView(webkit.WebView):
     # Loading HTML -------------------------------------------------------------
     # --------------------------------------------------------------------------
     def start(self):
+        self.scroll.get_vscrollbar().set_value(0)
         self.offset_count = 0
         self.render_html("""
             <body class="unloaded">
@@ -97,6 +95,7 @@ class HTMLView(webkit.WebView):
             </body>""" % (self.main.get_image(), self.lang_loading))
     
     def splash(self):
+        self.scroll.get_vscrollbar().set_value(0)
         self.offset_count = 0
         self.render_html("""
             <body class="unloaded">
@@ -237,6 +236,7 @@ class HTMLView(webkit.WebView):
     def loaded(self, *args):
         if len(self.items) > 0 and self.newitems and not self.load_history:
             offset = self.get_offset()
+            print offset
         
         else:
             offset = 0
@@ -398,61 +398,66 @@ class HTMLView(webkit.WebView):
     
     # Popup Menu ---------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def on_button(self, view, event, *args):
-        self.button_position = (int(event.x), int(event.y))
-    
+
+    # Kill of the original context menu!
     def on_popup(self, view, menu, *args):
-        for i in menu.get_children():
-            i.hide()
-        
-        # Save items!
-        self.popup_items = self.items[:]
-        
-        # Calculate on which tweet the user clicked
-        tweet = self.get_clicked_item(self.get_sizes())
-        if tweet == None:
-            menu.hide()
-            menu.cancel()
-            menu.destroy()
-            return True
-        
-        # Create the Menu!
-        self.custom_menu = False
-        self.create_menu(menu, tweet)
-        if not self.custom_menu:
-            menu.hide()
-            menu.cancel()
-            menu.destroy()
-            return True
-        
-        # Fix annoying instant click of context menu!
-        if not self.menu:
-            self.menu = menu
-            self.menu_toggle(False)
-            gobject.timeout_add(100, lambda: self.menu_toggle(True)) 
-        
-        menu.connect("hide", self.on_popup_close)
+        menu.hide()
+        menu.cancel()
+        menu.destroy()
+        return True
     
-    def menu_toggle(self, mode):
-        for i in self.menu.get_children():
-            i.set_sensitive(mode)
+    # Let's create our own
+    def on_button(self, view, event, *args):
+        if event.button == 3:
+            # Calculate on which item the user clicked
+            item_id, link = self.get_clicked_item(self.get_sizes(event), event)
+            if item_id == -1:
+                return False
+            
+            item = self.items[item_id][0]
+            
+            # Create Menu
+            menu = gtk.Menu()
+            self.create_menu(menu, item, link)
+            menu.show_all()
+            menu.connect("hide", self.on_popup_close)
+            
+            def position(*args):
+                return (int(event.x_root), int(event.y_root), True)
+            
+            menu.attach_to_widget(self, lambda *args: False)
+            menu.popup(None, None, position, event.button, event.get_time())
+            return True
+    
+    def add_menu_link(self, menu, name, callback):
+        item = gtk.MenuItem()
+        item.set_label(name)
+        item.connect('activate', callback)
+        menu.append(item)
+        item.show()
+        return item
+    
+    def add_menu_separator(self, menu):
+        item = gtk.SeparatorMenuItem()
+        menu.append(item)
+        item.show()
     
     def on_popup_close(self, *args):
-        self.menu = None
         self.gui.text.html_focus()
     
-    def get_clicked_item(self, items):
-        self.clicked_link = None
+    
+    # Get a Tweet based on a button press --------------------------------------
+    def get_clicked_item(self, items, event):
         if items == None:
-            return None
+            return -1
         
         # Get Positions and Link
-        items, self.clicked_link = items.split("|")
-        if self.clicked_link == "undefined":
-            self.clicked_link = None
+        items, link = items.split("|")
+        if link == "undefined":
+            link = None
         
         items = items.split(";")
-        my = self.button_position[1] + self.scroll.get_vscrollbar().get_value();
+        my = event.y + self.scroll.get_vscrollbar().get_value();
         item_num = -1
         last_pos = 0
         for i in items:
@@ -465,16 +470,10 @@ class HTMLView(webkit.WebView):
                 
                 last_pos = pos
         
-        # Get Tweet!
-        if item_num != -1:
-            return self.popup_items[item_num][0]
-        
-        else:
-            return None
+        return item_num, link
     
-    def get_sizes(self):
-        x = self.button_position[0]
-        y = self.button_position[1];
+    # Run some crazy javascript in order to calculate all the positioning
+    def get_sizes(self, event):
         try:
             self.execute_script('''
             var sizes = [];
@@ -493,26 +492,12 @@ class HTMLView(webkit.WebView):
             document.title = sizes.join(";") + "|" + 
             (link.href != undefined ? link.href : link.parentNode.href);
             delete link;
-            delete sizes;''' % (x, y))
+            delete sizes;''' % (event.x, event.y))
             title = self.get_main_frame().get_title()
             return title
         
         except:
             return None
-    
-    def add_menu_link(self, menu, name, callback):
-        self.custom_menu = True
-        item = gtk.MenuItem()
-        item.set_label(name)
-        item.connect('activate', callback)
-        menu.append(item)
-        item.show()
-        return item
-    
-    def add_menu_separator(self, menu):
-        item = gtk.SeparatorMenuItem()
-        menu.append(item)
-        item.show()
     
     
     # Helpers ------------------------------------------------------------------
