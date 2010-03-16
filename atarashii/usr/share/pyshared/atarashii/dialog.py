@@ -23,7 +23,7 @@ import gobject
 
 from lang import lang
 from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \
-                      MESSAGE_INFO, RETWEET_ASK, RETWEET_OLD, RETWEET_NEW
+                      MESSAGE_INFO
 
 
 class Dialog:
