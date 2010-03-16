@@ -676,6 +676,7 @@ class GUI(gtk.Window):
     # Handlers -----------------------------------------------------------------
     # --------------------------------------------------------------------------
     def on_refresh(self, *args):
+        self.refresh_button.set_sensitive(False)
         if self.mode == MODE_MESSAGES:
             self.main.updater.refresh_messages = True
         

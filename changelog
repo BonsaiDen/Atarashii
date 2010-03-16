@@ -1,3 +1,9 @@
+atarashii (0.99.10a-1) all;
+
+  * The kittens have hotfixed focus issues with the textbox.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 16 Mar 2010 16:35:00 +0100
+
 atarashii (0.99.10-1) all;
 
   * Added favorites! You can now favorite Tweets by clicking on the gray heart

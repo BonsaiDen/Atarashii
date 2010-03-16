@@ -50,6 +50,7 @@ class HTMLView(webkit.WebView):
         
         # Fix CSS hover stuff
         self.mouse_position = -1.0
+        self.give_text_focus = False
         self.connect("motion-notify-event", self.on_move)
         self.connect("leave-notify-event", self.on_leave)
         self.last_scroll = 0
@@ -336,11 +337,16 @@ class HTMLView(webkit.WebView):
     # This fixes an issue where the reply/favorite links wouldn't disapear if
     # the mouse left the view
     def fake_click(self):
+        # Don't steal focus from the text box
+        if self.gui.text.has_focus:
+            self.give_text_focus = True      
+        
         event = gtk.gdk.Event(gtk.gdk.BUTTON_PRESS)
         event.x = 0.0
         event.y = self.mouse_position
         event.button = 1
         self.emit("button_press_event", event)
+        
     
     def on_leave(self, view, event, *args):
         self.mouse_position = -1.0
@@ -423,6 +429,11 @@ class HTMLView(webkit.WebView):
     
     # Let's create our own nice little popup :)
     def on_button(self, view, event, *args):
+        if self.give_text_focus:
+            self.gui.text.grab_focus()
+            self.give_text_focus = False
+            return True
+    
         if event.button == 3:
             # Calculate on which item the user clicked
             item_id, link = self.get_clicked_item(self.get_sizes(event), event)
