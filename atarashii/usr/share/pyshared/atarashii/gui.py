@@ -59,6 +59,7 @@ class GUI(gtk.Window):
         gtb.add_from_file(main.get_resource("main.glade"))
         frame = gtb.get_object("frame")
         self.add(frame)
+        gtb.get_object("content").set_border_width(2)
         
         # Link Components
         self.refresh_button = gtb.get_object("refresh")
@@ -97,6 +98,7 @@ class GUI(gtk.Window):
         self.quit_button.connect("clicked", self.on_quit)
         self.quit_button.set_tooltip_text(lang.tool_quit)
         
+        # Info Label
         self.info_label = gtb.get_object("label")
         
         # Text Input
@@ -115,10 +117,6 @@ class GUI(gtk.Window):
         self.message = message.HTML(self.main, self)
         self.message_scroll.add(self.message)
         self.message_scroll.set_shadow_type(gtk.SHADOW_IN)
-        
-        
-        self.content = gtb.get_object("content")
-        self.content.set_border_width(2)
         
         # Bars
         self.toolbar = gtb.get_object("toolbar")
@@ -212,8 +210,8 @@ class GUI(gtk.Window):
                 self.main.is_connecting or \
                 self.main.is_loading_history or \
                 (self.mode == MODE_MESSAGES and \
-                self.message.loaded == HTML_LOADING) or \
-                (self.mode == MODE_TWEETS and self.html.loaded == HTML_LOADING)
+                self.message.load_state == HTML_LOADING) or \
+                (self.mode == MODE_TWEETS and self.html.load_state == HTML_LOADING)
         
         self.progress.set_fraction(0.0)
         self.progress.show()
@@ -282,8 +280,8 @@ class GUI(gtk.Window):
         
         elif self.main.refresh_time == UNSET_TIMEOUT or \
             (self.mode == MODE_MESSAGES and \
-            self.message.loaded == HTML_LOADING) or \
-            (self.mode == MODE_TWEETS and self.html.loaded == HTML_LOADING):
+            self.message.load_state == HTML_LOADING) or \
+            (self.mode == MODE_TWEETS and self.html.load_state == HTML_LOADING):
             
             self.set_status(lang.status_connected)
         
@@ -478,11 +476,11 @@ class GUI(gtk.Window):
             self.message_button.set_active(False)
     
     def is_ready(self):
-        return not self.main.is_updating and self.is_loaded()
+        return not self.main.is_updating and self.load_state()
     
-    def is_loaded(self):
-        return self.message.loaded == HTML_LOADED and \
-               self.html.loaded == HTML_LOADED
+    def load_state(self):
+        return self.message.load_state == HTML_LOADED and \
+               self.html.load_state == HTML_LOADED
     
     def show_taskbar(self, mode):
         self.main.settings['taskbar'] = mode
@@ -717,10 +715,10 @@ class GUI(gtk.Window):
             
             self.history_button.set_sensitive(self.message.history_loaded)
             
-            if self.message.loaded == HTML_LOADING:
+            if self.message.load_state == HTML_LOADING:
                 self.show_progress()
             
-            elif self.message.loaded == HTML_LOADED:
+            elif self.message.load_state == HTML_LOADED:
                 self.show_input()
         
         elif self.mode == MODE_TWEETS:
@@ -735,10 +733,10 @@ class GUI(gtk.Window):
             
             self.history_button.set_sensitive(self.html.history_loaded)
             
-            if self.html.loaded == HTML_LOADING:
+            if self.html.load_state == HTML_LOADING:
                 self.show_progress()
             
-            elif self.html.loaded == HTML_LOADED:
+            elif self.html.load_state == HTML_LOADED:
                 self.show_input()
         
         else: # TODO implement search here

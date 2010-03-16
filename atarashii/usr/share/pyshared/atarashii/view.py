@@ -71,10 +71,10 @@ class HTMLView(webkit.WebView):
         self.history_count = 0
         self.first_load = True
         self.newest_id = HTML_UNSET_ID
-        self.newitems = False
+        self.has_newitems = False
         self.load_history = False
         self.load_history_id = HTML_UNSET_ID
-        self.loaded = HTML_UNSET_ID
+        self.load_state = HTML_UNSET_ID
         self.init_id = HTML_UNSET_ID
         self.last_id = HTML_UNSET_ID
         self.count = 0
@@ -295,7 +295,7 @@ class HTMLView(webkit.WebView):
             return 0
     
     def loaded(self, *args):
-        if len(self.items) > 0 and self.newitems and not self.load_history:
+        if len(self.items) > 0 and self.has_newitems and not self.load_history:
             offset = self.get_offset()
         
         else:
@@ -318,7 +318,7 @@ class HTMLView(webkit.WebView):
             self.first_load = False
         
         self.load_history = False
-        self.newitems = False
+        self.has_newitems = False
     
     
     # Double check for some stupid scrolling bugs with webkit
@@ -352,7 +352,7 @@ class HTMLView(webkit.WebView):
             else:
                 self.items.append(item)
             
-            self.newitems = True
+            self.has_newitems = True
             if len(self.items) > self.main.max_tweet_count:
                 self.items.pop(0)
     

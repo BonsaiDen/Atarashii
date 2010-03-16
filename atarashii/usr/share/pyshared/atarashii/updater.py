@@ -82,8 +82,8 @@ class Updater(threading.Thread):
         
         self.message.last_id = HTML_UNSET_ID
         self.html.last_id = HTML_UNSET_ID
-        self.message.loaded = HTML_RESET
-        self.html.loaded = HTML_RESET
+        self.message.load_state = HTML_RESET
+        self.html.load_state = HTML_RESET
         
         # InitID = the last read tweet
         self.html.init_id = self.main.get_latest_id()
@@ -152,20 +152,20 @@ class Updater(threading.Thread):
         self.api = self.main.api = tweepy.API(auth)
         
         # Set loading to pending
-        self.message.loaded = HTML_LOADING
-        self.html.loaded = HTML_LOADING
+        self.message.load_state = HTML_LOADING
+        self.html.load_state = HTML_LOADING
         
         # Lazy loading
         if self.gui.mode == MODE_MESSAGES:
             if not self.get_init_messages():
-                self.message.loaded = HTML_RESET
-                self.html.loaded = HTML_RESET
+                self.message.load_state = HTML_RESET
+                self.html.load_state = HTML_RESET
                 return
         
         elif self.gui.mode == MODE_TWEETS:
             if not self.get_init_tweets():
-                self.message.loaded = HTML_RESET
-                self.html.loaded = HTML_RESET
+                self.message.load_state = HTML_RESET
+                self.html.load_state = HTML_RESET
                 return
         
         else: # TODO implement loading of search
@@ -186,8 +186,8 @@ class Updater(threading.Thread):
                     gobject.idle_add(lambda: self.gui.check_refresh())
             
             else:
-                self.message.loaded = HTML_RESET
-                self.html.loaded = HTML_RESET
+                self.message.load_state = HTML_RESET
+                self.html.load_state = HTML_RESET
                 return
         
         elif self.gui.mode == MODE_MESSAGES:
@@ -199,8 +199,8 @@ class Updater(threading.Thread):
                     gobject.idle_add(lambda: self.gui.check_refresh())
             
             else:
-                self.message.loaded = HTML_RESET
-                self.html.loaded = HTML_RESET
+                self.message.load_state = HTML_RESET
+                self.html.load_state = HTML_RESET
                 return 
         
         else: # TODO implement loading of search
@@ -235,7 +235,7 @@ class Updater(threading.Thread):
         
         def render():
             self.html.push_updates()
-            self.html.loaded = HTML_LOADED
+            self.html.load_state = HTML_LOADED
                     
             # Show login message
             if last:
@@ -267,7 +267,7 @@ class Updater(threading.Thread):
         
         def render():
             self.message.push_updates()
-            self.message.loaded = HTML_LOADED
+            self.message.load_state = HTML_LOADED
                     
             # Show login message
             if last:
