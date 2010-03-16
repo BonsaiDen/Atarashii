@@ -13,8 +13,6 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-# TODO add favorite stuff
-
 
 # Atarashii --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -41,7 +39,7 @@ import settings
 import updater
 
 from lang import lang
-from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, RETWEET_ASK, \
+from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
                       MODE_TWEETS, MODE_MESSAGES, HTML_UNSET_ID
 
 
@@ -104,10 +102,7 @@ class Atarashii:
         
         # Current Username
         self.username = self.settings['username'] or UNSET_TEXT
-        
-        # Retweet Style
-        self.retweet_style = self.settings['retweet'] or RETWEET_ASK
-        
+                
         # Notifier
         self.notifier = notify.Notifier(self)
         
@@ -194,12 +189,12 @@ class Atarashii:
     
     
     # Favorite
-    def favorite(self, tweet_id, mode):
+    def favorite(self, tweet_id, mode, name):
         if not self.favorites_pending.has_key(tweet_id):
             self.favorites_pending[tweet_id] = mode
             
             # Favoriter
-            favoriter = send.Favorite(self, tweet_id, mode)
+            favoriter = send.Favorite(self, tweet_id, mode, name)
             favoriter.setDaemon(True)
             favoriter.start()     
     

@@ -17,7 +17,6 @@
 # Constants --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 # Rewteets
-RETWEET_ASK = 0          # Can be anything
 RETWEET_NEW = 1          # Can be anything
 RETWEET_OLD = 2          # Can be anything
 
