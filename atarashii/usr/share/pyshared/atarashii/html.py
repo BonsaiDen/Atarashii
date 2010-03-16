@@ -153,13 +153,11 @@ class HTML(view.HTMLView):
                  <b><a href="profile:http://twitter.com/%s" title="''' + \
                 lang.html_profile + '''">
                    %s
-                </a></b></span> ''' + self.is_protected(user) + ''' %s
-            </div>
+                </a></b></span>''' + self.is_protected(user) + '''%s</div>
             <div class="time">
                 <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
                 (self.absolute_time(tweet.created_at)) + '''">%s</a>
-                ''' + by_user + '''
-            </div>
+                ''' + by_user + '''</div>
             <div class="reply">%s</div>
             <div class="reply">%s</div>
         </div>
