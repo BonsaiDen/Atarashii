@@ -94,6 +94,9 @@ class Formatter:
                 else:
                     text = data
 
+                if data.startswith("www"):
+                    data = "http://%s" % data
+
                 result.append(
                     '%s<a href="%s" title="%s">%s</a>' %
                     (pre, escape(data), escape(data), text))
