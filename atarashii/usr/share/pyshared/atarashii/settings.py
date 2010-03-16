@@ -177,7 +177,7 @@ class Settings:
         self['crashed'] = os.path.exists(CRASH_FILE)
         if self['crashed']:
             cfp = open(CRASH_FILE, "rb")
-            self['time_before_crash'] = long(cfp.read())
+            self['time_before_crash'] = int(cfp.read())
             cfp.close()
             print "ERROR: Atarashii crashed!"
             print "Runtime before crash %2.2f minutes" % (self['time_before_crash'] / 60.0)
@@ -186,7 +186,7 @@ class Settings:
         try:
             if mode:
                 cfp = open(CRASH_FILE, "wb")
-                cfp.write(str(time.time() - self.init_time))
+                cfp.write(str(int(time.time() - self.init_time)))
                 cfp.close()
                 
             else:
