@@ -166,7 +166,8 @@ LANG = {
         'error_overload' : 'Twitter ist gerade überlastet.',
         'error_internal' : 'Atarashii Fehler: %s',
         'error_already_retweeted' : 'Es ist entweder nicht möglich diesen Tweet zu retweeten oder er wurde bereits von ihnen retweeted.',
-        'error_user_not_found' : 'Der Benutzer "%s" existiert nicht.',
+        'error_user_not_found' : 'Der Benutzer %s existiert nicht.',
+        'error_network' : 'Atarashii konnte keine Verbindung zum Internet herstellen.',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warnung',
@@ -361,7 +362,8 @@ LANG = {
         'error_overload' : 'Twitter is over capacity.',
         'error_internal' : 'Atarashii error: %s',
         'error_already_retweeted' : 'Either it\'s not possible to retweet this Tweet or you\'ve already retweeted it.',
-        'error_user_not_found' : 'The user "%s" does not exist.',
+        'error_user_not_found' : 'The user %s does not exist.',
+        'error_network' : 'Atarashii could not establish a connection to the Internet.',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warning',
