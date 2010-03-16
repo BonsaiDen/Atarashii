@@ -148,6 +148,10 @@ class OAuthHandler(AuthHandler):
             resp = urlopen(Request(url, data=request.to_postdata()))
             self.access_token = oauth.OAuthToken.from_string(resp.read())
             return self.access_token
+            
+        except IOError, e:
+            raise e
+            
         except Exception, e:
             raise TweepError(e)
 
@@ -157,6 +161,7 @@ class OAuthHandler(AuthHandler):
             user = api.verify_credentials()
             if user:
                 self.username = user.screen_name
+            
             else:
                 raise TweepError("Unable to get username, invalid oauth token!")
         return self.username

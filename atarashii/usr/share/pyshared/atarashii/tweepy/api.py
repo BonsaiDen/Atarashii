@@ -258,7 +258,8 @@ class API(object):
                 payload_type = 'user',
                 require_auth = True
             )(self)
-        except TweepError:
+        
+        except TweepError, error:
             return False
 
     """ account/rate_limit_status """
