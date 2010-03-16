@@ -523,6 +523,12 @@ class GUI(gtk.Window):
                         lang.retweet_info % name,
                         lang.retweet_info_title)
     
+    def ask_for_delete(self, name, yes, noo):
+        dialog.MessageDialog(self, MESSAGE_QUESTION,
+                        lang.delete_question,
+                        lang.delete_title,
+                        yes_callback = yes, no_callback = noo)
+    
     
     # Error & Warning ----------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -543,9 +549,12 @@ class GUI(gtk.Window):
         
         # Network Error?
         if isinstance(error, IOError):
-            code = -4
-            if self.main.login_status:
-                code = -5
+            if error.errno == -2:
+                code = -4
+                if self.main.login_status:
+                    code = -5
+            else:
+                code = -1
             
         # Try to find out what the error was!
         elif hasattr(error, "response") and error.response != None:
