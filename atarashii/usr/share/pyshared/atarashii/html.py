@@ -208,7 +208,6 @@ class HTML(view.HTMLView):
     # --------------------------------------------------------------------------
     def create_menu(self, menu, item, link):
         link, url, full = self.get_link_type(link)
-        print link, url, full
                 
         # No Quick links
         if link in ("fav", "unfav", "qreply"):
