@@ -788,6 +788,7 @@ class GUI(gtk.Window):
             data.set_visible(False)
         
         self.main.quit()
+
     
     
     # Events -------------------------------------------------------------------
