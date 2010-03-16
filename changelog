@@ -1,3 +1,14 @@
+atarashii (0.99.9-1) all;
+
+  * Removed retweet settings from the preferences...
+  * ...and added a completely new context menu to the view!
+  * You can now retweet from there, either new or old style.
+  * It's now also possible to delete tweets and messages directly from
+    Atarashii.
+  * And as usual there have been a lot of bugfixes by the kittens.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 16 Mar 2010 05:58:00 +0100
+
 atarashii (0.99.8b-1) all;
 
   * Added new tooltip for the tray icon.
