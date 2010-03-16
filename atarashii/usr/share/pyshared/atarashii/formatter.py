@@ -23,6 +23,7 @@ import urllib
 # <http://github.com/mzsanford/twitter-text-java>
 AT_REGEX = re.compile(ur"\B[@\uFF20]([a-z0-9_]{1,20})",
                       re.UNICODE | re.IGNORECASE)
+
 TAG_REGEX = re.compile(ur"(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+[a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff]*)",
                        re.UNICODE | re.IGNORECASE)
 
@@ -42,6 +43,8 @@ URL_REGEX = re.compile("((" + PRE_CHARS + ")((https?://|www\\.)(" + \
                        PATH_ENDING_CHARS + "?)?(\\?" + QUERY_CHARS + "*" + \
                        QUERY_ENDING_CHARS + ")?))", re.UNICODE | re.IGNORECASE)
 
+from utils import escape
+
 from lang import lang
 
 
@@ -52,7 +55,6 @@ class Formatter:
         self.tags = []
         URL_REGEX.sub(self.url, text)
         
-        
         # Filter URLS
         self.text_parts = []
         last = 0
@@ -62,14 +64,11 @@ class Formatter:
             last = i.end()
         
         self.text_parts.append((0, text[last:]))
-        
-        # Filter @
-        self.filter_by(AT_REGEX, 2)
-        
-        # Filter Hashtags
-        self.filter_by(TAG_REGEX, 3)
-        
-        # Replace all the stuff
+        self.filter_by(AT_REGEX, 2) # Filter @
+        self.filter_by(TAG_REGEX, 3) # Filter Hashtags
+        return self.format()
+    
+    def format(self):
         result = []
         for i in self.text_parts:
             ttype, data = i
@@ -83,41 +82,41 @@ class Formatter:
                 if start == -1:
                     start = data.find("www")
                 
-                foo = ""
+                pre = ""
                 if start != -1:
-                    foo = data[:start]
+                    pre = data[:start]
                     data = data[start:]
                 
                 # Shorten URLS
                 if len(data) > 30:
                     text = data[0:27] + "..."
+                
                 else:
                     text = data
 
                 result.append(
                     '%s<a href="%s" title="%s">%s</a>' %
-                    (foo, self.escape(data), self.escape(data), text))
+                    (pre, escape(data), escape(data), text))
             
             # @
             elif ttype == 2:
                 at_user = data[1:]
                 self.users.append(at_user)
                 result.append(
-                    ('<a href="user:http://twitter.com/%s" title="' + lang.html_at +\
-                    '">@%s</a>') % (at_user, at_user, at_user))
+                    ('<a href="user:http://twitter.com/%s" title="' + \
+                    lang.html_at + '">@%s</a>') % (at_user, at_user, at_user))
             
             # tag
             elif ttype == 3:
                 pos = data.rfind("#")
-                stuff, tag = data[:pos], data[pos + 1:]
+                pre, tag = data[:pos], data[pos + 1:]
                 self.tags.append(tag)
                 result.append((
-                    '%s<a href="tag:http://search.twitter.com/search?%s" title="'+\
-                    lang.html_search + '">#%s</a>') %
-                    (stuff, urllib.urlencode({'q': '#' + tag}), tag, tag))
+                    '%s<a href="tag:http://search.twitter.com/search?%s"''' + \
+                    ' title="' + lang.html_search + '">#%s</a>') %
+                    (pre, urllib.urlencode({'q': '#' + tag}), tag, tag))
         
         return "".join(result)
-    
     
     # Crazy filtering and splitting :O
     def filter_by(self, regex, stype):
@@ -143,13 +142,3 @@ class Formatter:
     def url(self, match):
         self.urls.append(match)
     
-    def escape(self, text):
-        ent = {
-            "&": "&amp;",
-            '"': "&quot;",
-            "'": "&apos;",
-            ">": "&gt;",
-            "<": "&lt;"
-        }
-        return "".join(ent.get(c, c) for c in text)
-

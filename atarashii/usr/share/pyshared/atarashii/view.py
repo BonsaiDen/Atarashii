@@ -26,6 +26,8 @@ import time
 import webbrowser
 
 import formatter
+from utils import unescape, compare_sub
+
 from lang import lang
 from constants import HTML_STATE_NONE, HTML_UNSET_ID, \
                       RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, UNSET_ID_NUM
@@ -87,7 +89,7 @@ class HTMLView(webkit.WebView):
     # --------------------------------------------------------------------------
     def init_render(self):
         self.position = self.scroll.get_vscrollbar().get_value()
-        self.items.sort(self.compare)
+        self.items.sort(compare_sub)
         self.count = 0
         
         # Set the latest tweet for reloading on startup
@@ -100,13 +102,11 @@ class HTMLView(webkit.WebView):
             self.main.settings[setting] = self.items[itemid][0].id - 1
         
         # Newest Stuff
-        if self.newest_id == HTML_UNSET_ID:
-            self.newest_id = self.init_id
-        
-        # Newest Stuff
         self.newest = False
         self.newest_avatar = False
         self.new_timline = False
+        if self.newest_id == HTML_UNSET_ID:
+            self.newest_id = self.init_id
     
     def render(self):
         self.init_render()
@@ -178,8 +178,8 @@ class HTMLView(webkit.WebView):
     
     # The big magic spacer inserted... trust me it's really magic that this
     # thin does work at all...
-    def insert_spacer(self, item, user, highlight, mentioned, message = False, 
-                    next = False, force = False):
+    def insert_spacer(self, item, user, highlight, mentioned,
+                    next_highlight = False, force = False):
         
         spacer = "foo"
         if item.id > self.init_id:
@@ -206,7 +206,7 @@ class HTMLView(webkit.WebView):
                 
                 # Just more normal tweets
                 else:
-                    if next and self.last_highlight:
+                    if next_highlight and self.last_highlight:
                         spacer = "1" # Dark Gray
                     
                     elif next and self.last_mentioned:
@@ -243,7 +243,7 @@ class HTMLView(webkit.WebView):
                 
                 # Just more normal tweets
                 else:
-                    if next and self.last_highlight:
+                    if next_highlight and self.last_highlight:
                         spacer = "" # Normal Gray
                     
                     elif next and self.last_mentioned:
@@ -357,29 +357,19 @@ class HTMLView(webkit.WebView):
                 self.items.pop(0)
     
     def remove(self, item_id):
-        e = UNSET_ID_NUM
+        remove_item_id = UNSET_ID_NUM
         for i in range(len(self.items)):
             if self.get_id(self.items[i][0]) == item_id:
-                e = i
+                remove_item_id = i
                 break
         
-        if e != UNSET_ID_NUM:
-            self.items.pop(e)
+        if remove_item_id != UNSET_ID_NUM:
+            self.items.pop(remove_item_id)
             self.render()
-    
-    def compare(self, x, y):
-        if x[0].id > y[0].id:
-            return 1
-        
-        elif x[0].id < y[0].id:
-            return -1
-        
-        else:
-            return 0
     
     
     # Popup Menu ---------------------------------------------------------------
-    # --------------------------------------------------------------------------    
+    # --------------------------------------------------------------------------
     def on_popup(self, view, menu, *args): # Kill of the original context menu!
         menu.hide()
         menu.cancel()
@@ -440,14 +430,14 @@ class HTMLView(webkit.WebView):
             link = None
         
         items = items.split(";")
-        my = event.y + self.scroll.get_vscrollbar().get_value();
+        mouse_y = event.y + self.scroll.get_vscrollbar().get_value()
         item_num = -1
         last_pos = 0
         for i in items:
             data = i.split(",")
             if len(data) > 1:
                 pos = int(data[1])
-                if my >= last_pos and my < pos:
+                if mouse_y >= last_pos and mouse_y < pos:
                     item_num = int(data[0])
                     break
                 
@@ -509,13 +499,13 @@ class HTMLView(webkit.WebView):
         
         # Replies
         elif uri.startswith("reply:"):
-            foo, self.main.reply_user, self.main.reply_id, num = uri.split(":")
+            ref, self.main.reply_user, self.main.reply_id, num = uri.split(":")
             num = int(num)
             if extra != None:
-                self.main.reply_text = self.unescape(self.get_text(extra))
+                self.main.reply_text = unescape(self.get_text(extra))
             
             elif num != -1:
-                self.main.reply_text = self.unescape(self.get_text(num))
+                self.main.reply_text = unescape(self.get_text(num))
             
             else:
                 self.main.reply_text = UNSET_TEXT
@@ -525,13 +515,15 @@ class HTMLView(webkit.WebView):
         
         # Send a message
         elif uri.startswith("message:"):
-            o, self.main.message_user, self.main.message_id, num = uri.split(":")
+            ref, self.main.message_user, \
+                self.main.message_id, num = uri.split(":")
+            
             num = int(num)
             if extra != None:
-                self.main.message_text = self.unescape(self.get_text(extra))
+                self.main.message_text = unescape(self.get_text(extra))
             
             elif num != -1:
-                self.main.message_text = self.unescape(self.get_text(num))
+                self.main.message_text = unescape(self.get_text(num))
             
             else:
                 self.main.message_text = UNSET_TEXT
@@ -541,7 +533,7 @@ class HTMLView(webkit.WebView):
         
         # Retweet someone
         elif uri.startswith("retweet:"):
-            foo, ttype = uri.split(":")
+            ref, ttype = uri.split(":")
             tweet_id = self.get_id(extra)
             name = self.get_user(extra).screen_name
             
@@ -550,16 +542,16 @@ class HTMLView(webkit.WebView):
                 self.main.retweet(name, tweet_id, True)
             
             elif int(ttype) == RETWEET_OLD:
-                self.main.retweet_text = self.unescape(self.get_text(extra))
+                self.main.retweet_text = unescape(self.get_text(extra))
                 self.main.retweet_user = name
                 self.main.gui.text.retweet()
                 self.main.gui.text.html_focus()
         
         # Delete
         elif uri.startswith("delete:"):
-            o, dtype, item_id = uri.split(":")
+            ref, dtype, item_id = uri.split(":")
             item_id = int(item_id)
-            text = self.unescape(self.get_text(extra))
+            text = unescape(self.get_text(extra))
             
             def delete_tweet():
                 self.main.delete(tweet_id = item_id)
@@ -616,19 +608,6 @@ class HTMLView(webkit.WebView):
     
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def unescape(self, text):
-        ent = {
-            "&": "&amp;",
-            '"': "&quot;",
-            "'": "&apos;",
-            ">": "&gt;",
-            "<": "&lt;"
-        }
-        for key, value in ent.iteritems():
-            text = text.replace(value, key)
-        
-        return text
-    
     def relative_time(self, date):
         delta = long(calendar.timegm(time.gmtime())) - \
                 long(calendar.timegm(date.timetuple()))

@@ -24,6 +24,8 @@ import os
 import gobject
 import calendar
 
+from utils import compare
+
 from lang import lang
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_UNSET_ID, \
                       UNSET_TIMEOUT, HTML_RESET, HTML_LOADING, HTML_LOADED
@@ -619,16 +621,6 @@ class Updater(threading.Thread):
                                           len(self.message.items) - 1][0].id
     
     def process_updates(self, updates):
-        def compare(x, y):
-            if x.id > y.id:
-                return -1
-            
-            elif x.id < y.id:
-                return 1
-            
-            else:
-                return 0
-        
         # Remove doubled mentions
         ids = []
         def unique(i):
@@ -698,7 +690,7 @@ class Updater(threading.Thread):
         
         # Check for user picture!
         if name.lower() == self.main.username.lower():
-           self.main.set_user_picture(imgfile)        
+            self.main.set_user_picture(imgfile)        
         
         return imgfile
 

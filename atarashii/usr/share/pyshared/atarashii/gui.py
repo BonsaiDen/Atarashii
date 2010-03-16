@@ -33,6 +33,7 @@ import message
 import tray
 import text
 import dialog
+from utils import escape
 
 from lang import lang
 from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_TEXT, UNSET_ID_NUM, \
@@ -211,7 +212,8 @@ class GUI(gtk.Window):
                 self.main.is_loading_history or \
                 (self.mode == MODE_MESSAGES and \
                 self.message.load_state == HTML_LOADING) or \
-                (self.mode == MODE_TWEETS and self.html.load_state == HTML_LOADING)
+                (self.mode == MODE_TWEETS and \
+                self.html.load_state == HTML_LOADING)
         
         self.progress.set_fraction(0.0)
         self.progress.show()
@@ -281,7 +283,8 @@ class GUI(gtk.Window):
         elif self.main.refresh_time == UNSET_TIMEOUT or \
             (self.mode == MODE_MESSAGES and \
             self.message.load_state == HTML_LOADING) or \
-            (self.mode == MODE_TWEETS and self.html.load_state == HTML_LOADING):
+            (self.mode == MODE_TWEETS and \
+            self.html.load_state == HTML_LOADING):
             
             self.set_status(lang.status_connected)
         
@@ -308,7 +311,8 @@ class GUI(gtk.Window):
                     self.set_status(lang.status_minute)
                 
                 else:
-                    self.set_status(lang.status_minutes % math.ceil(wait / 60.0))
+                    self.set_status(
+                         lang.status_minutes % math.ceil(wait / 60.0))
         
         if once:
             return False
@@ -355,11 +359,11 @@ class GUI(gtk.Window):
             self.set_label_text(lang.label_message, self.main.message_user)
             self.info_label.show()
     
-    def set_label_text(self, info, text):
+    def set_label_text(self, info, label_text):
         # Get Font Width
         font = self.info_label.create_pango_context().get_font_description()
         layout = self.info_label.create_pango_layout("")
-        layout.set_markup(info % self.escape(text))
+        layout.set_markup(info % escape(label_text))
         layout.set_font_description(font)
         
         # Truncate till it fits
@@ -367,25 +371,15 @@ class GUI(gtk.Window):
         cur = layout.get_pixel_size()[0]
         if cur > width:
             while cur > width:
-                text = text[:-3]
-                layout.set_markup(info % self.escape(text) + "...")
+                label_text = label_text[:-3]
+                layout.set_markup(info % escape(label_text) + "...")
                 cur = layout.get_pixel_size()[0]
             
-            self.info_label.set_markup(info % self.escape(text) + "...")
+            self.info_label.set_markup(info % escape(label_text) + "...")
         
         else:
-            self.info_label.set_markup(info % self.escape(text))
+            self.info_label.set_markup(info % escape(label_text))
     
-    def escape(self, text):
-        ent = {
-            "&": "&amp;",
-            '"': "&quot;",
-            "'": "&apos;",
-            ">": "&gt;",
-            "<": "&lt;"
-        }
-        return "".join(ent.get(c, c) for c in text)
-
     
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -397,20 +391,21 @@ class GUI(gtk.Window):
         if self.main.username == UNSET_TEXT or \
             (not self.main.login_status and not self.main.is_connecting):
             self.set_title(lang.title)
-            
         
         elif self.mode == MODE_MESSAGES:
             if self.html.count > 0:
-                self.set_title((lang.title_tweets if self.html.count > 1 else \
-                                lang.title_tweet) % self.html.count)
+                self.set_title(
+                     (lang.title_tweets if self.html.count > 1 else \
+                      lang.title_tweet) % self.html.count)
             
             else:
                 self.set_title(lang.title_logged_in % self.main.username)
         
         elif self.mode == MODE_TWEETS:
             if self.message.count > 0:
-                self.set_title((lang.title_messages if self.html.count > 1 else \
-                                lang.title_message) % self.message.count)
+                self.set_title(
+                     (lang.title_messages if self.html.count > 1 else \
+                      lang.title_message) % self.message.count)
             
             else:
                 self.set_title(lang.title_logged_in % self.main.username)
@@ -488,23 +483,23 @@ class GUI(gtk.Window):
     
     def show_start_notifications(self):
         if self.main.settings.is_true("notify"):
-            text = []
+            info_text = []
             
             # Tweet Info
             if self.html.count > 0:
-                text.append(
+                info_text.append(
                   (lang.notification_login_tweets if self.html.count > 1 else \
                    lang.notification_login_tweet) % self.html.count)  
             
             # Message Info
             if self.message.count > 0:
-                text.append(
+                info_text.append(
                   (lang.notification_login_messages if self.message.count > 1 \
                    else lang.notification_login_message) % self.message.count)  
             
             # Create notification
             info = [(lang.notification_login % self.main.username,
-                    "\n".join(text), self.main.get_user_picture())]
+                    "\n".join(info_text), self.main.get_user_picture())]
             
             self.main.notifier.show(info)
     
@@ -522,15 +517,15 @@ class GUI(gtk.Window):
                         lang.retweet_info % name,
                         lang.retweet_info_title)
     
-    def ask_for_delete_tweet(self, text, yes, noo):
+    def ask_for_delete_tweet(self, info_text, yes, noo):
         dialog.MessageDialog(self, MESSAGE_QUESTION,
-                        lang.delete_tweet_question % text,
+                        lang.delete_tweet_question % info_text,
                         lang.delete_title,
                         yes_callback = yes, no_callback = noo)
     
-    def ask_for_delete_message(self, text, yes, noo):
+    def ask_for_delete_message(self, info_text, yes, noo):
         dialog.MessageDialog(self, MESSAGE_QUESTION,
-                        lang.delete_message_question % text,
+                        lang.delete_message_question % info_text,
                         lang.delete_title,
                         yes_callback = yes, no_callback = noo)
     
