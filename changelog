@@ -1,3 +1,10 @@
+atarashii (0.99.10b-1) all;
+
+  * Another hotfix for the textbox focus.
+  * Also a small fix for the manpage, this fixes a broken URL.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 16 Mar 2010 16:35:00 +0100
+
 atarashii (0.99.10a-1) all;
 
   * The kittens have hotfixed focus issues with the textbox.

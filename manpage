@@ -1,4 +1,4 @@
-.TH ATARASHII 1 "March 16 2010" "Version 0.99.10a" "Atarahsii Manual Pages"
+.TH ATARASHII 1 "March 16 2010" "Version 0.99.10b" "Atarahsii Manual Pages"
 
 .SH NAME
 .B Atarashii 
@@ -15,6 +15,7 @@ for the GTK+ libraries.
 
 .SH CONTRIBUTING
 The source is available on GitHub:
+
 <http://github.com/BonsaiDen/Atarashii>
 
 To contribute to the project, fork it on GitHub and send a pull request.
