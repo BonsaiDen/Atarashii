@@ -165,60 +165,50 @@ class SettingsDialog(Dialog):
         cancel_button.set_label(lang.settings_buttonCancel)
         
         # Accounts
-        self.get("accounts").set_text(lang.settings_accounts)
         add = self.get("add")
         add.set_label(lang.settings_add)
-        edit = self.get("edit")
+        self.edit = edit = self.get("edit")
         edit.set_label(lang.settings_edit)
-        delete = self.get("delete")
+        self.delete = delete = self.get("delete")
         delete.set_label(lang.settings_delete)
         
-        
-        # Setup Account List
-        def drop_changed(*args):
-            i = drop.get_active()
-            if i != -1:
-                edit.set_sensitive(True)
-                delete.set_sensitive(True)
-            
-            else:
-                edit.set_sensitive(False)
-                delete.set_sensitive(False)
-        
-        self.drop = drop = self.get("dropbox")
-        drop.connect("changed", drop_changed)
+        self.drop = drop = gtk.TreeView()
+        drop.get_selection().set_mode(gtk.SELECTION_BROWSE)
+        column = gtk.TreeViewColumn(lang.settings_accounts)
+        drop.append_column(column)
         cell = gtk.CellRendererText()
-        self.drop.pack_start(cell, True)
-        self.drop.add_attribute(cell, 'text', 0)
+        column.pack_start(cell, True)
+        column.add_attribute(cell, 'text', 0)
+        self.get("treewindow").add(drop)
+        drop.show()
+        
+        drop.connect("cursor-changed", self.drop_changed)
         self.create_drop_list()
-        drop_changed()
+        self.drop_changed()
 
         
         # Edit Action
         def edit_dialog(*args):
-            name = self.user_accounts[drop.get_active()]
+            name = self.user_accounts[self.get_drop_active()]
             AccountDialog(self, name, lang.account_edit, self.edit_account)
         
         edit.connect("clicked", edit_dialog)
-
         
         # Add Action
         def create_dialog(*args):
             AccountDialog(self, "", lang.account_create, self.create_account)
         
         add.connect("clicked", create_dialog)
-
         
         # Delete Action
         def delete_dialog(*args):
-            name = self.user_accounts[drop.get_active()]
+            name = self.user_accounts[self.get_drop_active()]
             MessageDialog(self.dlg, MESSAGE_QUESTION,
                             lang.account_delete_description % name,
                             lang.account_delete,
                             yes_callback = self.delete_account)
         
         delete.connect("clicked", delete_dialog)
-        
         
         # Notifications
         self.get("notifications").set_text(lang.settings_notifications)
@@ -269,7 +259,8 @@ class SettingsDialog(Dialog):
         toggle()
         notify.connect("toggled", lambda *a: toggle())
         sound.connect("toggled", lambda *a: toggle2())
-                
+        
+        
         # Save -----------------------------------------------------------------
         oldusername = self.main.username
         def save(*args):
@@ -285,8 +276,8 @@ class SettingsDialog(Dialog):
             self.main.save_mode()
             
             # Set new Username
-            if drop.get_active() != -1:
-                username = self.user_accounts[drop.get_active()]
+            if self.get_drop_active() != -1:
+                username = self.user_accounts[self.get_drop_active()]
             
             # Save Settings
             self.main.save_settings()
@@ -309,8 +300,18 @@ class SettingsDialog(Dialog):
         self.gui.settings_button.set_active(False)
         self.dlg.hide()
     
-    
     # Generate Account List ----------------------------------------------------
+    def get_drop_active(self):
+        i = self.drop.get_selection().get_selected_rows()[1]
+        if i == None or len(i) == 0:
+            return -1
+        
+        return i[0][0]
+    
+    def select_drop(self, num):
+        self.drop.get_selection().select_path((num,))
+        self.drop_changed()
+
     def create_drop_list(self, name = None):
         self.user_accounts = self.main.settings.get_accounts()
         self.accounts_list = gtk.ListStore(str)
@@ -324,12 +325,27 @@ class SettingsDialog(Dialog):
                 selected = num
         
         self.drop.set_model(self.accounts_list)
-        self.drop.set_active(selected)
+        if selected != -1:
+            self.select_drop(selected)
+        
+        else:
+            self.drop_changed()
+            
+     # Setup Account List
+    def drop_changed(self, *args):
+        i = self.get_drop_active()
+        if i != -1:
+            self.edit.set_sensitive(True)
+            self.delete.set_sensitive(True)
+        
+        else:
+            self.edit.set_sensitive(False)
+            self.delete.set_sensitive(False)
     
     
     # Edit a User Account ------------------------------------------------------
     def edit_account(self, username):
-        name = self.user_accounts[self.drop.get_active()]
+        name = self.user_accounts[self.get_drop_active()]
         if name != username:
             ft_tmp = self.main.settings['firsttweet_' + name]
             lt_tmp = self.main.settings['lasttweet_' + name]
@@ -361,12 +377,13 @@ class SettingsDialog(Dialog):
     
     def create_account(self, username):
         self.main.settings['account_' + username] = ""
+        self.main.username = username
         self.create_drop_list()
         if len(self.user_accounts) == 1:
-            self.drop.set_active(0)
+            self.select_drop(0)
     
     def delete_account(self):
-        name = self.user_accounts[self.drop.get_active()]
+        name = self.user_accounts[self.get_drop_active()]
         del self.main.settings['mode_' + name]
         del self.main.settings['account_' + name]
         del self.main.settings['firsttweet_' + name]

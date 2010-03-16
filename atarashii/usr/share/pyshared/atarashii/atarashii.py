@@ -203,7 +203,8 @@ class Atarashii:
     # Login & Logout -----------------------------------------------------------
     # --------------------------------------------------------------------------
     def on_init(self):
-        self.login()
+        self.gui.on_settings(True)
+        #self.login()
     
     def login(self, change_user = None):
         # We need a username!
