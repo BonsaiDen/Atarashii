@@ -77,6 +77,8 @@ class TextInput(gtk.TextView):
         self.get_buffer().connect("changed", self.changed)
         self.connect("focus-in-event", self.focus)
         self.connect("key-press-event", self.check_escape)
+        self.connect("drag-motion", lambda *args: True)
+        self.connect("drag-data-received", lambda *args: True)
     
     
     # Focus Events -------------------------------------------------------------
