@@ -171,3 +171,53 @@ class Retweet(threading.Thread):
         
         self.main.is_sending = False
 
+
+# Deletes ----------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class Delete(threading.Thread):
+    def __init__(self, main, tweet_id, message_id):
+        threading.Thread.__init__(self)
+        self.gui = main.gui
+        self.main = main
+        self.tweet_id = tweet_id
+        self.message_id = message_id
+    
+    def run(self):
+        self.main.was_deleting = True
+        try:
+            # Delete
+            if self.tweet_id != UNSET_ID_NUM:
+                self.main.api.destroy_status(self.tweet_id)
+            
+            elif self.message_id != UNSET_ID_NUM:
+                self.main.api.destroy_direct_message(self.message_id)
+            
+            # Focus HTML
+            self.gui.show_input(False)
+            if self.gui.mode == MODE_MESSAGES:
+                self.gui.message.focus_me()
+            
+            elif self.gui.mode == MODE_TWEETS:
+                self.gui.html.focus_me()
+            
+            else: # TODO implement search
+                pass
+            
+            self.main.was_deleting = False
+            
+            # Remove from view!
+            if self.tweet_id != UNSET_ID_NUM:
+                gobject.idle_add(lambda: self.gui.html.remove(self.tweet_id))
+                
+            elif self.message_id != UNSET_ID_NUM:
+                gobject.idle_add(lambda: self.gui.message.remove(self.message_id))
+            
+            # Show Info
+            gobject.idle_add(lambda: self.gui.show_delete_info(
+                                     self.tweet_id, self.message_id))
+        
+        except Exception, error:
+            gobject.idle_add(lambda: self.gui.show_error(error))
+        
+        self.main.is_deleting = False
+
