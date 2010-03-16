@@ -297,7 +297,6 @@ class HTMLView(webkit.WebView):
     def loaded(self, *args):
         if len(self.items) > 0 and self.newitems and not self.load_history:
             offset = self.get_offset()
-            print offset
         
         else:
             offset = 0
@@ -705,6 +704,16 @@ class HTMLView(webkit.WebView):
         if self.new_avatar:
             self.newest_avatar = True
     
+    def is_protected(self, user):
+        if hasattr(user, "protected") and user.protected:
+            return  ('<span class="protected" title="' + \
+                     lang.html_protected + '"></span>') % \
+                     lang.name(user.screen_name)
+        
+        else:
+            return ''
+    
+    
     # Focus this view
     def focus_me(self):
         self.grab_focus()
@@ -728,13 +737,4 @@ class HTMLView(webkit.WebView):
     
     def get_id(self, item):
         return self.get_attr(item, "id")
-    
-    def is_protected(self, user):
-        if hasattr(user, "protected") and user.protected:
-            return  ('<span class="protected" title="' + \
-                     lang.html_protected + '"></span>') % \
-                     lang.name(user.screen_name)
-        
-        else:
-            return ''
     
