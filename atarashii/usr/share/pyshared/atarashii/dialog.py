@@ -159,6 +159,7 @@ class SettingsDialog(Dialog):
     instance = None
     
     def on_init(self):
+        self.saved = False
         self.dlg.set_title(lang.settings_title)
         self.close_button.set_label(lang.settings_button)
         cancel_button = self.get("cancelbutton")
@@ -263,6 +264,7 @@ class SettingsDialog(Dialog):
         # Save -----------------------------------------------------------------
         oldusername = self.main.username
         def save(*args):
+            self.saved = True
             self.settings['soundfile'] = str(file_widget.get_filename())
             self.settings['notify'] = notify.get_active()
             self.settings['sound'] = sound.get_active()
@@ -294,20 +296,17 @@ class SettingsDialog(Dialog):
             self.on_close()
         
         
-        # Cancel ---------------------------------------------------------------
-        def cancel(*args):
-            if self.get_drop_active() == -1:
-                self.main.username = ""
-                self.settings['username'] = ""
-                self.main.logout()
-            
-            self.on_close()
-        
         self.close_button.connect("clicked", save)
-        cancel_button.connect("clicked", cancel)
+        cancel_button.connect("clicked", self.on_close)
         gobject.idle_add(lambda *arg: self.drop.grab_focus())
     
     def on_close(self, *args):
+        if not self.saved:
+            if self.get_drop_active() == -1:
+                self.main.username = ""
+                self.settings['username'] = ""
+                self.main.logout()      
+        
         self.__class__.instance = None
         self.gui.settings_dialog = None
         self.gui.settings_button.set_active(False)

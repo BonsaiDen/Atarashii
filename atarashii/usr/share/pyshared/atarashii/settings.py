@@ -81,6 +81,14 @@ class Settings:
     
     # Save ---------------------------------------------------------------------
     def save(self):
+        # Don't save crash stuff
+        if self.values.has_key("crashed"):
+            del self.values['crashed']
+        
+        if self.values.has_key("time_before_crash"):
+            del self.values['time_before_crash']         
+        
+        # Test
         settings_file = open(os.path.join(self.dir, 'atarashii.conf'), "w")
         keys = self.values.keys()
         keys.sort()
