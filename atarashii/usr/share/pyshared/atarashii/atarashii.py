@@ -13,9 +13,8 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-# TODO enable deletion
-# TODO add favorite
-# TODO fix link dragging
+# TODO make new screenshots
+# TODO add favorite stuff
 
 
 # Atarashii --------------------------------------------------------------------
@@ -422,8 +421,8 @@ class Atarashii:
     
     def quit(self):
         self.updater.running = False
+        gtk.main_quit()
         self.save_mode()
         self.save_settings()
-        gtk.main_quit()
         sys.exit(1)
 
