@@ -406,7 +406,7 @@ class HTMLView(webkit.WebView):
         menu.destroy()
         return True
     
-    # Let's create our own
+    # Let's create our own nice little popup :)
     def on_button(self, view, event, *args):
         if event.button == 3:
             # Calculate on which item the user clicked
@@ -419,9 +419,15 @@ class HTMLView(webkit.WebView):
             # Create Menu
             menu = gtk.Menu()
             self.create_menu(menu, item, link)
+            if len(menu.get_children()) == 0:
+                return False
+            
             menu.show_all()
             menu.connect("hide", self.on_popup_close)
             
+            # This makes the menu popup just besides the mouse pointer
+            # It fixes an issues were the user would release the mouse button
+            # and trigger an menu item without wanting to do so
             def position(*args):
                 return (int(event.x_root), int(event.y_root), True)
             
@@ -435,7 +441,6 @@ class HTMLView(webkit.WebView):
         item.connect('activate', callback)
         menu.append(item)
         item.show()
-        return item
     
     def add_menu_separator(self, menu):
         item = gtk.SeparatorMenuItem()

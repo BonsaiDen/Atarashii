@@ -258,7 +258,7 @@ class HTML(view.HTMLView):
             if name.lower() == self.main.username.lower():
                 self.add_menu_separator(menu)
                 full3 = "delete:t:%d" % item_id
-                mitem = self.add_menu_link(menu, lang.context_delete_tweet,
+                self.add_menu_link(menu, lang.context_delete_tweet,
                                    lambda *args: self.context_link(full3,
                                                                extra = item))
 
