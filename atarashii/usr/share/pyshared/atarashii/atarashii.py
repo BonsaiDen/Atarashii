@@ -421,7 +421,18 @@ class Atarashii:
     # Start & Quit -------------------------------------------------------------
     # --------------------------------------------------------------------------
     def start(self):
+        gtk.quit_add(gtk.main_level(), self.save_on_quit)
         gtk.main()
+
+    def quit(self):
+        self.updater.running = False
+        gtk.main_quit()
+        
+    def save_on_quit(self):
+        self.save_mode()
+        self.save_settings()
+        self.settings.crash_file(False)
+        sys.exit(1)
     
     def save_settings(self):
         self.settings['position'] = str(self.gui.get_position())
@@ -433,11 +444,4 @@ class Atarashii:
     def save_mode(self):
         if self.username != UNSET_TEXT:
             self.settings['mode_' + self.username] = self.gui.mode
-    
-    def quit(self):
-        self.updater.running = False
-        gtk.main_quit()
-        self.save_mode()
-        self.save_settings()
-        sys.exit(1)
 
