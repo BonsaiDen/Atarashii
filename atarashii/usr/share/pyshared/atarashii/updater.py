@@ -365,6 +365,9 @@ class Updater(threading.Thread):
         elif not self.refresh_now:
             self.message_counter += 1
         
+        # Disable read button before pushing updates into the trees
+        self.gui.read_button.set_sensitive(False)
+        
         # Notify
         self.show_notifications(updates, messages)
         
