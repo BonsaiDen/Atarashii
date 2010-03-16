@@ -513,7 +513,8 @@ class GUI(gtk.Window):
     def enter_password(self):
         self.main.api_temp_password = None
         dialog.PasswordDialog(self, lang.password_title,
-                                lang.password_question % self.main.username)
+                              lang.password_question % \
+                              lang.name(self.main.username))
     
     def show_retweet_info(self, name):
         dialog.MessageDialog(self, MESSAGE_INFO,

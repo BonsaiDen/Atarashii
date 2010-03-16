@@ -33,6 +33,9 @@ LANG = {
         'title_tweet' : '%d neuer Tweet',
         'title_tweets' : '%d neue Tweets',
         
+        # Username
+        'name' : lambda x: x + "'" if x[-1:] in "xs" else x + "s",
+
         # HTML
         'html_welcome' : 'Willkommen bei Atarashii!',
         'html_loading' : 'Tweets werden geladen...',
@@ -49,7 +52,7 @@ LANG = {
         'html_in_retweet' : 'retweeted von %s',
         'html_load_more' : 'Mehr',
         'html_empty' : 'Keine Tweets',
-        'html_protected' : '%s\'s Tweets sind geschützt',
+        'html_protected' : '%s Tweets sind geschützt',
         'html_about_second' : 'vor circa einer Sekunde',
         'html_second' : 'vor %d Sekunden',
         'html_about_minute' : 'vor circa einer Minute',
@@ -70,8 +73,8 @@ LANG = {
         
         # Notifications
         'notification_message' : 'Nachricht von %s',
-        'notification_index' : '%s (%d von %d)',
-        'notification_login' : "%s wurde eingeloggt",
+        'notification_index' : '%s (%d von %d)', # "Message (3 of 4)"
+        'notification_login' : "%s wurde angemeldet",
         'notification_login_tweet' : "%d neuer Tweet",
         'notification_login_message' : "%d neue Nachricht",
         'notification_login_tweets' : "%d neue Tweets",
@@ -138,7 +141,7 @@ LANG = {
         'account_edit' : 'Benutzer bearbeiten',
         'account_create' : 'Benutzer erstellen',
         'account_delete' : 'Benutzer löschen',
-        'account_delete_description' : 'Möchten sie den Benutzer "%s" wirklich löschen?',
+        'account_delete_description' : 'Möchten sie den Benutzer %s wirklich löschen?',
         'account_button' : 'OK',
         'account_button_cancel' : 'Abbrechen',
         'account_username' : 'Benutzername:',
@@ -147,15 +150,15 @@ LANG = {
         'password_button' : 'OK',
         'password_button_cancel' : 'Abbrechen',
         'password_title' : 'Passwort',
-        'password_question' : '%s\'s Passwort:',
+        'password_question' : '%s Passwort:',
         
         # Retweet Dialogs
         'retweet_info_title' : 'Retweet erfolgreich',
-        'retweet_info' : '"%s" wurde erfolgreich retweeted!',
+        'retweet_info' : '%s wurde erfolgreich retweeted!',
         
         # Error Dialogs
         'error_title' : 'Atarashii - Fehler',
-        'error_login' : 'Die Anmeldung als "%s" ist fehlgeschlagen.',
+        'error_login' : 'Die Anmeldung als %s ist fehlgeschlagen.',
         'error_ratelimit' : 'Ratelimit erreicht. Automatische Aktualisierung in %d Minute(n).',
         'error_ratelimit_reconnect' : 'Ratelimit erreicht. Automatischer Reconnect in %d Minute(n).',
         'error_twitter' : 'Interner Twitterfehler.',
@@ -172,7 +175,7 @@ LANG = {
         
         # Toolbar Items
         'tool_refresh' : 'Tweets aktualisieren',
-        'tool_history' : 'Ältere Tweets entfernen',
+        'tool_history' : 'Ältere Tweets zurücksetzen',
         'tool_read' : 'Alle Tweets als gelesen markieren',
         'tool_mode' : 'Nachrichten',
         'tool_settings' : 'Einstellungen öffnen',
@@ -197,7 +200,22 @@ LANG = {
         'tray_tweet' : "<b>%d</b> neuer Tweet",
         'tray_message' : "<b>%d</b> neue Nachricht",
         'tray_tweets' : "<b>%d</b> neue Tweets",
-        'tray_messages' : "<b>%d</b> neue Nachrichten" 
+        'tray_messages' : "<b>%d</b> neue Nachrichten" ,
+        
+        # Context Menu
+        'context_browser' : 'Im Browser öffnen',
+        'context_copy' : 'Link kopieren',
+        'context_profile' : '%s auf Twitter.com',
+        'context_reply' : '%s antworten...',
+        'context_tweet' : 'Tweet an %s...',
+        'context_message' : 'Nachricht an %s...',
+        'context_source' : '%s Homepage',
+        'context_view' : 'Auf Twitter.com anschauen',
+        'context_search' : 'Auf Twitter.com suchen',
+        'context_retweet_old' : '%s via RT retweeten',
+        'context_retweet_new' : '%s via Twitter retweeten',
+        'context_delete_tweet' : 'Diesen Tweet löschen',
+        'context_delete_message' : 'Diese Nachricht löschen'
     },
     
     # English ------------------------------------------------------------------
@@ -211,6 +229,9 @@ LANG = {
         'title_messages' : '%d new Messages',
         'title_tweet' : '%d new Tweet',
         'title_tweets' : '%d new Tweets',
+        
+        # Username
+        'name' : lambda x: x + "'s" if x[-1:] in "xs" else x + "s", 
         
         # HTML
         'html_welcome' : 'Welcome to Atarashii!',
@@ -317,22 +338,22 @@ LANG = {
         'account_edit' : 'Edit user',
         'account_create' : 'Create a new user',
         'account_delete' : 'Delete user',
-        'account_delete_description' : 'Do you really want to delete the user "%s"?',
+        'account_delete_description' : 'Do you really want to delete the user %s?',
         'account_button' : 'OK',
         'account_button_cancel' : 'Cancel',
         'account_username' : 'Username:',
         'password_button' : 'OK',
         'password_button_cancel' : 'Cancel',
         'password_title' : 'Password',
-        'password_question' : '%s\'s password:',
+        'password_question' : '%s password:',
         
         # Retweet Dialogs
         'retweet_info_title' : 'Retweet successful',
-        'retweet_info' : '"%s" has been successfully retweeted!',
+        'retweet_info' : '%s has been successfully retweeted!',
         
         # Error Dialogs
         'error_title' : 'Atarashii - Error',
-        'error_login' : 'The login as "%s" has failed.',
+        'error_login' : 'The login as %s has failed.',
         'error_ratelimit' : 'Reached rate limit. Automatic refresh in %d minute(s).',
         'error_ratelimit_reconnect' : 'Reached rate limit. Automatic reconnect in %d minute(s).',
         'error_twitter' : 'Internal Twitter error.',
@@ -349,7 +370,7 @@ LANG = {
         
         # Toolbar items
         'tool_refresh' : 'Refresh Tweets',
-        'tool_history' : 'Remove History',
+        'tool_history' : 'Reset History',
         'tool_read' : 'Mark all Tweets as read',
         'tool_mode' : 'Messages',
         'tool_settings' : 'Open Preferences',
@@ -374,7 +395,22 @@ LANG = {
         'tray_tweet' : "<b>%d</b> new Tweet",
         'tray_message' : "<b>%d</b> new Message",
         'tray_tweets' : "<b>%d</b> new Tweets",
-        'tray_messages' : "<b>%d</b> new Messages" 
+        'tray_messages' : "<b>%d</b> new Messages",
+        
+        # Context Menu
+        'context_browser' : 'Open in Browser',
+        'context_copy' : 'Copy link location',
+        'context_profile' : 'Visit %s on Twitter.com',
+        'context_reply' : 'Reply to %s...',
+        'context_tweet' : 'Tweet to %s...',
+        'context_message' : 'Message to %s...',
+        'context_source' : '%s Homepage',
+        'context_view' : 'View on Twitter.com',
+        'context_search' : 'Search on Twitter.com',
+        'context_retweet_old' : 'Retweet %s via RT',
+        'context_retweet_new' : 'Retweet %s via Twitter',
+        'context_delete_tweet' : 'Delete this Tweet',
+        'context_delete_message' : 'Delete this Message'
     }
 }
 

@@ -220,6 +220,15 @@ class HTMLView(webkit.WebView):
         
         return '<div class="spacer%s"></div>' % spacer
     
+    def is_protected(self, user):
+        if hasattr(user, "protected") and user.protected:
+            return  ('<span class="protected" title="' + \
+                     lang.html_protected + '"></span>') % \
+                     lang.name(user.screen_name)
+        
+        else:
+            return ''
+    
     
     # Fix scrolling isses on page load -----------------------------------------
     # --------------------------------------------------------------------------
