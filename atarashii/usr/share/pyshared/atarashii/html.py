@@ -261,6 +261,4 @@ class HTML(view.HTMLView):
                 mitem = self.add_menu_link(menu, lang.context_delete_tweet,
                                    lambda *args: self.context_link(full3,
                                                                extra = item))
-                
-                mitem.set_sensitive(False)
-        
+

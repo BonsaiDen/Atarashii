@@ -203,12 +203,8 @@ class HTML(view.HTMLView):
         else:
             name = item.sender.screen_name
             if name.lower() == self.main.username.lower():
-                full3 = "delete:t:%d" % item_id
+                full3 = "delete:m:%d" % item_id
                 mitem = self.add_menu_link(menu, lang.context_delete_message,
                                    lambda *args: self.context_link(full3,
                                                                extra = item))
-                
-                mitem.set_sensitive(False)
-        
-
 
