@@ -5,6 +5,7 @@ atarashii (0.99.9-1) all;
   * You can now retweet from there, either new or old style.
   * It's now also possible to delete tweets and messages directly from
     Atarashii.
+  * New and improved handling of network errors.
   * And as usual there have been a lot of bugfixes by the kittens.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 16 Mar 2010 05:58:00 +0100
