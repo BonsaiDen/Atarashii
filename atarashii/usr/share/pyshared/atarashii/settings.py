@@ -159,5 +159,5 @@ class Settings:
             print "Could not set autostart"
     
     def check_autostart(self):
-        self.autostart = os.path.exists(DESKTOP_FILE)
+        self['autostart'] = os.path.exists(DESKTOP_FILE)
     
