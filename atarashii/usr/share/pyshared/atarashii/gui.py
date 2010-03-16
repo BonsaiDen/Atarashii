@@ -539,8 +539,12 @@ class GUI(gtk.Window):
             if self.text.has_typed and self.main.was_new_retweeting:
                 self.text.grab_focus()
         
+        # Network Error?
+        if isinstance(error, IOError):
+            code = -4
+            
         # Try to find out what the error was!
-        if hasattr(error, "response") and error.response != None:
+        elif hasattr(error, "response") and error.response != None:
             code = error.response.status
             if error.reason.startswith("Share sharing"):
                 code = -2
@@ -607,6 +611,7 @@ class GUI(gtk.Window):
         
         else:
             description = {
+                -4 : lang.error_network,
                 -3 : lang.error_user_not_found,
                 -2 : lang.error_already_retweeted,
                 0 : lang.error_internal % str(error),
