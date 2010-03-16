@@ -110,8 +110,8 @@ class HTMLView(webkit.WebView):
     
     def render(self):
         self.init_render()
-        self.lastname = ""
-        self.lastrecipient = ""
+        self.last_name = ""
+        self.last_recipient = ""
         self.last_highlight = False
         self.last_mentioned = False
         
@@ -184,7 +184,7 @@ class HTMLView(webkit.WebView):
         spacer = "foo"
         if item.id > self.init_id:
             # Name change
-            if self.lastname != user.screen_name or self.new_timeline or force:
+            if self.last_name != user.screen_name or self.new_timeline or force:
                 spacer = "1" # Dark Gray
             
             else:
@@ -221,7 +221,7 @@ class HTMLView(webkit.WebView):
         # Old Tweets
         else:
             # Name change
-            if self.lastname != user.screen_name or self.new_timeline or force:
+            if self.last_name != user.screen_name or self.new_timeline or force:
                 spacer = "" # Normal Gray
             
             else:

@@ -73,7 +73,7 @@ class HTML(view.HTMLView):
             self.renderitems.insert(0,
                         self.insert_spacer(item, user, highlight, mentioned))
         
-        self.lastname = user.screen_name
+        self.last_name = user.screen_name
         self.last_highlight = highlight
         self.last_mentioned = mentioned
         

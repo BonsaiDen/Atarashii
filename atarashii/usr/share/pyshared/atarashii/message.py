@@ -51,14 +51,14 @@ class HTML(view.HTMLView):
             next_highlight = self.items[num + 1][0].recipient_screen_name != \
                 self.main.username if num < len(self.items) - 1 else False
             
-            force = self.lastrecipient != item.recipient_screen_name
+            force = self.last_recipient != item.recipient_screen_name
             self.renderitems.insert(0,
                         self.insert_spacer(item, user, False, mentioned,
                         next_highlight, force = force))
         
         self.last_mentioned = mentioned
-        self.lastname = user.screen_name
-        self.lastrecipient = item.recipient_screen_name
+        self.last_name = user.screen_name
+        self.last_recipient = item.recipient_screen_name
         
         
         # Avatar ---------------------------------------------------------------
