@@ -301,7 +301,6 @@ class GUI(gtk.Window):
             if wait == 0:
                 self.refresh_button.set_sensitive(False)
                 self.tray.refresh_menu.set_sensitive(False)
-                self.read_button.set_sensitive(False)
                 self.set_status(lang.status_update)
             
             elif wait == 1:
