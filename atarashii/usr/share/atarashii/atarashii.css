@@ -93,10 +93,13 @@ a:active, a:hover, a, .protected {
 .protected {
 	background: url("file:///usr/share/atarashii/lock.png") no-repeat 0 1px;
 	display: inline-block;
-	margin-left: 3px;
 	margin-right: 3px;
 	width: 7px;
 	height: 10px
+}
+
+.name {
+	margin-right: 3px;
 }
 
 .clearfloat {
