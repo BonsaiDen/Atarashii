@@ -133,6 +133,17 @@ class HTML(view.HTMLView):
             by_user = ""
         
         
+        # Favorite -------------------------------------------------------------
+        if tweet.favorited:
+            favorite = '''<div class="undofav">
+                          <a href="unfav:%d" title="''' + \
+                          lang.html_unfavorite +  '''"> </a></div>'''
+        
+        else:
+            favorite = '''<div class="dofav"><a href="fav:%d" title="''' + \
+                          lang.html_favorite +  '''"> </a></div>'''
+        
+        
         # HTML Snippet ---------------------------------------------------------
         html = '''
         <div class="viewitem %s" id="%d">
@@ -141,10 +152,12 @@ class HTML(view.HTMLView):
         </div>
         
         <div class="actions">
+            <div class="blocker"></div>
             <div class="doreply">
                 <a href="reply:%s:%d:%d" title="''' + \
                 (lang.html_reply % user.screen_name) + '''"> </a>
             </div>
+            ''' + favorite + '''
         </div>
         
         <div class="inner-text">
@@ -173,7 +186,7 @@ class HTML(view.HTMLView):
                 
                 # Actions
                 user.screen_name, tweet.id, num,
-                #num, tweet.id,
+                tweet.id,
                 
                 # Text
                 user.screen_name,
