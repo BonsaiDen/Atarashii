@@ -154,7 +154,7 @@ class HTML(view.HTMLView):
         <div class="actions">
             <div class="blocker"></div>
             <div class="doreply">
-                <a href="reply:%s:%d:%d" title="''' + \
+                <a href="qreply:%s:%d:%d" title="''' + \
                 (lang.html_reply % user.screen_name) + '''"> </a>
             </div>
             ''' + favorite + '''
@@ -208,6 +208,11 @@ class HTML(view.HTMLView):
     # --------------------------------------------------------------------------
     def create_menu(self, menu, item, link):
         link, url, full = self.get_link_type(link)
+        print link, url, full
+                
+        # No Quick links
+        if link in ("fav", "unfav", "qreply"):
+            return False
         
         # Get the real ID
         if item != None:
@@ -274,4 +279,6 @@ class HTML(view.HTMLView):
                 self.add_menu_link(menu, lang.context_delete_tweet,
                                    lambda *args: self.context_link(full3,
                                                                extra = item))
+        
+        return True
 

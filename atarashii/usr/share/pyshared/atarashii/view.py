@@ -444,7 +444,9 @@ class HTMLView(webkit.WebView):
             
             # Create Menu
             menu = gtk.Menu()
-            self.create_menu(menu, item, link)
+            if not self.create_menu(menu, item, link):
+                return False
+            
             if len(menu.get_children()) == 0:
                 return False
             
@@ -554,7 +556,7 @@ class HTMLView(webkit.WebView):
                     self.main.gui.text.html_focus()
         
         # Replies
-        elif uri.startswith("reply:"):
+        elif uri.startswith("reply:") or uri.startswith("qreply:"):
             ref, self.main.reply_user, self.main.reply_id, num = uri.split(":")
             num = int(num)
             if extra != None:
@@ -570,7 +572,7 @@ class HTMLView(webkit.WebView):
             self.main.gui.text.html_focus()
         
         # Send a message
-        elif uri.startswith("message:"):
+        elif uri.startswith("message:") or uri.startswith("qmessage:"):
             ref, self.main.message_user, \
                 self.main.message_id, num = uri.split(":")
             
@@ -664,6 +666,18 @@ class HTMLView(webkit.WebView):
         
         elif uri.startswith("tag:"):
             return "tag", uri[4:], uri
+        
+        elif uri.startswith("fav:"):
+            return "fav", uri[4:], uri
+        
+        elif uri.startswith("unfav:"):
+            return "unfav", uri[6:], uri
+            
+        elif uri.startswith("qreply:"):
+            return "qreply", uri[7:], uri
+        
+        elif uri.startswith("qmessage:"):
+            return "qmessage", uri[9:], uri
         
         else:
             return "link", uri, uri

@@ -112,7 +112,7 @@ class HTML(view.HTMLView):
         
         <div class="actions">
             <div class="doretweet" style="''' + reply + \
-            '''"><a href="message:%s:%d:%d" title="''' + \
+            '''"><a href="qmessage:%s:%d:%d" title="''' + \
                 (lang.html_reply % user.screen_name) + '''"></a>
             </div>
         </div>
@@ -161,6 +161,12 @@ class HTML(view.HTMLView):
     def create_menu(self, menu, item, link):
         link, url, full = self.get_link_type(link)
         
+        
+        # No Quick links
+        if link in ("qmessage"):
+            return False
+        
+        
         # Get the real ID
         if item != None:
             item_id = self.get_id(item)
@@ -208,4 +214,6 @@ class HTML(view.HTMLView):
                 self.add_menu_link(menu, lang.context_delete_message,
                                    lambda *args: self.context_link(full3,
                                                                extra = item))
+        
+        return True
 
