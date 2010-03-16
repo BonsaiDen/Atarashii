@@ -164,9 +164,8 @@ class HTML(view.HTMLView):
             <div><span class="name">''' + \
                 ("<b>RT</b>" if retweeted else "") + '''
                  <b><a href="profile:http://twitter.com/%s" title="''' + \
-                lang.html_profile + '''">
-                   %s
-                </a></b></span>''' + self.is_protected(user) + '''%s</div>
+                lang.html_profile + '''">%s</a></b></span>''' + \
+                self.is_protected(user) + '''%s</div>
             <div class="time">
             <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
                 (self.absolute_time(tweet.created_at)) + '''">%s</a>
