@@ -27,8 +27,7 @@ import webbrowser
 
 import formatter
 from lang import lang
-from constants import HTML_STATE_NONE, HTML_UNSET_ID, HTML_STATE_START, \
-                      HTML_STATE_SPLASH, HTML_STATE_RENDER, \
+from constants import HTML_STATE_NONE, HTML_UNSET_ID, \
                       RETWEET_NEW, RETWEET_OLD, UNSET_TEXT
 
 
@@ -40,13 +39,11 @@ class HTMLView(webkit.WebView):
         webkit.WebView.__init__(self)
         self.connect("navigation-requested", self.open_link)
         self.connect("load-finished", self.loaded)
-        self.connect("load-started", self.on_loading)
         self.connect("button-release-event", self.gui.text.html_focus)
         self.connect("button-press-event", self.on_button)
         self.connect("populate-popup", self.on_popup)
         self.scroll = scroll
         self.set_maintains_back_forward_list(False)
-        self.mode = HTML_STATE_NONE
         self.count = 0
         self.formatter = formatter.Formatter()
         self.get_latest = None
@@ -67,7 +64,6 @@ class HTMLView(webkit.WebView):
     # Initiate a empty timeline ------------------------------------------------
     # --------------------------------------------------------------------------
     def init(self, splash = False):
-        self.is_rendering = False
         self.items = []
         self.update_list = []
         self.history_list = []
@@ -97,23 +93,19 @@ class HTMLView(webkit.WebView):
         self.render_html("""
             <body class="unloaded">
                 <div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
-            </body>""" % (self.main.get_image(), self.lang_loading),
-            HTML_STATE_START)
+            </body>""" % (self.main.get_image(), self.lang_loading))
     
     def splash(self):
         self.offset_count = 0
         self.render_html("""
             <body class="unloaded">
                 <div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
-            </body>""" % (self.main.get_image(), lang.html_welcome),
-            HTML_STATE_SPLASH)
+            </body>""" % (self.main.get_image(), lang.html_welcome))
     
     
     # Render the actual HTML ---------------------------------------------------
     # --------------------------------------------------------------------------
-    def render_html(self, html, mode):
-        self.mode = mode
-        self.is_rendering = True
+    def render_html(self, html):
         self.load_string("""
         <html>
         <head>
@@ -132,14 +124,13 @@ class HTMLView(webkit.WebView):
                     <div><div id="newcontainer">%s</div>
                     <div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
                 </body>""" % ("".join(renderitems),
-                                self.items[0][0].id, self.lang_load),
-                                HTML_STATE_RENDER)
+                                self.items[0][0].id, self.lang_load))
         
         else:
             self.render_html("""
                 <body class="unloaded">
                     <div class="loading"><b>%s</b></div>
-                </body>""" % self.lang_empty, HTML_STATE_RENDER)
+                </body>""" % self.lang_empty)
     
     def insert_spacer(self, item, user, highlight, mentioned, message = False, 
                     next = False, force = False):
@@ -243,7 +234,6 @@ class HTMLView(webkit.WebView):
             return 0
     
     def loaded(self, *args):
-        self.is_rendering = False
         if len(self.items) > 0 and self.newitems and not self.load_history:
             offset = self.get_offset()
         
@@ -279,21 +269,6 @@ class HTMLView(webkit.WebView):
         height = self.gui.get_height(self)
         if offset > height:
             self.scroll.get_vscrollbar().set_value(offset - height)
-    
-    
-    # Fix Reloading
-    def on_loading(self, *args):
-        if not self.is_rendering:
-            if self.mode == HTML_STATE_RENDER:
-                self.render()
-            
-            elif self.mode == HTML_STATE_START:
-                self.start()
-            
-            elif self.mode == HTML_STATE_SPLASH:
-                self.splash()
-            
-            return True
     
     
     # History / Read Button ----------------------------------------------------
