@@ -9,15 +9,15 @@ The code itself is written in *Python* and uses the corresponding *Python* bindi
 ## Installation
 To install **Atarashii** from source run `python make.py` to create the debian package, after that just install the package that was created. 
 
-Alternatively, you can check for a recent DEBIAN-Package at the downloads section on GitHub (<http://github.com/BonsaiDen/Atarashii/downloads>)
+Alternatively, you can check for a recent DEBIAN-Package at the downloads section on GitHub (<http://github.com/BonsaiDen/Atarashii/downloads>).
+Atarashii has been successfully installed on to distinct Ubuntu 9.10 systems, if you encounter any problems please send me an e-mail at <ivo.wetzel@googlemail.com> or file an issues at GitHub.
 
 ### Notes
-> If you've downloaded the source you can start **Atarashii** without installing it by running `python debug.py`  
-> You may need to install `fakeroot` via the package manager in order to be able to create the package by yourself
+> If you've downloaded the source you can start **Atarashii** without installing it by running `python debug.py`.
+> You may need to install `fakeroot` via the package manager in order to be able to create the package by yourself.
 
 ## TODO
 - Add more translations(See <http://github.com/BonsaiDen/Atarashii/issues#issue/6>)
-- Add functionality to favorite stuff
 - Implement a search view
 
 ## Contributing

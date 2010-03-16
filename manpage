@@ -1,35 +1,42 @@
-.TH ATARASHII 1 "March 16 2010" "Version 0.99.9" "Atarahsii Manual Pages"
+.TH ATARASHII 1 "March 16 2010" "Version 0.99.10" "Atarahsii Manual Pages"
 
 .SH NAME
-Atarashii \- Twitter Client for the GNOME Desktop
+.B Atarashii 
+\- Twitter Client for the GNOME Desktop
 
 
 .SH DESCRIPTION
-Atarashii(Japanese for "New") is a simple Twitter Client for the GNOME Desktop.
+.B Atarashii 
+is a simple Twitter Client for the GNOME Desktop.
 It uses GTK+ and webkit to archive a slim and functional design.
 The code itself is written in Python and uses the corresponding Python bindings
 for the GTK+ libraries.
 
 
 .SH CONTRIBUTING
-The source is available on GitHub <http://github.com/BonsaiDen/Atarashii>, to
-contribute to the project, fork it on GitHub and send a pull request.
+The source is available on GitHub:
+<http://github.com/BonsaiDen/Atarashii>
+
+To contribute to the project, fork it on GitHub and send a pull request.
 Everyone is welcome to make improvements to Atarashii!
 
 
 .SH LICENSE
-Atarashii is free software: you can redistribute it and/or 
+.B Atarashii 
+is free software: you can redistribute it and/or 
 modify it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-Atarashii is distributed in the hope that it will be useful,
+.B Atarashii 
+is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with
-Atarashii. If not, see <http://www.gnu.org/licenses/>.
+.B Atarashii. 
+If not, see <http://www.gnu.org/licenses/>.
 
 
 .SH AUTHOR

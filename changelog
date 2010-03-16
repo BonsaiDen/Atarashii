@@ -1,3 +1,12 @@
+atarashii (0.99.10-1) all;
+
+  * Added favorites! You can now favorite Tweets by clicking on the gray heart
+    besides them, if a Tweet is favorited a nice red heart will show up!
+    Isn't that cute?
+  * Many fixes to the timeline/message views.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 16 Mar 2010 16:05:00 +0100
+
 atarashii (0.99.9-1) all;
 
   * Removed retweet settings from the preferences...
