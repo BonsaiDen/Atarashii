@@ -207,7 +207,7 @@ class GUI(gtk.Window):
         self.text.set_sensitive(True)
         self.check_refresh()
         self.check_read()
-        self.message_button.set_sensitive(True)
+        self.message_button.set_sensitive(self.main.login_status)
     
     def show_progress(self):
         def progress_activity():
@@ -750,7 +750,6 @@ class GUI(gtk.Window):
         
         else: # TODO implement search here
             pass
-        
         
         self.set_app_title()
         self.text.check_mode()
