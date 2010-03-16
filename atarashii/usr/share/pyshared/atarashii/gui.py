@@ -411,7 +411,7 @@ class GUI(gtk.Window):
                 self.set_title(lang.title_logged_in % self.main.username)
         
         # Tray Tooltip
-        if not self.main.is_connecting:
+        if not self.main.is_connecting and self.main.login_complete:
             if self.main.username == UNSET_TEXT or \
                 (not self.main.login_status and not self.main.is_connecting):
                 self.tray.set_tooltip(lang.tray_logged_out)

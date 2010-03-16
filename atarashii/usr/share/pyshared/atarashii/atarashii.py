@@ -84,6 +84,7 @@ class Atarashii:
         self.login_error = False
         self.login_status = False
         self.network_failed = False
+        self.login_complete = False
         self.is_sending = False
         self.is_connecting = False
         self.is_reconnecting = False
@@ -232,6 +233,7 @@ class Atarashii:
             gobject.source_remove(self.reconnect_timeout)
         
         self.login_status = False
+        self.login_complete = False
         self.is_sending = False
         self.is_connecting = True
         self.is_reconnecting = False
@@ -255,6 +257,7 @@ class Atarashii:
         self.updater.do_init = True
     
     def on_login(self):
+        self.login_complete = False
         self.login_error = False
         self.login_status = True
         self.is_connecting = False
@@ -270,6 +273,7 @@ class Atarashii:
         self.refresh_time = UNSET_TIMEOUT
         self.refresh_timeout = UNSET_TIMEOUT
         self.gui.set_mode(MODE_TWEETS)
+        self.login_complete = False
         self.login_error = True if error != None else False
         self.login_status = False
         self.is_connecting = False
@@ -295,6 +299,7 @@ class Atarashii:
         self.gui.set_mode(MODE_TWEETS)
         self.login_error = False
         self.login_status = False
+        self.login_complete = False
         self.is_sending = False
         self.is_connecting = False
         self.is_reconnecting = False

@@ -209,6 +209,7 @@ class Updater(threading.Thread):
             pass
         
         # Force Title Update
+        self.main.login_complete = True
         gobject.idle_add(lambda: self.gui.set_app_title())
         
         # Init Timer
