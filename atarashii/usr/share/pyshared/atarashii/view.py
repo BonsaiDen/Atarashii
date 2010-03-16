@@ -33,6 +33,9 @@ from constants import HTML_STATE_NONE, HTML_UNSET_ID, \
                       RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, UNSET_ID_NUM
 
 
+# Watch out! This is one giant "Is this OK mommy?" hackery by the kittens!
+# You've been warned...
+# ------------------------------------------------------------------------------
 class HTMLView(webkit.WebView):
     def __init__(self, main, gui, scroll):
         self.main = main
@@ -44,6 +47,14 @@ class HTMLView(webkit.WebView):
         self.connect("button-release-event", self.gui.text.html_focus)
         self.connect("button-press-event", self.on_button)
         self.connect("populate-popup", self.on_popup)
+        
+        # Fix CSS hover stuff
+        self.mouse_position = -1.0
+        self.connect("motion-notify-event", self.on_move)
+        self.connect("leave-notify-event", self.on_leave)
+        self.last_scroll = 0
+        self.connect("scroll-event", self.on_scroll)
+        
         self.scroll = scroll
         self.set_maintains_back_forward_list(False)
         self.count = 0
@@ -319,8 +330,28 @@ class HTMLView(webkit.WebView):
         
         self.load_history = False
         self.has_newitems = False
+        self.fake_click()
     
+    # Fakeman! Roger Buster!
+    # This fixes an issue where the reply/favorite links wouldn't disapear if
+    # the mouse left the view
+    def fake_click(self):
+        event = gtk.gdk.Event(gtk.gdk.BUTTON_PRESS)
+        event.x = 0.0
+        event.y = self.mouse_position
+        event.button = 1
+        self.emit("button_press_event", event)
     
+    def on_leave(self, view, event, *args):
+        self.mouse_position = -1.0
+        self.fake_click()
+    
+    def on_move(self, view, event, *args):
+        self.mouse_position = event.y
+    
+    def on_scroll(self, view, event, *args):
+        gobject.timeout_add(10, lambda *args: self.fake_click())
+
     # Double check for some stupid scrolling bugs with webkit
     def check_scroll(self, pos):
         self.scroll.get_vscrollbar().set_value(pos)
@@ -366,6 +397,20 @@ class HTMLView(webkit.WebView):
         if remove_item_id != UNSET_ID_NUM:
             self.items.pop(remove_item_id)
             self.render()
+    
+    def favorite(self, item_id, mode):
+        fav_item_id = UNSET_ID_NUM
+        for i in range(len(self.items)):
+            item = self.items[i][0]
+            if self.get_id(item) == item_id:
+                if hasattr(item, "retweeted_status"):
+                    self.items[i][0].retweeted_status.favorited = mode
+                
+                else:
+                    self.items[i][0].favorited = mode
+                
+                self.render()
+                break
     
     
     # Popup Menu ---------------------------------------------------------------
@@ -571,6 +616,16 @@ class HTMLView(webkit.WebView):
                                          text,
                                          delete_message,
                                          None))
+        
+        # Favorite
+        elif uri.startswith("fav:"):
+            ref, item_id = uri.split(":")
+            self.favorite(int(item_id), True)
+        
+        # Un-Favorite
+        elif uri.startswith("unfav:"):
+            ref, item_id, = uri.split(":")
+            self.favorite(int(item_id), False)
         
         # Regular links
         else:
