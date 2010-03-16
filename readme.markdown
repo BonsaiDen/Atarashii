@@ -17,7 +17,8 @@ Alternatively, you can check for a recent DEBIAN-Package at the downloads sectio
 
 ## TODO
 - Add more translations(See <http://github.com/BonsaiDen/Atarashii/issues#issue/6>)
-- Implement search view
+- Add functionality to favorite stuff
+- Implement a search view
 
 ## Contributing
 The source is available on GitHub (<http://github.com/BonsaiDen/Atarashii>), to
