@@ -18,7 +18,6 @@
 # ------------------------------------------------------------------------------
 import gobject
 import threading
-import sys
 
 from constants import MODE_TWEETS, MODE_MESSAGES, UNSET_TEXT, UNSET_ID_NUM
 
@@ -210,7 +209,8 @@ class Delete(threading.Thread):
                 gobject.idle_add(lambda: self.gui.html.remove(self.tweet_id))
                 
             elif self.message_id != UNSET_ID_NUM:
-                gobject.idle_add(lambda: self.gui.message.remove(self.message_id))
+                gobject.idle_add(
+                        lambda: self.gui.message.remove(self.message_id))
             
             # Show Info
             gobject.idle_add(lambda: self.gui.show_delete_info(

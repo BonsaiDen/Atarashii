@@ -111,7 +111,7 @@ class TrayIcon(gtk.StatusIcon):
     
     # Events -------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def on_tooltip(self, icon, x, y, key, tip, *args):
+    def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
         tip.set_custom(self.tooltip)
         return True
     
@@ -138,7 +138,8 @@ class TrayIcon(gtk.StatusIcon):
         # Show!
         if not self.gui.get_property("visible"):
             self.gui.present()
-            self.gui.move(*self.gui.window_position)
+            pos = self.gui.window_position
+            self.gui.move(pos[0], pos[1])
             gobject.idle_add(lambda: self.gui.grab_focus())
         
         # Hide or move to other screen

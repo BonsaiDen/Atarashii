@@ -65,7 +65,7 @@ class HTML(view.HTMLView):
         user, text = tweet.user, self.formatter.parse(tweet.text)
         
         
-        # Spacers ----------------------------------------------------------
+        # Spacers --------------------------------------------------------------
         highlight = self.main.username.lower() in \
                         [i.lower() for i in self.formatter.users]
         mentioned = hasattr(tweet, "is_mentioned") and tweet.is_mentioned
@@ -88,7 +88,7 @@ class HTML(view.HTMLView):
             reply = ""
         
         
-        # Avatar -----------------------------------------------------------
+        # Avatar ---------------------------------------------------------------
         self.is_new_avatar(num)
         if (num < len(self.items) - 1 and \
             (user.screen_name != self.get_user(num + 1).screen_name or \
@@ -155,7 +155,7 @@ class HTML(view.HTMLView):
                    %s
                 </a></b></span>''' + self.is_protected(user) + '''%s</div>
             <div class="time">
-                <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
+            <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
                 (self.absolute_time(tweet.created_at)) + '''">%s</a>
                 ''' + by_user + '''</div>
             <div class="reply">%s</div>
@@ -227,8 +227,8 @@ class HTML(view.HTMLView):
         
         # Source
         elif link == "source":
-            by = self.get_source(item)
-            self.add_menu_link(menu, lang.context_source % lang.name(by),
+            source = self.get_source(item)
+            self.add_menu_link(menu, lang.context_source % lang.name(source),
                                lambda *args: self.context_link(full))
         
         # Status

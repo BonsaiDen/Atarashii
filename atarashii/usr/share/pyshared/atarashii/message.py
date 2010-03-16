@@ -53,7 +53,7 @@ class HTML(view.HTMLView):
             
             force = self.lastrecipient != item.recipient_screen_name
             self.renderitems.insert(0,
-                        self.insert_spacer(item, user, False, mentioned, True,
+                        self.insert_spacer(item, user, False, mentioned,
                         next_highlight, force = force))
         
         self.last_mentioned = mentioned
@@ -123,9 +123,10 @@ class HTML(view.HTMLView):
                 ''' <a href="''' + ltype + \
                 ''':http://twitter.com/%s" title="''' + \
                 lang.html_profile + \
-                '''">%s</a></b></span>''' + self.is_protected(user) + '''%s</div>
+                '''">%s</a></b></span>''' + self.is_protected(user) + \
+                '''%s</div>
             <div class="time">
-                <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
+            <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
                 (self.absolute_time(item.created_at)) + '''">%s</a>
             </div>
         </div>
