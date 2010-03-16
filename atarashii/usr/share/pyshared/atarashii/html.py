@@ -108,7 +108,7 @@ class HTML(view.HTMLView):
             avatar = ""
         
         
-        # Background -------------------------------------------------------
+        # Background -----------------------------------------------------------
         if mentioned:
             clas = "mentionedold" if item.id <= self.init_id else "mentioned"
         
@@ -119,10 +119,11 @@ class HTML(view.HTMLView):
             clas = 'highlight' if highlight else 'tweet'
         
         
-        # Source -----------------------------------------------------------
+        # Source ---------------------------------------------------------------
         if tweet.source != "web":
             if hasattr(tweet, "source_url") and tweet.source_url != "":
-                by_user = lang.html_by % ('<a href="source:%s" title="%s">%s</a>' % \
+                by_user = lang.html_by % (
+                        '<a href="source:%s" title="%s">%s</a>' % \
                         (tweet.source_url, tweet.source_url, tweet.source))
             
             else:
@@ -132,16 +133,7 @@ class HTML(view.HTMLView):
             by_user = ""
         
         
-        # Protected --------------------------------------------------------
-        if hasattr(user, "protected") and user.protected:
-            locked = ('<span class="protected" title="' + \
-                lang.html_protected + '"></span>') % user.screen_name
-        
-        else:
-            locked = ''
-        
-        
-        # HTML Snippet -----------------------------------------------------
+        # HTML Snippet ---------------------------------------------------------
         html = '''
         <div class="viewitem %s" id="%d">
         <div class="avatar">
@@ -161,7 +153,7 @@ class HTML(view.HTMLView):
                  <b><a href="profile:http://twitter.com/%s" title="''' + \
                 lang.html_profile + '''">
                    %s
-                </a></b></span> ''' + locked + ''' %s
+                </a></b></span> ''' + self.is_protected(user) + ''' %s
             </div>
             <div class="time">
                 <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
@@ -174,10 +166,6 @@ class HTML(view.HTMLView):
         <div class="clearfloat"></div>
         </div>'''
         
-        #             <div class="doretweet">
-        #        <a href="retweet:%d:%d:-1" title="''' + \
-        #        (lang.html_retweet % user.screen_name) + '''"> </a>
-        #    </div>
         
         # Insert values
         html = html % (
@@ -213,66 +201,66 @@ class HTML(view.HTMLView):
         # Get the real ID
         if item != None:
             item_id = self.get_id(item)
-        
+           
         # Link options
         if link == "link":
-            self.add_menu_link(menu, "Open in Browser",
+            self.add_menu_link(menu, lang.context_browser,
                                lambda *args: self.context_link(full))
             
-            self.add_menu_link(menu, "Copy",
+            self.add_menu_link(menu, lang.context_copy,
                                lambda *args: self.copy_link(full))  
                 
         # User Options
         elif link == "user" or link == "profile":
             user = full[full.rfind("/") + 1:]
-            self.add_menu_link(menu, "Visit %s's Profile" % user,
+            self.add_menu_link(menu, lang.context_profile % user,
                                lambda *args: self.context_link(full))
             
             if link == "profile":
                 reply = "reply:%s:%d:-1" % (user, item_id)
-                self.add_menu_link(menu, "Reply to %s" % user,
+                self.add_menu_link(menu, lang.context_reply % user,
                                    lambda *args: self.context_link(reply, 
                                                               extra = item))
             
             else:
                 reply = "reply:%s:-1:-1" % user
-                self.add_menu_link(menu, "Tweet to %s" % user,
+                self.add_menu_link(menu, lang.context_tweet % user,
                                    lambda *args: self.context_link(reply))    
         
         # Source
         elif link == "source":
             by = self.get_source(item)
-            self.add_menu_link(menu, "%s's Homepage" % by,
+            self.add_menu_link(menu, lang.context_source % lang.name(by),
                                lambda *args: self.context_link(full))
         
         # Status
         elif link == "status":
-            self.add_menu_link(menu, "View on Twitter.com",
+            self.add_menu_link(menu, lang.context_view,
                                lambda *args: self.context_link(full))   
         
         # Tag
         elif link == "tag":
-            self.add_menu_link(menu, "Search on Twitter.com",
+            self.add_menu_link(menu, lang.context_search,
                                lambda *args: self.context_link(full))   
         
         # Retweet / Delete
         else:
             name = self.get_user(item).screen_name
             full1 = "retweet:%s" % RETWEET_OLD
-            self.add_menu_link(menu, "Retweet %s via RT" % name,
+            self.add_menu_link(menu, lang.context_retweet_old % name,
                                lambda *args: self.context_link(full1,
                                                            extra = item))
             
             if name.lower() != self.main.username.lower():
                 full2 = "retweet:%s" % RETWEET_NEW
-                self.add_menu_link(menu, "Retweet %s via Twitter" % name,
+                self.add_menu_link(menu, lang.context_retweet_new % name,
                                    lambda *args: self.context_link(full2,
                                                                extra = item))
             
             if name.lower() == self.main.username.lower():
                 self.add_menu_separator(menu)
                 full3 = "delete:t:%d" % item_id
-                mitem = self.add_menu_link(menu, "Delete this Tweet",
+                mitem = self.add_menu_link(menu, lang.context_delete_tweet,
                                    lambda *args: self.context_link(full3,
                                                                extra = item))
                 

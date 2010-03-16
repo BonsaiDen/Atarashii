@@ -102,16 +102,7 @@ class HTML(view.HTMLView):
             user_realname = user.name.strip()
             ltype = "profile"
         
-        
-        # Protected ------------------------------------------------------------
-        if hasattr(user, "protected") and user.protected:
-            locked = ('<span class="protected" title="' + \
-                lang.html_protected + '"></span>') % user.screen_name
-        
-        else:
-            locked = ''
-        
-        
+                
         # HTML Snippet ---------------------------------------------------------
         html = '''
         <div class="viewitem %s" id="%d">
@@ -132,7 +123,7 @@ class HTML(view.HTMLView):
                 ''' <a href="''' + ltype + \
                 ''':http://twitter.com/%s" title="''' + \
                 lang.html_profile + \
-                '''">%s</a></b></span> ''' + locked + ''' %s
+                '''">%s</a></b></span> ''' + self.is_protected(user) + ''' %s
             </div>
             <div class="time">
                 <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
@@ -176,37 +167,37 @@ class HTML(view.HTMLView):
         
         # Link options
         if link == "link":
-            self.add_menu_link(menu, "Open in Browser",
+            self.add_menu_link(menu, lang.context_browser,
                                lambda *args: self.context_link(full))
             
-            self.add_menu_link(menu, "Copy",
+            self.add_menu_link(menu, lang.context_copy,
                                lambda *args: self.copy_link(full))  
         
         # User Options
         elif link == "user" or link == "profile":
             user = full[full.rfind("/") + 1:]
-            self.add_menu_link(menu, "Visit %s's Profile" % user,
+            self.add_menu_link(menu, lang.context_profile % user,
                                lambda *args: self.context_link(full))
             
             if link == "profile" and user.lower() != self.main.username.lower():
                 reply = "message:%s:%d:-1" % (user, item_id)
-                self.add_menu_link(menu, "Reply to %s" % user,
+                self.add_menu_link(menu, lang.context_reply % user,
                                    lambda *args: self.context_link(reply,
                                                               extra = item))
             
             elif link == "user":
                 reply = "message:%s:-1:-1" % user
-                self.add_menu_link(menu, "Message to %s" % user,
+                self.add_menu_link(menu, lang.context_message % user,
                                    lambda *args: self.context_link(reply))    
         
         # Status
         elif link == "status":
-            self.add_menu_link(menu, "View on Twitter.com",
+            self.add_menu_link(menu, lang.context_view,
                                lambda *args: self.context_link(full))   
         
         # Tag
         elif link == "tag":
-            self.add_menu_link(menu, "Search on Twitter.com",
+            self.add_menu_link(menu, lang.context_search,
                                lambda *args: self.context_link(full))   
         
         # Retweet / Delete
@@ -214,7 +205,7 @@ class HTML(view.HTMLView):
             name = item.sender.screen_name
             if name.lower() == self.main.username.lower():
                 full3 = "delete:t:%d" % item_id
-                mitem = self.add_menu_link(menu, "Delete this Message",
+                mitem = self.add_menu_link(menu, lang.context_delete_message,
                                    lambda *args: self.context_link(full3,
                                                                extra = item))
                 
