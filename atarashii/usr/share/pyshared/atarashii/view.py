@@ -137,7 +137,7 @@ class HTMLView(webkit.WebView):
         self.scroll.get_vscrollbar().set_value(0)
         self.offset_count = 0
         self.render_html("""
-            <body class="unloaded">
+            <body class="unloaded" ondragstart="return false">
                 <div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
             </body>""" % (self.main.get_image(), self.lang_loading))
     
@@ -145,7 +145,7 @@ class HTMLView(webkit.WebView):
         self.scroll.get_vscrollbar().set_value(0)
         self.offset_count = 0
         self.render_html("""
-            <body class="unloaded">
+            <body class="unloaded" ondragstart="return false">
                 <div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
             </body>""" % (self.main.get_image(), lang.html_welcome))
     
@@ -164,7 +164,7 @@ class HTMLView(webkit.WebView):
         self.main.gui.set_app_title()
         if len(self.items) > 0:
             self.render_html("""
-                <body>
+                <body ondragstart="return false">
                     <div><div id="newcontainer">%s</div>
                     <div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
                 </body>""" % ("".join(renderitems),
@@ -172,7 +172,7 @@ class HTMLView(webkit.WebView):
         
         else:
             self.render_html("""
-                <body class="unloaded">
+                <body class="unloaded" ondragstart="return false">
                     <div class="loading"><b>%s</b></div>
                 </body>""" % self.lang_empty)
     
@@ -721,8 +721,8 @@ class HTMLView(webkit.WebView):
     
     
     # Attribute helpers for new style Retweets
-    def get_attr(self, num, attr):
-        item = self.items[num][0] if type(num) in (int, long) else num
+    def get_attr(self, item, attr):
+        item = self.items[item][0] if type(item) in (int, long) else item
         return (item.retweeted_status if \
                 hasattr(item, "retweeted_status") else item).__dict__[attr]
     

@@ -1,16 +1,11 @@
 body {
 	font: 10px sans-serif;
 	overflow-x: hidden
-	-webkit-user-drag: none !important;
 }
 
 body, td, tr, table {
 	margin: 0;
 	padding: 0
-}
-
-*, a, span, .name {
-	-webkit-user-drag: none !important;
 }
 
 tr, td, .protected {
@@ -42,7 +37,6 @@ img, .loadmore, .loadmore a, .loading, .unloaded, .name, .time, .reply,
 
 .loadmore a, .inner-text a, .name a, .time a, .reply a, .doreply a, .doreply a:hover, .doretweet a, .doretweet a:hover {
 	text-decoration: none;
-	-webkit-user-drag: none !important;
 }
 
 .loadmore a, .name a {
