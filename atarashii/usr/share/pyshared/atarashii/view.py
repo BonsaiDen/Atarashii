@@ -28,7 +28,7 @@ import webbrowser
 import formatter
 from lang import lang
 from constants import HTML_STATE_NONE, HTML_UNSET_ID, \
-                      RETWEET_NEW, RETWEET_OLD, UNSET_TEXT
+                      RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, UNSET_ID_NUM
 
 
 class HTMLView(webkit.WebView):
@@ -57,6 +57,7 @@ class HTMLView(webkit.WebView):
         self.lang_loading = ""
         self.lang_load = ""
         self.lang_empty = ""
+        self.menu = None
         
         self.init(True)
     
@@ -321,6 +322,17 @@ class HTMLView(webkit.WebView):
             if len(self.items) > self.main.max_tweet_count:
                 self.items.pop(0)
     
+    def remove(self, item_id):
+        e = UNSET_ID_NUM
+        for i in range(len(self.items)):
+            if self.get_id(self.items[i][0]) == item_id:
+                e = i
+                break
+        
+        if e != UNSET_ID_NUM:
+            self.items.pop(e)
+            self.render()
+    
     def compare(self, x, y):
         if x[0].id > y[0].id:
             return 1
@@ -413,9 +425,20 @@ class HTMLView(webkit.WebView):
             menu.destroy()
             return True
         
+        # Fix annoying instant click of context menu!
+        if not self.menu:
+            self.menu = menu
+            self.menu_toggle(False)
+            gobject.timeout_add(100, lambda: self.menu_toggle(True)) 
+        
         menu.connect("hide", self.on_popup_close)
     
+    def menu_toggle(self, mode):
+        for i in self.menu.get_children():
+            i.set_sensitive(mode)
+    
     def on_popup_close(self, *args):
+        self.menu = None
         self.gui.text.html_focus()
     
     def get_clicked_item(self, items):
@@ -649,7 +672,27 @@ class HTMLView(webkit.WebView):
         # Delete
         elif uri.startswith("delete:"):
             o, dtype, item_id = uri.split(":")
-            print "delete", int(item_id), self.unescape(self.get_text(extra))
+            item_id = int(item_id)
+            text = self.unescape(self.get_text(extra))
+            
+            def delete_tweet():
+                self.main.delete(tweet_id = item_id)
+            
+            def delete_message():
+                self.main.delete(message_id = item_id)
+            
+            # Ask
+            if dtype == "t":
+                gobject.idle_add(lambda: self.main.gui.ask_for_delete_tweet(
+                                         text,
+                                         delete_tweet,
+                                         None))
+            
+            elif dtype == "m":
+                gobject.idle_add(lambda: self.main.gui.ask_for_delete_message(
+                                         text,
+                                         delete_message,
+                                         None))
         
         # Regular links
         else:
