@@ -92,12 +92,15 @@ class Atarashii:
         self.is_updating = False
         self.is_loading_history = False
         self.is_deleting = False
+        self.favorites_pending = {}
+        
         self.was_sending = False
         self.was_retweeting = False
         self.was_new_retweeting = False
         self.was_deleting = False
         self.rate_warning_shown = False
         self.request_warning_shown = False
+        
         
         # Current Username
         self.username = self.settings['username'] or UNSET_TEXT
@@ -165,7 +168,7 @@ class Atarashii:
         self.gui.show_progress()
         self.gui.set_status(lang.status_retweet % name)
         
-        # Sender
+        # Retweeter
         retweeter = send.Retweet(self, name, tweet_id)
         retweeter.setDaemon(True)
         retweeter.start()
@@ -184,10 +187,21 @@ class Atarashii:
                             tweet_id != UNSET_ID_NUM else \
                             lang.status_deleting_message)
     
-        # Sender
+        # Deleter
         deleter = send.Delete(self, tweet_id, message_id)
         deleter.setDaemon(True)
         deleter.start()
+    
+    
+    # Favorite
+    def favorite(self, tweet_id, mode):
+        if not self.favorites_pending.has_key(tweet_id):
+            self.favorites_pending[tweet_id] = mode
+            
+            # Favoriter
+            favoriter = send.Favorite(self, tweet_id, mode)
+            favoriter.setDaemon(True)
+            favoriter.start()     
     
     
     # Login & Logout -----------------------------------------------------------
