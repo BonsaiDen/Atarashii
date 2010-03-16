@@ -13,6 +13,11 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
+# TODO enable deletion
+# TODO add favorite
+# TODO add timeout to requests!!!!!
+# TODO fix link dragging
+
 
 # Atarashii --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -83,6 +88,7 @@ class Atarashii:
         # State
         self.login_error = False
         self.login_status = False
+        self.network_failed = False
         self.is_sending = False
         self.is_connecting = False
         self.is_reconnecting = False
@@ -223,6 +229,7 @@ class Atarashii:
         self.login_error = False
         self.login_status = True
         self.is_connecting = False
+        self.network_failed = False
         self.gui.settings_button.set_sensitive(True)
         self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_title(lang.title_logged_in % self.username)
@@ -236,6 +243,7 @@ class Atarashii:
         self.login_error = True if error != None else False
         self.login_status = False
         self.is_connecting = False
+        self.network_failed = False
         self.gui.settings_button.set_sensitive(True)
         self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_app_title()
@@ -244,7 +252,11 @@ class Atarashii:
         if error:
             self.gui.show_error(error)
         
+        gobject.idle_add(lambda: self.gui.message.init(True))
         gobject.idle_add(lambda: self.gui.html.init(True))
+    
+    def on_network_failed(self, error):
+        self.on_login_failed(error)
     
     def logout(self):
         self.refresh_time = UNSET_TIMEOUT
@@ -256,10 +268,13 @@ class Atarashii:
         self.is_connecting = False
         self.is_reconnecting = False
         self.is_updating = False
+        self.network_failed = False
         self.gui.settings_button.set_sensitive(True)
         self.gui.update_status()
         self.gui.set_app_title()
         self.gui.hide_all()
+        
+        gobject.idle_add(lambda: self.gui.message.init(True))
         gobject.idle_add(lambda: self.gui.html.init(True))
     
     
@@ -298,6 +313,9 @@ class Atarashii:
     
     def get_user_picture(self):
         img = self.settings['picture_' + self.username]
+        if not self.login_status and not self.is_connecting:
+            img = None
+        
         if img == None or not os.path.exists(img):
             return self.get_image()
         

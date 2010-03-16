@@ -110,6 +110,9 @@ class Updater(threading.Thread):
                     auth.get_username()
                     token_ok = True
                 
+                except IOError, error:
+                    raise error
+                
                 except Exception, error:
                     self.settings[key_name] = ""
                     self.settings[secret_name] = ""
@@ -135,6 +138,10 @@ class Updater(threading.Thread):
                     gobject.idle_add(lambda: self.main.on_login_failed())
                     self.main.api_temp_password = None
                     return
+        
+        except IOError, error:
+            gobject.idle_add(lambda: self.main.on_network_failed(error))
+            return False
         
         except Exception, error:
             self.main.api_temp_password = None
@@ -429,6 +436,10 @@ class Updater(threading.Thread):
                 return self.get_updates(since_id = since_id, max_id = max_id,
                                 max_count = max_count)
             
+            # Stop immediately on network error
+            except IOError, error:
+                raise error
+            
             # Something went wrong, either try it again or break with the error
             except Exception, error:
                 if count == 2:
@@ -467,7 +478,7 @@ class Updater(threading.Thread):
             i.is_mentioned = True
         
         self.refresh_now = False
-        
+        self.main.network_failed = False
         self.update_limit()
         updates = updates + mentions
         if len(mentions) > 0:
@@ -489,6 +500,7 @@ class Updater(threading.Thread):
             gobject.idle_add(lambda: self.gui.show_error(error))
             return
         
+        self.main.network_failed = False
         self.main.max_tweet_count += len(updates)
         for i in updates:
             imgfile = self.get_image(i)
@@ -517,6 +529,10 @@ class Updater(threading.Thread):
                 # Try to get the updates and then break
                 return self.get_messages(since_id = since_id, max_id = max_id,
                                 max_count = max_count)
+            
+            # Stop immediately on network error
+            except IOError, error:
+                raise error
             
             # Something went wrong, either try it again or break with the error
             except Exception, error:
@@ -548,6 +564,7 @@ class Updater(threading.Thread):
             messages += self.api.sent_direct_messages(
                                  count = self.main.load_message_count // 2)
         
+        self.main.network_failed = False
         self.refresh_messages = False
         self.update_limit()
         return self.process_updates(messages)
@@ -566,6 +583,7 @@ class Updater(threading.Thread):
             gobject.idle_add(lambda: self.gui.show_error(error))
             return
         
+        self.main.network_failed = False
         self.main.max_message_count += len(messages)
         for i in messages:
             imgfile = self.get_image(i, True)

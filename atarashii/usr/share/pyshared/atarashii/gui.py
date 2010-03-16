@@ -395,7 +395,8 @@ class GUI(gtk.Window):
         return size[3] - size[0]
     
     def set_app_title(self):
-        if self.main.username == UNSET_TEXT:
+        if self.main.username == UNSET_TEXT or \
+            (not self.main.login_status and not self.main.is_connecting):
             self.set_title(lang.title)
             
         
@@ -417,7 +418,8 @@ class GUI(gtk.Window):
         
         # Tray Tooltip
         if not self.main.is_connecting:
-            if self.main.username == UNSET_TEXT:
+            if self.main.username == UNSET_TEXT or \
+                (not self.main.login_status and not self.main.is_connecting):
                 self.tray.set_tooltip(lang.tray_logged_out)
             
             elif self.mode == MODE_MESSAGES:
@@ -542,6 +544,8 @@ class GUI(gtk.Window):
         # Network Error?
         if isinstance(error, IOError):
             code = -4
+            if self.main.login_status:
+                code = -5
             
         # Try to find out what the error was!
         elif hasattr(error, "response") and error.response != None:
@@ -597,7 +601,17 @@ class GUI(gtk.Window):
         self.main.was_new_retweeting = False
         
         # Show Warning on url error or error message for anything else
-        if code == -1 or code == 500 or code == 502 or code == 503:
+        if code == -1 or code == 500 or code == 502 or \
+            code == 503 or code == -5:
+            
+            # Don't warn until we reconnect
+            if code == -5:
+                if self.main.network_failed:
+                    return
+                
+                else:
+                    self.main.network_failed = True
+            
             # Show only one warning at a time to prevent dialog cluttering
             if not self.main.request_warning_shown:
                 self.main.request_warning_shown = True
@@ -606,8 +620,8 @@ class GUI(gtk.Window):
                     self.main.request_warning_shown = False
                 
                 dialog.MessageDialog(self, MESSAGE_WARNING,
-                    lang.warning_url, lang.warning_title,
-                    ok_callback = unset)
+                    lang.error_network_lost if code == -5 else lang.warning_url,
+                    lang.warning_title, ok_callback = unset)
         
         else:
             description = {

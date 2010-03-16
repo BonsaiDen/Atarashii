@@ -168,6 +168,7 @@ LANG = {
         'error_already_retweeted' : 'Es ist entweder nicht möglich diesen Tweet zu retweeten oder er wurde bereits von ihnen retweeted.',
         'error_user_not_found' : 'Der Benutzer %s existiert nicht.',
         'error_network' : 'Atarashii konnte keine Verbindung zum Internet herstellen.',
+        'error_network_lost' : 'Atarashii hat die Verbundung zum Internet verloren, es wird alle 60 Sekunden versucht die Verbindung wiederherzustellen.',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warnung',
@@ -195,8 +196,8 @@ LANG = {
         # Tray Tooltip
         'tray_title' : 'Atarashii',
         'tray_logging_in' : 'Verbinde als <b>%s</b>...',
-        'tray_logged_out' : 'Nicht eingeloggt.',
-        'tray_logged_in' : 'Eingeloggt als <b>%s</b>.',
+        'tray_logged_out' : 'Nicht verbunden.',
+        'tray_logged_in' : 'Angemeldet als <b>%s</b>.',
         
         'tray_tweet' : "<b>%d</b> neuer Tweet",
         'tray_message' : "<b>%d</b> neue Nachricht",
@@ -364,6 +365,7 @@ LANG = {
         'error_already_retweeted' : 'Either it\'s not possible to retweet this Tweet or you\'ve already retweeted it.',
         'error_user_not_found' : 'The user %s does not exist.',
         'error_network' : 'Atarashii could not establish a connection to the Internet.',
+        'error_network_lost' : 'Atarashii has lost the conntection to the Internet. It will automatically try to reconnect itself every 60 seconds.',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warning',
@@ -391,7 +393,7 @@ LANG = {
         # Tray Tooltip
         'tray_title' : 'Atarashii',
         'tray_logging_in' : 'Connecting as <b>%s</b>...',
-        'tray_logged_out' : 'Not logged in.',
+        'tray_logged_out' : 'Not connected.',
         'tray_logged_in' : 'Logged in as <b>%s</b>.',
         
         'tray_tweet' : "<b>%d</b> new Tweet",
