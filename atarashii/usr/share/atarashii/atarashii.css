@@ -93,6 +93,11 @@ a:active, a:hover, a, .protected {
 
 /* Tweet Stuff -----------------------------------------------------------------
 ------------------------------------------------------------------------------*/
+.avatar {
+	padding-top: 6px;
+	float: left;
+}
+
 .inner-text {
 	word-wrap: break-word;
 	padding-top: 5px;
@@ -174,53 +179,77 @@ a:active, a:hover, a, .protected {
 
 /* Reply Icon ------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
-.actions, .highlightold:hover .doreply a, .oldtweet:hover .doreply a, 
-.mentioned:hover .doreply a, .highlight:hover .doreply a, 
-.tweet:hover .doreply a, .doreply a, .doretweet a {
+.actions, doreply a, .doretweet a, .dofav a {
 	display: block;
 }
 
-.highlightold:hover .doreply a, .oldtweet:hover .doreply a, 
-.mentioned:hover .doreply a, .highlight:hover .doreply a, 
-.tweet:hover .doreply a {
+.highlightold:hover .doreply a, .highlight:hover .doreply a,
+.oldtweet:hover .doreply a, .tweet:hover .doreply a,
+.mentioned:hover .doreply a, .mentionedold:hover .doreply a {
+    display: block;
 	background: url("file:///usr/share/atarashii/at.png");
 }
 
-
-
-.doreply a, .doretweet a {
-	background: no-repeat;
-	color: transparent;
-	width: 12px;
-	height: 12px;
-}
-
-.doreply a {
-	margin-bottom: 4px;
+.highlightold:hover .doreply a:hover, .highlight:hover .doreply a:hover,
+.oldtweet:hover .doreply a:hover, .tweet:hover .doreply a:hover,
+.mentioned:hover .doreply a:hover, .mentionedold:hover .doreply a:hover {
+	background-position: -12px 0;
 }
 
 
 /* Retweet Icon ----------------------------------------------------------------
 ------------------------------------------------------------------------------*/
-.highlightold:hover .doretweet a, .oldtweet:hover .doretweet a, 
-.mentioned:hover .doretweet a, .highlight:hover .doretweet a, 
-.tweet:hover .doretweet a {
+.highlightold:hover .doretweet a, .highlight:hover .doretweet a,
+.oldtweet:hover .doretweet a, .tweet:hover .doretweet a,
+.mentioned:hover .doretweet a, .mentionedold:hover .doretweet a {
+    display: block;
 	background: url("file:///usr/share/atarashii/rt.png");
 }
 
-.doretweet a, .doretweet a:hover {
-	font-size: 10px;
-}
-
-.avatar {
-	padding-top: 6px;
-	float: left;
-}
-
-.highlightold:hover .doreply a:hover, .oldtweet:hover .doreply a:hover, 
-.mentioned:hover .doreply a:hover, .highlight:hover .doreply a:hover, 
-.tweet:hover .doreply a:hover {
+.highlightold:hover .doretweet a:hover, .highlight:hover .doretweet a:hover,
+.oldtweet:hover .doretweet a:hover, .tweet:hover .doretweet a:hover,
+.mentioned:hover .doretweet a:hover, .mentionedold:hover .doretweet a:hover {
 	background-position: -12px 0;
+}
+
+
+/* Fav Icon --------------------------------------------------------------------
+------------------------------------------------------------------------------*/
+.highlightold:hover .dofav a, .highlight:hover .dofav a,
+.oldtweet:hover .dofav a, .tweet:hover .dofav a,
+.mentioned:hover .dofav a, .mentionedold:hover .dofav a {
+    display: block;
+	background: url("file:///usr/share/atarashii/fav.png");
+}
+
+
+.highlightold .undofav a, .highlight .undofav a,
+.oldtweet .undofav a, .tweet .undofav a,
+.mentioned .undofav a, .mentionedold .undofav a {
+    display: block;
+	background: url("file:///usr/share/atarashii/fav.png");
+ 	background-position: -12px 0px;
+}
+
+
+.dofav a, .undofav a {
+	margin-top: 4px;
+}
+
+
+.highlightold:hover .blocker, .highlight:hover .blocker,
+.oldtweet:hover .blocker, .tweet:hover .blocker,
+.mentioned:hover .blocker, .mentionedold:hover .blocker {
+    display: none;
+}
+
+
+/* Generic Stuff */
+.doreply a, .doretweet a, .dofav a, .undofav a, .blocker {
+	background: no-repeat;
+	color: transparent;
+	width: 12px;
+	height: 12px;
 }
 
 
