@@ -166,7 +166,8 @@ class TrayIcon(gtk.StatusIcon):
                 self.gui.hide()
             
             else:
-                self.gui.move(*self.gui.window_position)
+                pos = self.gui.window_position
+                self.gui.move(pos[0], pos[1])
                 gobject.timeout_add(10, lambda: self.force_focus())
     
     def force_focus(self):
