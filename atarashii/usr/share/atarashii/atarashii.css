@@ -1,87 +1,107 @@
+/* General setup ---------------------------------------------------------------
+------------------------------------------------------------------------------*/
 body {
 	font: 10px sans-serif;
-	overflow-x: hidden
+	overflow-x: hidden;
 }
 
 body, td, tr, table {
 	margin: 0;
-	padding: 0
+	padding: 0;
 }
 
 tr, td, .protected {
-	vertical-align: top
+	vertical-align: top;
 }
 
 img {
-	border: none
+	border: none;
+}
+
+a {
+	outline: none; /* Disable selection border */
 }
 
 img, .loadmore, .loadmore a, .loading, .unloaded, .name, .time, .reply, 
 .actions, .avatar, .spacer, .spacer1, .spacer3, .spacer2, .spacer4, 
 .spacer5, .spacer6, .spacer7, .spacer8 {
-	-webkit-user-select: none
+	-webkit-user-select: none; /* Disable user selection of none tweet text */
 }
 
+
+/* "More" Link -----------------------------------------------------------------
+------------------------------------------------------------------------------*/
 .loadmore {
 	padding-top: 4px;
-	border-top: 2px solid #d2d2d2
+	border-top: 2px solid #d2d2d2;
 }
 
 .loadmore, .inner-text, .avatar {
-	padding-bottom: 4px
+	padding-bottom: 4px;
 }
 
 .loadmore, .loading {
-	text-align: center
+	text-align: center;
 }
 
-.loadmore a, .inner-text a, .name a, .time a, .reply a, .doreply a, .doreply a:hover, .doretweet a, .doretweet a:hover {
+.loadmore a, .inner-text a, .name a, .time a, .reply a, .doreply a,
+.doreply a:hover, .doretweet a, .doretweet a:hover {
 	text-decoration: none;
 }
 
 .loadmore a, .name a {
-	font-weight: bold
+	font-weight: bold;
 }
 
 .loadmore a, .doreply a, .doreply a:hover {
-	font-size: 12px
+	font-size: 12px;
 }
 
-.loadmore a:hover, .name a:hover, .inner-text a:hover, .time a:hover, .reply a:hover {
-	text-decoration: underline
-}
 
+/* Loading Screens -------------------------------------------------------------
+------------------------------------------------------------------------------*/
 .loading {
 	font-size: 14px;
 	margin-top: 8px;
-	color: #444
+	color: #444;
 }
 
 .unloaded {
-	background: #dbdbdb
+	background: #dbdbdb;
 }
 
 .unloaded, .time, .reply {
-	cursor: default
+	cursor: default;
 }
 
+
+/* Links -----------------------------------------------------------------------
+------------------------------------------------------------------------------*/
 a:active, a:hover, a {
-	color: #004363
+	color: #004363;
 }
 
 a:active, a:hover, a, .protected {
-	cursor: pointer
+	cursor: pointer;
 }
 
+.loadmore a:hover, .name a:hover, .inner-text a:hover, .time a:hover,
+.reply a:hover {
+	text-decoration: underline;
+}
+
+
+/* Tweet Stuff -----------------------------------------------------------------
+------------------------------------------------------------------------------*/
 .inner-text {
 	word-wrap: break-word;
 	padding-top: 5px;
 	margin-right: 20px;
-	min-height: 34px
+	min-height: 34px;
 }
 
 .inner-text, .text {
-	margin-left: 38px
+	margin-left: 38px;
 }
 
 .protected {
@@ -89,7 +109,7 @@ a:active, a:hover, a, .protected {
 	display: inline-block;
 	margin-right: 3px;
 	width: 7px;
-	height: 10px
+	height: 10px;
 }
 
 .name {
@@ -97,67 +117,73 @@ a:active, a:hover, a, .protected {
 }
 
 .clearfloat {
-	clear: both
+	clear: both;
 }
 
 .tweet {
-	background: #d8e4ed
+	background: #d8e4ed;
 }
 
 .tweet, .oldtweet, .highlight, .highlightold, .mentioned, .mentionedold {
 	padding-left: 6px;
-	padding-right: 2px
+	padding-right: 2px;
 }
 
 .oldtweet {
-	background: #fff
+	background: #ffffff;
 }
 
 .highlight {
-	background: #c9deed
+	background: #c9deed;
 }
 
 .highlightold {
-	background: #e4e9ed
+	background: #e4e9ed;
 }
 
 .mentioned {
-	background: #ffffab
+	background: #ffffab;
 }
 
 .mentionedold {
-	background: #ffffbd
+	background: #ffffbd;
 }
 
 .time, .time a, .time a:hover, .reply, .reply a, .reply a:hover {
-	color: #555
+	color: #555;
 }
 
 .time, .reply {
-	font-size: 9px
+	font-size: 9px;
 }
 
 .time {
-	padding-top: 1px
+	padding-top: 1px;
 }
 
+
+/* Actions ---------------------------------------------------------------------
+------------------------------------------------------------------------------*/
 .actions {
 	padding-top: 7px;
 	width: 15px;
 	height: 28px;
-	float: right
+	float: right;
 }
 
+
+/* Reply Icon ------------------------------------------------------------------
+------------------------------------------------------------------------------*/
 .actions, .highlightold:hover .doreply a, .oldtweet:hover .doreply a, 
 .mentioned:hover .doreply a, .highlight:hover .doreply a, 
 .tweet:hover .doreply a, .doreply a, .doretweet a {
-	display: block
+	display: block;
 }
 
 .highlightold:hover .doreply a, .oldtweet:hover .doreply a, 
 .mentioned:hover .doreply a, .highlight:hover .doreply a, 
 .tweet:hover .doreply a {
-	background: url("file:///usr/share/atarashii/at.png")
+	background: url("file:///usr/share/atarashii/at.png");
 }
 
 
@@ -166,11 +192,29 @@ a:active, a:hover, a, .protected {
 	background: no-repeat;
 	color: transparent;
 	width: 12px;
-	height: 12px
+	height: 12px;
 }
 
 .doreply a {
-	margin-bottom: 4px
+	margin-bottom: 4px;
+}
+
+
+/* Retweet Icon ----------------------------------------------------------------
+------------------------------------------------------------------------------*/
+.highlightold:hover .doretweet a, .oldtweet:hover .doretweet a, 
+.mentioned:hover .doretweet a, .highlight:hover .doretweet a, 
+.tweet:hover .doretweet a {
+	background: url("file:///usr/share/atarashii/rt.png");
+}
+
+.doretweet a, .doretweet a:hover {
+	font-size: 10px;
+}
+
+.avatar {
+	padding-top: 6px;
+	float: left;
 }
 
 .highlightold:hover .doreply a:hover, .oldtweet:hover .doreply a:hover, 
@@ -179,63 +223,46 @@ a:active, a:hover, a, .protected {
 	background-position: -12px 0;
 }
 
-.highlightold:hover .doretweet a, .oldtweet:hover .doretweet a, 
-.mentioned:hover .doretweet a, .highlight:hover .doretweet a, 
-.tweet:hover .doretweet a {
-	background: url("file:///usr/share/atarashii/rt.png")
-}
 
-.doretweet a, .doretweet a:hover {
-	font-size: 10px
-}
-
-.avatar {
-	padding-top: 6px;
-	float: left
-}
-
+/* Sapcers ---------------------------------------------------------------------
+------------------------------------------------------------------------------*/
 .spacerfoo {
-	border-bottom: 2px solid #f00
+	border-bottom: 2px solid #f00;
 }
 
 .spacer {
-	border-bottom: 2px solid #d2d2d2
+	border-bottom: 2px solid #d2d2d2;
 }
 
 .spacer1 {
-	border-bottom: 2px solid #b3c4c4
+	border-bottom: 2px solid #b3c4c4;
 }
 
 .spacer3 {
-	border-bottom: 2px solid #cdd8df
+	border-bottom: 2px solid #cdd8df;
 }
 
 .spacer2 {
-	border-bottom: 2px solid #fff
+	border-bottom: 2px solid #ffffff;
 }
 
 .spacer4 {
-	border-bottom: 2px solid #d8e4ed
+	border-bottom: 2px solid #d8e4ed;
 }
 
 .spacer5 {
-	border-bottom: 2px solid #ffffab
+	border-bottom: 2px solid #ffffab;
 }
 
 .spacer6 {
-	border-bottom: 2px solid #c9deed
+	border-bottom: 2px solid #c9deed;
 }
 
 .spacer7 {
-	border-bottom: 2px solid #e4e9ed
+	border-bottom: 2px solid #e4e9ed;
 }
 
 .spacer8 {
-	border-bottom: 2px solid #ffffbd
+	border-bottom: 2px solid #ffffbd;
 }
-
-a {
-	outline: none
-}
-
 
