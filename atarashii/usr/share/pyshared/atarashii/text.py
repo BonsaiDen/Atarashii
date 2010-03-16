@@ -210,7 +210,7 @@ class TextInput(gtk.TextView):
             # check for "d user" and switch to messaging
             at_user = self.reply_regex.match(text)
             if at_user != None:
-                if self.gui.is_loaded():
+                if self.gui.load_state():
                     self.switch(self.get_text(), MODE_TWEETS)
                 
                 else:
@@ -259,7 +259,7 @@ class TextInput(gtk.TextView):
             # check for "d user" and switch to messaging
             msg = self.message_regex.match(text)
             if msg != None:
-                if self.gui.is_loaded():
+                if self.gui.load_state():
                     self.switch(self.get_text(), MODE_MESSAGES)
                 
                 else:

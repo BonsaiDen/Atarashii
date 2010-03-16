@@ -1,15 +1,23 @@
+atarashii (0.99.10c-1) all;
+
+  * And one more hotfix, this time it seemes that a refactoring did break the
+    auto switching between tweets/messages when starting a message/reply.
+  * Also fixed wrong dates in the changelog.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 16 Mar 2010 16:53:00 +0100
+
 atarashii (0.99.10b-1) all;
 
   * Another hotfix for the textbox focus.
   * Also a small fix for the manpage, this fixes a broken URL.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 16 Mar 2010 16:35:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 16 Mar 2010 16:45:00 +0100
 
 atarashii (0.99.10a-1) all;
 
   * The kittens have hotfixed focus issues with the textbox.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 16 Mar 2010 16:35:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 16 Mar 2010 16:35:00 +0100
 
 atarashii (0.99.10-1) all;
 
@@ -18,7 +26,7 @@ atarashii (0.99.10-1) all;
     Isn't that cute?
   * Many fixes to the timeline/message views.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 16 Mar 2010 16:05:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 16 Mar 2010 16:05:00 +0100
 
 atarashii (0.99.9-1) all;
 
@@ -30,7 +38,7 @@ atarashii (0.99.9-1) all;
   * New and improved handling of network errors.
   * And as usual there have been a lot of bugfixes by the kittens.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 16 Mar 2010 05:58:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 16 Mar 2010 05:58:00 +0100
 
 atarashii (0.99.8b-1) all;
 
@@ -43,7 +51,7 @@ atarashii (0.99.8b-1) all;
     compliant with Twitter.com.
   * New .markdown README for GitHub.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 15 Mar 2010 04:32:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 15 Mar 2010 04:32:00 +0100
 
 atarashii (0.99.8-1) all;
 
@@ -54,7 +62,7 @@ atarashii (0.99.8-1) all;
   * Fixed wrong size of the text input box under some font size configurations.
   * The kittens applied a lot of fixes to the error handling.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 15 Mar 2010 01:02:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 15 Mar 2010 01:02:00 +0100
 
 atarashii (0.99.7-1) all;
 
@@ -77,7 +85,7 @@ atarashii (0.99.6-1) all;
   * Lots of internal refactoring and cleanup e.g. converted all magic values
     into constants.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 13 Mar 2010 01:19:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 13 Mar 2010 01:19:00 +0100
 
 atarashii (0.99.5-1) all;
 
@@ -87,7 +95,7 @@ atarashii (0.99.5-1) all;
   * Fix for hyperspeeded progressbar in some cases.
   * Yet again lots of small bugfixes by the kittens.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 11 Mar 2010 17:35:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 11 Mar 2010 17:35:00 +0100
 
 atarashii (0.99.4-1) all;
 
@@ -97,7 +105,7 @@ atarashii (0.99.4-1) all;
   * Improved detection of #Hashtags, works more like Twitter.com now.
   * Lots of other bugfixes by the kittens.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 9 Mar 2010 04:26:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 9 Mar 2010 04:26:00 +0100
 
 atarashii (0.99.3-1) all;
 
