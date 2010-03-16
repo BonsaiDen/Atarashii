@@ -18,12 +18,15 @@
 # ------------------------------------------------------------------------------
 import os
 import urllib
+import time
 
 # File Paths
 DESKTOP_FILE = os.path.join(os.path.expanduser('~'), '.config',
                             'autostart', 'atarashii.desktop')
 
 COPY_FILE = '/usr/share/applications/atarashii.desktop'
+CRASH_FILE = os.path.join(os.path.expanduser('~'), '.atarashii', 'crashed')
+
 
 class Settings:
     def __init__(self):
@@ -31,9 +34,11 @@ class Settings:
         if not os.path.exists(self.dir):
             os.mkdir(self.dir)
         
+        # Record running time
+        self.init_time = time.time()        
         self.values = {}
         self.load()
-    
+        
     
     # Load ---------------------------------------------------------------------
     def load(self):
@@ -68,6 +73,10 @@ class Settings:
     
         # Check autostart
         self.check_autostart()
+        
+        # Check crash
+        self.check_crash()
+        self.crash_file(True)
     
     
     # Save ---------------------------------------------------------------------
@@ -160,4 +169,29 @@ class Settings:
     
     def check_autostart(self):
         self['autostart'] = os.path.exists(DESKTOP_FILE)
+        
+        
+    # Crash Handling -----------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def check_crash(self):
+        self['crashed'] = os.path.exists(CRASH_FILE)
+        if self['crashed']:
+            cfp = open(CRASH_FILE, "rb")
+            self['time_before_crash'] = long(cfp.read())
+            cfp.close()
+            print "ERROR: Atarashii crashed!"
+            print "Runtime before crash %2.2f minutes" % (self['time_before_crash'] / 60.0)
+    
+    def crash_file(self, mode):
+        try:
+            if mode:
+                cfp = open(CRASH_FILE, "wb")
+                cfp.write(str(time.time() - self.init_time))
+                cfp.close()
+                
+            else:
+                os.unlink(CRASH_FILE)
+        
+        except:
+            print "IO on crashfile failed"
     

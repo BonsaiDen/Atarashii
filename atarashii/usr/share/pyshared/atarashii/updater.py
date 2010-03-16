@@ -312,6 +312,11 @@ class Updater(threading.Thread):
             
             self.main.is_updating = True
             self.update()
+            
+            # Update crashfile
+            self.main.settings.crash_file(True)
+            
+            # Update GUI
             gobject.idle_add(
                     lambda: self.gui.refresh_button.set_sensitive(True))
             

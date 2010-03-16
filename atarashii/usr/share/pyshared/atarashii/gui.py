@@ -162,7 +162,8 @@ class GUI(gtk.Window):
         self.on_mode()
         
         # Show GUI
-        if not main.settings.is_true("tray", False):
+        if not main.settings.is_true("tray", False) or \
+            main.settings.is_true("crashed", False): # show after crash
             self.show_gui()
         
         gobject.idle_add(lambda: self.main.on_init())
@@ -176,6 +177,10 @@ class GUI(gtk.Window):
         # Statusbar Updater
         self.update_status()
         gobject.timeout_add(1000, lambda: self.update_status())
+        
+        # Crash Info
+        if self.main.settings.is_true("crashed", False):
+            self.show_crash_report()
         
         # Show
         if not self.main.is_connecting:
@@ -538,6 +543,11 @@ class GUI(gtk.Window):
         dialog.MessageDialog(self, MESSAGE_WARNING, 
                lang.error_favorite_on % lang.name(name) if mode else \
                lang.error_favorite_off % lang.name(name), lang.error_title)
+    
+    def show_crash_report(self):
+        dialog.MessageDialog(self, MESSAGE_WARNING, 
+               "Atarashii has crashed and automatically restarted itself.",
+               lang.error_title)    
     
     
     # Error & Warning aka I'm Error! -------------------------------------------
