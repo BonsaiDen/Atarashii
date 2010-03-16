@@ -208,7 +208,8 @@ class GUI(gtk.Window):
     def show_progress(self):
         def progress_activity():
             self.progress.pulse()
-            return self.main.is_sending or self.main.is_connecting or \
+            return self.main.is_sending or self.main.is_deleting or \
+                self.main.is_connecting or \
                 self.main.is_loading_history or \
                 (self.mode == MODE_MESSAGES and \
                 self.message.loaded == HTML_LOADING) or \
@@ -270,7 +271,7 @@ class GUI(gtk.Window):
         elif not self.main.login_status:
             self.set_status(lang.status_logout)
         
-        elif self.main.is_sending:
+        elif self.main.is_sending or self.main.is_deleting:
             pass
         
         elif self.main.is_updating:
@@ -523,32 +524,47 @@ class GUI(gtk.Window):
                         lang.retweet_info % name,
                         lang.retweet_info_title)
     
-    def ask_for_delete(self, name, yes, noo):
+    def ask_for_delete_tweet(self, text, yes, noo):
         dialog.MessageDialog(self, MESSAGE_QUESTION,
-                        lang.delete_question,
+                        lang.delete_tweet_question % text,
                         lang.delete_title,
                         yes_callback = yes, no_callback = noo)
+    
+    def ask_for_delete_message(self, text, yes, noo):
+        dialog.MessageDialog(self, MESSAGE_QUESTION,
+                        lang.delete_message_question % text,
+                        lang.delete_title,
+                        yes_callback = yes, no_callback = noo)
+    
+    def show_delete_info(self, tweet, msg):
+        dialog.MessageDialog(self, MESSAGE_INFO,
+                        lang.delete_info_tweet if tweet != UNSET_ID_NUM else \
+                        lang.delete_info_message,
+                        lang.delete_info_title)
     
     
     # Error & Warning ----------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_error(self, error):
-        if self.main.was_sending:
+        # Select Textbox?
+        if self.main.was_sending or self.main.was_deleting:
             self.show_input()
-            
-            # Select Textbox?
             if not self.main.was_retweeting or \
                (self.main.retweet_text != UNSET_TEXT or \
                self.main.reply_user != UNSET_TEXT or \
                self.main.reply_id != UNSET_ID_NUM):
+                
                 if not self.main.was_new_retweeting:
                     self.text.grab_focus()
                     
-            if self.text.has_typed and self.main.was_new_retweeting:
+            if self.text.has_typed and \
+               (self.main.was_new_retweeting or self.main.was_deleting):
                 self.text.grab_focus()
         
         # Network Error?
         if isinstance(error, IOError):
+            print error.message
+            print error.errno
             if error.errno == -2:
                 code = -4
                 if self.main.login_status:
@@ -577,6 +593,7 @@ class GUI(gtk.Window):
         
         # Get information about the internal error
         if code == 0:
+            # The stack trace here is usesless... fix it...
             top = traceback.extract_stack()[-1]
             error = "%s @ %s line %s\n%s" % (
                     type(error).__name__,
@@ -605,9 +622,11 @@ class GUI(gtk.Window):
         if self.main.was_sending and code == 404:
             code = -3
         
+        # Reset stuff
         self.main.was_sending = False
         self.main.was_retweeting = False
         self.main.was_new_retweeting = False
+        self.main.was_deleting = False
         
         # Show Warning on url error or error message for anything else
         if code == -1 or code == 500 or code == 502 or \
