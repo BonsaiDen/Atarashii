@@ -181,6 +181,8 @@ LANG = {
         'error_user_not_found' : 'Der Benutzer %s existiert nicht.',
         'error_network' : 'Atarashii konnte keine Verbindung zum Internet herstellen.',
         'error_network_lost' : 'Atarashii hat die Verbundung zum Internet verloren, es wird alle 60 Sekunden versucht die Verbindung wiederherzustellen.',
+        'error_favorite_on' : '%s Tweet konnte nicht favorisiert werden.',
+        'error_favorite_off' : '%s Tweet konnte nicht entfavorisiert werden.',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warnung',
@@ -390,6 +392,8 @@ LANG = {
         'error_user_not_found' : 'The user %s does not exist.',
         'error_network' : 'Atarashii could not establish a connection to the Internet.',
         'error_network_lost' : 'Atarashii has lost the conntection to the Internet. It will automatically try to reconnect itself every 60 seconds.',
+        'error_favorite_on' : '%s Tweet couldn\'t be favorited.',
+        'error_favorite_off' : '%s Tweet couldn\'t be unfavorited.',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warning',

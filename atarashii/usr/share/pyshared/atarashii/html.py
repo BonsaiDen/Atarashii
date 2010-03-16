@@ -136,11 +136,11 @@ class HTML(view.HTMLView):
         # Favorite -------------------------------------------------------------
         if tweet.favorited:
             favorite = '''<div class="undofav">
-                          <a href="unfav:%d" title="''' + \
+                          <a href="unfav:%s:%d" title="''' + \
                           lang.html_unfavorite +  '''"> </a></div>'''
         
         else:
-            favorite = '''<div class="dofav"><a href="fav:%d" title="''' + \
+            favorite = '''<div class="dofav"><a href="fav:%s:%d" title="''' + \
                           lang.html_favorite +  '''"> </a></div>'''
         
         
@@ -186,7 +186,7 @@ class HTML(view.HTMLView):
                 
                 # Actions
                 user.screen_name, tweet.id, num,
-                tweet.id,
+                user.screen_name, tweet.id,
                 
                 # Text
                 user.screen_name,

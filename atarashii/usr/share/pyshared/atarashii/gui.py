@@ -535,8 +535,13 @@ class GUI(gtk.Window):
                         lang.delete_info_message,
                         lang.delete_info_title)
     
+    def show_favorite_error(self, name, mode):
+        dialog.MessageDialog(self, MESSAGE_WARNING, 
+               lang.error_favorite_on % lang.name(name) if mode else \
+               lang.error_favorite_off % lang.name(name), lang.error_title)
     
-    # Error & Warning ----------------------------------------------------------
+    
+    # Error & Warning aka I'm Error! -------------------------------------------
     # --------------------------------------------------------------------------
     def show_error(self, error):
         # Select Textbox?

@@ -225,12 +225,13 @@ class Delete(threading.Thread):
 # Favorites --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Favorite(threading.Thread):
-    def __init__(self, main, tweet_id, mode):
+    def __init__(self, main, tweet_id, mode, name):
         threading.Thread.__init__(self)
         self.gui = main.gui
         self.main = main
         self.tweet_id = tweet_id
         self.mode = mode
+        self.name = name
     
     def run(self):
         try:
@@ -242,11 +243,12 @@ class Favorite(threading.Thread):
             else:
                 self.main.api.destroy_favorite(self.tweet_id)
             
-            gobject.idle_add(lambda: self.gui.html.favorite(self.tweet_id, self.mode))
+            gobject.idle_add(lambda: 
+                    self.gui.html.favorite(self.tweet_id, self.mode))
         
         except Exception, error:
             print error
-            gobject.idle_add(lambda: self.gui.show_favorite_error())
+            gobject.idle_add(lambda: self.gui.show_favorite_error(self.name, self.mode))
 
         del self.main.favorites_pending[self.tweet_id]
 

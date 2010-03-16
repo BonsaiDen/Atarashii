@@ -619,13 +619,15 @@ class HTMLView(webkit.WebView):
         
         # Favorite
         elif uri.startswith("fav:"):
-            ref, item_id = uri.split(":")
-            gobject.idle_add(lambda: self.main.favorite(int(item_id), True))
+            ref, name, item_id = uri.split(":")
+            gobject.idle_add(
+                    lambda: self.main.favorite(int(item_id), True, name))
         
         # Un-Favorite
         elif uri.startswith("unfav:"):
-            ref, item_id, = uri.split(":")
-            gobject.idle_add(lambda: self.main.favorite(int(item_id), False))
+            ref, name, item_id, = uri.split(":")
+            gobject.idle_add(
+                    lambda: self.main.favorite(int(item_id), False, name))
         
         # Regular links
         else:
