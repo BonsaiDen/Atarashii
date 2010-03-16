@@ -278,6 +278,9 @@ class SettingsDialog(Dialog):
             if self.get_drop_active() != -1:
                 username = self.user_accounts[self.get_drop_active()]
             
+            else:
+                username = ""
+            
             # Save Settings
             self.main.save_settings()
             if username == "":
@@ -290,8 +293,18 @@ class SettingsDialog(Dialog):
             
             self.on_close()
         
+        
+        # Cancel ---------------------------------------------------------------
+        def cancel(*args):
+            if self.get_drop_active() == -1:
+                self.main.username = ""
+                self.settings['username'] = ""
+                self.main.logout()
+            
+            self.on_close()
+        
         self.close_button.connect("clicked", save)
-        cancel_button.connect("clicked", self.on_close)
+        cancel_button.connect("clicked", cancel)
         gobject.idle_add(lambda *arg: self.drop.grab_focus())
     
     def on_close(self, *args):

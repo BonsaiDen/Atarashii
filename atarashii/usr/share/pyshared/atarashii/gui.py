@@ -426,9 +426,11 @@ class GUI(gtk.Window):
             elif self.mode == MODE_TWEETS:                
                 self.tray.set_tooltip(lang.tray_logged_in % self.main.username,
                                       self.html.count, self.message.count)
+        elif self.main.is_connecting:
+            self.tray.set_tooltip(lang.tray_logging_in % self.main.username)
         
         else:
-            self.tray.set_tooltip(lang.tray_logging_in % self.main.username)
+            self.tray.set_tooltip(lang.tray_logged_out)
     
     
     def check_refresh(self):
@@ -485,7 +487,7 @@ class GUI(gtk.Window):
         self.set_property('skip-taskbar-hint', not mode)
     
     def show_start_notifications(self):
-        if self.main.settings.is_true("notify"):
+        if self.main.settings.is_true("notify") and self.main.login_status:
             info_text = []
             
             # Tweet Info
