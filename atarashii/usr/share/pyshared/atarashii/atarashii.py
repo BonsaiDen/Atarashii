@@ -218,6 +218,7 @@ class Atarashii:
         
         # Switch User
         if change_user != None:
+            self.gui.text.reset()
             self.username = change_user
             self.settings['username'] = change_user
         
@@ -228,6 +229,7 @@ class Atarashii:
         self.gui.hide_all(False)
         self.gui.show_progress()
         
+                
         # Connect
         if self.reconnect_timeout != None:
             gobject.source_remove(self.reconnect_timeout)

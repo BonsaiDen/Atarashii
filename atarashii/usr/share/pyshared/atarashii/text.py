@@ -132,6 +132,12 @@ class TextInput(gtk.TextView):
             elif self.gui.mode == MODE_MESSAGES:
                 self.gui.message.focus_me()
     
+    def reset(self):
+        self.set_text("")
+        self.has_focus = False
+        self.contents_change = False
+        self.loose_focus()
+    
     
     # Sizing -------------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -286,7 +292,7 @@ class TextInput(gtk.TextView):
         self.check_color(len(text))
     
     def check_length(self):
-        text = self.get_text()
+        text = unicode(self.get_text())
         max_length = 140 + self.message_len
         if len(text) <= max_length:
             self.gui.set_status(lang.status_left % (max_length - len(text)))
