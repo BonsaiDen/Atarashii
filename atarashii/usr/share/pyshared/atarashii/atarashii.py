@@ -15,7 +15,6 @@
 
 # TODO enable deletion
 # TODO add favorite
-# TODO add timeout to requests!!!!!
 # TODO fix link dragging
 
 
@@ -94,9 +93,11 @@ class Atarashii:
         self.is_reconnecting = False
         self.is_updating = False
         self.is_loading_history = False
+        self.is_deleting = False
         self.was_sending = False
         self.was_retweeting = False
         self.was_new_retweeting = False
+        self.was_deleting = False
         self.rate_warning_shown = False
         self.request_warning_shown = False
         
@@ -123,7 +124,7 @@ class Atarashii:
     # Sending ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def send(self, text):
-        if self.is_sending:
+        if self.is_sending or self.is_deleting:
             return
         
         # Send
@@ -154,20 +155,41 @@ class Atarashii:
     
     # New style Retweet
     def retweet(self, name, tweet_id, new_style = False):
-        if not self.is_sending:
-            if new_style:
-                self.was_new_retweeting = True
-            
-            self.is_sending = True
-            self.gui.text.set_sensitive(False)
-            self.gui.message_button.set_sensitive(False)
-            self.gui.show_progress()
-            self.gui.set_status(lang.status_retweet % name)
-            
-            # Sender
-            sender = send.Retweet(self, name, tweet_id)
-            sender.setDaemon(True)
-            sender.start()
+        if self.is_sending or self.is_deleting:
+            return
+        
+        if new_style:
+            self.was_new_retweeting = True
+        
+        self.is_sending = True
+        self.gui.text.set_sensitive(False)
+        self.gui.message_button.set_sensitive(False)
+        self.gui.show_progress()
+        self.gui.set_status(lang.status_retweet % name)
+        
+        # Sender
+        retweeter = send.Retweet(self, name, tweet_id)
+        retweeter.setDaemon(True)
+        retweeter.start()
+    
+    
+    # Delete
+    def delete(self, tweet_id = UNSET_ID_NUM, message_id = UNSET_ID_NUM):
+        if self.is_sending or self.is_deleting:
+            return
+        
+        self.is_deleting = True
+        self.gui.text.set_sensitive(False)
+        self.gui.message_button.set_sensitive(False)
+        self.gui.show_progress()
+        self.gui.set_status(lang.status_deleting_tweet if \
+                            tweet_id != UNSET_ID_NUM else \
+                            lang.status_deleting_message)
+    
+        # Sender
+        deleter = send.Delete(self, tweet_id, message_id)
+        deleter.setDaemon(True)
+        deleter.start()
     
     
     # Login & Logout -----------------------------------------------------------
@@ -229,6 +251,7 @@ class Atarashii:
         self.login_error = False
         self.login_status = True
         self.is_connecting = False
+        self.is_deleting = False
         self.network_failed = False
         self.gui.settings_button.set_sensitive(True)
         self.gui.tray.settings_menu.set_sensitive(True)
@@ -244,6 +267,7 @@ class Atarashii:
         self.login_status = False
         self.is_connecting = False
         self.network_failed = False
+        self.is_deleting = False
         self.gui.settings_button.set_sensitive(True)
         self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_app_title()
@@ -268,6 +292,7 @@ class Atarashii:
         self.is_connecting = False
         self.is_reconnecting = False
         self.is_updating = False
+        self.is_deleting = False
         self.network_failed = False
         self.gui.settings_button.set_sensitive(True)
         self.gui.update_status()
