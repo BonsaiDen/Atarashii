@@ -54,7 +54,6 @@ class HTMLView(webkit.WebView):
         self.lang_loading = ""
         self.lang_load = ""
         self.lang_empty = ""
-        self.menu = None
         
         self.init(True)
     
@@ -84,8 +83,56 @@ class HTMLView(webkit.WebView):
             self.splash()
     
     
-    # Loading HTML -------------------------------------------------------------
+    # Render the actual HTML ---------------------------------------------------
     # --------------------------------------------------------------------------
+    def init_render(self):
+        self.position = self.scroll.get_vscrollbar().get_value()
+        self.items.sort(self.compare)
+        self.count = 0
+        
+        # Set the latest tweet for reloading on startup
+        if len(self.items) > 0:
+            itemid = len(self.items) - self.item_count
+            if itemid < 0:
+                itemid = 0
+            
+            setting = self.first_setting + self.main.username
+            self.main.settings[setting] = self.items[itemid][0].id - 1
+        
+        # Newest Stuff
+        if self.newest_id == HTML_UNSET_ID:
+            self.newest_id = self.init_id
+        
+        # Newest Stuff
+        self.newest = False
+        self.newest_avatar = False
+        self.new_timline = False
+    
+    def render(self):
+        self.init_render()
+        self.lastname = ""
+        self.lastrecipient = ""
+        self.last_highlight = False
+        self.last_mentioned = False
+        
+        # Do the rendering!
+        self.renderitems = []
+        for num, obj in enumerate(self.items):
+            item, img = obj
+            self.is_new_timeline(item)
+            html = self.render_item(num, item, img)
+            
+            # Close Newest Container
+            if item.id == self.newest_id:
+                html = '</div>' + html
+            
+            self.renderitems.insert(0, html)
+        
+        # Render
+        self.set_html(self.renderitems)
+    
+    
+    # HTML Helpers -------------------------------------------------------------
     def start(self):
         self.scroll.get_vscrollbar().set_value(0)
         self.offset_count = 0
@@ -102,9 +149,6 @@ class HTMLView(webkit.WebView):
                 <div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
             </body>""" % (self.main.get_image(), lang.html_welcome))
     
-    
-    # Render the actual HTML ---------------------------------------------------
-    # --------------------------------------------------------------------------
     def render_html(self, html):
         self.load_string("""
         <html>
@@ -132,6 +176,8 @@ class HTMLView(webkit.WebView):
                     <div class="loading"><b>%s</b></div>
                 </body>""" % self.lang_empty)
     
+    # The big magic spacer inserted... trust me it's really magic that this
+    # thin does work at all...
     def insert_spacer(self, item, user, highlight, mentioned, message = False, 
                     next = False, force = False):
         
@@ -211,14 +257,29 @@ class HTMLView(webkit.WebView):
         
         return '<div class="spacer%s"></div>' % spacer
     
-    def is_protected(self, user):
-        if hasattr(user, "protected") and user.protected:
-            return  ('<span class="protected" title="' + \
-                     lang.html_protected + '"></span>') % \
-                     lang.name(user.screen_name)
-        
-        else:
-            return ''
+    
+    # History / Read Button ----------------------------------------------------
+    # --------------------------------------------------------------------------
+    def clear(self):
+        self.history_loaded = False
+        self.items = self.items[self.history_count:]
+        self.set_item_count(self.get_item_count() - self.history_count)
+        self.history_count = 0
+        self.main.gui.history_button.set_sensitive(False)
+        self.render()
+    
+    def read(self):
+        if self.init_id != self.get_latest():
+            self.main.gui.read_button.set_sensitive(False)
+            self.init_id = self.get_latest()
+            if not self.history_loaded:
+                pos = len(self.items) - self.item_count
+                if pos < 0:
+                    pos = 0
+                
+                self.items = self.items[pos:]
+            
+            self.render()
     
     
     # Fix scrolling isses on page load -----------------------------------------
@@ -272,31 +333,7 @@ class HTMLView(webkit.WebView):
             self.scroll.get_vscrollbar().set_value(offset - height)
     
     
-    # History / Read Button ----------------------------------------------------
-    # --------------------------------------------------------------------------
-    def clear(self):
-        self.history_loaded = False
-        self.items = self.items[self.history_count:]
-        self.set_item_count(self.get_item_count() - self.history_count)
-        self.history_count = 0
-        self.main.gui.history_button.set_sensitive(False)
-        self.render()
-    
-    def read(self):
-        if self.init_id != self.get_latest():
-            self.main.gui.read_button.set_sensitive(False)
-            self.init_id = self.get_latest()
-            if not self.history_loaded:
-                pos = len(self.items) - self.item_count
-                if pos < 0:
-                    pos = 0
-                
-                self.items = self.items[pos:]
-            
-            self.render()
-    
-    
-    # Add Items ----------------------------------------------------------------
+    # Item management ----------------------------------------------------------
     # --------------------------------------------------------------------------
     def push_updates(self):
         while len(self.update_list) > 0:
@@ -307,8 +344,6 @@ class HTMLView(webkit.WebView):
         
         self.render()
     
-    
-    # Add items to the internal List
     def add(self, item, append = False):        
         # Don't add items with the same ID twice
         if not item[0].id in [i[0].id for i in self.items]:
@@ -344,63 +379,9 @@ class HTMLView(webkit.WebView):
             return 0
     
     
-    # Setup rendering ----------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def init_render(self):
-        self.position = self.scroll.get_vscrollbar().get_value()
-        self.items.sort(self.compare)
-        self.count = 0
-        
-        # Set the latest tweet for reloading on startup
-        if len(self.items) > 0:
-            itemid = len(self.items) - self.item_count
-            if itemid < 0:
-                itemid = 0
-            
-            setting = self.first_setting + self.main.username
-            self.main.settings[setting] = self.items[itemid][0].id - 1
-        
-        # Newest Stuff
-        if self.newest_id == HTML_UNSET_ID:
-            self.newest_id = self.init_id
-        
-        # Newest Stuff
-        self.newest = False
-        self.newest_avatar = False
-        self.new_timline = False
-    
-    
-    # Render the Timeline ------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def render(self):
-        self.init_render()
-        self.lastname = ""
-        self.lastrecipient = ""
-        self.last_highlight = False
-        self.last_mentioned = False
-        
-        # Do the rendering!
-        self.renderitems = []
-        for num, obj in enumerate(self.items):
-            item, img = obj
-            self.is_new_timeline(item)
-            html = self.render_item(num, item, img)
-            
-            # Close Newest Container
-            if item.id == self.newest_id:
-                html = '</div>' + html
-            
-            self.renderitems.insert(0, html)
-        
-        # Render
-        self.set_html(self.renderitems)
-    
-    
     # Popup Menu ---------------------------------------------------------------
-    # --------------------------------------------------------------------------
-
-    # Kill of the original context menu!
-    def on_popup(self, view, menu, *args):
+    # --------------------------------------------------------------------------    
+    def on_popup(self, view, menu, *args): # Kill of the original context menu!
         menu.hide()
         menu.cancel()
         menu.destroy()
@@ -498,94 +479,12 @@ class HTMLView(webkit.WebView):
             delete sizes;''' % (event.x, event.y))
             title = self.get_main_frame().get_title()
             return title
-        
+            
         except:
             return None
     
     
-    # Helpers ------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def relative_time(self, date):
-        delta = long(calendar.timegm(time.gmtime())) - \
-                long(calendar.timegm(date.timetuple()))
-        
-        if delta <= 1:
-            return lang.html_about_second
-        
-        elif delta <= 45:
-            return lang.html_second % delta
-        
-        elif delta <= 90:
-            return lang.html_about_minute
-        
-        elif delta <= 60 * 45:
-            return lang.html_minute % math.ceil(delta / 60.0)
-        
-        elif delta <= 60 * 60 * 1.5:
-            return lang.html_about_hour
-        
-        elif delta <= 60 * 60 * 20:
-            return lang.html_hour % math.ceil(delta / (60.0 * 60.0))
-        
-        elif delta <= 60 * 60 * 24 * 1.5:
-            return lang.html_about_day
-        
-        elif delta <= 60 * 60 * 48:
-            return lang.html_yesterday
-        
-        elif delta <= 60 * 60 * 72:
-            return lang.html_day % math.ceil(delta / (60.0 * 60.0 * 24.0))
-        
-        else:
-            date = time.localtime(calendar.timegm(date.timetuple()))
-            return time.strftime(lang.html_exact, date)
-    
-    def absolute_time(self, date):
-        delta = long(calendar.timegm(time.gmtime())) - \
-                long(calendar.timegm(date.timetuple()))
-        
-        date = time.localtime(calendar.timegm(date.timetuple()))
-        if delta <= 60 * 60 * 24:
-            return time.strftime(lang.html_time, date)
-        
-        else:
-            return time.strftime(lang.html_time_day, date)
-    
-    
-    # Checks for new Tweets
-    def is_new_timeline(self, item):
-        self.new_timeline = item.id > self.init_id
-        if self.new_timeline:
-            self.count += 1
-        
-        if self.newest or self.init_id == 0:
-            self.new_timeline = False
-        
-        if self.new_timeline:
-            self.newest = True
-    
-    def is_new_avatar(self, num):
-        if num < len(self.items) - 1:
-            self.new_avatar = self.items[num + 1][0].id > self.init_id
-        
-        else:
-            self.new_avatar = False
-        
-        if num > 0 and self.items[num - 1][0].id <= self.init_id:
-            self.new_timeline = False
-        
-        if self.newest_avatar or self.init_id == 0:
-            self.new_avatar = False
-        
-        if self.new_avatar:
-            self.newest_avatar = True
-    
-    def focus_me(self):
-        self.grab_focus()
-        self.gui.text.html_focus()
-    
-    
-    # Handle the opening of links ----------------------------------------------
+    # Handle the opening of Links ----------------------------------------------
     # --------------------------------------------------------------------------
     def context_link(self, uri, extra = None):
         self.open_link(None, None, None, uri, extra)
@@ -715,7 +614,9 @@ class HTMLView(webkit.WebView):
         clipboard = gtk.Clipboard(display, "CLIPBOARD")
         clipboard.set_text(url)
     
-    # Unescape chars
+    
+    # Helpers ------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     def unescape(self, text):
         ent = {
             "&": "&amp;",
@@ -729,58 +630,111 @@ class HTMLView(webkit.WebView):
         
         return text
     
+    def relative_time(self, date):
+        delta = long(calendar.timegm(time.gmtime())) - \
+                long(calendar.timegm(date.timetuple()))
+        
+        if delta <= 1:
+            return lang.html_about_second
+        
+        elif delta <= 45:
+            return lang.html_second % delta
+        
+        elif delta <= 90:
+            return lang.html_about_minute
+        
+        elif delta <= 60 * 45:
+            return lang.html_minute % math.ceil(delta / 60.0)
+        
+        elif delta <= 60 * 60 * 1.5:
+            return lang.html_about_hour
+        
+        elif delta <= 60 * 60 * 20:
+            return lang.html_hour % math.ceil(delta / (60.0 * 60.0))
+        
+        elif delta <= 60 * 60 * 24 * 1.5:
+            return lang.html_about_day
+        
+        elif delta <= 60 * 60 * 48:
+            return lang.html_yesterday
+        
+        elif delta <= 60 * 60 * 72:
+            return lang.html_day % math.ceil(delta / (60.0 * 60.0 * 24.0))
+        
+        else:
+            date = time.localtime(calendar.timegm(date.timetuple()))
+            return time.strftime(lang.html_exact, date)
     
-    # Helpers for new style Retweets -------------------------------------------
-    # --------------------------------------------------------------------------
-    def get_user(self, num):
-        if type(num) in (int, long):
-            item = self.items[num][0]
+    def absolute_time(self, date):
+        delta = long(calendar.timegm(time.gmtime())) - \
+                long(calendar.timegm(date.timetuple()))
+        
+        date = time.localtime(calendar.timegm(date.timetuple()))
+        if delta <= 60 * 60 * 24:
+            return time.strftime(lang.html_time, date)
         
         else:
-            item = num
-        
-        if hasattr(item, "retweeted_status"):
-            return item.retweeted_status.user
-        
-        else:
-            return item.user
+            return time.strftime(lang.html_time_day, date)
     
-    def get_text(self, num):
-        if type(num) in (int, long):
-            item = self.items[num][0]
-        
-        else:
-            item = num
-        
-        if hasattr(item, "retweeted_status"):
-            return item.retweeted_status.text
-        
-        else:
-            return item.text
     
-    def get_source(self, num):
-        if type(num) in (int, long):
-            item = self.items[num][0]
+    # Checks for new Tweets
+    def is_new_timeline(self, item):
+        self.new_timeline = item.id > self.init_id
+        if self.new_timeline:
+            self.count += 1
         
-        else:
-            item = num
+        if self.newest or self.init_id == 0:
+            self.new_timeline = False
         
-        if hasattr(item, "retweeted_status"):
-            return item.retweeted_status.source
-        
-        else:
-            return item.source
+        if self.new_timeline:
+            self.newest = True
     
-    def get_id(self, num):
-        if type(num) in (int, long):
-            item = self.items[num][0]
+    def is_new_avatar(self, num):
+        if num < len(self.items) - 1:
+            self.new_avatar = self.items[num + 1][0].id > self.init_id
         
         else:
-            item = num
+            self.new_avatar = False
         
-        if hasattr(item, "retweeted_status"):
-            return item.retweeted_status.id
+        if num > 0 and self.items[num - 1][0].id <= self.init_id:
+            self.new_timeline = False
+        
+        if self.newest_avatar or self.init_id == 0:
+            self.new_avatar = False
+        
+        if self.new_avatar:
+            self.newest_avatar = True
+    
+    # Focus this view
+    def focus_me(self):
+        self.grab_focus()
+        self.gui.text.html_focus()
+    
+    
+    # Attribute helpers for new style Retweets
+    def get_attr(self, num, attr):
+        item = self.items[num][0] if type(num) in (int, long) else num
+        return (item.retweeted_status if \
+                hasattr(item, "retweeted_status") else item).__dict__[attr]
+    
+    def get_user(self, item):
+        return self.get_attr(item, "user")
+    
+    def get_text(self, item):
+        return self.get_attr(item, "text")
+        
+    def get_source(self, item):
+        return self.get_attr(item, "source")
+    
+    def get_id(self, item):
+        return self.get_attr(item, "id")
+    
+    def is_protected(self, user):
+        if hasattr(user, "protected") and user.protected:
+            return  ('<span class="protected" title="' + \
+                     lang.html_protected + '"></span>') % \
+                     lang.name(user.screen_name)
         
         else:
-            return item.id
+            return ''
     
