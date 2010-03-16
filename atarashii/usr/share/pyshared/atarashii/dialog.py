@@ -181,7 +181,6 @@ class SettingsDialog(Dialog):
         column.add_attribute(cell, 'text', 0)
         self.get("treewindow").add(drop)
         drop.show()
-        
         drop.connect("cursor-changed", self.drop_changed)
         self.create_drop_list()
         self.drop_changed()
@@ -293,6 +292,7 @@ class SettingsDialog(Dialog):
         
         self.close_button.connect("clicked", save)
         cancel_button.connect("clicked", self.on_close)
+        gobject.idle_add(lambda *arg: self.drop.grab_focus())
     
     def on_close(self, *args):
         self.__class__.instance = None
