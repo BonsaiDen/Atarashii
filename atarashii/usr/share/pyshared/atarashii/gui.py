@@ -782,13 +782,10 @@ class GUI(gtk.Window):
             self.about_toggle = False
     
     def on_quit(self, widget = None, data = None):
-        # TODO check if this get's called when the application is closed by
-        # logging out
         if data:
             data.set_visible(False)
         
         self.main.quit()
-
     
     
     # Events -------------------------------------------------------------------
