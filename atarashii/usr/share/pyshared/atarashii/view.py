@@ -741,7 +741,7 @@ class HTMLView(webkit.WebView):
             return time.strftime(lang.html_time_day, date)
     
     
-    # Checks for new Tweets
+    # IS stuff -----------------------------------------------------------------
     def is_new_timeline(self, item):
         self.new_timeline = item.id > self.init_id
         if self.new_timeline:
