@@ -440,12 +440,10 @@ class HTMLView(webkit.WebView):
         item.set_label(name)
         item.connect('activate', callback)
         menu.append(item)
-        item.show()
     
     def add_menu_separator(self, menu):
         item = gtk.SeparatorMenuItem()
         menu.append(item)
-        item.show()
     
     def on_popup_close(self, *args):
         self.gui.text.html_focus()
