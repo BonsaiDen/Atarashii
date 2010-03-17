@@ -14,6 +14,10 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
+# TODO add readall to tray menu
+# TODO convert
+
+
 # Atarashii --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import bus
@@ -428,7 +432,7 @@ class Atarashii:
         self.updater.running = False
         gtk.main_quit()
         
-    def save_on_quit(self):
+    def save_on_quit(self, *args):
         self.save_mode()
         self.save_settings()
         self.settings.crash_file(False)
