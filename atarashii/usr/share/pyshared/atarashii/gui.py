@@ -54,7 +54,7 @@ class GUI(gtk.Window):
         self.set_icon_from_file(main.get_image())
         
         # Hide in Taskbar?
-        self.show_taskbar(main.settings.is_true('taskbar'))
+        self.show_in_taskbar(main.settings.is_true('taskbar'))
         
         # Load Components
         self.gtb = gtb = gtk.Builder()
@@ -167,7 +167,7 @@ class GUI(gtk.Window):
         self.is_shown = False
         self.progress_visible = False
         
-        # Enable Mode
+        # Set Message/Tweet Mode
         self.set_mode(self.mode)
         self.set_app_title()
         self.on_mode()
@@ -186,8 +186,7 @@ class GUI(gtk.Window):
         
         # Hide Warning/Error Buttons
         self.warning_button.hide()
-        self.error_button.hide() 
-        
+        self.error_button.hide()
         self.on_mode()
         
         # Statusbar Updater
@@ -415,10 +414,6 @@ class GUI(gtk.Window):
     
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def get_height(self, widget):
-        size = widget.get_allocation()
-        return size[3] - size[0]
-    
     def set_app_title(self):
         if self.main.username == UNSET_TEXT or \
             (not self.main.status(ST_LOGIN_SUCCESSFUL) and \
@@ -466,7 +461,6 @@ class GUI(gtk.Window):
         
         else:
             self.tray.set_tooltip(lang.tray_logged_out)
-    
     
     def check_refresh(self):
         if self.is_ready():
@@ -519,7 +513,7 @@ class GUI(gtk.Window):
         return self.message.load_state == HTML_LOADED and \
                self.html.load_state == HTML_LOADED
     
-    def show_taskbar(self, mode):
+    def show_in_taskbar(self, mode):
         self.main.settings['taskbar'] = mode
         self.set_property('skip-taskbar-hint', not mode)
     
