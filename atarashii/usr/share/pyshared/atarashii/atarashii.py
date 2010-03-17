@@ -46,6 +46,39 @@ from lang import lang
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
                       MODE_TWEETS, MODE_MESSAGES, HTML_UNSET_ID
 
+# Loading like stuff
+ST_NONE = 0
+ST_CONNECTING = 1
+ST_RECONNECTING = 2
+ST_UPDATING = 4
+ST_SENDING = 8
+ST_HISTORY = 16
+ST_DELETING = 32
+ST_ALL_IS = ST_CONNECTING | ST_RECONNECTING | ST_UPDATING | ST_SENDING | ST_HISTORY | ST_DELETING
+
+# Was stuff
+ST_WAS_SENDING = 64
+ST_WAS_RETWEETING = 128
+ST_WAS_NEW_RETWEETING = 256
+ST_WAS_DELETING = 512
+ST_WAS_ALL = ST_WAS_SENDING | ST_WAS_RETWEETING | ST_WAS_NEW_RETWEETING | ST_WAS_DELETING
+
+# Warning stuff
+ST_WARNING_RATE = 1024
+ST_WARNING_REQUEST = 2048
+ST_WARNING_ALL = ST_WARNING_RATE |ST_WARNING_REQUEST
+
+# Login Stuff
+ST_LOGIN_ERROR = 4096
+ST_LOGIN_OK = 8192
+ST_LOGIN_COMPLETE = 16384
+ST_LOGIN_ALL = ST_LOGIN_ERROR | ST_LOGIN_OK | ST_LOGIN_COMPLETE
+
+# Network
+ST_NETWORK_FAILED = 32768
+
+# All
+ST_ALL = ST_ALL_IS | ST_WAS_ALL | ST_WARNING_ALL | ST_NETWORK_FAILED
 
 class Atarashii:
     def __init__(self, version, debug = None):
@@ -85,6 +118,7 @@ class Atarashii:
         self.reconnect_timeout = None # The reconnect timer reference
         
         # State
+        self.current_status = ST_NONE
         self.login_error = False
         self.login_status = False
         self.network_failed = False
@@ -120,6 +154,17 @@ class Atarashii:
         
         # Start
         self.updater.start()
+    
+    
+    # Status stuff!
+    def status(self, flag):
+        return self.current_status & flag == flag
+        
+    def status_on(self, flag):
+        self.current_status |= flag
+        
+    def status_off(self, flag):
+        self.current_status ^= flag
     
     
     # Sending ------------------------------------------------------------------
