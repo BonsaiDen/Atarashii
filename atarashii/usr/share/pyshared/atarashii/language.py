@@ -182,15 +182,6 @@ LANG = {
         'error_login' : 
             'Die Anmeldung als <b>%s</b> ist fehlgeschlagen.',
         
-        'error_ratelimit' : 
-            'Ratelimit erreicht. Automatische Aktualisierung in %d Minute(n).',
-        
-        'error_ratelimit_reconnect' : 
-            'Ratelimit erreicht. Automatischer Reconnect in %d Minute(n).',
-        
-        'error_twitter' : 'Interner Twitterfehler.',
-        'error_down' : 'Twitter ist gerade offline.',
-        'error_overload' : 'Twitter ist gerade überlastet.',
         'error_internal' : '<b>Atarashii Fehler:</b> %s',
         'error_already_retweeted' : 
             '''Es ist entweder nicht möglich diesen Tweet zu retweeten ''' + \
@@ -201,28 +192,49 @@ LANG = {
         'error_network' : 
             'Atarashii konnte keine Verbindung zum Internet herstellen.',
         
-        'error_network_lost' : 
-            '''Atarashii hat die Verbundung zum Internet verloren, es ''' + \
-            '''wird alle 60 Sekunden versucht die Verbindung ''' + \
-            '''wiederherzustellen.''',
-        
         'error_favorite_on' : 
             '<b>%s</b> Tweet konnte nicht favorisiert werden.',
         
         'error_favorite_off' : 
             '<b>%s</b> Tweet konnte nicht entfavorisiert werden.',
         
+        'error_ratelimit_reconnect' : 
+            '''Twitter Requestlimit wurde überschritten.\n''' + \
+            '''Verbinde automatisch neu in %d Minute(n).''',
+        
+        # Error Button stuff
+        'error_button_twitter' : 'Twitterfehler',
+        'error_twitter' : 
+            'Ein unbekannter Fehler auf seitens Twitter ist aufgetreten.',
+        
+        'error_button_down' : 'Twitter ist derzeit offline',
+        'error_down' : 'Twitter konnte nicht erreicht werden.',
+        
+        'error_button_rate_limit' : 'Requestlimit überschritten',
+        'error_rate_limit' : 
+            '''Twitter Requestlimit wurde überschritten.\n''' + \
+            '''Automatische Aktualisierung in %d Minute(n).''',
+        
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warnung',
-        'warning_text' : 
-            '''Twitter hat das Ratelimit auf %d Requests pro Stunde ''' + \
+        
+        'warning_button_rate_limit' : 'Requestlimit verringert',
+        'warning_rate_limit' : 
+            '''Twitter hat das Requestlimit auf %d Requests pro Stunde ''' + \
             '''reduziert, das Aktualisierungsinterval wurde ''' + \
             '''entsprechend angepasst.''',
         
-        'warning_url' : 
+        'warning_button_overload' : 'Twitter überlastet',
+        'warning_overload' : 
             '''Atarashii konnte Twitter nicht erreichen, dies ist in ''' + \
             '''den meisten Fällen lediglich ein temporäres Problem ''' + \
             '''aufgrund von Überlastung seitens Twitter.''',
+        
+        'warning_button_network' : 'Netzwerkfehler',
+        'warning_network' : 
+            '''Atarashii hat die Verbindung zum Internet verloren, es ''' + \
+            '''wird alle 60 Sekunden versucht die Verbindung ''' + \
+            '''wiederherzustellen.''',
         
         # Toolbar Items
         'tool_refresh' : 'Tweets aktualisieren',
@@ -427,15 +439,6 @@ LANG = {
         # Error Dialogs
         'error_title' : 'Atarashii - Error',
         'error_login' : 'The login as <b>%s</b> has failed.',
-        'error_ratelimit' : 
-          'Rate limit reached. Automatic refresh in %d minute(s).',
-        
-        'error_ratelimit_reconnect' : 
-          'Rate limit reached. Automatic reconnect in %d minute(s).',
-        
-        'error_twitter' : 'Internal Twitter error.',
-        'error_down' : 'Twitter is currently offline.',
-        'error_overload' : 'Twitter is over capacity.',
         'error_internal' : '<b>Atarashii error:</b> %s',
         'error_already_retweeted' : 
             '''Either it\'s not possible to retweet this Tweet or ''' + \
@@ -446,23 +449,45 @@ LANG = {
         'error_network' : 
             'Atarashii could not establish a connection to the Internet.',
         
-        'error_network_lost' : 
-            '''Atarashii has lost the conntection to the Internet. It ''' + \
-            '''will automatically try to reconnect itself every 60 seconds.''',
-        
         'error_favorite_on' : '<b>%s</b> Tweet couldn\'t be favorited.',
         'error_favorite_off' : '<b>%s</b> Tweet couldn\'t be unfavorited.',
         
+        'error_ratelimit_reconnect' : 
+             '''Twitters limit on requests has been exceeded.\n''' + \
+             '''Automatic reconnect in %d minute(s).''',
+        
+        # Error Button stuff
+        'error_button_twitter' : 'Twitter error',
+        'error_twitter' : 'Internal Twitter error.',
+        
+        'error_button_down' : 'Twitter is offline',
+        'error_down' : 
+            'Could not establish a connection to the Twitter Server.',
+        
+        'error_button_rate_limit' : 'Ratelimit exceeded',
+        'error_rate_limit' : 
+            '''Twitters limit on requests has been exceeded.\n''' + \
+            '''Automatic refresh in %d minute(s).''',
+        
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warning',
-        'warning_text' : 
+
+        'warning_button_rate_limit' : 'Rate limit reduced',
+        'warning_rate_limit' : 
             '''Twitter has lowered the rate limit to %d requests per ''' + \
             '''hour, the update interval has been adjusted accordingly.''',
         
-        'warning_url' : 
+        'warning_button_overload' : 'Twitter over capacity',
+        'warning_overload' : 
             '''Atarashii couldn\'t connect to Twitter, in most cases ''' + \
             '''this is just a temporary issue due to Twitter being too ''' + \
             '''busy at the moment.''',
+        
+        'warning_button_network' : 'Network error',
+        'warning_network_lost' : 
+            '''Atarashii has lost the conntection to the Internet. It ''' + \
+            '''will automatically try to reconnect itself every 60 seconds.''',
+        
         
         # Toolbar items
         'tool_refresh' : 'Refresh Tweets',

@@ -375,11 +375,10 @@ class HTMLView(webkit.WebView):
         
     def fix_scroll(self):
         if self.scroll_to != -1 and self.main.gui.mode == self.mode_type:
-            print "fixing"
             self.scroll.get_vscrollbar().set_value(self.scroll_to)
             gobject.timeout_add(25, self.check_offset)
             self.scroll_to = -1
-
+    
     # Double check for some stupid scrolling bugs with webkit
     def check_scroll(self, pos):
         self.scroll.get_vscrollbar().set_value(pos)
@@ -871,3 +870,7 @@ class HTMLView(webkit.WebView):
     def get_id(self, item):
         return self.get_attr(item, "id")
     
+    def get_protected(self, item):
+        user = self.get_user(item)
+        return hasattr(user, "protected") and user.protected
+

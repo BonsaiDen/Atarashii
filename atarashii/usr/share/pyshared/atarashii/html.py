@@ -231,7 +231,8 @@ class HTML(view.HTMLView):
                                lambda *args: self.context_link(full1,
                                                            extra = item))
             
-            if name.lower() != self.main.username.lower():
+            if name.lower() != self.main.username.lower() and \
+               not self.get_protected(item):
                 full2 = "retweet:%s" % RETWEET_NEW
                 self.add_menu_link(menu, lang.context_retweet_new % name,
                                    lambda *args: self.context_link(full2,

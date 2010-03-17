@@ -13,6 +13,7 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
+# TODO add timeinfo to button dialogs
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -50,7 +51,7 @@ import settings
 import updater
 
 from language import LANG as lang
-from constants import ST_CONNECT, ST_NETWORK_FAILED, ST_LOGIN_ERROR, \
+from constants import ST_CONNECT, ST_LOGIN_ERROR, \
                       ST_LOGIN_SUCCESSFUL, ST_UPDATE, ST_WAS_RETWEET_NEW, \
                       ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, ST_NONE, \
                       ST_SEND, ST_DELETE
@@ -273,7 +274,7 @@ class Atarashii:
     
     def on_login(self):
         self.unset_status(ST_LOGIN_COMPLETE | ST_LOGIN_ERROR | ST_CONNECT | \
-                          ST_DELETE | ST_NETWORK_FAILED)
+                          ST_DELETE)
         
         self.set_status(ST_LOGIN_SUCCESSFUL)
         self.gui.settings_button.set_sensitive(True)
@@ -296,6 +297,7 @@ class Atarashii:
         self.gui.hide_all()
         self.gui.update_status()
         if error:
+            self.gui.force_gui()
             self.gui.show_error(error)
         
         gobject.idle_add(self.gui.message.init, True)
@@ -339,11 +341,11 @@ class Atarashii:
                                      int(self.refresh_timeout * 1000),
                                      self.login)
             
-            return lang.error_ratelimit_reconnect % math.ceil(minutes)
+            return -7, lang.error_ratelimit_reconnect % math.ceil(minutes)
         
         # Just display an error if we exiced the ratelimit while being logged in
         else:
-            return lang.error_ratelimit % math.ceil(minutes)
+            return -6, lang.error_ratelimit % math.ceil(minutes)
     
     
     # Helper Functions ---------------------------------------------------------

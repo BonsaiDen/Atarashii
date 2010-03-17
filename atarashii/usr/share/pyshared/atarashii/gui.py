@@ -33,7 +33,7 @@ import dialog
 from utils import escape
 
 from language import LANG as lang
-from constants import ST_WARNING_REQUEST, ST_CONNECT, ST_NETWORK_FAILED, \
+from constants import ST_CONNECT, \
                       ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, ST_DELETE, \
                       ST_UPDATE, ST_WAS_RETWEET, ST_WAS_RETWEET_NEW, ST_SEND, \
                       ST_LOGIN_COMPLETE, ST_WAS_SEND, ST_RECONNECT, \
@@ -129,6 +129,24 @@ class GUI(gtk.Window):
         self.progress = gtb.get_object("progressbar")
         self.status = gtb.get_object("statusbar")
         
+        # Warning Button
+        self.warning_box = gtb.get_object("warning")
+        self.warning_button = gtb.get_object("warning_button")
+        self.warning_label = gtb.get_object("warning_label")
+        self.warning_button.connect("clicked", self.show_warning_dialog)
+        self.warning_dialog = None
+        self.warning_shown = False
+        self.warning_information = UNSET_TEXT
+        
+        # Error Button
+        self.error_box = gtb.get_object("error")
+        self.error_button = gtb.get_object("error_button")
+        self.error_label = gtb.get_object("error_label")
+        self.error_button.connect("clicked", self.show_error_dialog)
+        self.error_dialog = None
+        self.error_shown = False
+        self.error_information = UNSET_TEXT
+                
         # Restore Position & Size
         if main.settings.isset("position"):
             self.window_position = main.settings['position'][1:-1].split(",")
@@ -177,6 +195,11 @@ class GUI(gtk.Window):
     # Initial Show -------------------------------------------------------------
     def show_gui(self):
         self.show_all()
+        
+        # Hide Warning/Error Buttons
+        self.hide_warning_button()
+        self.hide_error_button() 
+        
         self.on_mode()
         
         # Statusbar Updater
@@ -196,6 +219,9 @@ class GUI(gtk.Window):
         
         self.is_shown = True
     
+    def force_show(self):
+        if not self.is_shown:
+            self.show_gui()
     
     # Events -------------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -267,6 +293,8 @@ class GUI(gtk.Window):
         self.tray.read_menu.set_sensitive(False)
         self.history_button.set_sensitive(False)
         self.message_button.set_sensitive(False)
+        self.hide_warning_button()
+        self.hide_error_button()
     
     
     # Statusbar ----------------------------------------------------------------
@@ -738,7 +766,7 @@ class GUI(gtk.Window):
                     
                     self.refresh_button.set_sensitive(False)
                     self.tray.refresh_menu.set_sensitive(False)
-                    rate_error = self.main.reconnect()
+                    code, rate_error = self.main.reconnect()
                 
                 # Just normal 400's and 403'
                 elif (code == 400 and self.main.status(ST_WAS_SEND)) or \
@@ -759,57 +787,145 @@ class GUI(gtk.Window):
         else:
             code = -1
         
+        code = ecode
         
         # Reset stuff
         self.main.unset_status(ST_WAS_SEND | ST_WAS_RETWEET | \
                                ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
         
         
-        # Show Warning ---------------------------------------------------------
-        if code == -1 or code == 500 or code == 502 or \
-            code == 503 or code == -5:
+        # Show Warning Button --------------------------------------------------
+        if code in (-5, 503):
+            if code == -5: # Network lost
+                info = lang.warning_network
+                button = lang.warning_button_network
+                
+            else: # overload warning
+                info = lang.warning_overload
+                button = lang.warning_button_overload
             
-            # Don't warn until we reconnect
-            if code == -5:
-                if self.main.status(ST_NETWORK_FAILED):
-                    return
+            self.show_warning_button(button, info)
+        
+        # Show Error Button
+        elif code in (500, 502, -6):
+            if code != -6:
+                if code == 500: # internal twitter error
+                    button = lang.error_button_twitter
+                    info = lang.error_twitter
                 
-                else:
-                    self.main.set_status(ST_NETWORK_FAILED)
+                else: # Twitter down
+                    button = lang.error_button_down
+                    info = lang.error_down
             
-            # Show only one warning at a time to prevent dialog cluttering
-            if not self.main.status(ST_WARNING_REQUEST):
-                self.main.set_status(ST_WARNING_REQUEST)
+            # Rate limit exceeded
+            else:
+                info = rate_error
+                button = lang.error_button_rate_limit
                 
-                def unset():
-                    self.main.unset_status(ST_WARNING_REQUEST)
-                
-                dialog.MessageDialog(self, MESSAGE_WARNING,
-                    lang.error_network_lost if code == -5 else lang.warning_url,
-                    lang.warning_title, ok_callback = unset)
+            self.show_error_button(button, info)
         
-        
-        # Show Error -----------------------------------------------------------
+        # Show Error Dialog ----------------------------------------------------
         else:
+            # Show GUI if minized in tray
+            gobject.idle_add(self.gui.force_show)
+            
             description = {
                 -4 : lang.error_network,
                 -3 : lang.error_user_not_found % self.main.message_user,
                 -2 : lang.error_already_retweeted,
                 0 : lang.error_internal % str(error),
-                400 : rate_error,
+                -7 : rate_error,
                 401 : lang.error_login % self.main.username,
-                403 : rate_error,  
-                404 : lang.error_login % self.main.username,
-                500 : lang.error_twitter,
-                502 : lang.error_down,
-                503 : lang.error_overload
+                404 : lang.error_login % self.main.username
             }[code]
             dialog.MessageDialog(self, MESSAGE_ERROR, description,
                                  lang.error_title)
         
         self.update_status()
     
-    def show_warning(self, limit):
-        dialog.MessageDialog(self, MESSAGE_WARNING, lang.warning_text % limit,
-                                lang.warning_title)
+    
+    # Warning Button -----------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def hide_warning_button(self):
+        if self.warning_dialog != None:
+            self.warning_dialog.destroy()
+            self.warning_dialog = None
+        
+        self.warning_box.hide()
+        
+    def show_warning_button(self, button, info):
+        self.warning_information = info
+        if self.warning_dialog != None:
+            self.warning_dialog.destroy()
+            self.warning_dialog = None
+        
+        self.warning_box.show()
+        self.warning_label.set_markup(button)
+    
+    def show_warning_dialog(self, *args):
+        if self.warning_dialog != None:
+            self.warning_dialog.destroy()
+            self.warning_dialog = None
+        
+        self.hide_warning_button()
+        self.warning_dialog = dialog.MessageDialog(self, MESSAGE_WARNING,
+                             self.warning_information, lang.warning_title)
+
+
+
+    # Warning Button -----------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def hide_warning_button(self):
+        if self.error_dialog != None:
+            self.warning_dialog.destroy()
+            self.warning_dialog = None
+        
+        self.warning_box.hide()
+        
+    def show_warning_button(self, button, info):
+        self.warning_information = info
+        if self.warning_dialog != None:
+            self.warning_dialog.destroy()
+            self.warning_dialog = None
+        
+        self.warning_box.show()
+        self.warning_label.set_markup(button)
+        
+        # Show GUI if not shown so the user does notice the message
+        if not self.is_shown:
+            gobject.idle_add(self.show_gui)
+
+    def show_warning_dialog(self, *args):
+        if self.warning_dialog != None:
+            self.warning_dialog.destroy()
+            self.warning_dialog = None
+        
+        self.hide_warning_button()
+        self.warning_dialog = dialog.MessageDialog(self, MESSAGE_WARNING,
+                             self.warning_information, lang.warning_title)
+    
+    
+    # Error Button -------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def hide_error_button(self):
+        if self.error_dialog != None:
+            self.error_dialog.destroy()
+            self.error_dialog = None
+        
+        self.error_box.hide()
+        
+    def show_error_button(self, button, info):
+        self.error_information = info
+        if self.error_dialog != None:
+            self.error_dialog.destroy()
+            self.error_dialog = None
+    
+    def show_error_dialog(self, *args):
+        if self.error_dialog != None:
+            self.error_dialog.destroy()
+            self.error_dialog = None
+        
+        self.hide_error_button()
+        self.error_dialog = dialog.MessageDialog(self, MESSAGE_ERROR,
+                             self.error_information, lang.error_title)
 

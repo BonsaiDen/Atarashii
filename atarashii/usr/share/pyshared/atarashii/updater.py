@@ -24,7 +24,7 @@ import gobject
 import calendar
 
 from language import LANG as lang
-from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED, \
+from constants import ST_WARNING_RATE, ST_UPDATE, \
                       ST_HISTORY, ST_LOGIN_COMPLETE
 
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_UNSET_ID, \
@@ -118,6 +118,7 @@ class Updater(threading.Thread):
             
             # Get a new token!
             if not token_ok:
+                gobject.idle_add(self.gui.force_show)
                 gobject.idle_add(self.gui.enter_password)
                 
                 # Wait for password entry
@@ -479,7 +480,6 @@ class Updater(threading.Thread):
             i.is_mentioned = True
         
         self.refresh_now = False
-        self.main.unset_status(ST_NETWORK_FAILED)
         self.update_limit()
         updates = updates + mentions
         if len(mentions) > 0:
@@ -507,7 +507,7 @@ class Updater(threading.Thread):
             self.html.history_list.append((i, imgfile))
         
         self.html.load_history_id = HTML_UNSET_ID
-        self.main.unset_status(ST_HISTORY | ST_NETWORK_FAILED)
+        self.main.unset_status(ST_HISTORY)
         
         if len(updates) > 0:
             self.html.load_history = True
@@ -564,7 +564,6 @@ class Updater(threading.Thread):
             messages += self.api.sent_direct_messages(
                                  count = self.main.load_message_count // 2)
         
-        self.main.unset_status(ST_NETWORK_FAILED)
         self.refresh_messages = False
         self.update_limit()
         return self.process_updates(messages)
@@ -589,7 +588,7 @@ class Updater(threading.Thread):
             self.message.history_list.append((i, imgfile))
         
         self.message.load_history_id = HTML_UNSET_ID
-        self.main.unset_status(ST_HISTORY | ST_NETWORK_FAILED)
+        self.main.unset_status(ST_HISTORY)
         
         if len(messages) > 0:
             self.message.load_history = True
@@ -654,12 +653,15 @@ class Updater(threading.Thread):
         if count < 350:
             if not self.main.status(ST_WARNING_RATE):
                 self.main.set_status(ST_WARNING_RATE)
-                gobject.idle_add(self.gui.show_warning, count)
+                
+                gobject.idle_add(self.gui.show_warning_button,
+                                 lang.warning_button_rate_limit, 
+                                 lang.warning_rate_limit % count)
         
         else:
             self.main.unset_status(ST_WARNING_RATE)
     
-    def get_image(self, item, message = False):#url, userid):
+    def get_image(self, item, message = False):
         if message:
             url = item.sender.profile_image_url
             userid = item.sender.id
