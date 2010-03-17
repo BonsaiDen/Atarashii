@@ -140,6 +140,8 @@ LANG = {
         'about_title' : 'Über Atarashii',
         'about_license_button' : 'Lizenz',
         'about_okbutton' : 'OK',
+        'about_description' : 
+            'Ein simpler Twitter Client für den GNOME Desktop.',
         
         # Account Dialog
         'account_edit' : 'Benutzer bearbeiten',
@@ -387,6 +389,8 @@ LANG = {
         'about_title' : 'About Atarashii',
         'about_license_button' : 'License',
         'about_okbutton' : 'OK',
+        'about_description' : 
+            'A simple Twitter Client for the GNOME Desktop.',
         
         # Account Dialog
         'account_edit' : 'Edit user',
