@@ -25,6 +25,8 @@ import pango
 import re
 
 from lang import lang
+from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL
+
 from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, MODE_TWEETS
 
 
@@ -164,20 +166,22 @@ class TextInput(gtk.TextView):
             self.initiated = True
             self.loose_focus()
         
-        if not self.main.login_status and not self.main.is_connecting:
+        if not self.main.status(ST_LOGIN_SUCCESSFUL) and \
+           not self.main.status(ST_CONNECT):
             self.gui.hide_all()
     
     
     # Events -------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def submit(self, *args):
-        text = self.get_text()
+        text = unicode(self.get_text())
         if len(text) <= 140 + self.message_len and text.strip() != UNSET_TEXT:
             if self.gui.mode == MODE_MESSAGES:
                 if self.main.message_user != UNSET_TEXT:
                     text = text[2:]
                     text = text[len(self.main.message_user):].strip()
-                    self.main.send(text)
+                    if len(text) > 0:
+                        self.main.send(text)
             
             elif self.gui.mode == MODE_TWEETS:
                 self.main.send(text)
@@ -289,7 +293,7 @@ class TextInput(gtk.TextView):
             self.has_typed = False
             self.gui.update_status()
         
-        self.check_color(len(text))
+        self.check_color(len(unicode(text)))
     
     def check_length(self):
         text = unicode(self.get_text())
