@@ -24,6 +24,9 @@ import time
 DESKTOP_FILE = os.path.join(os.path.expanduser('~'), '.config',
                             'autostart', 'atarashii.desktop')
 
+CACHE_DIR = os.path.join(os.path.expanduser('~'), '.atarashii')
+CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
+
 COPY_FILE = '/usr/share/applications/atarashii.desktop'
 CRASH_FILE = os.path.join(os.path.expanduser('~'), '.atarashii', 'crashed')
 
@@ -70,7 +73,8 @@ class Settings:
         
         except IOError:
             self.values = {}
-    
+        
+        
         # Check autostart
         self.check_autostart()
         
@@ -108,6 +112,9 @@ class Settings:
                                 value))
         
         settings_file.close()
+    
+        # Check avatar cache
+        self.check_cache()
     
     
     # Get / Set ----------------------------------------------------------------
@@ -202,4 +209,19 @@ class Settings:
         
         except IOError:
             print "IO on crashfile failed"
-
+    
+    
+    # Avatar Cache Handling ----------------------------------------------------
+    # --------------------------------------------------------------------------
+    def check_cache(self):
+        for i in os.listdir(CACHE_DIR):
+            cache_file = os.path.join(CACHE_DIR, i)
+            
+            if time.time() - os.stat(cache_file).st_atime > CACHE_TIMEOUT:
+                if cache_file[-4:].lower() in ('.jpg', '.png', 'gif'):
+                    try:
+                        os.unlink(cache_file)
+                    
+                    except IOError:
+                        print "Could not delete file %s" % i
+    
