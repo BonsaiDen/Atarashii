@@ -33,16 +33,14 @@ import dialog
 from utils import escape
 
 from language import LANG as lang
-from constants import ST_CONNECT, \
-                      ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, ST_DELETE, \
-                      ST_UPDATE, ST_WAS_RETWEET, ST_WAS_RETWEET_NEW, ST_SEND, \
-                      ST_LOGIN_COMPLETE, ST_WAS_SEND, ST_RECONNECT, \
-                      ST_HISTORY, ST_WAS_DELETE
+from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
+                      ST_DELETE, ST_UPDATE, ST_SEND, ST_LOGIN_COMPLETE, \
+                      ST_RECONNECT, ST_HISTORY
 
 from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_TEXT, UNSET_ID_NUM, \
                       HTML_LOADING, HTML_LOADED, MESSAGE_WARNING, \
-                      MESSAGE_ERROR, MESSAGE_QUESTION, MESSAGE_INFO, \
-                      UNSET_LABEL, UNSET_TIMEOUT, HTML_UNSET_ID
+                      MESSAGE_QUESTION, MESSAGE_INFO, UNSET_LABEL, \
+                      UNSET_TIMEOUT, HTML_UNSET_ID
 
 
 class GUI(gtk.Window):
@@ -208,7 +206,7 @@ class GUI(gtk.Window):
             self.show_progress()
         
         #gobject.timeout_add(250, lambda: self.error_button.show("foo", "bla"))
-        #gobject.timeout_add(250, lambda: self.warning_button.show("foo", "bla"))
+        #gobject.timeout_add(250,lambda: self.warning_button.show("foo", "bla"))
         self.is_shown = True
     
     def force_show(self):

@@ -56,10 +56,11 @@ from language import LANG as lang
 from constants import ST_CONNECT, ST_LOGIN_ERROR, \
                       ST_LOGIN_SUCCESSFUL, ST_UPDATE, ST_WAS_RETWEET_NEW, \
                       ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, ST_NONE, \
-                      ST_SEND, ST_DELETE
+                      ST_SEND, ST_DELETE, ST_WAS_SEND, ST_WAS_RETWEET, \
+                      ST_WAS_DELETE
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
-                      MODE_TWEETS, MODE_MESSAGES, HTML_UNSET_ID
+                      MODE_TWEETS, MODE_MESSAGES, HTML_UNSET_ID, MESSAGE_ERROR
 
 
 class Atarashii:
@@ -476,7 +477,7 @@ class Atarashii:
         if self.gui.message.count > 0:
             info_text.append(
               (lang.notification_login_messages if self.gui.message.count > 1 \
-               else lang.notification_login_message) % self.gui.message.count)  
+               else lang.notification_login_message) % self.gui.message.count)
         
         # Create notification
         info = [(lang.notification_login % self.username,
@@ -489,7 +490,8 @@ class Atarashii:
     
     def get_user_picture(self):
         img = self.settings['picture_' + self.username]
-        if not self.status(ST_LOGIN_SUCCESSFUL) and not self.status(ST_CONNECT):
+        if not self.status(ST_LOGIN_SUCCESSFUL) and \
+           not self.status(ST_CONNECT):
             img = None
         
         if img == None or not os.path.exists(img):
