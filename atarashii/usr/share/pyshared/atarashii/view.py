@@ -39,9 +39,10 @@ from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \
 # You've been warned...
 # ------------------------------------------------------------------------------
 class HTMLView(webkit.WebView):
-    def __init__(self, main, gui, scroll):
+    def __init__(self, main, gui, scroll, mode):
         self.main = main
         self.gui = gui
+        self.mode_type = mode
         
         webkit.WebView.__init__(self)
         self.connect("navigation-requested", self.open_link)
@@ -70,6 +71,8 @@ class HTMLView(webkit.WebView):
         self.lang_loading = ""
         self.lang_load = ""
         self.lang_empty = ""
+        
+        self.scroll_to = -1
         
         self.init(True)
     
@@ -335,8 +338,8 @@ class HTMLView(webkit.WebView):
         elif self.first_load or (offset > 0 and self.position == 0):
             height = self.gui.get_height(self)
             if offset > height:
-                self.scroll.get_vscrollbar().set_value(offset - height)
-                gobject.timeout_add(25, self.check_offset)
+                self.scroll_to = offset - height
+                self.fix_scroll()
         
         if len(self.items) > 0:
             self.first_load = False
@@ -369,6 +372,13 @@ class HTMLView(webkit.WebView):
     
     def on_scroll(self, view, event, *args):
         gobject.timeout_add(10, self.fake_click)
+        
+    def fix_scroll(self):
+        if self.scroll_to != -1 and self.main.gui.mode == self.mode_type:
+            print "fixing"
+            self.scroll.get_vscrollbar().set_value(self.scroll_to)
+            gobject.timeout_add(25, self.check_offset)
+            self.scroll_to = -1
 
     # Double check for some stupid scrolling bugs with webkit
     def check_scroll(self, pos):
