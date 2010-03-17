@@ -112,12 +112,14 @@ class GUI(gtk.Window):
         self.html = html.HTML(self.main, self)
         self.html_scroll.add(self.html)
         self.html_scroll.set_shadow_type(gtk.SHADOW_IN)
+        self.html.start()
         
         # Messages
         self.message_scroll = gtb.get_object("messagescroll")
         self.message = message.HTML(self.main, self)
         self.message_scroll.add(self.message)
         self.message_scroll.set_shadow_type(gtk.SHADOW_IN)
+        self.message.start()
         
         # Bars
         self.toolbar = gtb.get_object("toolbar")
