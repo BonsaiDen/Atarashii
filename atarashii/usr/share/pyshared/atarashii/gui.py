@@ -182,7 +182,7 @@ class GUI(gtk.Window):
         
         # Crash Info
         if self.main.settings.is_true("crashed", False):
-            self.show_crash_report()
+            gobject.timeout_add(250, self.show_crash_report())
         
         # Show
         if not self.main.is_connecting:
