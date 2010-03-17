@@ -145,7 +145,7 @@ LANG = {
         'account_edit' : 'Benutzer bearbeiten',
         'account_create' : 'Benutzer erstellen',
         'account_delete' : 'Benutzer löschen',
-        'account_delete_description' : 'Möchten sie den Benutzer %s wirklich löschen?',
+        'account_delete_description' : 'Möchten sie den Benutzer <b>%s</b> wirklich löschen?',
         'account_button' : 'OK',
         'account_button_cancel' : 'Abbrechen',
         'account_username' : 'Benutzername:',
@@ -154,35 +154,36 @@ LANG = {
         'password_button' : 'OK',
         'password_button_cancel' : 'Abbrechen',
         'password_title' : 'Passwort',
-        'password_question' : '%s Passwort:',
+        'password_question' : '<b>%s</b> Passwort:',
+        'password_too_short' : "<i><b>Fehler:</b> Mindestens 6 Zeichen.</i>",
         
         # Retweet Dialogs
         'retweet_info_title' : 'Retweet erfolgreich',
-        'retweet_info' : '%s wurde erfolgreich retweeted.',
+        'retweet_info' : '<b>%s</b> wurde erfolgreich retweeted.',
         
         # Delete Dialogs
         'delete_title' : 'Löschen bestätigen',
-        'delete_tweet_question' : 'Diesen Tweet wirklich löschen?\n\n%s',
-        'delete_message_question' : 'Diese Nachricht wirklich löschen?\n\n%s',
+        'delete_tweet_question' : '<b>Diesen Tweet wirklich löschen?</b>\n<i>%s</i>',
+        'delete_message_question' : '<b>Diese Nachricht wirklich löschen?</b>\n<i>%s</i>',
         'delete_info_title' : 'Löschen erfolgreich',
         'delete_info_tweet' : 'Der Tweet wurde erfolgreich gelöscht.',    
         'delete_info_message' : 'Die Nachricht wurde erfolgreich gelöscht.',    
         
         # Error Dialogs
         'error_title' : 'Atarashii - Fehler',
-        'error_login' : 'Die Anmeldung als %s ist fehlgeschlagen.',
+        'error_login' : 'Die Anmeldung als <b>%s</b> ist fehlgeschlagen.',
         'error_ratelimit' : 'Ratelimit erreicht. Automatische Aktualisierung in %d Minute(n).',
         'error_ratelimit_reconnect' : 'Ratelimit erreicht. Automatischer Reconnect in %d Minute(n).',
         'error_twitter' : 'Interner Twitterfehler.',
         'error_down' : 'Twitter ist gerade offline.',
         'error_overload' : 'Twitter ist gerade überlastet.',
-        'error_internal' : 'Atarashii Fehler: %s',
+        'error_internal' : '<b>Atarashii Fehler:</b> %s',
         'error_already_retweeted' : 'Es ist entweder nicht möglich diesen Tweet zu retweeten oder er wurde bereits von ihnen retweeted.',
-        'error_user_not_found' : 'Der Benutzer %s existiert nicht.',
+        'error_user_not_found' : 'Der Benutzer <b>%s</b> existiert nicht.',
         'error_network' : 'Atarashii konnte keine Verbindung zum Internet herstellen.',
         'error_network_lost' : 'Atarashii hat die Verbundung zum Internet verloren, es wird alle 60 Sekunden versucht die Verbindung wiederherzustellen.',
-        'error_favorite_on' : '%s Tweet konnte nicht favorisiert werden.',
-        'error_favorite_off' : '%s Tweet konnte nicht entfavorisiert werden.',
+        'error_favorite_on' : '<b>%s</b> Tweet konnte nicht favorisiert werden.',
+        'error_favorite_off' : '<b>%s</b> Tweet konnte nicht entfavorisiert werden.',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warnung',
@@ -203,6 +204,7 @@ LANG = {
         
         # Tray Menu
         'menu_update' : 'Aktualisieren',
+        'menu_read' : 'Alle als gelesen markieren',
         'menu_settings' : 'Einstellungen',
         'menu_about' : 'Über Atarashii',
         'menu_quit' : 'Beenden',
@@ -358,42 +360,43 @@ LANG = {
         'account_edit' : 'Edit user',
         'account_create' : 'Create a new user',
         'account_delete' : 'Delete user',
-        'account_delete_description' : 'Do you really want to delete the user %s?',
+        'account_delete_description' : 'Do you really want to delete the user <b>%s</b>?',
         'account_button' : 'OK',
         'account_button_cancel' : 'Cancel',
         'account_username' : 'Username:',
         'password_button' : 'OK',
         'password_button_cancel' : 'Cancel',
         'password_title' : 'Password',
-        'password_question' : '%s password:',
+        'password_question' : '<b>%s</b> password:',
+        'password_too_short' : "<i><b>Error:</b> At least 6 characters.</i>",
         
         # Retweet Dialogs
         'retweet_info_title' : 'Retweet successful',
-        'retweet_info' : '%s has been successfully retweeted.',
+        'retweet_info' : '<b>%s</b> has been successfully retweeted.',
         
         # Delete Dialogs
         'delete_title' : 'Confirm delete',
-        'delete_tweet_question' : 'Are you sure to delete this Tweet?\n\n%s',
-        'delete_message_question' : 'Are you sure to delete this Message?\n\n%s',
+        'delete_tweet_question' : '<b>Are you sure to delete this Tweet?</b>\n<i>%s</i>',
+        'delete_message_question' : '<b>Are you sure to delete this Message?</b>\n<i>%s</i>',
         'delete_info_title' : 'Deletion successful',
         'delete_info_tweet' : 'The Tweet has been successfully deleted.',    
         'delete_info_message' : 'The Message has been successfully deleted.',  
         
         # Error Dialogs
         'error_title' : 'Atarashii - Error',
-        'error_login' : 'The login as %s has failed.',
+        'error_login' : 'The login as <b>%s</b> has failed.',
         'error_ratelimit' : 'Reached rate limit. Automatic refresh in %d minute(s).',
         'error_ratelimit_reconnect' : 'Reached rate limit. Automatic reconnect in %d minute(s).',
         'error_twitter' : 'Internal Twitter error.',
         'error_down' : 'Twitter is currently offline.',
         'error_overload' : 'Twitter is over capacity.',
-        'error_internal' : 'Atarashii error: %s',
+        'error_internal' : '<b>Atarashii error:</b> %s',
         'error_already_retweeted' : 'Either it\'s not possible to retweet this Tweet or you\'ve already retweeted it.',
-        'error_user_not_found' : 'The user %s does not exist.',
+        'error_user_not_found' : 'The user <b>%s</b> does not exist.',
         'error_network' : 'Atarashii could not establish a connection to the Internet.',
         'error_network_lost' : 'Atarashii has lost the conntection to the Internet. It will automatically try to reconnect itself every 60 seconds.',
-        'error_favorite_on' : '%s Tweet couldn\'t be favorited.',
-        'error_favorite_off' : '%s Tweet couldn\'t be unfavorited.',
+        'error_favorite_on' : '<b>%s</b> Tweet couldn\'t be favorited.',
+        'error_favorite_off' : '<b>%s</b> Tweet couldn\'t be unfavorited.',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warning',
@@ -414,6 +417,7 @@ LANG = {
         
         # Tray Menu
         'menu_update' : 'Refresh',
+        'menu_read' : 'Mark all as read',
         'menu_settings' : 'Preferences',
         'menu_about' : 'About Atarashii',
         'menu_quit' : 'Quit',
