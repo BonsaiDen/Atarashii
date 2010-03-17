@@ -65,10 +65,10 @@ class Settings:
                     if name != "":
                         self.values[urllib.unquote(name)] = value
                 
-                except Exception, detail:
+                except ValueError, detail:
                     print detail
         
-        except Exception, detail:
+        except IOError:
             self.values = {}
     
         # Check autostart
@@ -170,7 +170,7 @@ class Settings:
             # Only save if we succeeded
             self['autostart'] = mode
         
-        except:
+        except IOError:
             print "Could not set autostart"
     
     def check_autostart(self):
@@ -185,8 +185,10 @@ class Settings:
             cfp = open(CRASH_FILE, "rb")
             self['time_before_crash'] = int(cfp.read())
             cfp.close()
+            
             print "ERROR: Atarashii crashed!"
-            print "Runtime before crash %2.2f minutes" % (self['time_before_crash'] / 60.0)
+            print "Runtime before crash %2.2f minutes" % \
+                   (self['time_before_crash'] / 60.0)
     
     def crash_file(self, mode):
         try:
@@ -198,6 +200,6 @@ class Settings:
             else:
                 os.unlink(CRASH_FILE)
         
-        except:
+        except IOError:
             print "IO on crashfile failed"
-    
+

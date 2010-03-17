@@ -19,28 +19,20 @@
 import time
 import threading
 import urllib
-import sys
 import os
 import gobject
 import calendar
 
 from utils import compare
 
-from lang import lang
+from language import LANG as lang
 from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED, \
                       ST_HISTORY, ST_LOGIN_COMPLETE
 
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_UNSET_ID, \
                       UNSET_TIMEOUT, HTML_RESET, HTML_LOADING, HTML_LOADED
 
-# Import local Tweepy
-try:
-    sys.path.insert(0, __file__[:__file__.rfind('/')])
-    import tweepy
-
-finally:
-    sys.path.pop(0)
-
+from utils import tweepy, TweepError
 
 class Updater(threading.Thread):
     def __init__(self, main):
@@ -122,7 +114,7 @@ class Updater(threading.Thread):
                 except IOError, error:
                     raise error
                 
-                except Exception, error:
+                except TweepError, error:
                     self.settings[key_name] = ""
                     self.settings[secret_name] = ""
             
@@ -148,14 +140,9 @@ class Updater(threading.Thread):
                     self.main.api_temp_password = None
                     return
         
-        except IOError, error:
+        except (IOError, TweepError), error:
             self.main.api_temp_password = None
             gobject.idle_add(self.main.on_network_failed, error)
-            return False
-        
-        except Exception, error:
-            self.main.api_temp_password = None
-            gobject.idle_add(self.main.on_login_failed, error)
             return False
         
         # Create the api instance
@@ -231,7 +218,7 @@ class Updater(threading.Thread):
         try:
             updates = self.try_get_updates(self.main.get_first_id())
         
-        except Exception, error:
+        except (IOError, TweepError), error:
             gobject.idle_add(self.main.on_login_failed, error)
             return False
         
@@ -262,7 +249,7 @@ class Updater(threading.Thread):
         try:
             messages = self.try_get_messages(self.main.get_first_message_id())
         
-        except Exception, error:
+        except (IOError, TweepError), error:
             gobject.idle_add(self.main.on_login_failed, error)
             return False
         
@@ -343,7 +330,7 @@ class Updater(threading.Thread):
                 updates = self.try_get_updates(self.html.last_id)
             
             # Something went wrong...
-            except Exception, error:
+            except (IOError, TweepError), error:
                 gobject.idle_add(self.html.render)
                 gobject.idle_add(self.gui.show_error, error)
                 self.main.refresh_timeout = 60
@@ -362,7 +349,7 @@ class Updater(threading.Thread):
                 messages = self.try_get_messages(self.message.last_id)
             
             # Something went wrong...
-            except Exception, error:
+            except (IOError, TweepError), error:
                 gobject.idle_add(self.message.render)
                 gobject.idle_add(self.gui.show_error, error)
                 return
@@ -457,7 +444,7 @@ class Updater(threading.Thread):
                 raise error
             
             # Something went wrong, either try it again or break with the error
-            except Exception, error:
+            except TweepError, error:
                 if count == 2:
                     raise error
     
@@ -510,11 +497,11 @@ class Updater(threading.Thread):
             updates = self.try_get_updates(max_id = self.html.load_history_id,
                                         max_count = self.main.load_tweet_count)
         
-        except Exception, error:
+        except (IOError, TweepError), error:
             self.html.load_history_id = HTML_UNSET_ID
             self.main.unset_status(ST_HISTORY)
             gobject.idle_add(self.gui.show_error, error)
-            return
+            return False
         
         self.main.max_tweet_count += len(updates)
         for i in updates:
@@ -550,7 +537,7 @@ class Updater(threading.Thread):
                 raise error
             
             # Something went wrong, either try it again or break with the error
-            except Exception, error:
+            except TweepError, error:
                 if count == 2:
                     raise error
     
@@ -592,11 +579,11 @@ class Updater(threading.Thread):
                             max_id = self.message.load_history_id,
                             max_count = self.main.load_message_count)
         
-        except Exception, error:
+        except (IOError, TweepError), error:
             self.message.load_history_id = HTML_UNSET_ID
             self.main.unset_status(ST_HISTORY)
             gobject.idle_add(self.gui.show_error, error)
-            return
+            return False
         
         self.main.max_message_count += len(messages)
         for i in messages:

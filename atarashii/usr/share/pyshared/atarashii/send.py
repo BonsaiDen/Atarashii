@@ -24,6 +24,8 @@ from constants import ST_SEND, ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE, \
 
 from constants import MODE_TWEETS, MODE_MESSAGES, UNSET_TEXT, UNSET_ID_NUM
 
+from utils import TweepError
+
 
 # Send Tweets/Messages ---------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -53,7 +55,7 @@ class Send(threading.Thread):
             gobject.idle_add(self.reset_gui)
         
         # Show Error Message
-        except Exception, error:
+        except (IOError, TweepError), error:
             gobject.idle_add(self.gui.show_error, error)
         
         
@@ -168,7 +170,7 @@ class Retweet(threading.Thread):
             self.main.unset_status(ST_WAS_SEND)
             gobject.idle_add(self.gui.show_retweet_info, self.name)
         
-        except Exception, error:
+        except (IOError, TweepError), error:
             gobject.idle_add(self.gui.show_error, error)
         
         self.main.unset_status(ST_SEND)
@@ -218,7 +220,7 @@ class Delete(threading.Thread):
             gobject.idle_add(self.gui.show_delete_info,
                              self.tweet_id, self.message_id)
         
-        except Exception, error:
+        except (IOError, TweepError), error:
             gobject.idle_add(self.gui.show_error, error)
         
         self.main.unset_status(ST_DELETE)
@@ -247,7 +249,7 @@ class Favorite(threading.Thread):
             
             gobject.idle_add(self.gui.html.favorite, self.tweet_id, self.mode)
         
-        except Exception, error:
+        except (IOError, TweepError), error:
             print error
             gobject.idle_add(self.gui.show_favorite_error, self.name, self.mode)
 
