@@ -29,6 +29,8 @@ import formatter
 from utils import unescape, compare_sub
 
 from lang import lang
+from constants import ST_HISTORY, ST_LOGIN_SUCCESSFUL
+
 from constants import HTML_STATE_NONE, HTML_UNSET_ID, \
                       RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, UNSET_ID_NUM
 
@@ -182,7 +184,7 @@ class HTMLView(webkit.WebView):
                 </body>""" % ("".join(renderitems),
                                 self.items[0][0].id, self.lang_load))
         
-        elif self.main.login_status:
+        elif self.main.status(ST_LOGIN_SUCCESSFUL):
             self.render_html("""
                 <body class="unloaded" ondragstart="return false">
                     <div class="loading"><b>%s</b></div>
@@ -547,10 +549,10 @@ class HTMLView(webkit.WebView):
         
         # Load history
         if uri.startswith("more:"):
-            if not self.main.is_loading_history:
+            if not self.main.status(ST_HISTORY):
                 self.load_history_id = int(uri.split(":")[1]) - 1
                 if self.load_history_id != HTML_UNSET_ID:
-                    self.main.is_loading_history = True
+                    self.main.set_status(ST_HISTORY)
                     self.gui.show_progress()
                     gobject.idle_add(lambda: self.main.gui.update_status(True))
                     self.main.gui.text.html_focus()
@@ -610,6 +612,7 @@ class HTMLView(webkit.WebView):
             ref, dtype, item_id = uri.split(":")
             item_id = int(item_id)
             text = unescape(self.get_text(extra))
+            retweet = hasattr(extra, "retweeted_status")
             
             def delete_tweet():
                 self.main.delete(tweet_id = item_id)
@@ -622,7 +625,7 @@ class HTMLView(webkit.WebView):
                 gobject.idle_add(lambda: self.main.gui.ask_for_delete_tweet(
                                          text,
                                          delete_tweet,
-                                         None))
+                                         None, retweet))
             
             elif dtype == "m":
                 gobject.idle_add(lambda: self.main.gui.ask_for_delete_message(

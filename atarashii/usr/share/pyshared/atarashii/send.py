@@ -19,6 +19,9 @@
 import gobject
 import threading
 
+from constants import ST_SEND, ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE, \
+                      ST_DELETE
+
 from constants import MODE_TWEETS, MODE_MESSAGES, UNSET_TEXT, UNSET_ID_NUM
 
 
@@ -35,7 +38,7 @@ class Send(threading.Thread):
     
     # Do a send ----------------------------------------------------------------
     def run(self):
-        self.main.was_sending = True
+        self.main.set_status(ST_WAS_SEND)
         try:
             if self.mode == MODE_TWEETS:
                 self.send_tweet(self.text)
@@ -54,7 +57,7 @@ class Send(threading.Thread):
             gobject.idle_add(lambda: self.gui.show_error(error))
         
         
-        self.main.is_sending = False
+        self.main.unset_status(ST_SEND)
     
     
     # Reset GUI ----------------------------------------------------------------
@@ -85,7 +88,7 @@ class Send(threading.Thread):
         else: # TODO implement search
             pass
         
-        self.main.was_sending = False
+        self.main.unset_status(ST_WAS_SEND)
     
     
     # Send a Tweet -------------------------------------------------------------
@@ -145,8 +148,8 @@ class Retweet(threading.Thread):
         self.tweet_id = tweet_id
     
     def run(self):
-        self.main.was_sending = True
-        self.main.was_retweeting = True
+        self.main.set_status(ST_WAS_SEND)
+        self.main.set_status(ST_WAS_RETWEET)
         try:
             # Retweet
             self.main.api.retweet(self.tweet_id)
@@ -162,13 +165,13 @@ class Retweet(threading.Thread):
             else: # TODO implement search
                 pass
             
-            self.main.was_sending = False
+            self.main.unset_status(ST_WAS_SEND)
             gobject.idle_add(lambda: self.gui.show_retweet_info(self.name))
         
         except Exception, error:
             gobject.idle_add(lambda: self.gui.show_error(error))
         
-        self.main.is_sending = False
+        self.main.unset_status(ST_SEND)
 
 
 # Deletes ----------------------------------------------------------------------
@@ -182,7 +185,7 @@ class Delete(threading.Thread):
         self.message_id = message_id
     
     def run(self):
-        self.main.was_deleting = True
+        self.main.set_status(ST_WAS_DELETE)
         try:
             # Delete
             if self.tweet_id != UNSET_ID_NUM:
@@ -202,7 +205,7 @@ class Delete(threading.Thread):
             else: # TODO implement search
                 pass
             
-            self.main.was_deleting = False
+            self.main.unset_status(ST_WAS_DELETE)
             
             # Remove from view!
             if self.tweet_id != UNSET_ID_NUM:
@@ -219,7 +222,7 @@ class Delete(threading.Thread):
         except Exception, error:
             gobject.idle_add(lambda: self.gui.show_error(error))
         
-        self.main.is_deleting = False
+        self.main.unset_status(ST_DELETE)
         
         
 # Favorites --------------------------------------------------------------------

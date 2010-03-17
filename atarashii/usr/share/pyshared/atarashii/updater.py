@@ -27,6 +27,9 @@ import calendar
 from utils import compare
 
 from lang import lang
+from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED, \
+                      ST_HISTORY, ST_LOGIN_COMPLETE
+
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_UNSET_ID, \
                       UNSET_TIMEOUT, HTML_RESET, HTML_LOADING, HTML_LOADED
 
@@ -142,6 +145,7 @@ class Updater(threading.Thread):
                     return
         
         except IOError, error:
+            self.main.api_temp_password = None
             gobject.idle_add(lambda: self.main.on_network_failed(error))
             return False
         
@@ -209,7 +213,7 @@ class Updater(threading.Thread):
             pass
         
         # Force Title Update
-        self.main.login_complete = True
+        self.main.set_status(ST_LOGIN_COMPLETE)
         gobject.idle_add(lambda: self.gui.set_app_title())
         
         # Init Timer
@@ -310,7 +314,7 @@ class Updater(threading.Thread):
            self.main.refresh_timeout or self.refresh_now or \
            self.refresh_messages:
             
-            self.main.is_updating = True
+            self.main.set_status(ST_UPDATE)
             self.update()
             
             # Update crashfile
@@ -327,7 +331,7 @@ class Updater(threading.Thread):
             self.main.refresh_time = calendar.timegm(time.gmtime())
             self.refresh_messages = False
             self.refresh_now = False
-            self.main.is_updating = False
+            self.main.unset_status(ST_UPDATE)
             gobject.idle_add(lambda: self.gui.update_status(True))
     
     def update(self):
@@ -489,7 +493,7 @@ class Updater(threading.Thread):
             i.is_mentioned = True
         
         self.refresh_now = False
-        self.main.network_failed = False
+        self.main.unset_status(ST_NETWORK_FAILED)
         self.update_limit()
         updates = updates + mentions
         if len(mentions) > 0:
@@ -507,18 +511,17 @@ class Updater(threading.Thread):
         
         except Exception, error:
             self.html.load_history_id = HTML_UNSET_ID
-            self.main.is_loading_history = False
+            self.main.unset_status(ST_HISTORY)
             gobject.idle_add(lambda: self.gui.show_error(error))
             return
         
-        self.main.network_failed = False
         self.main.max_tweet_count += len(updates)
         for i in updates:
             imgfile = self.get_image(i)
             self.html.history_list.append((i, imgfile))
         
         self.html.load_history_id = HTML_UNSET_ID
-        self.main.is_loading_history = False
+        self.main.unset_status(ST_HISTORY | ST_NETWORK_FAILED)
         
         if len(updates) > 0:
             self.html.load_history = True
@@ -575,7 +578,7 @@ class Updater(threading.Thread):
             messages += self.api.sent_direct_messages(
                                  count = self.main.load_message_count // 2)
         
-        self.main.network_failed = False
+        self.main.unset_status(ST_NETWORK_FAILED)
         self.refresh_messages = False
         self.update_limit()
         return self.process_updates(messages)
@@ -590,18 +593,17 @@ class Updater(threading.Thread):
         
         except Exception, error:
             self.message.load_history_id = HTML_UNSET_ID
-            self.main.is_loading_history = False
+            self.main.unset_status(ST_HISTORY)
             gobject.idle_add(lambda: self.gui.show_error(error))
             return
         
-        self.main.network_failed = False
         self.main.max_message_count += len(messages)
         for i in messages:
             imgfile = self.get_image(i, True)
             self.message.history_list.append((i, imgfile))
         
         self.message.load_history_id = HTML_UNSET_ID
-        self.main.is_loading_history = False
+        self.main.unset_status(ST_HISTORY | ST_NETWORK_FAILED)
         
         if len(messages) > 0:
             self.message.load_history = True
@@ -664,12 +666,12 @@ class Updater(threading.Thread):
         # Check for ratelimit
         count = ratelimit['hourly_limit']
         if count < 350:
-            if not self.main.rate_warning_shown:
-                self.main.rate_warning_shown= True
+            if not self.main.status(ST_WARNING_RATE):
+                self.main.set_status(ST_WARNING_RATE)
                 gobject.idle_add(lambda: self.gui.show_warning(count))
         
         else:
-            self.main.rate_warning_shown = False
+            self.main.unset_status(ST_WARNING_RATE)
     
     def get_image(self, item, message = False):#url, userid):
         if message:
