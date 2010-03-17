@@ -787,8 +787,6 @@ class GUI(gtk.Window):
         else:
             code = -1
         
-        code = ecode
-        
         # Reset stuff
         self.main.unset_status(ST_WAS_SEND | ST_WAS_RETWEET | \
                                ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
