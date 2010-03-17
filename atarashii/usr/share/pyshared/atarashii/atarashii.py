@@ -14,13 +14,22 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
-# TODO reorganize GUI.py, like half way done
+# DBUS Integration -------------------------------------------------------------
+# ------------------------------------------------------------------------------
+import dbus
+import dbus.service
+import sys
+if 'org.Atarashii' in dbus.Interface(dbus.SessionBus().get_object(
+   "org.freedesktop.DBus", "/org/freedesktop/DBus"), 
+   "org.freedesktop.DBus").ListNames():
+    sys.exit(2)
+
+DBUS = dbus.SessionBus()
+DBUSNAME = dbus.service.BusName('org.Atarashii', bus = DBUS)
 
 
 # Atarashii --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-import bus
-
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -30,7 +39,6 @@ import os
 import calendar
 import time
 import math
-import sys
 
 gtk.gdk.threads_init()
 gtk.gdk.threads_enter()
