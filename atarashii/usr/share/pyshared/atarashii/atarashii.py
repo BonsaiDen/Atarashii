@@ -458,7 +458,32 @@ class Atarashii:
     
     
     # Helper Functions ---------------------------------------------------------
-    # --------------------------------------------------------------------------
+    # -------------------------------------------------------------------------- 
+    def show_start_notifications(self):
+        if not self.settings.is_true("notify") and \
+           self.status(ST_LOGIN_SUCCESSFUL):
+            return False
+        
+        info_text = []
+        
+        # Tweet Info
+        if self.gui.html.count > 0:
+            info_text.append(
+              (lang.notification_login_tweets if self.gui.html.count > 1 else \
+               lang.notification_login_tweet) % self.gui.html.count)  
+        
+        # Message Info
+        if self.gui.message.count > 0:
+            info_text.append(
+              (lang.notification_login_messages if self.gui.message.count > 1 \
+               else lang.notification_login_message) % self.gui.message.count)  
+        
+        # Create notification
+        info = [(lang.notification_login % self.username,
+                "\n".join(info_text), self.get_user_picture())]
+        
+        self.notifier.show(info)
+    
     def set_user_picture(self, img):
         self.settings['picture_' + self.username] = img
     

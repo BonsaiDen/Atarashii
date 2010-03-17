@@ -525,29 +525,6 @@ class GUI(gtk.Window):
         self.main.settings['taskbar'] = mode
         self.set_property('skip-taskbar-hint', not mode)
     
-    def show_start_notifications(self):
-        if self.main.settings.is_true("notify") and \
-           self.main.status(ST_LOGIN_SUCCESSFUL):
-            info_text = []
-            
-            # Tweet Info
-            if self.html.count > 0:
-                info_text.append(
-                  (lang.notification_login_tweets if self.html.count > 1 else \
-                   lang.notification_login_tweet) % self.html.count)  
-            
-            # Message Info
-            if self.message.count > 0:
-                info_text.append(
-                  (lang.notification_login_messages if self.message.count > 1 \
-                   else lang.notification_login_message) % self.message.count)  
-            
-            # Create notification
-            info = [(lang.notification_login % self.main.username,
-                    "\n".join(info_text), self.main.get_user_picture())]
-            
-            self.main.notifier.show(info)
-    
     
     # Handlers -----------------------------------------------------------------
     # --------------------------------------------------------------------------

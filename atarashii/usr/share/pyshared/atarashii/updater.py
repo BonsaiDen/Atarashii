@@ -236,7 +236,7 @@ class Updater(threading.Thread):
                     
             # Show login message
             if last:
-                self.gui.show_start_notifications()
+                self.main.show_start_notifications()
         
         gobject.idle_add(render)
         return True
@@ -268,7 +268,7 @@ class Updater(threading.Thread):
                     
             # Show login message
             if last:
-                self.gui.show_start_notifications()
+                self.main.show_start_notifications()
         
         gobject.idle_add(render)
         return True
