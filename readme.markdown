@@ -1,3 +1,7 @@
+### Disclaimer
+This project is still under heavy development, addition average is about ~1300 lines per day. Bugs getting squished every minute or so... which explains the crazy version numbering.
+But besides that it's already pretty stable, most times it's best to fetch from the repo instead of using the pre build DEBIAN-Package in the downloads section.
+
 # Atarashii
 **Atarashii** is a simple Twitter Client for your GNOME Desktop.
 
@@ -12,7 +16,7 @@ To install **Atarashii** from source run `python make.py` to create the debian p
 Alternatively, you can check for a recent DEBIAN-Package at the downloads section on GitHub (<http://github.com/BonsaiDen/Atarashii/downloads>).
 Atarashii has been successfully installed on to distinct Ubuntu 9.10 systems, if you encounter any problems please send me an e-mail at <ivo.wetzel@googlemail.com> or file an issues at GitHub.
 
-### Notes
+#### Notes
 > If you've downloaded the source you can start **Atarashii** without installing it by running `python debug.py`.
 > You may need to install `fakeroot` via the package manager in order to be able to create the package by yourself.
 
