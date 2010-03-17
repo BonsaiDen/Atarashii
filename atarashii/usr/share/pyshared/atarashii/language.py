@@ -218,9 +218,9 @@ LANG = {
             '''entsprechend angepasst.''',
         
         'warning_url' : 
-            '''Atarashii konnte Twitter nicht erreichen, dies ist in den ''' + \
-            '''meisten Fällen lediglich ein temporäres Problem aufgrund ''' + \
-            '''von Überlastung seitens Twitter.''',
+            '''Atarashii konnte Twitter nicht erreichen, dies ist in ''' + \
+            '''den meisten Fällen lediglich ein temporäres Problem ''' + \
+            '''aufgrund von Überlastung seitens Twitter.''',
         
         # Toolbar Items
         'tool_refresh' : 'Tweets aktualisieren',
