@@ -40,8 +40,8 @@ from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       UNSET_TIMEOUT, HTML_UNSET_ID
 
 
-from guievents import GUIEventHandler
-from guihelpers import GUIHelpers
+from gui_events import GUIEventHandler
+from gui_helpers import GUIHelpers
 
 
 class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
