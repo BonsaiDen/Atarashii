@@ -56,7 +56,7 @@ class Send(threading.Thread):
         
         # Show Error Message
         except (IOError, TweepError), error:
-            gobject.idle_add(self.gui.show_error, error)
+            gobject.idle_add(self.main.handle_error, error)
         
         
         self.main.unset_status(ST_SEND)
@@ -171,7 +171,7 @@ class Retweet(threading.Thread):
             gobject.idle_add(self.gui.show_retweet_info, self.name)
         
         except (IOError, TweepError), error:
-            gobject.idle_add(self.gui.show_error, error)
+            gobject.idle_add(self.main.handle_error, error)
         
         self.main.unset_status(ST_SEND)
 
@@ -221,7 +221,7 @@ class Delete(threading.Thread):
                              self.tweet_id, self.message_id)
         
         except (IOError, TweepError), error:
-            gobject.idle_add(self.gui.show_error, error)
+            gobject.idle_add(self.main.handle_error, error)
         
         self.main.unset_status(ST_DELETE)
         

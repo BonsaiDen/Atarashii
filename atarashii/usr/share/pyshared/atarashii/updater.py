@@ -331,7 +331,7 @@ class Updater(threading.Thread):
             # Something went wrong...
             except (IOError, TweepError), error:
                 gobject.idle_add(self.html.render)
-                gobject.idle_add(self.gui.show_error, error)
+                gobject.idle_add(self.main.handle_error, error)
                 self.main.refresh_timeout = 60
                 self.main.refresh_time = calendar.timegm(time.gmtime())
                 return
@@ -350,7 +350,7 @@ class Updater(threading.Thread):
             # Something went wrong...
             except (IOError, TweepError), error:
                 gobject.idle_add(self.message.render)
-                gobject.idle_add(self.gui.show_error, error)
+                gobject.idle_add(self.main.handle_error, error)
                 return
             
             if len(messages) > 0:
@@ -498,7 +498,7 @@ class Updater(threading.Thread):
         except (IOError, TweepError), error:
             self.html.load_history_id = HTML_UNSET_ID
             self.main.unset_status(ST_HISTORY)
-            gobject.idle_add(self.gui.show_error, error)
+            gobject.idle_add(self.main.handle_error, error)
             return False
         
         self.main.max_tweet_count += len(updates)
@@ -579,7 +579,7 @@ class Updater(threading.Thread):
         except (IOError, TweepError), error:
             self.message.load_history_id = HTML_UNSET_ID
             self.main.unset_status(ST_HISTORY)
-            gobject.idle_add(self.gui.show_error, error)
+            gobject.idle_add(self.main.handle_error, error)
             return False
         
         self.main.max_message_count += len(messages)
