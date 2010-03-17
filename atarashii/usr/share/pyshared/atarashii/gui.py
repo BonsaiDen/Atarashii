@@ -215,6 +215,7 @@ class GUI(gtk.Window):
         if not self.is_shown:
             self.show_gui()
     
+    
     # Events -------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def delete_event(self, widget, event, data=None):
