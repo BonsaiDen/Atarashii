@@ -75,16 +75,11 @@ class HTML(view.HTMLView):
            self.items[num + 1][0].recipient_screen_name or self.new_avatar) \
            ) or num == len(self.items) - 1 or self.new_timeline:
             
-            avatar = '''<a href="profile:http://twitter.com/%s">
-                        <img width="32" src="file://%s" title="''' + \
-                        lang.html_info + '''"/></a>'''
-            
-            avatar = avatar % (user.screen_name, img,
-                                user.name,
-                                user.followers_count,
-                                user.friends_count,
-                                user.statuses_count)
-            
+            avatar = self.avatar_html(user.screen_name, img,
+                                      user.name, user.followers_count,
+                                      user.friends_count,
+                                      user.statuses_count)
+        
         else:
             avatar = ""
         

@@ -272,6 +272,14 @@ class HTMLView(webkit.WebView):
         return '<div class="spacer%s"></div>' % spacer
     
     
+    def avatar_html(self, screen_name, img, name, followers, friends, statuses):
+        return ('''<a href="profile:http://twitter.com/%s">
+                  <img width="32" src="file://%s" title="''' + \
+                  lang.html_info + '''"/></a>''') % (screen_name, img, name,
+                                                     followers, friends,
+                                                     statuses)
+    
+        
     # History / Read Button ----------------------------------------------------
     # --------------------------------------------------------------------------
     def clear(self):
