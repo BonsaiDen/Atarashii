@@ -151,6 +151,7 @@ class AboutDialog(Dialog):
         # License toggling
         info = self.get("infobox")
         text = self.get("textwindow")
+        self.get("about").set_markup(lang.about_description)
         license_button = self.get("license")
         license_button.set_label(lang.about_license_button)
         
