@@ -37,7 +37,7 @@ LANG = {
         'name' : lambda x: x + "'" if x[-1:] in "xs" else x + "s",
 
         # HTML
-        'html_welcome' : 'Willkommen bei Atarashii!',
+        'html_welcome' : 'Willkommen bei Atarashii.',
         'html_loading' : 'Tweets werden geladen...',
         'html_info' : 'Name: %s\nFollower: %d\nFollowing: %d\nTweets: %d',
         'html_profile' : '%s auf Twitter.com',
@@ -302,7 +302,7 @@ LANG = {
         'name' : lambda x: x + "'s" if x[-1:] in "xs" else x + "s", 
         
         # HTML
-        'html_welcome' : 'Welcome to Atarashii!',
+        'html_welcome' : 'Welcome to Atarashii.',
         'html_loading' : 'Loading Tweets...',
         'html_info' : 'Name: %s\nFollower: %d\nFollowing: %d\nTweets: %d',
         'html_profile' : '%s at Twitter.com',
