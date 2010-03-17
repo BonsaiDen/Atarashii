@@ -491,7 +491,29 @@ class HTMLView(webkit.WebView):
     # Menu Building ------------------------------------------------------------
     def create_base_menu(self, menu, item, link):
         link_data = self.get_link_type(link)
-        return self.create_menu(menu, item, link_data[0], link_data[1])
+        link, full = link_data[0], link_data[2]
+        item_id = self.get_id(item) if item != None else -1
+        if self.ok_menu(link):
+            if self.create_link_menu(menu, link, full): # Link options
+                return True
+            
+            elif self.create_status_tag_menu(menu, link, full): # Status / Tag
+                return True
+            
+            else:
+                # Profile
+                if link in ('user', 'profile'):
+                    user = full[full.rfind("/") + 1:]
+                    self.add_menu_link(menu, lang.context_profile % user,
+                                       lambda *args: self.context_link(full))
+                
+                else:
+                    user = None
+                
+                return self.create_menu(menu, item, item_id, link, full, user)
+        
+        else:
+            return False
     
     def create_link_menu(self, menu, link, full):
         if link == "link":

@@ -143,11 +143,7 @@ class HTML(view.HTMLView):
         
         # HTML Snippet ---------------------------------------------------------
         html = '''
-        <div class="viewitem %s" id="%d">
-        <div class="avatar">
-            %s
-        </div>
-        
+        <div class="viewitem %s" id="%d"><div class="avatar">%s</div>
         <div class="actions">
             <div class="blocker"></div>
             <div class="doreply">
@@ -202,25 +198,12 @@ class HTML(view.HTMLView):
         
     # Create Popup Items -------------------------------------------------------
     # --------------------------------------------------------------------------
-    def create_menu(self, menu, item, link, full):                
-        # No Quick links
-        if link in ("fav", "unfav", "qreply"):
-            return False
-        
-        # Get the real ID
-        if item != None:
-            item_id = self.get_id(item)
-           
-        # Link options
-        if self.create_link_menu(menu, link, full):
-            pass
-        
+    def ok_menu(self, link):
+        return not link in ("fav", "unfav", "qreply")
+    
+    def create_menu(self, menu, item, item_id, link, full, user):
         # User Options
-        elif link == "user" or link == "profile":
-            user = full[full.rfind("/") + 1:]
-            self.add_menu_link(menu, lang.context_profile % user,
-                               lambda *args: self.context_link(full))
-            
+        if user != None:
             if link == "profile":
                 reply = "reply:%s:%d:-1" % (user, item_id)
                 self.add_menu_link(menu, lang.context_reply % user,
@@ -237,10 +220,6 @@ class HTML(view.HTMLView):
             source = self.get_source(item)
             self.add_menu_link(menu, lang.context_source % lang.name(source),
                                lambda *args: self.context_link(full))
-        
-        # Status / Tag
-        elif self.create_status_tag_menu(menu, link, full):
-            pass
         
         # Retweet / Delete
         else:
