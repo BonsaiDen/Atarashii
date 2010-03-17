@@ -67,5 +67,4 @@ def compare_sub(item_x, item_y):
     
     else:
         return 0
-        
 
