@@ -18,8 +18,8 @@
 # ------------------------------------------------------------------------------
 import pygtk
 pygtk.require('2.0')
-import gtk
 import gobject
+import gtk
 
 from language import LANG as lang
 
