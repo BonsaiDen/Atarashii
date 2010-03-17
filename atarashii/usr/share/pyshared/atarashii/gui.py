@@ -390,25 +390,7 @@ class GUI(gtk.Window):
             self.info_label.show()
     
     def set_label_text(self, info, label_text):
-        # Get Font Width
-        font = self.info_label.create_pango_context().get_font_description()
-        layout = self.info_label.create_pango_layout("")
-        layout.set_markup(info % escape(label_text))
-        layout.set_font_description(font)
-        
-        # Truncate till it fits
-        width = self.info_label.get_allocation()[2]
-        cur = layout.get_pixel_size()[0]
-        if cur > width:
-            while cur > width:
-                label_text = label_text[:-3]
-                layout.set_markup(info % escape(label_text) + "...")
-                cur = layout.get_pixel_size()[0]
-            
-            self.info_label.set_markup(info % escape(label_text) + "...")
-        
-        else:
-            self.info_label.set_markup(info % escape(label_text))
+        self.info_label.set_markup(info % escape(label_text))
     
     
     # Helpers ------------------------------------------------------------------
