@@ -99,10 +99,7 @@ class HTML(view.HTMLView):
             self.new_avatar) \
             ) or num == len(self.items) - 1 or self.new_timeline:
             
-            avatar = self.avatar_html(user.screen_name, img,
-                                      user.name, user.followers_count,
-                                      user.friends_count,
-                                      user.statuses_count)
+            avatar = self.avatar_html(user, img)
         
         else:
             avatar = ""
