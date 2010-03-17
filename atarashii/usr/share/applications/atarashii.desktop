@@ -1,7 +1,7 @@
 [Desktop Entry]
 Name=Atarashii
 GenericName=Twitter Client
-Comment=Use Twitter on your GNOME Desktop
+Comment=Twitter on your GNOME Desktop
 Comment[de]=Twitter auf deinem GNOME Desktop
 Exec=atarashii
 Icon=atarashii.png
