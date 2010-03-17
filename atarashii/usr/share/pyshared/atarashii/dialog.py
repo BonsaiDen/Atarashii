@@ -304,7 +304,7 @@ class SettingsDialog(Dialog):
             self.settings['tray'] = tray.get_active()
             
             self.settings.set_autostart(autostart.get_active())
-            self.gui.show_taskbar(taskbar.get_active())
+            self.gui.show_in_taskbar(taskbar.get_active())
             
             # Save GUI Mode
             self.main.save_mode()
