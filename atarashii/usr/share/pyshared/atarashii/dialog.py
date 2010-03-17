@@ -27,7 +27,7 @@ from language import LANG as lang
 from constants import ST_LOGIN_SUCCESSFUL
 
 from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \
-                      MESSAGE_INFO, UNSET_TEXT, UNSET_ID_NUM
+                      MESSAGE_INFO, UNSET_TEXT, UNSET_TIMEOUT
 
 
 class Dialog:
@@ -545,7 +545,7 @@ class ButtonDialog:
         self.dialog = None
         self.shown = False
         self.information = UNSET_TEXT
-        self.time = UNSET_ID_NUM
+        self.time = UNSET_TIMEOUT
         
         self.title = title
         self.template = template
@@ -584,14 +584,4 @@ class ButtonDialog:
                               time.strftime(self.template, date) + \
                               self.information,
                               self.title)
-
-
-
-
-
-
-
-
-
-
 
