@@ -587,6 +587,7 @@ class GUI(gtk.Window):
             self.html_scroll.hide()
             self.message_scroll.show()
             self.message.focus_me()
+            self.message.fix_scroll()
             
             self.check_read()
             self.history_button.set_sensitive(self.message.history_loaded)
@@ -604,6 +605,7 @@ class GUI(gtk.Window):
             self.message_scroll.hide()
             self.html_scroll.show()
             self.html.focus_me()
+            self.html.fix_scroll()
             
             self.check_read()
             self.history_button.set_sensitive(self.html.history_loaded)
