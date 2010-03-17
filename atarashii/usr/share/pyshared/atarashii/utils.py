@@ -14,6 +14,21 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
+
+
+# Tweepy Wrapper ---------------------------------------------------------------
+# ------------------------------------------------------------------------------
+try:
+    import sys
+    sys.path.insert(0, __file__[:__file__.rfind('/')])
+    import tweepy
+    TweepError = tweepy.get_error()
+
+finally:
+    sys.path.pop(0)
+    del sys
+
+
 # Utility stuff ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 ENTITIES = {
