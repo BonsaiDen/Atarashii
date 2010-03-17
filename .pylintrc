@@ -1,0 +1,39 @@
+[MASTER]
+
+# Profiled execution.
+profile=no
+
+# Add <file or directory> to the black list. It should be a base name, not a
+# path. You may set this option multiple times.
+ignore=tweepy
+
+# Pickle collected data for later comparisons.
+persistent=yes
+
+# Set the cache size for astng objects.
+cache-size=500
+
+# List of plugins (as comma separated values of python modules names) to load,
+# usually to register additional checkers.
+load-plugins=
+
+
+[MESSAGES CONTROL]
+disable-checker=similarities
+
+# Enable all messages in the listed categories.
+#enable-msg-cat=
+
+# Disable all messages in the listed categories.
+#disable-msg-cat=
+
+# Enable the message(s) with the given id(s).
+#enable-msg=
+
+
+# Disable the message(s) with the given id(s).
+# List of all available ids: http://www.logilab.org/card/pylintfeatures
+disable-msg=C0111,E1101,W0403,R0902,R0904,W0613,R0903,W0201,R0912,R0915,R0913,R0911,R0914,R0901,R0201,E1102,W0231
+
+[BASIC]
+good-names=i,j,k,ex,Run,_,e,v,TweepError
