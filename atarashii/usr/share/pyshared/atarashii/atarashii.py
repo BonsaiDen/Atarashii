@@ -42,12 +42,10 @@ import settings
 import updater
 
 from lang import lang
-from constants import ST_WARNING_REQUEST, ST_CONNECT, ST_NETWORK_FAILED, \
-                      ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, ST_DELETE, \
-                      ST_WAS_RETWEET, ST_UPDATE, ST_WARNING_RATE, \
-                      ST_WAS_RETWEET_NEW, ST_SEND, ST_LOGIN_COMPLETE, \
-                      ST_WAS_SEND, ST_RECONNECT, ST_HISTORY, ST_WAS_DELETE, \
-                      ST_ALL, ST_NONE
+from constants import ST_CONNECT, ST_NETWORK_FAILED, ST_LOGIN_ERROR, \
+                      ST_LOGIN_SUCCESSFUL, ST_UPDATE, ST_WAS_RETWEET_NEW, \
+                      ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, ST_NONE, \
+                      ST_SEND, ST_DELETE
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
                       MODE_TWEETS, MODE_MESSAGES, HTML_UNSET_ID
@@ -292,8 +290,8 @@ class Atarashii:
         if error:
             self.gui.show_error(error)
         
-        gobject.idle_add(lambda: self.gui.message.init(True))
-        gobject.idle_add(lambda: self.gui.html.init(True))
+        gobject.idle_add(self.gui.message.init, True)
+        gobject.idle_add(self.gui.html.init, True)
     
     def on_network_failed(self, error):
         self.on_login_failed(error)
@@ -308,8 +306,8 @@ class Atarashii:
         self.gui.set_app_title()
         self.gui.hide_all()
         
-        gobject.idle_add(lambda: self.gui.message.init(True))
-        gobject.idle_add(lambda: self.gui.html.init(True))
+        gobject.idle_add(self.gui.message.init, True)
+        gobject.idle_add(self.gui.html.init, True)
     
     
     # Reconnect ----------------------------------------------------------------
@@ -331,7 +329,7 @@ class Atarashii:
             self.set_status(ST_RECONNECT)
             self.reconnect_timeout = gobject.timeout_add(
                                      int(self.refresh_timeout * 1000),
-                                     lambda: self.login())
+                                     self.login)
             
             return lang.error_ratelimit_reconnect % math.ceil(minutes)
         

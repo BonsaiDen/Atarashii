@@ -32,7 +32,7 @@ class Dialog:
     resource = ""
     instance = None
     
-    def __init__(self, gui, close = True):
+    def __init__(self, gui, close = True, init = True):
         self.gui = gui
         self.main = gui.main
         self.settings = gui.main.settings
@@ -53,12 +53,13 @@ class Dialog:
             
             self.__class__.instance = self.dlg
             self.dlg.show_all()
-            self.on_init()
+            if init:
+                self.on_init()
             
             self.close_button.grab_focus()
         
         else:
-            gobject.idle_add(lambda: self.__class__.instance.present())
+            gobject.idle_add(self.__class__.instance.present)
     
     def on_init(self):
         pass
@@ -78,23 +79,26 @@ class PasswordDialog(Dialog):
     instance = None
     
     def __init__(self, parent, title, info):
-        Dialog.__init__(self, parent, False)
+        Dialog.__init__(self, parent, False, False)
         self.dlg.set_transient_for(parent)
         self.parent = parent
         self.dlg.set_title(title)
-        self.get("password").grab_focus()
-        self.get("info").set_label(info)
-    
-    def on_init(self):
+        
+        self.get("info").set_markup(info)
+        
         self.password = self.get("password")
+        self.password.grab_focus()
+        
         self.close_button.set_label(lang.password_button)
-        cancel_button = self.get("cancelbutton")
-        cancel_button.set_label(lang.password_button_cancel)
+        self.cancel_button = self.get("cancelbutton")
+        self.cancel_button.set_label(lang.password_button_cancel)
+        
         self.error = self.get("error")
+        self.default_bg = self.password.get_style().base[gtk.STATE_NORMAL]
+        
         self.error.hide()
         self.error_shown = False
         self.error.set_label(lang.password_too_short)
-        self.default_bg = self.password.get_style().base[gtk.STATE_NORMAL]
         
         def save(*args):
             password = self.password.get_text().strip()
@@ -115,7 +119,6 @@ class PasswordDialog(Dialog):
             self.main.api_temp_password = ""
             self.on_close()
         
-        
         def key(widget, event, *args):
             if self.error_shown:
                 if len(self.password.get_text().strip()) >= 6:
@@ -129,7 +132,7 @@ class PasswordDialog(Dialog):
         
         self.password.connect("key-press-event", key)
         self.close_button.connect("clicked", save)
-        cancel_button.connect("clicked", abort)
+        self.cancel_button.connect("clicked", abort)
 
 
 # About Dialog -----------------------------------------------------------------
@@ -177,7 +180,12 @@ class SettingsDialog(Dialog):
     resource = "settings.glade"
     instance = None
     
-    def on_init(self):
+    def __init__(self, parent):
+        Dialog.__init__(self, parent, True, False)
+        self.dlg.set_transient_for(parent)
+        self.parent = parent
+        
+        # Stuff
         self.saved = False
         self.dlg.set_title(lang.settings_title)
         self.close_button.set_label(lang.settings_button)
@@ -192,6 +200,9 @@ class SettingsDialog(Dialog):
         self.delete = delete = self.get("delete")
         delete.set_label(lang.settings_delete)
         
+        # Listview
+        self.user_accounts = []
+        self.accounts_list = None
         self.drop = drop = gtk.TreeView()
         drop.get_selection().set_mode(gtk.SELECTION_BROWSE)
         column = gtk.TreeViewColumn(lang.settings_accounts)
@@ -319,7 +330,7 @@ class SettingsDialog(Dialog):
         
         self.close_button.connect("clicked", save)
         cancel_button.connect("clicked", self.on_close)
-        gobject.idle_add(lambda *arg: self.drop.grab_focus())
+        gobject.idle_add(self.drop.grab_focus)
     
     def on_close(self, *args):
         if not self.saved:
@@ -478,25 +489,24 @@ class MessageDialog(gtk.MessageDialog):
     def __init__(self, parent, msg_type, message, title, ok_callback = None,
                 yes_callback = None, no_callback = None):
         
+        buttons = gtk.BUTTONS_OK
         if msg_type == MESSAGE_ERROR:
-            gtk.MessageDialog.__init__(self, parent,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, message)
+            icon = gtk.MESSAGE_ERROR
         
         elif msg_type == MESSAGE_WARNING:
-            gtk.MessageDialog.__init__(self, parent,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        gtk.MESSAGE_WARNING, gtk.BUTTONS_OK, message)
+            icon = gtk.MESSAGE_WARNING
         
         elif msg_type == MESSAGE_QUESTION:
-            gtk.MessageDialog.__init__(self, parent,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
+            icon = gtk.MESSAGE_QUESTION,
+            buttons = gtk.BUTTONS_YES_NO
         
         elif msg_type == MESSAGE_INFO:
-            gtk.MessageDialog.__init__(self, parent,
-                        gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-                        gtk.MESSAGE_INFO, gtk.BUTTONS_OK, message)
+            icon = gtk.MESSAGE_INFO
+        
+        # Init
+        gtk.MessageDialog.__init__(self, parent, 
+                          gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
+                          icon, buttons, "")
         
         self.set_markup(message)
         self.set_title(title)

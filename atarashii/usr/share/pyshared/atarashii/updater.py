@@ -47,6 +47,10 @@ class Updater(threading.Thread):
         threading.Thread.__init__(self)
         self.main = main
         self.settings = main.settings
+        self.gui = None
+        self.api = None
+        self.html = None
+        self.message = None
         
         # Notifier
         self.notifier = self.main.notifier
@@ -124,7 +128,7 @@ class Updater(threading.Thread):
             
             # Get a new token!
             if not token_ok:
-                gobject.idle_add(lambda: self.gui.enter_password())
+                gobject.idle_add(self.gui.enter_password)
                 
                 # Wait for password entry
                 while self.main.api_temp_password == None:
@@ -140,18 +144,18 @@ class Updater(threading.Thread):
                     self.settings[secret_name] = token.secret
                 
                 else:
-                    gobject.idle_add(lambda: self.main.on_login_failed())
+                    gobject.idle_add(self.main.on_login_failed)
                     self.main.api_temp_password = None
                     return
         
         except IOError, error:
             self.main.api_temp_password = None
-            gobject.idle_add(lambda: self.main.on_network_failed(error))
+            gobject.idle_add(self.main.on_network_failed, error)
             return False
         
         except Exception, error:
             self.main.api_temp_password = None
-            gobject.idle_add(lambda: self.main.on_login_failed(error))
+            gobject.idle_add(self.main.on_login_failed, error)
             return False
         
         # Create the api instance
@@ -179,17 +183,17 @@ class Updater(threading.Thread):
         
         # Init the GUI
         self.started = True
-        gobject.idle_add(lambda: self.main.on_login())
-        gobject.idle_add(lambda: self.gui.check_read())
+        gobject.idle_add(self.main.on_login)
+        gobject.idle_add(self.gui.check_read)
         
         # Load other stuff
         if self.gui.mode == MODE_TWEETS:
             if self.get_init_messages(True):
                 if self.gui.mode == MODE_MESSAGES:
-                    gobject.idle_add(lambda: self.gui.show_input())
+                    gobject.idle_add(self.gui.show_input)
                 
                 else:
-                    gobject.idle_add(lambda: self.gui.check_refresh())
+                    gobject.idle_add(self.gui.check_refresh)
             
             else:
                 self.message.load_state = HTML_RESET
@@ -199,10 +203,10 @@ class Updater(threading.Thread):
         elif self.gui.mode == MODE_MESSAGES:
             if self.get_init_tweets(True):
                 if self.gui.mode == MODE_TWEETS:
-                    gobject.idle_add(lambda: self.gui.show_input())
+                    gobject.idle_add(self.gui.show_input)
                 
                 else:
-                    gobject.idle_add(lambda: self.gui.check_refresh())
+                    gobject.idle_add(self.gui.check_refresh)
             
             else:
                 self.message.load_state = HTML_RESET
@@ -214,11 +218,11 @@ class Updater(threading.Thread):
         
         # Force Title Update
         self.main.set_status(ST_LOGIN_COMPLETE)
-        gobject.idle_add(lambda: self.gui.set_app_title())
+        gobject.idle_add(self.gui.set_app_title)
         
         # Init Timer
         self.main.refresh_time = calendar.timegm(time.gmtime())
-        gobject.idle_add(lambda: self.gui.check_read())
+        gobject.idle_add(self.gui.check_read)
     
     
     # Load initial tweets ------------------------------------------------------
@@ -228,7 +232,7 @@ class Updater(threading.Thread):
             updates = self.try_get_updates(self.main.get_first_id())
         
         except Exception, error:
-            gobject.idle_add(lambda: self.main.on_login_failed(error))
+            gobject.idle_add(self.main.on_login_failed, error)
             return False
         
         if len(updates) > 0:
@@ -248,7 +252,7 @@ class Updater(threading.Thread):
             if last:
                 self.gui.show_start_notifications()
         
-        gobject.idle_add(lambda: render())
+        gobject.idle_add(render)
         return True
     
     
@@ -259,7 +263,7 @@ class Updater(threading.Thread):
             messages = self.try_get_messages(self.main.get_first_message_id())
         
         except Exception, error:
-            gobject.idle_add(lambda: self.main.on_login_failed(error))
+            gobject.idle_add(self.main.on_login_failed, error)
             return False
         
         if len(messages) > 0:
@@ -280,7 +284,7 @@ class Updater(threading.Thread):
             if last:
                 self.gui.show_start_notifications()
         
-        gobject.idle_add(lambda: render())
+        gobject.idle_add(render)
         return True
     
     
@@ -321,18 +325,15 @@ class Updater(threading.Thread):
             self.main.settings.crash_file(True)
             
             # Update GUI
-            gobject.idle_add(
-                    lambda: self.gui.refresh_button.set_sensitive(True))
+            gobject.idle_add(self.gui.refresh_button.set_sensitive, True)
+            gobject.idle_add(self.gui.tray.refresh_menu.set_sensitive, True)
             
-            gobject.idle_add(
-                    lambda: self.gui.tray.refresh_menu.set_sensitive(True))
-            
-            gobject.idle_add(lambda: self.gui.check_read())
+            gobject.idle_add(self.gui.check_read)
             self.main.refresh_time = calendar.timegm(time.gmtime())
             self.refresh_messages = False
             self.refresh_now = False
             self.main.unset_status(ST_UPDATE)
-            gobject.idle_add(lambda: self.gui.update_status(True))
+            gobject.idle_add(self.gui.update_status, True)
     
     def update(self):
         # Fetch Tweets
@@ -343,8 +344,8 @@ class Updater(threading.Thread):
             
             # Something went wrong...
             except Exception, error:
-                gobject.idle_add(lambda: self.html.render())
-                gobject.idle_add(lambda: self.gui.show_error(error))
+                gobject.idle_add(self.html.render)
+                gobject.idle_add(self.gui.show_error, error)
                 self.main.refresh_timeout = 60
                 self.main.refresh_time = calendar.timegm(time.gmtime())
                 return
@@ -362,8 +363,8 @@ class Updater(threading.Thread):
             
             # Something went wrong...
             except Exception, error:
-                gobject.idle_add(lambda: self.message.render())
-                gobject.idle_add(lambda: self.gui.show_error(error))
+                gobject.idle_add(self.message.render)
+                gobject.idle_add(self.gui.show_error, error)
                 return
             
             if len(messages) > 0:
@@ -382,16 +383,16 @@ class Updater(threading.Thread):
         
         # Update View
         if len(updates) > 0:
-            gobject.idle_add(lambda: self.html.push_updates())
+            gobject.idle_add(self.html.push_updates)
         
         else:
-            gobject.idle_add(lambda: self.html.render())
+            gobject.idle_add(self.html.render)
         
         if len(messages) > 0:
-            gobject.idle_add(lambda: self.message.push_updates())
+            gobject.idle_add(self.message.push_updates)
         
         else:
-            gobject.idle_add(lambda: self.message.render())
+            gobject.idle_add(self.message.render)
     
     
     # Notifications ------------------------------------------------------------
@@ -462,7 +463,7 @@ class Updater(threading.Thread):
     
     # Tweets
     def get_updates(self, since_id = 0, max_id = None, max_count = 200):
-        gobject.idle_add(lambda: self.gui.update_status(True))
+        gobject.idle_add(self.gui.update_status, True)
         updates = []
         mentions = []
         if since_id != HTML_UNSET_ID:
@@ -512,7 +513,7 @@ class Updater(threading.Thread):
         except Exception, error:
             self.html.load_history_id = HTML_UNSET_ID
             self.main.unset_status(ST_HISTORY)
-            gobject.idle_add(lambda: self.gui.show_error(error))
+            gobject.idle_add(self.gui.show_error, error)
             return
         
         self.main.max_tweet_count += len(updates)
@@ -529,8 +530,8 @@ class Updater(threading.Thread):
             self.html.history_count += len(updates)
             self.gui.history_button.set_sensitive(True)
         
-        gobject.idle_add(lambda: self.html.push_updates())
-        gobject.idle_add(lambda: self.gui.show_input())
+        gobject.idle_add(self.html.push_updates)
+        gobject.idle_add(self.gui.show_input)
     
     
     # Main Function that fetches the messages ----------------------------------
@@ -594,7 +595,7 @@ class Updater(threading.Thread):
         except Exception, error:
             self.message.load_history_id = HTML_UNSET_ID
             self.main.unset_status(ST_HISTORY)
-            gobject.idle_add(lambda: self.gui.show_error(error))
+            gobject.idle_add(self.gui.show_error, error)
             return
         
         self.main.max_message_count += len(messages)
@@ -611,8 +612,8 @@ class Updater(threading.Thread):
             self.message.history_count += len(messages)
             self.gui.history_button.set_sensitive(True)
         
-        gobject.idle_add(lambda: self.message.push_updates())
-        gobject.idle_add(lambda: self.gui.show_input())
+        gobject.idle_add(self.message.push_updates)
+        gobject.idle_add(self.gui.show_input)
     
     
     # Helpers ------------------------------------------------------------------
@@ -668,7 +669,7 @@ class Updater(threading.Thread):
         if count < 350:
             if not self.main.status(ST_WARNING_RATE):
                 self.main.set_status(ST_WARNING_RATE)
-                gobject.idle_add(lambda: self.gui.show_warning(count))
+                gobject.idle_add(self.gui.show_warning, count)
         
         else:
             self.main.unset_status(ST_WARNING_RATE)

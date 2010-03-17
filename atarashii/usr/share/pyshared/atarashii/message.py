@@ -20,6 +20,8 @@ import view
 
 from lang import lang
 
+from constants import UNSET_TEXT
+
 
 class HTML(view.HTMLView):
     def __init__(self, main, gui):
@@ -35,6 +37,10 @@ class HTML(view.HTMLView):
         self.lang_loading = lang.message_loading
         self.lang_empty = lang.message_empty
         self.lang_load = lang.message_load_more
+        
+        self.last_name = UNSET_TEXT
+        self.last_recipient = UNSET_TEXT
+        self.last_mentioned = UNSET_TEXT
         
         self.first_setting = 'firstmessage_'
     

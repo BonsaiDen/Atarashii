@@ -31,8 +31,8 @@ from utils import unescape, compare_sub
 from lang import lang
 from constants import ST_HISTORY, ST_LOGIN_SUCCESSFUL
 
-from constants import HTML_STATE_NONE, HTML_UNSET_ID, \
-                      RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, UNSET_ID_NUM
+from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \
+                      UNSET_ID_NUM
 
 
 # Watch out! This is one giant "Is this OK mommy?" hackery by the kittens!
@@ -319,7 +319,7 @@ class HTMLView(webkit.WebView):
         if not self.first_load and self.position > 0:
             pos = self.position + offset
             self.check_scroll(pos)
-            gobject.timeout_add(25, lambda: self.check_scroll(pos))
+            gobject.timeout_add(25, self.check_scroll, pos)
         
         # scroll to first new tweet
         elif self.first_load or (offset > 0 and self.position == 0):
@@ -358,7 +358,7 @@ class HTMLView(webkit.WebView):
         self.mouse_position = event.y
     
     def on_scroll(self, view, event, *args):
-        gobject.timeout_add(10, lambda *args: self.fake_click())
+        gobject.timeout_add(10, self.fake_click)
 
     # Double check for some stupid scrolling bugs with webkit
     def check_scroll(self, pos):
@@ -554,7 +554,7 @@ class HTMLView(webkit.WebView):
                 if self.load_history_id != HTML_UNSET_ID:
                     self.main.set_status(ST_HISTORY)
                     self.gui.show_progress()
-                    gobject.idle_add(lambda: self.main.gui.update_status(True))
+                    gobject.idle_add(self.main.gui.update_status, True)
                     self.main.gui.text.html_focus()
         
         # Replies
@@ -612,7 +612,7 @@ class HTMLView(webkit.WebView):
             ref, dtype, item_id = uri.split(":")
             item_id = int(item_id)
             text = unescape(self.get_text(extra))
-            retweet = hasattr(extra, "retweeted_status")
+
             
             def delete_tweet():
                 self.main.delete(tweet_id = item_id)
@@ -622,28 +622,26 @@ class HTMLView(webkit.WebView):
             
             # Ask
             if dtype == "t":
-                gobject.idle_add(lambda: self.main.gui.ask_for_delete_tweet(
-                                         text,
-                                         delete_tweet,
-                                         None, retweet))
+                gobject.idle_add(self.main.gui.ask_for_delete_tweet,
+                                 text,
+                                 delete_tweet,
+                                 None)
             
             elif dtype == "m":
-                gobject.idle_add(lambda: self.main.gui.ask_for_delete_message(
-                                         text,
-                                         delete_message,
-                                         None))
+                gobject.idle_add(self.main.gui.ask_for_delete_message,
+                                 text,
+                                 delete_message,
+                                 None)
         
         # Favorite
         elif uri.startswith("fav:"):
             ref, name, item_id = uri.split(":")
-            gobject.idle_add(
-                    lambda: self.main.favorite(int(item_id), True, name))
+            gobject.idle_add(self.main.favorite, int(item_id), True, name)
         
         # Un-Favorite
         elif uri.startswith("unfav:"):
             ref, name, item_id, = uri.split(":")
-            gobject.idle_add(
-                    lambda: self.main.favorite(int(item_id), False, name))
+            gobject.idle_add(self.main.favorite, int(item_id), False, name)
         
         # Regular links
         else:
@@ -692,7 +690,7 @@ class HTMLView(webkit.WebView):
         
         # Make sure the textbox doesn't loose focus if it's opened
         if self.gui.text.has_focus:
-            gobject.idle_add(lambda *args: self.gui.text.grab_focus())
+            gobject.idle_add(self.gui.text.grab_focus)
     
     
     # Helpers ------------------------------------------------------------------

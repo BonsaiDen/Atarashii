@@ -54,7 +54,7 @@ class Send(threading.Thread):
         
         # Show Error Message
         except Exception, error:
-            gobject.idle_add(lambda: self.gui.show_error(error))
+            gobject.idle_add(self.gui.show_error, error)
         
         
         self.main.unset_status(ST_SEND)
@@ -103,7 +103,7 @@ class Send(threading.Thread):
             # Insert temporary tweet
             imgfile = self.main.updater.get_image(update)
             self.gui.html.update_list.append((update, imgfile))
-            gobject.idle_add(lambda: self.gui.html.push_updates())
+            gobject.idle_add(self.gui.html.push_updates)
         
         # Normal Tweet / Retweet
         else:
@@ -114,7 +114,7 @@ class Send(threading.Thread):
             # Insert temporary tweet
             imgfile = self.main.updater.get_image(update)
             self.gui.html.update_list.append((update, imgfile))
-            gobject.idle_add(lambda: self.gui.html.push_updates())
+            gobject.idle_add(self.gui.html.push_updates)
     
     
     # Send a Direct Message ----------------------------------------------------
@@ -133,7 +133,7 @@ class Send(threading.Thread):
         # Insert temporary message
         imgfile = self.main.updater.get_image(message, True)
         self.gui.message.update_list.append((message, imgfile))
-        gobject.idle_add(lambda: self.gui.message.push_updates())
+        gobject.idle_add(self.gui.message.push_updates)
 
 
 
@@ -166,10 +166,10 @@ class Retweet(threading.Thread):
                 pass
             
             self.main.unset_status(ST_WAS_SEND)
-            gobject.idle_add(lambda: self.gui.show_retweet_info(self.name))
+            gobject.idle_add(self.gui.show_retweet_info, self.name)
         
         except Exception, error:
-            gobject.idle_add(lambda: self.gui.show_error(error))
+            gobject.idle_add(self.gui.show_error, error)
         
         self.main.unset_status(ST_SEND)
 
@@ -209,18 +209,17 @@ class Delete(threading.Thread):
             
             # Remove from view!
             if self.tweet_id != UNSET_ID_NUM:
-                gobject.idle_add(lambda: self.gui.html.remove(self.tweet_id))
+                gobject.idle_add(self.gui.html.remove, self.tweet_id)
                 
             elif self.message_id != UNSET_ID_NUM:
-                gobject.idle_add(
-                        lambda: self.gui.message.remove(self.message_id))
+                gobject.idle_add(self.gui.message.remove, self.message_id)
             
             # Show Info
-            gobject.idle_add(lambda: self.gui.show_delete_info(
-                                     self.tweet_id, self.message_id))
+            gobject.idle_add(self.gui.show_delete_info,
+                             self.tweet_id, self.message_id)
         
         except Exception, error:
-            gobject.idle_add(lambda: self.gui.show_error(error))
+            gobject.idle_add(self.gui.show_error, error)
         
         self.main.unset_status(ST_DELETE)
         
@@ -246,12 +245,11 @@ class Favorite(threading.Thread):
             else:
                 self.main.api.destroy_favorite(self.tweet_id)
             
-            gobject.idle_add(lambda: 
-                    self.gui.html.favorite(self.tweet_id, self.mode))
+            gobject.idle_add(self.gui.html.favorite, self.tweet_id, self.mode)
         
         except Exception, error:
             print error
-            gobject.idle_add(lambda: self.gui.show_favorite_error(self.name, self.mode))
+            gobject.idle_add(self.gui.show_favorite_error, self.name, self.mode)
 
         del self.main.favorites_pending[self.tweet_id]
 

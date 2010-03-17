@@ -52,14 +52,14 @@ class TrayIcon(gtk.StatusIcon):
         # Refresh
         menu_item = gtk.ImageMenuItem(gtk.STOCK_REFRESH)
         menu_item.set_label(lang.menu_update)
-        menu_item.connect('activate', self.gui.on_refresh, self)
+        menu_item.connect('activate', self.gui.on_refresh)
         menu.append(menu_item)
         self.refresh_menu = menu_item
         
         # Readall
         menu_item = gtk.ImageMenuItem(gtk.STOCK_OK)
         menu_item.set_label(lang.menu_read)
-        menu_item.connect('activate', self.gui.on_read_all, self)
+        menu_item.connect('activate', self.gui.on_read_all)
         menu.append(menu_item)
         self.read_menu = menu_item
         
@@ -67,7 +67,7 @@ class TrayIcon(gtk.StatusIcon):
         menu_item = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
         menu_item.set_label(lang.menu_settings)
         menu_item.connect('activate',
-                          lambda *args: self.gui.on_settings(True), self)
+                          lambda *args: self.gui.on_settings(True))
         
         menu.append(menu_item)
         self.settings_menu = menu_item
@@ -76,7 +76,7 @@ class TrayIcon(gtk.StatusIcon):
         menu_item = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
         menu_item.set_label(lang.menu_about)
         menu_item.connect('activate',
-                          lambda *args: self.gui.on_about(True), self)
+                          lambda *args: self.gui.on_about(True))
         
         menu.append(menu_item)
         
@@ -147,7 +147,7 @@ class TrayIcon(gtk.StatusIcon):
             self.gui.present()
             pos = self.gui.window_position
             self.gui.move(pos[0], pos[1])
-            gobject.idle_add(lambda: self.gui.grab_focus())
+            gobject.idle_add(self.gui.grab_focus)
         
         # Hide or move to other screen
         else:
@@ -175,7 +175,7 @@ class TrayIcon(gtk.StatusIcon):
             else:
                 pos = self.gui.window_position
                 self.gui.move(pos[0], pos[1])
-                gobject.timeout_add(10, lambda: self.force_focus())
+                gobject.timeout_add(10, self.force_focus)
     
     def force_focus(self):
         self.gui.grab_focus()

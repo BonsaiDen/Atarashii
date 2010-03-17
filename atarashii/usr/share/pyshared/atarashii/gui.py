@@ -24,9 +24,6 @@ import gobject
 import calendar
 import time
 import math
-import exceptions
-import os
-import traceback
 
 import html
 import message
@@ -174,7 +171,7 @@ class GUI(gtk.Window):
             main.settings.is_true("crashed", False): # show after crash
             self.show_gui()
         
-        gobject.idle_add(lambda: self.main.on_init())
+        gobject.idle_add(self.main.on_init)
     
     
     # Initial Show -------------------------------------------------------------
@@ -184,11 +181,11 @@ class GUI(gtk.Window):
         
         # Statusbar Updater
         self.update_status()
-        gobject.timeout_add(1000, lambda: self.update_status())
+        gobject.timeout_add(1000, self.update_status)
         
         # Crash Info
         if self.main.settings.is_true("crashed", False):
-            gobject.timeout_add(250, lambda *args: self.show_crash_report())
+            gobject.timeout_add(250, self.show_crash_report)
         
         # Show
         if not self.main.status(ST_CONNECT):
@@ -254,7 +251,7 @@ class GUI(gtk.Window):
         self.info_label.hide()
         self.text_scroll.hide()
         if not self.progress_visible:
-            gobject.timeout_add(100, lambda: progress_activity())
+            gobject.timeout_add(100, progress_activity)
         
         self.progress_visible = True
     
@@ -560,21 +557,21 @@ class GUI(gtk.Window):
     
     def on_history(self, *args):
         if self.mode == MODE_MESSAGES:
-            gobject.idle_add(lambda: self.message.clear())
+            gobject.idle_add(self.message.clear)
         
         else:
-            gobject.idle_add(lambda: self.html.clear())
+            gobject.idle_add(self.html.clear)
     
     def on_read(self, *args):
         if self.mode == MODE_MESSAGES:
-            gobject.idle_add(lambda: self.message.read())
+            gobject.idle_add(self.message.read)
         
         else:
-            gobject.idle_add(lambda: self.html.read())
+            gobject.idle_add(self.html.read)
     
     def on_read_all(self, *args):
-        gobject.idle_add(lambda: self.message.read())
-        gobject.idle_add(lambda: self.html.read())
+        gobject.idle_add(self.message.read)
+        gobject.idle_add(self.html.read)
     
     def on_mode(self, *args):
         if self.message_button.get_active():
@@ -683,7 +680,7 @@ class GUI(gtk.Window):
                         lang.retweet_info % name,
                         lang.retweet_info_title)
     
-    def ask_for_delete_tweet(self, info_text, yes, noo, retweet):
+    def ask_for_delete_tweet(self, info_text, yes, noo):
         dialog.MessageDialog(self, MESSAGE_QUESTION,
                         lang.delete_tweet_question % info_text,
                         lang.delete_title,

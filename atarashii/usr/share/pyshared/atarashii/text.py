@@ -20,13 +20,11 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
-import pango
 
 import re
 
 from lang import lang
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL
-
 from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, MODE_TWEETS
 
 
@@ -57,6 +55,8 @@ class TextInput(gtk.TextView):
         self.message_len = 0
         self.go_send_message = None
         self.go_send_tweet = None
+        
+        self.contents_change = False
         
         # Colors
         self.default_bg = self.get_style().base[gtk.STATE_NORMAL]
@@ -93,7 +93,7 @@ class TextInput(gtk.TextView):
             self.set_text(UNSET_TEXT)
         
         else:
-            gobject.idle_add(lambda: self.check_length())
+            gobject.idle_add(self.check_length)
     
     def loose_focus(self):
         if not self.has_focus and self.initiated:
@@ -121,7 +121,7 @@ class TextInput(gtk.TextView):
     def html_focus(self, *args):
         if self.has_focus:
             if not self.change_contents:
-                gobject.timeout_add(50, lambda: self.loose_focus())
+                gobject.timeout_add(50, self.loose_focus)
                 self.has_focus = False
             
             self.change_contents = False

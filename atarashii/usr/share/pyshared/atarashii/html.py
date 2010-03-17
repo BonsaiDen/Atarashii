@@ -20,7 +20,7 @@ import view
 
 from lang import lang
 
-from constants import RETWEET_NEW, RETWEET_OLD
+from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT
 
 
 class HTML(view.HTMLView):
@@ -37,6 +37,10 @@ class HTML(view.HTMLView):
         self.lang_loading = lang.html_loading
         self.lang_empty = lang.html_empty
         self.lang_load = lang.html_load_more
+        
+        self.last_name = UNSET_TEXT
+        self.last_highlight = UNSET_TEXT
+        self.last_mentioned = UNSET_TEXT
         
         self.first_setting = 'firsttweet_'
     

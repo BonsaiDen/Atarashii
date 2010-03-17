@@ -49,6 +49,12 @@ from lang import lang
 
 
 class Formatter:
+    def __init__(self):
+        self.urls = []
+        self.users = []
+        self.tags = []
+        self.text_parts = []
+    
     def parse(self, text):
         self.urls = []
         self.users = []
