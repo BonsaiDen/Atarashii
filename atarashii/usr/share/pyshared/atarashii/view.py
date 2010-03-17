@@ -28,7 +28,7 @@ import webbrowser
 import formatter
 from utils import unescape, compare_sub
 
-from lang import lang
+from language import LANG as lang
 from constants import ST_HISTORY, ST_LOGIN_SUCCESSFUL
 
 from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \
@@ -407,7 +407,6 @@ class HTMLView(webkit.WebView):
             self.render()
     
     def favorite(self, item_id, mode):
-        fav_item_id = UNSET_ID_NUM
         for i in range(len(self.items)):
             item = self.items[i][0]
             if self.get_id(item) == item_id:
@@ -446,7 +445,7 @@ class HTMLView(webkit.WebView):
             
             # Create Menu
             menu = gtk.Menu()
-            if not self.create_menu(menu, item, link):
+            if not self.create_base_menu(menu, item, link):
                 return False
             
             if len(menu.get_children()) == 0:
@@ -477,6 +476,32 @@ class HTMLView(webkit.WebView):
     
     def on_popup_close(self, *args):
         self.gui.text.html_focus()
+    
+    
+    # Menu Building ------------------------------------------------------------
+    def create_base_menu(self, menu, item, link):
+        link_data = self.get_link_type(link)
+        return self.create_menu(menu, item, link_data[0], link_data[1])
+    
+    def create_link_menu(self, menu, link, full):
+        if link == "link":
+            self.add_menu_link(menu, lang.context_browser,
+                               lambda *args: self.context_link(full))
+            
+            self.add_menu_link(menu, lang.context_copy,
+                               lambda *args: self.copy_link(full))  
+            return True
+    
+    def create_status_tag_menu(self, menu, link, full):
+        if link == "status":
+            self.add_menu_link(menu, lang.context_view,
+                               lambda *args: self.context_link(full))
+            return True
+        
+        elif link == "tag":
+            self.add_menu_link(menu, lang.context_search,
+                               lambda *args: self.context_link(full))   
+            return True
     
     
     # Get a Tweet based on a button press --------------------------------------

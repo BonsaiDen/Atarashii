@@ -18,7 +18,7 @@
 # ------------------------------------------------------------------------------
 import view
 
-from lang import lang
+from language import LANG as lang
 
 from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT
 
@@ -209,9 +209,7 @@ class HTML(view.HTMLView):
         
     # Create Popup Items -------------------------------------------------------
     # --------------------------------------------------------------------------
-    def create_menu(self, menu, item, link):
-        link, url, full = self.get_link_type(link)
-                
+    def create_menu(self, menu, item, link, full):                
         # No Quick links
         if link in ("fav", "unfav", "qreply"):
             return False
@@ -221,12 +219,8 @@ class HTML(view.HTMLView):
             item_id = self.get_id(item)
            
         # Link options
-        if link == "link":
-            self.add_menu_link(menu, lang.context_browser,
-                               lambda *args: self.context_link(full))
-            
-            self.add_menu_link(menu, lang.context_copy,
-                               lambda *args: self.copy_link(full))  
+        if self.create_link_menu(menu, link, full):
+            pass
                 
         # User Options
         elif link == "user" or link == "profile":
@@ -243,7 +237,7 @@ class HTML(view.HTMLView):
             else:
                 reply = "reply:%s:-1:-1" % user
                 self.add_menu_link(menu, lang.context_tweet % user,
-                                   lambda *args: self.context_link(reply))    
+                                   lambda *args: self.context_link(reply))
         
         # Source
         elif link == "source":
@@ -251,15 +245,9 @@ class HTML(view.HTMLView):
             self.add_menu_link(menu, lang.context_source % lang.name(source),
                                lambda *args: self.context_link(full))
         
-        # Status
-        elif link == "status":
-            self.add_menu_link(menu, lang.context_view,
-                               lambda *args: self.context_link(full))   
-        
-        # Tag
-        elif link == "tag":
-            self.add_menu_link(menu, lang.context_search,
-                               lambda *args: self.context_link(full))   
+        # Status / Tag
+        elif self.create_status_tag_menu(menu, link, full):
+            pass
         
         # Retweet / Delete
         else:
