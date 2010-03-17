@@ -37,7 +37,7 @@ from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
 
 from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       MESSAGE_WARNING, MESSAGE_QUESTION, MESSAGE_INFO, \
-                      UNSET_TIMEOUT, HTML_UNSET_ID
+                      UNSET_TIMEOUT, HTML_UNSET_ID, MESSAGE_ERROR
 
 
 from gui_events import GUIEventHandler
@@ -394,5 +394,57 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     def show_crash_report(self):
         dialog.MessageDialog(self, MESSAGE_WARNING, 
                "Atarashii has crashed and automatically restarted itself.",
-               lang.error_title)    
+               lang.error_title)   
+    
+    
+    # Show Error Dialog --------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def show_error(self, code, error, rate_error):
+        if code in (-5, 503):
+            if code == -5: # Network lost
+                info = lang.warning_network
+                button = lang.warning_button_network
+                
+            else: # overload warning
+                info = lang.warning_overload
+                button = lang.warning_button_overload
+            
+            self.warning_button.show(button, info)
+        
+        # Show Error Button
+        elif code in (500, 502, -6):
+            if code != -6:
+                if code == 500: # internal twitter error
+                    button = lang.error_button_twitter
+                    info = lang.error_twitter
+                
+                else: # Twitter down
+                    button = lang.error_button_down
+                    info = lang.error_down
+            
+            # Rate limit exceeded
+            else:
+                info = rate_error
+                button = lang.error_button_rate_limit
+                
+            self.error_button.show(button, info)
+        
+        # Show Error Dialog ----------------------------------------------------
+        else:
+            # Show GUI if minimized to tray
+            gobject.idle_add(self.force_show)
+            
+            description = {
+                -4 : lang.error_network,
+                -3 : lang.error_user_not_found % self.message_user,
+                -2 : lang.error_already_retweeted,
+                0 : lang.error_internal % str(error),
+                -7 : rate_error,
+                401 : lang.error_login % self.username,
+                404 : lang.error_login % self.username
+            }[code]
+            dialog.MessageDialog(self, MESSAGE_ERROR, description,
+                                 lang.error_title)
+        
+        self.update_status()
 
