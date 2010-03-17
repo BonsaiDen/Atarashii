@@ -21,11 +21,13 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
+import time
+
 from language import LANG as lang
 from constants import ST_LOGIN_SUCCESSFUL
 
 from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \
-                      MESSAGE_INFO
+                      MESSAGE_INFO, UNSET_TEXT, UNSET_ID_NUM
 
 
 class Dialog:
@@ -528,4 +530,68 @@ class MessageDialog(gtk.MessageDialog):
         
         elif response == gtk.RESPONSE_NO and self.no_callback != None:
             self.no_callback()
+
+
+# Button Dialog ----------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class ButtonDialog:
+    def __init__(self, gui, dtype, template, title):
+        self.gui = gui
+        self.box = gui.gtb.get_object(dtype)
+        self.button = gui.gtb.get_object(dtype + "_button")
+        self.label = gui.gtb.get_object(dtype + "_label")
+        self.button.connect("clicked", self.show_dialog)
+        self.dtype = dtype
+        self.dialog = None
+        self.shown = False
+        self.information = UNSET_TEXT
+        self.time = UNSET_ID_NUM
+        
+        self.title = title
+        self.template = template
+    
+    def hide(self):
+        if self.dialog != None:
+            self.dialog.destroy()
+            self.dialog = None
+        
+        self.box.hide()
+    
+    def show(self, button, info):
+        self.information = info
+        if self.dialog != None:
+            self.dialog.destroy()
+            self.dialog = None
+        
+        self.time = time.time()
+        self.box.show()
+        self.label.set_markup(button)
+        
+        # Show GUI if not shown so the user does notice the message
+        if not self.gui.is_shown:
+            gobject.idle_add(self.gui.show_gui)
+    
+    def show_dialog(self, *args):
+        if self.dialog != None:
+            self.dialog.destroy()
+            self.dialog = None
+        
+        self.hide()
+        date = time.localtime(self.time)
+        self.dialog = MessageDialog(self.gui,
+                              MESSAGE_WARNING if self.dtype == "warning" else \
+                              MESSAGE_ERROR,
+                              time.strftime(self.template, date) + \
+                              self.information,
+                              self.title)
+
+
+
+
+
+
+
+
+
+
 

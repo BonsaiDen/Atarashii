@@ -59,7 +59,7 @@ class GUI(gtk.Window):
         self.show_taskbar(main.settings.is_true('taskbar'))
         
         # Load Components
-        gtb = gtk.Builder()
+        self.gtb = gtb = gtk.Builder()
         gtb.add_from_file(main.get_resource("main.glade"))
         frame = gtb.get_object("frame")
         self.add(frame)
@@ -130,25 +130,13 @@ class GUI(gtk.Window):
         self.status = gtb.get_object("statusbar")
         
         # Warning Button
-        self.warning_box = gtb.get_object("warning")
-        self.warning_button = gtb.get_object("warning_button")
-        self.warning_label = gtb.get_object("warning_label")
-        self.warning_button.connect("clicked", self.show_warning_dialog)
-        self.warning_dialog = None
-        self.warning_shown = False
-        self.warning_information = UNSET_TEXT
-        self.warning_time = UNSET_ID_NUM
+        self.warning_button = dialog.ButtonDialog(self, "warning",
+                                     lang.warning_template, lang.warning_title)
         
         # Error Button
-        self.error_box = gtb.get_object("error")
-        self.error_button = gtb.get_object("error_button")
-        self.error_label = gtb.get_object("error_label")
-        self.error_button.connect("clicked", self.show_error_dialog)
-        self.error_dialog = None
-        self.error_shown = False
-        self.error_information = UNSET_TEXT
-        self.error_time = UNSET_ID_NUM
-                
+        self.error_button = dialog.ButtonDialog(self, "error",
+                                     lang.error_template, lang.error_title)
+        
         # Restore Position & Size
         if main.settings.isset("position"):
             self.window_position = main.settings['position'][1:-1].split(",")
@@ -199,8 +187,8 @@ class GUI(gtk.Window):
         self.show_all()
         
         # Hide Warning/Error Buttons
-        self.hide_warning_button()
-        self.hide_error_button() 
+        self.warning_button.hide()
+        self.error_button.hide() 
         
         self.on_mode()
         
@@ -219,8 +207,8 @@ class GUI(gtk.Window):
         else:
             self.show_progress()
         
-       # gobject.timeout_add(250, lambda: self.show_error_button("foo", "bla"))
-        #gobject.timeout_add(250, lambda: self.show_warning_button("foo", "bla"))
+        #gobject.timeout_add(250, lambda: self.error_button.show("foo", "bla"))
+        #gobject.timeout_add(250, lambda: self.warning_button.show("foo", "bla"))
         self.is_shown = True
     
     def force_show(self):
@@ -297,8 +285,9 @@ class GUI(gtk.Window):
         self.tray.read_menu.set_sensitive(False)
         self.history_button.set_sensitive(False)
         self.message_button.set_sensitive(False)
-        self.hide_warning_button()
-        self.hide_error_button()
+        
+        self.warning_button.hide()
+        self.error_button.hide()
     
     
     # Statusbar ----------------------------------------------------------------
@@ -806,7 +795,7 @@ class GUI(gtk.Window):
                 info = lang.warning_overload
                 button = lang.warning_button_overload
             
-            self.show_warning_button(button, info)
+            self.warning_button.show(button, info)
         
         # Show Error Button
         elif code in (500, 502, -6):
@@ -824,7 +813,7 @@ class GUI(gtk.Window):
                 info = rate_error
                 button = lang.error_button_rate_limit
                 
-            self.show_error_button(button, info)
+            self.error_button.show(button, info)
         
         # Show Error Dialog ----------------------------------------------------
         else:
@@ -844,75 +833,4 @@ class GUI(gtk.Window):
                                  lang.error_title)
         
         self.update_status()
-    
-    
-    # Warning Button -----------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def hide_warning_button(self):
-        if self.warning_dialog != None:
-            self.warning_dialog.destroy()
-            self.warning_dialog = None
-        
-        self.warning_box.hide()
-    
-    def show_warning_button(self, button, info):
-        self.warning_information = info
-        if self.warning_dialog != None:
-            self.warning_dialog.destroy()
-            self.warning_dialog = None
-        
-        self.warning_time = time.time()
-        self.warning_box.show()
-        self.warning_label.set_markup(button)
-        
-        # Show GUI if not shown so the user does notice the message
-        if not self.is_shown:
-            gobject.idle_add(self.show_gui)
-    
-    def show_warning_dialog(self, *args):
-        if self.warning_dialog != None:
-            self.warning_dialog.destroy()
-            self.warning_dialog = None
-        
-        self.hide_warning_button()
-        date = time.localtime(self.error_time)
-        self.warning_dialog = dialog.MessageDialog(self, MESSAGE_WARNING,
-                              time.strftime(lang.warning_template, date) + \
-                              self.warning_information,
-                              lang.warning_title)
-    
-    # Error Button -------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def hide_error_button(self):
-        if self.error_dialog != None:
-            self.error_dialog.destroy()
-            self.error_dialog = None
-        
-        self.error_box.hide()
-        
-    def show_error_button(self, button, info):
-        self.error_information = info
-        if self.error_dialog != None:
-            self.error_dialog.destroy()
-            self.error_dialog = None
-        
-        self.error_time = time.time()
-        self.error_box.show()
-        self.error_label.set_markup(button)
-        
-        # Show GUI if not shown so the user does notice the message
-        if not self.is_shown:
-            gobject.idle_add(self.show_gui)  
-    
-    def show_error_dialog(self, *args):
-        if self.error_dialog != None:
-            self.error_dialog.destroy()
-            self.error_dialog = None
-        
-        self.hide_error_button()
-        date = time.localtime(self.error_time)
-        self.error_dialog = dialog.MessageDialog(self, MESSAGE_ERROR,
-                            time.strftime(lang.error_template, date) + \
-                            self.error_information,
-                            lang.error_title)
 

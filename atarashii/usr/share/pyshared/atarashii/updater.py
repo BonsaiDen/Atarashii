@@ -654,7 +654,7 @@ class Updater(threading.Thread):
             if not self.main.status(ST_WARNING_RATE):
                 self.main.set_status(ST_WARNING_RATE)
                 
-                gobject.idle_add(self.gui.show_warning_button,
+                gobject.idle_add(self.gui.warning_button.show,
                                  lang.warning_button_rate_limit, 
                                  lang.warning_rate_limit % count)
         
