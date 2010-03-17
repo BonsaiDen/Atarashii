@@ -163,6 +163,7 @@ class Settings:
             
             dfp = open(DESKTOP_FILE, "wb")
             bmode = "true" if mode else "false"
+            text = text.replace("Exec=atarashii", "Exec=atarashii &")
             dfp.write(text + "\nX-GNOME-Autostart-enabled=%s" % bmode)
             dfp.close()
             
