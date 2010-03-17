@@ -22,6 +22,8 @@ import gtk
 import gobject
 
 from lang import lang
+from constants import ST_LOGIN_SUCCESSFUL
+
 from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \
                       MESSAGE_INFO
 
@@ -84,15 +86,25 @@ class PasswordDialog(Dialog):
         self.get("info").set_label(info)
     
     def on_init(self):
+        self.password = self.get("password")
         self.close_button.set_label(lang.password_button)
         cancel_button = self.get("cancelbutton")
         cancel_button.set_label(lang.password_button_cancel)
-        
+        self.error = self.get("error")
+        self.error.hide()
+        self.error_shown = False
+        self.error.set_label(lang.password_too_short)
+        self.default_bg = self.password.get_style().base[gtk.STATE_NORMAL]
         
         def save(*args):
-            password = self.get("password").get_text().strip()
+            password = self.password.get_text().strip()
             if len(password) < 6:
-                self.get("password").grab_focus()
+                self.error_shown = True
+                self.error.show()
+                self.password.modify_base(gtk.STATE_NORMAL,
+                         gtk.gdk.Color(255 * 255, 200 * 255, 200 * 255))
+                
+                self.password.grab_focus()
             
             else:
                 self.main.api_temp_password = password
@@ -105,10 +117,17 @@ class PasswordDialog(Dialog):
         
         
         def key(widget, event, *args):
-            if event.keyval == gtk.keysyms.Return:
+            if self.error_shown:
+                if len(self.password.get_text().strip()) >= 6:
+                    self.password.modify_base(gtk.STATE_NORMAL, 
+                                                    self.default_bg)
+                    self.error.hide()
+                    self.error_shown = False
+            
+            if event.keyval in (gtk.keysyms.Return, gtk.keysyms.KP_Enter):
                 save()
         
-        self.get("password").connect("key-press-event", key)
+        self.password.connect("key-press-event", key)
         self.close_button.connect("clicked", save)
         cancel_button.connect("clicked", abort)
 
@@ -290,7 +309,9 @@ class SettingsDialog(Dialog):
                 self.settings['username'] = ""
                 self.main.logout()
             
-            elif username != oldusername or not self.main.login_status:
+            elif username != oldusername or \
+                not self.main.status(ST_LOGIN_SUCCESSFUL):
+                
                 self.main.login(username)
             
             self.on_close()
@@ -477,6 +498,7 @@ class MessageDialog(gtk.MessageDialog):
                         gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                         gtk.MESSAGE_INFO, gtk.BUTTONS_OK, message)
         
+        self.set_markup(message)
         self.set_title(title)
         self.ok_callback = ok_callback
         self.yes_callback = yes_callback
