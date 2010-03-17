@@ -279,7 +279,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     # Update -------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def update(self):
-        # Fetch Tweets
+        # Tweets
         updates = []
         if not self.refresh_messages:
             try:

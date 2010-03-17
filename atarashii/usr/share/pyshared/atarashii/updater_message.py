@@ -94,18 +94,18 @@ class UpdaterMessage:
         messages = []
         if since_id != HTML_UNSET_ID:
             if max_id == None:
-                messages = self.api.direct_messages(since_id = since_id,
-                                                    count = max_count)
+                messages = self.api.direct_messages(
+                                    since_id = since_id, count = max_count)
                 
-                messages += self.api.sent_direct_messages(since_id = since_id,
-                                                    count = max_count)
+                messages += self.api.sent_direct_messages(
+                                     since_id = since_id, count = max_count)
             
             else:
-                messages = self.api.direct_messages(max_id = max_id,
-                                                    count = max_count)
+                messages = self.api.direct_messages(
+                                    max_id = max_id,count = max_count)
                 
-                messages += self.api.sent_direct_messages(max_id = max_id,
-                                                    count = max_count)
+                messages += self.api.sent_direct_messages(
+                                     max_id = max_id, count = max_count)
         
         else:
             messages = self.api.direct_messages(
