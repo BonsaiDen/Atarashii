@@ -32,7 +32,7 @@ import text
 import dialog
 from utils import escape
 
-from lang import lang
+from language import LANG as lang
 from constants import ST_WARNING_REQUEST, ST_CONNECT, ST_NETWORK_FAILED, \
                       ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, ST_DELETE, \
                       ST_UPDATE, ST_WAS_RETWEET, ST_WAS_RETWEET_NEW, ST_SEND, \

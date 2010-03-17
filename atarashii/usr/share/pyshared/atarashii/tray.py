@@ -21,7 +21,7 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-from lang import lang
+from language import LANG as lang
 
 
 class TrayIcon(gtk.StatusIcon):

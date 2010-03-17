@@ -41,7 +41,7 @@ import gui
 import settings
 import updater
 
-from lang import lang
+from language import LANG as lang
 from constants import ST_CONNECT, ST_NETWORK_FAILED, ST_LOGIN_ERROR, \
                       ST_LOGIN_SUCCESSFUL, ST_UPDATE, ST_WAS_RETWEET_NEW, \
                       ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, ST_NONE, \

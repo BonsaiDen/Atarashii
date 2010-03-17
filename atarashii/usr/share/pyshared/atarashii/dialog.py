@@ -21,7 +21,7 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-from lang import lang
+from language import LANG as lang
 from constants import ST_LOGIN_SUCCESSFUL
 
 from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \

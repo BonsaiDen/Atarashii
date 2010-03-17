@@ -23,7 +23,7 @@ import gobject
 
 import re
 
-from lang import lang
+from language import LANG as lang
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL
 from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, MODE_TWEETS
 

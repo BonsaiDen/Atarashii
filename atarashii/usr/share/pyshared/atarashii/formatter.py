@@ -45,7 +45,7 @@ URL_REGEX = re.compile("((" + PRE_CHARS + ")((https?://|www\\.)(" + \
 
 from utils import escape
 
-from lang import lang
+from language import LANG as lang
 
 
 class Formatter:
