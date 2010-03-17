@@ -825,7 +825,7 @@ class GUI(gtk.Window):
         # Show Error Dialog ----------------------------------------------------
         else:
             # Show GUI if minized in tray
-            gobject.idle_add(self.gui.force_show)
+            gobject.idle_add(self.force_show)
             
             description = {
                 -4 : lang.error_network,
