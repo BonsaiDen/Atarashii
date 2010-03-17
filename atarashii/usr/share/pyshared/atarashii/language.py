@@ -178,46 +178,49 @@ LANG = {
         # Error Dialogs
         'error_title' : 'Atarashii - Fehler',
         'error_login' : 
-        'Die Anmeldung als <b>%s</b> ist fehlgeschlagen.',
+            'Die Anmeldung als <b>%s</b> ist fehlgeschlagen.',
         
         'error_ratelimit' : 
-        'Ratelimit erreicht. Automatische Aktualisierung in %d Minute(n).',
+            'Ratelimit erreicht. Automatische Aktualisierung in %d Minute(n).',
         
         'error_ratelimit_reconnect' : 
-        'Ratelimit erreicht. Automatischer Reconnect in %d Minute(n).',
+            'Ratelimit erreicht. Automatischer Reconnect in %d Minute(n).',
         
         'error_twitter' : 'Interner Twitterfehler.',
         'error_down' : 'Twitter ist gerade offline.',
         'error_overload' : 'Twitter ist gerade überlastet.',
         'error_internal' : '<b>Atarashii Fehler:</b> %s',
         'error_already_retweeted' : 
-        '''Es ist entweder nicht möglich diesen Tweet zu retweeten oder er 
-        wurde bereits von ihnen retweeted.''',
+            '''Es ist entweder nicht möglich diesen Tweet zu retweeten ''' + \
+            '''oder er wurde bereits von ihnen retweeted.''',
         
         'error_user_not_found' : 'Der Benutzer <b>%s</b> existiert nicht.',
+        
         'error_network' : 
-        'Atarashii konnte keine Verbindung zum Internet herstellen.',
+            'Atarashii konnte keine Verbindung zum Internet herstellen.',
         
         'error_network_lost' : 
-        '''Atarashii hat die Verbundung zum Internet verloren, es wird alle 60 
-        Sekunden versucht die Verbindung wiederherzustellen.''',
+            '''Atarashii hat die Verbundung zum Internet verloren, es ''' + \
+            '''wird alle 60 Sekunden versucht die Verbindung ''' + \
+            '''wiederherzustellen.''',
         
         'error_favorite_on' : 
-        '<b>%s</b> Tweet konnte nicht favorisiert werden.',
+            '<b>%s</b> Tweet konnte nicht favorisiert werden.',
         
         'error_favorite_off' : 
-        '<b>%s</b> Tweet konnte nicht entfavorisiert werden.',
+            '<b>%s</b> Tweet konnte nicht entfavorisiert werden.',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warnung',
         'warning_text' : 
-        '''Twitter hat das Ratelimit auf %d Requests pro Stunde reduziert, 
-        das Updateinterval wurde entsprechend angepasst.''',
+            '''Twitter hat das Ratelimit auf %d Requests pro Stunde ''' + \
+            '''reduziert, das Aktualisierungsinterval wurde ''' + \
+            '''entsprechend angepasst.''',
         
         'warning_url' : 
-        '''Atarashii konnte Twitter nicht erreichen, dies ist in den meisten 
-        Fällen lediglich ein temporäres Problem aufgrund von Überlastung 
-        seitens Twitter.''',
+            '''Atarashii konnte Twitter nicht erreichen, dies ist in den ''' + \
+            '''meisten Fällen lediglich ein temporäres Problem aufgrund ''' + \
+            '''von Überlastung seitens Twitter.''',
         
         # Toolbar Items
         'tool_refresh' : 'Tweets aktualisieren',
@@ -421,26 +424,27 @@ LANG = {
         'error_title' : 'Atarashii - Error',
         'error_login' : 'The login as <b>%s</b> has failed.',
         'error_ratelimit' : 
-        'Reached rate limit. Automatic refresh in %d minute(s).',
+          'Rate limit reached. Automatic refresh in %d minute(s).',
         
         'error_ratelimit_reconnect' : 
-        'Reached rate limit. Automatic reconnect in %d minute(s).',
+          'Rate limit reached. Automatic reconnect in %d minute(s).',
         
         'error_twitter' : 'Internal Twitter error.',
         'error_down' : 'Twitter is currently offline.',
         'error_overload' : 'Twitter is over capacity.',
         'error_internal' : '<b>Atarashii error:</b> %s',
         'error_already_retweeted' : 
-        '''Either it\'s not possible to retweet this Tweet or you\'ve 
-        already retweeted it.''',
+            '''Either it\'s not possible to retweet this Tweet or ''' + \
+            '''you\'ve already retweeted it.''',
         
         'error_user_not_found' : 'The user <b>%s</b> does not exist.',
+        
         'error_network' : 
-        'Atarashii could not establish a connection to the Internet.',
+            'Atarashii could not establish a connection to the Internet.',
         
         'error_network_lost' : 
-        '''Atarashii has lost the conntection to the Internet. It will 
-        automatically try to reconnect itself every 60 seconds.''',
+            '''Atarashii has lost the conntection to the Internet. It ''' + \
+            '''will automatically try to reconnect itself every 60 seconds.''',
         
         'error_favorite_on' : '<b>%s</b> Tweet couldn\'t be favorited.',
         'error_favorite_off' : '<b>%s</b> Tweet couldn\'t be unfavorited.',
@@ -448,12 +452,13 @@ LANG = {
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warning',
         'warning_text' : 
-        '''Twitter has lowered the rate limit to %d requests per hour, the 
-        update interval has been adjusted accordingly.''',
+            '''Twitter has lowered the rate limit to %d requests per ''' + \
+            '''hour, the update interval has been adjusted accordingly.''',
         
         'warning_url' : 
-        '''Atarashii couldn\'t connect to Twitter, in most cases this is just a 
-        temporary issue due to Twitter being too busy at the moment.''',
+            '''Atarashii couldn\'t connect to Twitter, in most cases ''' + \
+            '''this is just a temporary issue due to Twitter being too ''' + \
+            '''busy at the moment.''',
         
         # Toolbar items
         'tool_refresh' : 'Refresh Tweets',
@@ -502,9 +507,6 @@ LANG = {
     }
 }
 
-import re
-SPACES = re.compile("\s+")
-
 class Language:
     def __init__(self, code):
         if LANG.has_key(code):
@@ -514,10 +516,7 @@ class Language:
             stuff = LANG['en_US']
         
         # set instance fields
-        for key, value in stuff.iteritems():
-            if type(value) in (str, unicode):
-                value = SPACES.sub(" ", value)
-            
+        for key, value in stuff.iteritems():            
             self.__dict__[key] = value
 
 # Select Language
