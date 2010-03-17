@@ -36,6 +36,12 @@ import dialog
 from utils import escape
 
 from lang import lang
+from constants import ST_WARNING_REQUEST, ST_CONNECT, ST_NETWORK_FAILED, \
+                      ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, ST_DELETE, \
+                      ST_UPDATE, ST_WAS_RETWEET, ST_WAS_RETWEET_NEW, ST_SEND, \
+                      ST_LOGIN_COMPLETE, ST_WAS_SEND, ST_RECONNECT, \
+                      ST_HISTORY, ST_WAS_DELETE
+
 from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_TEXT, UNSET_ID_NUM, \
                       HTML_LOADING, HTML_LOADED, MESSAGE_WARNING, \
                       MESSAGE_ERROR, MESSAGE_QUESTION, MESSAGE_INFO, \
@@ -112,14 +118,14 @@ class GUI(gtk.Window):
         self.html = html.HTML(self.main, self)
         self.html_scroll.add(self.html)
         self.html_scroll.set_shadow_type(gtk.SHADOW_IN)
-        self.html.start()
+        self.html.splash()
         
         # Messages
         self.message_scroll = gtb.get_object("messagescroll")
         self.message = message.HTML(self.main, self)
         self.message_scroll.add(self.message)
         self.message_scroll.set_shadow_type(gtk.SHADOW_IN)
-        self.message.start()
+        self.message.splash()
         
         # Bars
         self.toolbar = gtb.get_object("toolbar")
@@ -182,16 +188,36 @@ class GUI(gtk.Window):
         
         # Crash Info
         if self.main.settings.is_true("crashed", False):
-            gobject.timeout_add(250, self.show_crash_report())
+            gobject.timeout_add(250, lambda *args: self.show_crash_report())
         
         # Show
-        if not self.main.is_connecting:
+        if not self.main.status(ST_CONNECT):
             self.show_input()
         
         else:
             self.show_progress()
         
         self.is_shown = True
+    
+    
+    # Events -------------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def delete_event(self, widget, event, data=None):
+        self.window_position = self.get_position()
+        self.main.settings['position'] = str(self.window_position)
+        self.hide()
+        return True
+    
+    def destroy_event(self, widget, data=None):
+        self.window_position = self.get_position()
+        self.main.settings['position'] = str(self.window_position)
+        self.hide()
+        return True
+    
+    def state_event(self, window, event):
+        if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
+            self.minimized = event.new_window_state & \
+                                gtk.gdk.WINDOW_STATE_ICONIFIED
     
     
     # GUI Switchers ------------------------------------------------------------
@@ -209,14 +235,15 @@ class GUI(gtk.Window):
         self.text.set_sensitive(True)
         self.check_refresh()
         self.check_read()
-        self.message_button.set_sensitive(self.main.login_status)
+        self.message_button.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL))
     
     def show_progress(self):
         def progress_activity():
             self.progress.pulse()
-            return self.main.is_sending or self.main.is_deleting or \
-                self.main.is_connecting or \
-                self.main.is_loading_history or \
+            return self.main.status(ST_SEND) or \
+                self.main.status(ST_DELETE) or \
+                self.main.status(ST_CONNECT) or \
+                self.main.status(ST_HISTORY) or \
                 (self.mode == MODE_MESSAGES and \
                 self.message.load_state == HTML_LOADING) or \
                 (self.mode == MODE_TWEETS and \
@@ -240,6 +267,7 @@ class GUI(gtk.Window):
         self.refresh_button.set_sensitive(False)
         self.tray.refresh_menu.set_sensitive(False)
         self.read_button.set_sensitive(False)
+        self.tray.read_menu.set_sensitive(False)
         self.history_button.set_sensitive(False)
         self.message_button.set_sensitive(False)
     
@@ -250,7 +278,7 @@ class GUI(gtk.Window):
         if self.text.has_typed:
             pass
         
-        elif self.main.is_reconnecting:
+        elif self.main.status(ST_RECONNECT):
             wait = self.main.refresh_timeout - \
                     (calendar.timegm(time.gmtime()) - self.main.reconnect_time)
             if wait < 60:
@@ -263,25 +291,25 @@ class GUI(gtk.Window):
                 self.set_status(
                     lang.status_reconnect_minutes % math.ceil(wait / 60.0))
         
-        elif self.main.is_loading_history:
+        elif self.main.status(ST_HISTORY):
             self.set_status(
                 lang.status_load_history if \
                 self.html.load_history_id != HTML_UNSET_ID else \
                 lang.status_load_message_history)
         
-        elif self.main.is_connecting:
+        elif self.main.status(ST_CONNECT):
             self.set_status(lang.status_connecting % self.main.username)
         
-        elif self.main.login_error:
+        elif self.main.status(ST_LOGIN_ERROR):
             self.set_status(lang.status_error)
         
-        elif not self.main.login_status:
+        elif not self.main.status(ST_LOGIN_SUCCESSFUL):
             self.set_status(lang.status_logout)
         
-        elif self.main.is_sending or self.main.is_deleting:
+        elif self.main.status(ST_SEND) or self.main.status(ST_DELETE):
             pass
         
-        elif self.main.is_updating:
+        elif self.main.status(ST_UPDATE):
             self.refresh_button.set_sensitive(False)
             self.tray.refresh_menu.set_sensitive(False)
             self.set_status(lang.status_update)
@@ -295,7 +323,7 @@ class GUI(gtk.Window):
             self.set_status(lang.status_connected)
         
         elif (not self.text.is_typing or not self.text.has_focus) and not \
-            self.main.is_sending:
+            self.main.status(ST_SEND):
             
             wait = self.main.refresh_timeout - \
                 (calendar.timegm(time.gmtime()) - self.main.refresh_time)
@@ -333,7 +361,7 @@ class GUI(gtk.Window):
     # Info Label ---------------------------------------------------------------
     # --------------------------------------------------------------------------
     def set_label(self):    
-        if self.main.is_sending:
+        if self.main.status(ST_SEND):
             return
         
         if self.main.reply_user == UNSET_TEXT and \
@@ -394,7 +422,8 @@ class GUI(gtk.Window):
     
     def set_app_title(self):
         if self.main.username == UNSET_TEXT or \
-            (not self.main.login_status and not self.main.is_connecting):
+            (not self.main.status(ST_LOGIN_SUCCESSFUL) and \
+            not self.main.status(ST_CONNECT)):
             self.set_title(lang.title)
         
         elif self.mode == MODE_MESSAGES:
@@ -416,9 +445,13 @@ class GUI(gtk.Window):
                 self.set_title(lang.title_logged_in % self.main.username)
         
         # Tray Tooltip
-        if not self.main.is_connecting and self.main.login_complete:
+        if not self.main.status(ST_CONNECT) and \
+           self.main.status(ST_LOGIN_COMPLETE):
+           
             if self.main.username == UNSET_TEXT or \
-                (not self.main.login_status and not self.main.is_connecting):
+                (not self.main.status(ST_LOGIN_SUCCESSFUL) and \
+                not self.main.status(ST_CONNECT)):
+                
                 self.tray.set_tooltip(lang.tray_logged_out)
             
             elif self.mode == MODE_MESSAGES:
@@ -428,7 +461,8 @@ class GUI(gtk.Window):
             elif self.mode == MODE_TWEETS:                
                 self.tray.set_tooltip(lang.tray_logged_in % self.main.username,
                                       self.html.count, self.message.count)
-        elif self.main.is_connecting:
+        
+        elif self.main.status(ST_CONNECT):
             self.tray.set_tooltip(lang.tray_logging_in % self.main.username)
         
         else:
@@ -451,15 +485,17 @@ class GUI(gtk.Window):
     
     def check_read(self):
         if self.mode == MODE_MESSAGES:
-            self.read_button.set_sensitive(
-                             self.message.last_id > self.message.init_id)
-        
+            mode = self.message.last_id > self.message.init_id            
+            
         elif self.mode == MODE_TWEETS:
-            self.read_button.set_sensitive(
-                             self.html.last_id > self.html.init_id)
+            mode = self.html.last_id > self.html.init_id
         
         else:
-            self.read_button.set_sensitive(False)
+            mode = False
+        
+        self.read_button.set_sensitive(mode)
+        self.tray.read_menu.set_sensitive(mode)
+    
     
     def set_mode(self, mode):
         if mode == self.mode:
@@ -478,7 +514,7 @@ class GUI(gtk.Window):
             self.message_button.set_active(False)
     
     def is_ready(self):
-        return not self.main.is_updating and self.load_state()
+        return not self.main.status(ST_UPDATE) and self.load_state()
     
     def load_state(self):
         return self.message.load_state == HTML_LOADED and \
@@ -489,7 +525,8 @@ class GUI(gtk.Window):
         self.set_property('skip-taskbar-hint', not mode)
     
     def show_start_notifications(self):
-        if self.main.settings.is_true("notify") and self.main.login_status:
+        if self.main.settings.is_true("notify") and \
+           self.main.status(ST_LOGIN_SUCCESSFUL):
             info_text = []
             
             # Tweet Info
@@ -509,180 +546,6 @@ class GUI(gtk.Window):
                     "\n".join(info_text), self.main.get_user_picture())]
             
             self.main.notifier.show(info)
-    
-    
-    # Message Dialogs ----------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def enter_password(self):
-        self.main.api_temp_password = None
-        dialog.PasswordDialog(self, lang.password_title,
-                              lang.password_question % \
-                              lang.name(self.main.username))
-    
-    def show_retweet_info(self, name):
-        dialog.MessageDialog(self, MESSAGE_INFO,
-                        lang.retweet_info % name,
-                        lang.retweet_info_title)
-    
-    def ask_for_delete_tweet(self, info_text, yes, noo):
-        dialog.MessageDialog(self, MESSAGE_QUESTION,
-                        lang.delete_tweet_question % info_text,
-                        lang.delete_title,
-                        yes_callback = yes, no_callback = noo)
-    
-    def ask_for_delete_message(self, info_text, yes, noo):
-        dialog.MessageDialog(self, MESSAGE_QUESTION,
-                        lang.delete_message_question % info_text,
-                        lang.delete_title,
-                        yes_callback = yes, no_callback = noo)
-    
-    def show_delete_info(self, tweet, msg):
-        dialog.MessageDialog(self, MESSAGE_INFO,
-                        lang.delete_info_tweet if tweet != UNSET_ID_NUM else \
-                        lang.delete_info_message,
-                        lang.delete_info_title)
-    
-    def show_favorite_error(self, name, mode):
-        dialog.MessageDialog(self, MESSAGE_WARNING, 
-               lang.error_favorite_on % lang.name(name) if mode else \
-               lang.error_favorite_off % lang.name(name), lang.error_title)
-    
-    def show_crash_report(self):
-        dialog.MessageDialog(self, MESSAGE_WARNING, 
-               "Atarashii has crashed and automatically restarted itself.",
-               lang.error_title)    
-    
-    
-    # Error & Warning aka I'm Error! -------------------------------------------
-    # --------------------------------------------------------------------------
-    def show_error(self, error):
-        # Select Textbox?
-        if self.main.was_sending or self.main.was_deleting:
-            self.show_input()
-            if not self.main.was_retweeting or \
-               (self.main.retweet_text != UNSET_TEXT or \
-               self.main.reply_user != UNSET_TEXT or \
-               self.main.reply_id != UNSET_ID_NUM):
-                
-                if not self.main.was_new_retweeting:
-                    self.text.grab_focus()
-                    
-            if self.text.has_typed and \
-               (self.main.was_new_retweeting or self.main.was_deleting):
-                self.text.grab_focus()
-        
-        # Network Error?
-        if isinstance(error, IOError):
-            print error.message
-            print error.errno
-            if error.errno == -2:
-                code = -4
-                if self.main.login_status:
-                    code = -5
-            else:
-                code = -1
-            
-        # Try to find out what the error was!
-        elif hasattr(error, "response") and error.response != None:
-            code = error.response.status
-            if error.reason.startswith("Share sharing"):
-                code = -2
-        
-        elif hasattr(error, "reason") and error.reason != None:
-            if error.reason.startswith("HTTP Error "):
-                code = int(error.reason[11:14])
-            
-            elif type(error) == exceptions.IOError:
-                code = -1
-            
-            else:
-                code = 0
-        
-        else:
-            code = 0
-        
-        # Get information about the internal error
-        if code == 0:
-            # The stack trace here is usesless... fix it...
-            top = traceback.extract_stack()[-1]
-            error = "%s @ %s line %s\n%s" % (
-                    type(error).__name__,
-                    os.path.basename(top[0]),
-                    str(top[1]),
-                    str(error))
-        
-        # Ratelimit error
-        if (code == 400 and not self.main.was_sending) or \
-           (code == 403 and self.main.was_sending):
-            
-            self.refresh_button.set_sensitive(False)
-            self.tray.refresh_menu.set_sensitive(False)
-            rate_error = self.main.reconnect()
-            
-        elif (code == 400 and self.main.was_sending) or \
-             (code == 403 and not self.main.was_sending):
-            
-            code = 500
-            rate_error = ""
-        
-        else:
-            rate_error = ""
-        
-        # 404's
-        if self.main.was_sending and code == 404:
-            code = -3
-        
-        # Reset stuff
-        self.main.was_sending = False
-        self.main.was_retweeting = False
-        self.main.was_new_retweeting = False
-        self.main.was_deleting = False
-        
-        # Show Warning on url error or error message for anything else
-        if code == -1 or code == 500 or code == 502 or \
-            code == 503 or code == -5:
-            
-            # Don't warn until we reconnect
-            if code == -5:
-                if self.main.network_failed:
-                    return
-                
-                else:
-                    self.main.network_failed = True
-            
-            # Show only one warning at a time to prevent dialog cluttering
-            if not self.main.request_warning_shown:
-                self.main.request_warning_shown = True
-                
-                def unset():
-                    self.main.request_warning_shown = False
-                
-                dialog.MessageDialog(self, MESSAGE_WARNING,
-                    lang.error_network_lost if code == -5 else lang.warning_url,
-                    lang.warning_title, ok_callback = unset)
-        
-        else:
-            description = {
-                -4 : lang.error_network,
-                -3 : lang.error_user_not_found,
-                -2 : lang.error_already_retweeted,
-                0 : lang.error_internal % str(error),
-                404 : lang.error_login % self.main.username,
-                401 : lang.error_login % self.main.username,
-                403 : rate_error,
-                400 : rate_error,
-                500 : lang.error_twitter,
-                502 : lang.error_down,
-                503 : lang.error_overload
-            }[code]
-            dialog.MessageDialog(self, MESSAGE_ERROR, description,
-                                 lang.error_title)
-        
-        self.update_status()
-    
-    def show_warning(self, limit):
-        dialog.MessageDialog(self, MESSAGE_WARNING, lang.warning_text % limit,
-                                lang.warning_title)
     
     
     # Handlers -----------------------------------------------------------------
@@ -709,6 +572,10 @@ class GUI(gtk.Window):
         else:
             gobject.idle_add(lambda: self.html.read())
     
+    def on_read_all(self, *args):
+        gobject.idle_add(lambda: self.message.read())
+        gobject.idle_add(lambda: self.html.read())
+    
     def on_mode(self, *args):
         if self.message_button.get_active():
             self.mode = MODE_MESSAGES
@@ -723,9 +590,8 @@ class GUI(gtk.Window):
             self.html_scroll.hide()
             self.message_scroll.show()
             self.message.focus_me()
-            self.read_button.set_sensitive(
-                             self.message.last_id > self.message.init_id)
             
+            self.check_read()
             self.history_button.set_sensitive(self.message.history_loaded)
             
             if self.message.load_state == HTML_LOADING:
@@ -741,9 +607,8 @@ class GUI(gtk.Window):
             self.message_scroll.hide()
             self.html_scroll.show()
             self.html.focus_me()
-            self.read_button.set_sensitive(
-                             self.html.last_id > self.html.init_id)
             
+            self.check_read()
             self.history_button.set_sensitive(self.html.history_loaded)
             
             if self.html.load_state == HTML_LOADING:
@@ -805,22 +670,165 @@ class GUI(gtk.Window):
         self.main.quit()
     
     
-    # Events -------------------------------------------------------------------
+    # Message Dialogs ----------------------------------------------------------
     # --------------------------------------------------------------------------
-    def delete_event(self, widget, event, data=None):
-        self.window_position = self.get_position()
-        self.main.settings['position'] = str(self.window_position)
-        self.hide()
-        return True
+    def enter_password(self):
+        self.main.api_temp_password = None
+        dialog.PasswordDialog(self, lang.password_title,
+                              lang.password_question % \
+                              lang.name(self.main.username))
     
-    def destroy_event(self, widget, data=None):
-        self.window_position = self.get_position()
-        self.main.settings['position'] = str(self.window_position)
-        self.hide()
-        return True
+    def show_retweet_info(self, name):
+        dialog.MessageDialog(self, MESSAGE_INFO,
+                        lang.retweet_info % name,
+                        lang.retweet_info_title)
     
-    def state_event(self, window, event):
-        if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
-            self.minimized = event.new_window_state & \
-                                gtk.gdk.WINDOW_STATE_ICONIFIED
+    def ask_for_delete_tweet(self, info_text, yes, noo, retweet):
+        dialog.MessageDialog(self, MESSAGE_QUESTION,
+                        lang.delete_tweet_question % info_text,
+                        lang.delete_title,
+                        yes_callback = yes, no_callback = noo)
+    
+    def ask_for_delete_message(self, info_text, yes, noo):
+        dialog.MessageDialog(self, MESSAGE_QUESTION,
+                        lang.delete_message_question % info_text,
+                        lang.delete_title,
+                        yes_callback = yes, no_callback = noo)
+    
+    def show_delete_info(self, tweet, msg):
+        dialog.MessageDialog(self, MESSAGE_INFO,
+                        lang.delete_info_tweet if tweet != UNSET_ID_NUM else \
+                        lang.delete_info_message,
+                        lang.delete_info_title)
+    
+    def show_favorite_error(self, name, mode):
+        dialog.MessageDialog(self, MESSAGE_WARNING, 
+               lang.error_favorite_on % lang.name(name) if mode else \
+               lang.error_favorite_off % lang.name(name), lang.error_title)
+    
+    def show_crash_report(self):
+        dialog.MessageDialog(self, MESSAGE_WARNING, 
+               "Atarashii has crashed and automatically restarted itself.",
+               lang.error_title)    
+    
+    
+    # Error & Warning aka I'm Error! -------------------------------------------
+    # --------------------------------------------------------------------------
+    def show_error(self, error):
+        # Select Textbox?
+        if self.main.status(ST_WAS_SEND) or self.main.status(ST_WAS_DELETE):
+            self.show_input()
+            
+            if not self.main.status(ST_WAS_RETWEET) or \
+               (self.main.retweet_text != UNSET_TEXT or \
+               self.main.reply_user != UNSET_TEXT or \
+               self.main.reply_id != UNSET_ID_NUM):
+                
+                if not self.main.status(ST_WAS_RETWEET_NEW):
+                    self.text.grab_focus()
+                    
+            if self.text.has_typed and \
+               (self.main.status(ST_WAS_RETWEET_NEW) or \
+               self.main.status(ST_WAS_DELETE)):
+                self.text.grab_focus()
         
+        
+        # Determine the kind of ther error
+        rate_error = ""  
+        if isinstance(error, IOError):
+            msg = error.read()
+            
+        else:
+            msg = error.reason
+            error.code = error.response.status
+            error.errno = None
+        
+        # Catch common Twitter errors
+        if error.code in (400, 401, 403, 404, 500, 502, 503):
+            if msg.startswith("Share sharing"):
+                code = -2
+            
+            else:
+                code = error.code
+                
+                # Ratelimit errors
+                if (code == 400 and not self.main.status(ST_WAS_SEND)) or \
+                   (code == 403 and self.main.status(ST_WAS_SEND)):
+                    
+                    self.refresh_button.set_sensitive(False)
+                    self.tray.refresh_menu.set_sensitive(False)
+                    rate_error = self.main.reconnect()
+                
+                # Just normal 400's and 403'
+                elif (code == 400 and self.main.status(ST_WAS_SEND)) or \
+                     (code == 403 and not self.main.status(ST_WAS_SEND)):
+                    
+                    code = 500
+                
+                # A real 404! This may be raised if a user wasn't found
+                elif self.main.status(ST_WAS_SEND) and code == 404:
+                    code = -3 
+                    
+        # Catch network errors
+        elif error.errno == -2:
+            code = -4
+            if self.main.status(ST_LOGIN_SUCCESSFUL):
+                code = -5
+        
+        else:
+            code = -1
+        
+        
+        # Reset stuff
+        self.main.unset_status(ST_WAS_SEND | ST_WAS_RETWEET | \
+                               ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
+        
+        
+        # Show Warning ---------------------------------------------------------
+        if code == -1 or code == 500 or code == 502 or \
+            code == 503 or code == -5:
+            
+            # Don't warn until we reconnect
+            if code == -5:
+                if self.main.status(ST_NETWORK_FAILED):
+                    return
+                
+                else:
+                    self.main.set_status(ST_NETWORK_FAILED)
+            
+            # Show only one warning at a time to prevent dialog cluttering
+            if not self.main.status(ST_WARNING_REQUEST):
+                self.main.set_status(ST_WARNING_REQUEST)
+                
+                def unset():
+                    self.main.unset_status(ST_WARNING_REQUEST)
+                
+                dialog.MessageDialog(self, MESSAGE_WARNING,
+                    lang.error_network_lost if code == -5 else lang.warning_url,
+                    lang.warning_title, ok_callback = unset)
+        
+        
+        # Show Error -----------------------------------------------------------
+        else:
+            description = {
+                -4 : lang.error_network,
+                -3 : lang.error_user_not_found % self.main.message_user,
+                -2 : lang.error_already_retweeted,
+                0 : lang.error_internal % str(error),
+                400 : rate_error,
+                401 : lang.error_login % self.main.username,
+                403 : rate_error,  
+                404 : lang.error_login % self.main.username,
+                500 : lang.error_twitter,
+                502 : lang.error_down,
+                503 : lang.error_overload
+            }[code]
+            dialog.MessageDialog(self, MESSAGE_ERROR, description,
+                                 lang.error_title)
+        
+        self.update_status()
+    
+    def show_warning(self, limit):
+        dialog.MessageDialog(self, MESSAGE_WARNING, lang.warning_text % limit,
+                                lang.warning_title)
+
