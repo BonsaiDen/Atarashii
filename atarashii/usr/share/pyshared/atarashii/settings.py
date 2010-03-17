@@ -157,17 +157,14 @@ class Settings:
            
         # Create/Delete .desktop file
         try:
-            if mode:
-                cfp = open(COPY_FILE, "rb")
-                text = cfp.read()
-                cfp.close()
-                
-                dfp = open(DESKTOP_FILE, "wb")
-                dfp.write(text)
-                dfp.close()
-                
-            else:
-                os.unlink(DESKTOP_FILE)
+            cfp = open(COPY_FILE, "rb")
+            text = cfp.read()
+            cfp.close()
+            
+            dfp = open(DESKTOP_FILE, "wb")
+            bmode = "true" if mode else "false"
+            dfp.write(text + "\nX-GNOME-Autostart-enabled=%s" % bmode)
+            dfp.close()
             
             # Only save if we succeeded
             self['autostart'] = mode
