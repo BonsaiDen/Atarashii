@@ -20,14 +20,16 @@ import view
 
 from language import LANG as lang
 
-from constants import UNSET_TEXT
+from constants import UNSET_TEXT, MODE_MESSAGES
 
 
 class HTML(view.HTMLView):
     def __init__(self, main, gui):
         self.main = main
         self.gui = gui
-        view.HTMLView.__init__(self, main, gui, self.gui.message_scroll)
+        view.HTMLView.__init__(self, main, gui, 
+                              self.gui.message_scroll, MODE_MESSAGES)
+        
         self.get_latest = self.main.get_latest_message_id
         self.item_count = self.main.load_message_count
         

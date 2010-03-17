@@ -20,14 +20,16 @@ import view
 
 from language import LANG as lang
 
-from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT
+from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, MODE_TWEETS
 
 
 class HTML(view.HTMLView):
     def __init__(self, main, gui):
         self.main = main
         self.gui = gui
-        view.HTMLView.__init__(self, main, gui, self.gui.html_scroll)
+        view.HTMLView.__init__(self, main, gui,
+                               self.gui.html_scroll, MODE_TWEETS)
+        
         self.get_latest = self.main.get_latest_id
         self.item_count = self.main.load_tweet_count
         
