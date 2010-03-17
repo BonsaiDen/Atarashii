@@ -1,3 +1,24 @@
+atarashii (0.99.11-1) all;
+  
+  * Fixed an issues with the views not scrolling correctly to the first unread
+    item.
+  * Cleanup of the internal exception handling this means better error messages.
+  * The tray menu now has an entry to mark all messages and tweets as read.
+  * Added markup to most of the warning/error/info/question dialogs. Usernames
+    and such are now bold.
+  * Notify the user that his typed in password is too short.
+  * Bugfix for white/empty views on startup.
+  * Autostart now works nicely with the GNOME autostart manager.
+  * Multiple fixes to the handling of user deletion.
+  * Fixed a bug where the message button would stay activated on logout.
+  * New listview for users in the preferences window.
+  * Fix for textbox focus issues when copying a link.
+  * Fixed wrong status in the tray icon tooltip.
+  * Quicklinks no longer have a context menu.
+  * Translated and updated the about dialog.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 17 Mar 2010 15:23:00 +0100
+
 atarashii (0.99.10c-1) all;
 
   * And one more hotfix, this time it seemes that a refactoring did break the
