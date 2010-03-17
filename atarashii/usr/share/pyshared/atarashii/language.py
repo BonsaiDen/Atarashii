@@ -215,6 +215,8 @@ LANG = {
             '''Twitter Requestlimit wurde überschritten.\n''' + \
             '''Automatische Aktualisierung in %d Minute(n).''',
         
+        'error_template' : '<b>%H:%M:%S Uhr</b>\n',
+        
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warnung',
         
@@ -235,6 +237,8 @@ LANG = {
             '''Atarashii hat die Verbindung zum Internet verloren, es ''' + \
             '''wird alle 60 Sekunden versucht die Verbindung ''' + \
             '''wiederherzustellen.''',
+        
+        'warning_template' : '<b>%H:%M:%S Uhr</b>\n',
         
         # Toolbar Items
         'tool_refresh' : 'Tweets aktualisieren',
@@ -469,6 +473,8 @@ LANG = {
             '''Twitters limit on requests has been exceeded.\n''' + \
             '''Automatic refresh in %d minute(s).''',
         
+        'error_template' : '<b>%H:%M:%S</b>\n',
+        
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warning',
 
@@ -488,6 +494,7 @@ LANG = {
             '''Atarashii has lost the conntection to the Internet. It ''' + \
             '''will automatically try to reconnect itself every 60 seconds.''',
         
+        'warning_template' : '<b>%H:%M:%S</b>\n',
         
         # Toolbar items
         'tool_refresh' : 'Refresh Tweets',

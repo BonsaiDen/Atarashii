@@ -137,6 +137,7 @@ class GUI(gtk.Window):
         self.warning_dialog = None
         self.warning_shown = False
         self.warning_information = UNSET_TEXT
+        self.warning_time = UNSET_ID_NUM
         
         # Error Button
         self.error_box = gtb.get_object("error")
@@ -146,6 +147,7 @@ class GUI(gtk.Window):
         self.error_dialog = None
         self.error_shown = False
         self.error_information = UNSET_TEXT
+        self.error_time = UNSET_ID_NUM
                 
         # Restore Position & Size
         if main.settings.isset("position"):
@@ -217,6 +219,8 @@ class GUI(gtk.Window):
         else:
             self.show_progress()
         
+       # gobject.timeout_add(250, lambda: self.show_error_button("foo", "bla"))
+        #gobject.timeout_add(250, lambda: self.show_warning_button("foo", "bla"))
         self.is_shown = True
     
     def force_show(self):
@@ -850,58 +854,32 @@ class GUI(gtk.Window):
             self.warning_dialog = None
         
         self.warning_box.hide()
-        
-    def show_warning_button(self, button, info):
-        self.warning_information = info
-        if self.warning_dialog != None:
-            self.warning_dialog.destroy()
-            self.warning_dialog = None
-        
-        self.warning_box.show()
-        self.warning_label.set_markup(button)
     
-    def show_warning_dialog(self, *args):
-        if self.warning_dialog != None:
-            self.warning_dialog.destroy()
-            self.warning_dialog = None
-        
-        self.hide_warning_button()
-        self.warning_dialog = dialog.MessageDialog(self, MESSAGE_WARNING,
-                             self.warning_information, lang.warning_title)
-
-
-
-    # Warning Button -----------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def hide_warning_button(self):
-        if self.error_dialog != None:
-            self.warning_dialog.destroy()
-            self.warning_dialog = None
-        
-        self.warning_box.hide()
-        
     def show_warning_button(self, button, info):
         self.warning_information = info
         if self.warning_dialog != None:
             self.warning_dialog.destroy()
             self.warning_dialog = None
         
+        self.warning_time = time.time()
         self.warning_box.show()
         self.warning_label.set_markup(button)
         
         # Show GUI if not shown so the user does notice the message
         if not self.is_shown:
             gobject.idle_add(self.show_gui)
-
+    
     def show_warning_dialog(self, *args):
         if self.warning_dialog != None:
             self.warning_dialog.destroy()
             self.warning_dialog = None
         
         self.hide_warning_button()
+        date = time.localtime(self.error_time)
         self.warning_dialog = dialog.MessageDialog(self, MESSAGE_WARNING,
-                             self.warning_information, lang.warning_title)
-    
+                              time.strftime(lang.warning_template, date) + \
+                              self.warning_information,
+                              lang.warning_title)
     
     # Error Button -------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -917,6 +895,14 @@ class GUI(gtk.Window):
         if self.error_dialog != None:
             self.error_dialog.destroy()
             self.error_dialog = None
+        
+        self.error_time = time.time()
+        self.error_box.show()
+        self.error_label.set_markup(button)
+        
+        # Show GUI if not shown so the user does notice the message
+        if not self.is_shown:
+            gobject.idle_add(self.show_gui)  
     
     def show_error_dialog(self, *args):
         if self.error_dialog != None:
@@ -924,6 +910,9 @@ class GUI(gtk.Window):
             self.error_dialog = None
         
         self.hide_error_button()
+        date = time.localtime(self.error_time)
         self.error_dialog = dialog.MessageDialog(self, MESSAGE_ERROR,
-                             self.error_information, lang.error_title)
+                            time.strftime(lang.error_template, date) + \
+                            self.error_information,
+                            lang.error_title)
 

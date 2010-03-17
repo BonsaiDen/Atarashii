@@ -14,6 +14,7 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 # TODO add timeinfo to button dialogs
+# TODO refactor button dialogs into a class to reduce code duplication
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
