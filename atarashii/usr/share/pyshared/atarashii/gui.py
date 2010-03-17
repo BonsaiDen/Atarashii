@@ -30,24 +30,25 @@ import message
 import tray
 import text
 import dialog
-from utils import escape
 
 from language import LANG as lang
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
-                      ST_DELETE, ST_UPDATE, ST_SEND, ST_LOGIN_COMPLETE, \
-                      ST_RECONNECT, ST_HISTORY
+                      ST_DELETE, ST_UPDATE, ST_SEND, ST_RECONNECT, ST_HISTORY
 
-from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_TEXT, UNSET_ID_NUM, \
-                      HTML_LOADING, HTML_LOADED, MESSAGE_WARNING, \
-                      MESSAGE_QUESTION, MESSAGE_INFO, UNSET_LABEL, \
+from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
+                      MESSAGE_WARNING, MESSAGE_QUESTION, MESSAGE_INFO, \
                       UNSET_TIMEOUT, HTML_UNSET_ID
 
 
-class GUI(gtk.Window):
+from guievents import GUIEventHandler
+from guihelpers import GUIHelpers
+
+
+class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     def __init__(self, main):
         # Setup
-        self.main = main
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
+        self.main = main
         self.hide_on_delete()
         self.set_border_width(2)
         self.set_size_request(280, 400)
@@ -213,26 +214,6 @@ class GUI(gtk.Window):
             self.show_gui()
     
     
-    # Events -------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def delete_event(self, widget, event, data=None):
-        self.window_position = self.get_position()
-        self.main.settings['position'] = str(self.window_position)
-        self.hide()
-        return True
-    
-    def destroy_event(self, widget, data=None):
-        self.window_position = self.get_position()
-        self.main.settings['position'] = str(self.window_position)
-        self.hide()
-        return True
-    
-    def state_event(self, window, event):
-        if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
-            self.minimized = event.new_window_state & \
-                                gtk.gdk.WINDOW_STATE_ICONIFIED
-    
-    
     # GUI Switchers ------------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_input(self, resize = True):
@@ -372,274 +353,6 @@ class GUI(gtk.Window):
     def set_status(self, status):
         self.status.pop(0)
         self.status.push(0, status)
-    
-    
-    # Info Label ---------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def set_label(self):    
-        if self.main.status(ST_SEND):
-            return
-        
-        if self.main.reply_user == UNSET_TEXT and \
-            self.main.retweet_user == UNSET_TEXT and \
-            self.main.message_user == UNSET_TEXT:
-            
-            self.info_label.set_markup(UNSET_LABEL)
-            self.info_label.hide()
-        
-        elif self.main.retweet_user != UNSET_TEXT:
-            self.set_label_text(lang.label_retweet, self.main.retweet_user)
-            self.info_label.show()
-        
-        elif self.main.reply_text != UNSET_TEXT:
-            self.set_label_text(lang.label_reply_text, self.main.reply_text)
-            self.info_label.show()
-        
-        elif self.main.reply_user != UNSET_TEXT:
-            self.set_label_text(lang.label_reply, self.main.reply_user)
-            self.info_label.show()
-        
-        # Messages
-        elif self.main.message_text != UNSET_TEXT:
-            self.set_label_text(lang.label_message_text, self.main.message_text)
-            self.info_label.show()
-        
-        elif self.main.message_user != UNSET_TEXT:
-            self.set_label_text(lang.label_message, self.main.message_user)
-            self.info_label.show()
-    
-    def set_label_text(self, info, label_text):
-        self.info_label.set_markup(info % escape(label_text))
-    
-    
-    # Helpers ------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def set_app_title(self):
-        if self.main.username == UNSET_TEXT or \
-            (not self.main.status(ST_LOGIN_SUCCESSFUL) and \
-            not self.main.status(ST_CONNECT)):
-            self.set_title(lang.title)
-        
-        elif self.mode == MODE_MESSAGES:
-            if self.html.count > 0:
-                self.set_title(
-                     (lang.title_tweets if self.html.count > 1 else \
-                      lang.title_tweet) % self.html.count)
-            
-            else:
-                self.set_title(lang.title_logged_in % self.main.username)
-        
-        elif self.mode == MODE_TWEETS:
-            if self.message.count > 0:
-                self.set_title(
-                     (lang.title_messages if self.html.count > 1 else \
-                      lang.title_message) % self.message.count)
-            
-            else:
-                self.set_title(lang.title_logged_in % self.main.username)
-        
-        # Tray Tooltip
-        if not self.main.status(ST_CONNECT) and \
-           self.main.status(ST_LOGIN_COMPLETE):
-           
-            if self.main.username == UNSET_TEXT or \
-                (not self.main.status(ST_LOGIN_SUCCESSFUL) and \
-                not self.main.status(ST_CONNECT)):
-                
-                self.tray.set_tooltip(lang.tray_logged_out)
-            
-            elif self.mode == MODE_MESSAGES:
-                self.tray.set_tooltip(lang.tray_logged_in % self.main.username,
-                                      self.html.count, self.message.count)
-            
-            elif self.mode == MODE_TWEETS:                
-                self.tray.set_tooltip(lang.tray_logged_in % self.main.username,
-                                      self.html.count, self.message.count)
-        
-        elif self.main.status(ST_CONNECT):
-            self.tray.set_tooltip(lang.tray_logging_in % self.main.username)
-        
-        else:
-            self.tray.set_tooltip(lang.tray_logged_out)
-    
-    def check_refresh(self):
-        if self.is_ready():
-            self.refresh_button.set_sensitive(True)
-            self.tray.refresh_menu.set_sensitive(True)
-            
-            # Check for message/tweet switch
-            if self.text.go_send_message != None:
-                self.set_mode(MODE_MESSAGES)
-            
-            elif self.text.go_send_tweet != None:
-                self.set_mode(MODE_TWEETS)
-            
-            self.update_status()
-    
-    def check_read(self):
-        if self.mode == MODE_MESSAGES:
-            mode = self.message.last_id > self.message.init_id            
-            
-        elif self.mode == MODE_TWEETS:
-            mode = self.html.last_id > self.html.init_id
-        
-        else:
-            mode = False
-        
-        self.read_button.set_sensitive(mode)
-        self.tray.read_menu.set_sensitive(mode)
-    
-    
-    def set_mode(self, mode):
-        if mode == self.mode:
-            return
-        
-        if mode == None:
-            self.mode = MODE_TWEETS
-        
-        else:
-            self.mode = mode
-        
-        if self.mode == MODE_MESSAGES:
-            self.message_button.set_active(True)
-        
-        elif self.mode == MODE_TWEETS:
-            self.message_button.set_active(False)
-    
-    def is_ready(self):
-        return not self.main.status(ST_UPDATE) and self.load_state()
-    
-    def load_state(self):
-        return self.message.load_state == HTML_LOADED and \
-               self.html.load_state == HTML_LOADED
-    
-    def show_in_taskbar(self, mode):
-        self.main.settings['taskbar'] = mode
-        self.set_property('skip-taskbar-hint', not mode)
-    
-    
-    # Handlers -----------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def on_refresh(self, *args):
-        self.refresh_button.set_sensitive(False)
-        if self.mode == MODE_MESSAGES:
-            self.main.updater.refresh_messages = True
-        
-        else:
-            self.main.updater.refresh_now = True
-    
-    def on_history(self, *args):
-        if self.mode == MODE_MESSAGES:
-            gobject.idle_add(self.message.clear)
-        
-        else:
-            gobject.idle_add(self.html.clear)
-    
-    def on_read(self, *args):
-        if self.mode == MODE_MESSAGES:
-            gobject.idle_add(self.message.read)
-        
-        else:
-            gobject.idle_add(self.html.read)
-    
-    def on_read_all(self, *args):
-        gobject.idle_add(self.message.read)
-        gobject.idle_add(self.html.read)
-    
-    def on_mode(self, *args):
-        if self.message_button.get_active():
-            self.mode = MODE_MESSAGES
-        
-        else: # TODO add case for searchbutton
-            self.mode = MODE_TWEETS
-        
-        if self.mode == MODE_MESSAGES:
-            self.history_button.set_tooltip_text(lang.tool_history_message)
-            self.read_button.set_tooltip_text(lang.tool_read_message)
-            self.refresh_button.set_tooltip_text(lang.tool_refresh_message)
-            self.html_scroll.hide()
-            self.message_scroll.show()
-            self.message.focus_me()
-            self.message.fix_scroll()
-            
-            self.check_read()
-            self.history_button.set_sensitive(self.message.history_loaded)
-            
-            if self.message.load_state == HTML_LOADING:
-                self.show_progress()
-            
-            elif self.message.load_state == HTML_LOADED:
-                self.show_input()
-        
-        elif self.mode == MODE_TWEETS:
-            self.history_button.set_tooltip_text(lang.tool_history)
-            self.read_button.set_tooltip_text(lang.tool_read)
-            self.refresh_button.set_tooltip_text(lang.tool_refresh)
-            self.message_scroll.hide()
-            self.html_scroll.show()
-            self.html.focus_me()
-            self.html.fix_scroll()
-            
-            self.check_read()
-            self.history_button.set_sensitive(self.html.history_loaded)
-            
-            if self.html.load_state == HTML_LOADING:
-                self.show_progress()
-            
-            elif self.html.load_state == HTML_LOADED:
-                self.show_input()
-        
-        else: # TODO implement search here
-            pass
-        
-        self.set_app_title()
-        self.text.check_mode()
-        self.text.loose_focus()
-    
-    def on_settings(self, menu):
-        if not self.settings_toggle:
-            self.settings_toggle = True
-            if self.settings_button.get_active() and not self.settings_dialog:
-                self.settings_dialog = dialog.SettingsDialog(self)
-            
-            elif menu and not self.settings_dialog:
-                self.settings_dialog = dialog.SettingsDialog(self)
-                self.settings_button.set_active(True)
-            
-            
-            elif menu and self.settings_dialog:
-                self.settings_dialog.on_close()
-                self.settings_button.set_active(False)
-            
-            elif self.settings_dialog:
-                self.settings_dialog.on_close()
-            
-            self.settings_toggle = False
-    
-    def on_about(self, menu):
-        if not self.about_toggle:
-            self.about_toggle = True
-            if self.about_button.get_active() and not self.about_dialog:
-                self.about_dialog = dialog.AboutDialog(self)
-            
-            elif menu and not self.about_dialog:
-                self.about_dialog = dialog.AboutDialog(self)
-                self.about_button.set_active(True)
-            
-            elif menu and self.about_dialog:
-                self.about_dialog.on_close()
-                self.about_button.set_active(False)
-            
-            elif self.about_dialog:
-                self.about_dialog.on_close()
-            
-            self.about_toggle = False
-    
-    def on_quit(self, widget = None, data = None):
-        if data:
-            data.set_visible(False)
-        
-        self.main.quit()
     
     
     # Message Dialogs ----------------------------------------------------------
