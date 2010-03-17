@@ -14,8 +14,7 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
-# TODO add readall to tray menu
-# TODO convert
+# TODO reorganize GUI.py, like half way done
 
 
 # Atarashii --------------------------------------------------------------------
@@ -43,6 +42,13 @@ import settings
 import updater
 
 from lang import lang
+from constants import ST_WARNING_REQUEST, ST_CONNECT, ST_NETWORK_FAILED, \
+                      ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, ST_DELETE, \
+                      ST_WAS_RETWEET, ST_UPDATE, ST_WARNING_RATE, \
+                      ST_WAS_RETWEET_NEW, ST_SEND, ST_LOGIN_COMPLETE, \
+                      ST_WAS_SEND, ST_RECONNECT, ST_HISTORY, ST_WAS_DELETE, \
+                      ST_ALL, ST_NONE
+
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
                       MODE_TWEETS, MODE_MESSAGES, HTML_UNSET_ID
 
@@ -86,25 +92,8 @@ class Atarashii:
         
         # State
         self.current_status = 0
-        self.login_error = False
-        self.login_status = False
-        self.network_failed = False
-        self.login_complete = False
-        self.is_sending = False
-        self.is_connecting = False
-        self.is_reconnecting = False
-        self.is_updating = False
-        self.is_loading_history = False
-        self.is_deleting = False
+        self.set_status(ST_NONE)
         self.favorites_pending = {}
-        
-        self.was_sending = False
-        self.was_retweeting = False
-        self.was_new_retweeting = False
-        self.was_deleting = False
-        self.rate_warning_shown = False
-        self.request_warning_shown = False
-        
         
         # Current Username
         self.username = self.settings['username'] or UNSET_TEXT
@@ -123,25 +112,26 @@ class Atarashii:
         self.updater.start()
     
     
-    # Status stuff!
+    # Set states ---------------------------------------------------------------
+    # --------------------------------------------------------------------------
     def status(self, flag):
         return self.current_status & flag == flag
-        
-    def status_on(self, flag):
+    
+    def set_status(self, flag):
         self.current_status |= flag
-        
-    def status_off(self, flag):
-        self.current_status ^= flag
+    
+    def unset_status(self, flag):
+        self.current_status &= ~flag
     
     
     # Sending ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def send(self, text):
-        if self.is_sending or self.is_deleting:
+        if self.status(ST_SEND) or self.status(ST_DELETE):
             return
         
         # Send
-        self.is_sending = True
+        self.set_status(ST_SEND)
         self.gui.text.set_sensitive(False)
         self.gui.message_button.set_sensitive(False)
         self.gui.show_progress()
@@ -168,13 +158,15 @@ class Atarashii:
     
     # New style Retweet
     def retweet(self, name, tweet_id, new_style = False):
-        if self.is_sending or self.is_deleting:
+        # Abort if pending
+        if self.status(ST_SEND) or self.status(ST_DELETE):
             return
         
         if new_style:
-            self.was_new_retweeting = True
+            self.set_status(ST_WAS_RETWEET_NEW)
         
-        self.is_sending = True
+        # Setup
+        self.set_status(ST_SEND)
         self.gui.text.set_sensitive(False)
         self.gui.message_button.set_sensitive(False)
         self.gui.show_progress()
@@ -188,10 +180,12 @@ class Atarashii:
     
     # Delete
     def delete(self, tweet_id = UNSET_ID_NUM, message_id = UNSET_ID_NUM):
-        if self.is_sending or self.is_deleting:
+        # Abort if pending
+        if self.status(ST_SEND) or self.status(ST_DELETE):
             return
         
-        self.is_deleting = True
+        # Setup
+        self.set_status(ST_DELETE)
         self.gui.text.set_sensitive(False)
         self.gui.message_button.set_sensitive(False)
         self.gui.show_progress()
@@ -229,7 +223,7 @@ class Atarashii:
             return
             
         # Wait until the last update is complete
-        while self.is_updating:
+        while self.status(ST_UPDATE):
             time.sleep(0.1)
         
         # Switch User
@@ -245,19 +239,16 @@ class Atarashii:
         self.gui.hide_all(False)
         self.gui.show_progress()
         
-                
         # Connect
         if self.reconnect_timeout != None:
             gobject.source_remove(self.reconnect_timeout)
         
-        self.login_status = False
-        self.login_complete = False
-        self.is_sending = False
-        self.is_connecting = True
-        self.is_reconnecting = False
+        # Status
+        self.unset_status(ST_LOGIN_SUCCESSFUL | ST_LOGIN_COMPLETE | ST_SEND | \
+                          ST_RECONNECT | ST_UPDATE | ST_LOGIN_ERROR)
+        
+        self.set_status(ST_CONNECT)
         self.reconnect_timeout = None
-        self.is_updating = False
-        self.login_error = False
         
         # Reset
         self.gui.update_status()
@@ -275,12 +266,10 @@ class Atarashii:
         self.updater.do_init = True
     
     def on_login(self):
-        self.login_complete = False
-        self.login_error = False
-        self.login_status = True
-        self.is_connecting = False
-        self.is_deleting = False
-        self.network_failed = False
+        self.unset_status(ST_LOGIN_COMPLETE | ST_LOGIN_ERROR | ST_CONNECT | \
+                          ST_DELETE | ST_NETWORK_FAILED)
+        
+        self.set_status(ST_LOGIN_SUCCESSFUL)
         self.gui.settings_button.set_sensitive(True)
         self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_title(lang.title_logged_in % self.username)
@@ -291,12 +280,10 @@ class Atarashii:
         self.refresh_time = UNSET_TIMEOUT
         self.refresh_timeout = UNSET_TIMEOUT
         self.gui.set_mode(MODE_TWEETS)
-        self.login_complete = False
-        self.login_error = True if error != None else False
-        self.login_status = False
-        self.is_connecting = False
-        self.network_failed = False
-        self.is_deleting = False
+        self.unset_status(ST_ALL)
+        if error != None:
+            self.set_status(ST_LOGIN_ERROR)
+        
         self.gui.settings_button.set_sensitive(True)
         self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_app_title()
@@ -315,15 +302,7 @@ class Atarashii:
         self.refresh_time = UNSET_TIMEOUT
         self.refresh_timeout = UNSET_TIMEOUT
         self.gui.set_mode(MODE_TWEETS)
-        self.login_error = False
-        self.login_status = False
-        self.login_complete = False
-        self.is_sending = False
-        self.is_connecting = False
-        self.is_reconnecting = False
-        self.is_updating = False
-        self.is_deleting = False
-        self.network_failed = False
+        self.unset_status(ST_ALL)
         self.gui.settings_button.set_sensitive(True)
         self.gui.update_status()
         self.gui.set_app_title()
@@ -347,16 +326,16 @@ class Atarashii:
         self.refresh_timeout = int(minutes * 60 + 2)
         
         # Schedule a reconnect if the actual login failed
-        if not self.login_status:
+        if not self.status(ST_LOGIN_SUCCESSFUL):
             self.reconnect_time = calendar.timegm(time.gmtime())
-            self.is_reconnecting = True
+            self.set_status(ST_RECONNECT)
             self.reconnect_timeout = gobject.timeout_add(
                                      int(self.refresh_timeout * 1000),
                                      lambda: self.login())
             
             return lang.error_ratelimit_reconnect % math.ceil(minutes)
         
-        # Just display an error if we exiced the ratelim while being logged in
+        # Just display an error if we exiced the ratelimit while being logged in
         else:
             return lang.error_ratelimit % math.ceil(minutes)
     
@@ -368,7 +347,7 @@ class Atarashii:
     
     def get_user_picture(self):
         img = self.settings['picture_' + self.username]
-        if not self.login_status and not self.is_connecting:
+        if not self.status(ST_LOGIN_SUCCESSFUL) and not self.status(ST_CONNECT):
             img = None
         
         if img == None or not os.path.exists(img):
