@@ -215,7 +215,7 @@ LANG = {
             '''Twitter Requestlimit wurde überschritten.\n''' + \
             '''Automatische Aktualisierung in %d Minute(n).''',
         
-        'error_template' : '<b>Fehler von %H:%M:%S Uhr:</b>\n',
+        'error_template' : '<b>Fehler von %H:%M:%S Uhr</b>\n',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warnung',
@@ -238,7 +238,7 @@ LANG = {
             '''wird alle 60 Sekunden versucht die Verbindung ''' + \
             '''wiederherzustellen.''',
         
-        'warning_template' : '<b>Warnung von %H:%M:%S Uhr:</b>\n',
+        'warning_template' : '<b>Warnung von %H:%M:%S Uhr</b>\n',
         
         # Buttons
         'button_open' : 'Für weitere Informationen klicken',
@@ -272,6 +272,10 @@ LANG = {
         'tray_message' : "<b>%d</b> neue Nachricht",
         'tray_tweets' : "<b>%d</b> neue Tweets",
         'tray_messages' : "<b>%d</b> neue Nachrichten" ,
+        
+        'tray_error_login' : 'Anmeldung als <b>%s</b> fehlgeschlagen.',
+        'tray_error_rate' : 'Requestlimit überschritten.',
+        'tray_warning_network' : '<b>Netzwerkfehler.</b>',
         
         # Context Menu
         'context_browser' : 'Im Browser öffnen',
@@ -476,7 +480,7 @@ LANG = {
             '''Twitters limit on requests has been exceeded.\n''' + \
             '''Automatic refresh in %d minute(s).''',
         
-        'error_template' : '<b>Error from %H:%M:%S:</b>\n',
+        'error_template' : '<b>Error from %H:%M:%S</b>\n',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warning',
@@ -497,7 +501,7 @@ LANG = {
             '''Atarashii has lost the conntection to the Internet. It ''' + \
             '''will automatically try to reconnect itself every 60 seconds.''',
         
-        'warning_template' : '<b>Warning from %H:%M:%S:</b>\n',
+        'warning_template' : '<b>Warning from %H:%M:%S</b>\n',
         
         # Buttons
         'button_open' : 'Clock for more information',
@@ -531,6 +535,10 @@ LANG = {
         'tray_message' : "<b>%d</b> new Message",
         'tray_tweets' : "<b>%d</b> new Tweets",
         'tray_messages' : "<b>%d</b> new Messages",
+        
+        'tray_error_login' : 'Login as <b>%s</b> failed.',
+        'tray_error_rate' : 'Request limit exceeded.',
+        'tray_warning_network' : '<b>Network error.</b>',
         
         # Context Menu
         'context_browser' : 'Open in Browser',
