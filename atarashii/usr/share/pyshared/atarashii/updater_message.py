@@ -18,7 +18,7 @@
 # ------------------------------------------------------------------------------
 import gobject
 
-from constants import ST_HISTORY
+from constants import ST_HISTORY, ST_NETWORK_FAILED
 from constants import HTML_UNSET_ID, HTML_LOADED
 
 from utils import TweepError
@@ -138,7 +138,7 @@ class UpdaterMessage:
             self.message.history_list.append((i, imgfile))
         
         self.message.load_history_id = HTML_UNSET_ID
-        self.main.unset_status(ST_HISTORY)
+        self.main.unset_status(ST_HISTORY | ST_NETWORK_FAILED)
         
         if len(messages) > 0:
             self.message.load_history = True

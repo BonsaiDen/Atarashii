@@ -24,7 +24,8 @@ import gobject
 import calendar
 
 from language import LANG as lang
-from constants import ST_WARNING_RATE, ST_UPDATE, ST_LOGIN_COMPLETE
+from constants import ST_WARNING_RATE, ST_UPDATE, ST_LOGIN_COMPLETE, \
+                      ST_NETWORK_FAILED
 
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_UNSET_ID, \
                       UNSET_TIMEOUT, HTML_RESET, HTML_LOADING
@@ -265,7 +266,9 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             self.main.settings.crash_file(True)
             
             # Update GUI
-            gobject.idle_add(self.gui.refresh_button.set_sensitive, True)
+            gobject.idle_add(self.gui.refresh_button.set_sensitive, 
+                             not self.main.status(ST_NETWORK_FAILED))
+            
             gobject.idle_add(self.gui.tray.refresh_menu.set_sensitive, True)
             
             gobject.idle_add(self.gui.check_read)
@@ -317,6 +320,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         elif not self.refresh_now:
             self.message_counter += 1
+        
+        self.main.unset_status(ST_NETWORK_FAILED)
         
         # Disable read button before pushing updates into the trees
         self.gui.read_button.set_sensitive(False)
