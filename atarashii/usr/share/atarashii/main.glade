@@ -117,6 +117,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="relief">none</property>
+                <property name="focus_on_click">False</property>
                 <child>
                   <object class="GtkHBox" id="hbox2">
                     <property name="visible">True</property>
@@ -140,16 +141,29 @@
                         <property name="xpad">6</property>
                         <property name="label" translatable="yes">Warning Info</property>
                         <property name="use_markup">True</property>
+                        <property name="ellipsize">end</property>
                       </object>
                       <packing>
                         <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="warning_image">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="xpad">4</property>
+                        <property name="stock">gtk-close</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                   </object>
                 </child>
               </object>
               <packing>
-                <property name="position">1</property>
+                <property name="position">0</property>
               </packing>
             </child>
           </object>
@@ -168,6 +182,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="relief">none</property>
+                <property name="focus_on_click">False</property>
                 <child>
                   <object class="GtkHBox" id="hbox1">
                     <property name="visible">True</property>
@@ -191,9 +206,22 @@
                         <property name="xpad">6</property>
                         <property name="label" translatable="yes">Error Info</property>
                         <property name="use_markup">True</property>
+                        <property name="ellipsize">end</property>
                       </object>
                       <packing>
                         <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="error_image">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="xpad">4</property>
+                        <property name="stock">gtk-close</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                   </object>
