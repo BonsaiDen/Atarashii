@@ -29,7 +29,8 @@ import send
 from language import LANG as lang
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
-                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_NETWORK_FAILED
+                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_NETWORK_FAILED, \
+                      ST_UPDATE
 
 from constants import UNSET_ID_NUM, UNSET_TEXT
 
@@ -45,10 +46,13 @@ class AtarashiiActions:
         gtk.main()
 
     def quit(self):
-        self.updater.running = False
         gtk.main_quit()
         
     def save_on_quit(self, *args):
+        self.updater.running = False
+        while self.status(ST_UPDATE):
+            time.sleep(0.05)
+        
         self.save_mode()
         self.save_settings()
         self.settings.crash_file(False)
