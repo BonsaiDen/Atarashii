@@ -4,6 +4,7 @@
   <!-- interface-naming-policy project-wide -->
   <object class="GtkDialog" id="dialog">
     <property name="width_request">320</property>
+    <property name="height_request">200</property>
     <property name="border_width">5</property>
     <property name="resizable">False</property>
     <property name="type_hint">normal</property>
@@ -14,6 +15,7 @@
         <property name="spacing">2</property>
         <child>
           <object class="GtkVBox" id="infobox">
+            <property name="height_request">200</property>
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
@@ -93,34 +95,34 @@ Copyright (c) 2010 by Ivo Wetzel
                 <property name="position">0</property>
               </packing>
             </child>
-            <child>
-              <object class="GtkScrolledWindow" id="textwindow">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="hscrollbar_policy">automatic</property>
-                <property name="vscrollbar_policy">automatic</property>
-                <property name="shadow_type">in</property>
-                <child>
-                  <object class="GtkTextView" id="licensetext">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="editable">False</property>
-                    <property name="wrap_mode">word</property>
-                    <property name="justification">center</property>
-                    <property name="left_margin">2</property>
-                    <property name="right_margin">2</property>
-                    <property name="cursor_visible">False</property>
-                    <property name="buffer">textbuffer1</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
           </object>
           <packing>
             <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="textwindow">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+            <property name="shadow_type">in</property>
+            <child>
+              <object class="GtkTextView" id="licensetext">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="editable">False</property>
+                <property name="wrap_mode">word</property>
+                <property name="justification">center</property>
+                <property name="left_margin">2</property>
+                <property name="right_margin">2</property>
+                <property name="cursor_visible">False</property>
+                <property name="buffer">textbuffer1</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">3</property>
           </packing>
         </child>
         <child internal-child="action_area">
