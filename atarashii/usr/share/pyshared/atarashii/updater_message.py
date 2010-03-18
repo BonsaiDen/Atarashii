@@ -88,6 +88,10 @@ class UpdaterMessage:
             except TweepError, error:
                 if count == 2:
                     raise error
+            
+            # Failsafe
+            except:
+                return []
     
     # Messages
     def get_messages(self, since_id = 0, max_id = None, max_count = 200):

@@ -85,6 +85,10 @@ class UpdaterTweet:
             except TweepError, error:
                 if count == 2:
                     raise error
+            
+            # Failsafe 
+            except:
+                return []
     
     # Tweets
     def get_updates(self, since_id = 0, max_id = None, max_count = 200):
