@@ -37,7 +37,8 @@ from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
 
 from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       MESSAGE_WARNING, MESSAGE_QUESTION, MESSAGE_INFO, \
-                      UNSET_TIMEOUT, HTML_UNSET_ID, MESSAGE_ERROR
+                      UNSET_TIMEOUT, HTML_UNSET_ID, MESSAGE_ERROR, \
+                      MESSAGE_WARNING
 
 
 from gui_events import GUIEventHandler
@@ -404,6 +405,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             if code == -5: # Network lost
                 info = lang.warning_network
                 button = lang.warning_button_network
+                self.tray.set_tooltip_error(
+                            (lang.tray_logged_in  % self.main.username) + \
+                            "\n" + lang.tray_warning_network, 
+                            gtk.STOCK_DIALOG_WARNING)
                 
             else: # overload warning
                 info = lang.warning_overload
@@ -431,19 +436,30 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Show Error Dialog ----------------------------------------------------
         else:
+            # Update Tray Icon
+            if code in (-4, -7, 401, 404):
+                self.tray.set_tooltip_error({
+                    -4 : lang.tray_warning_network,
+                    -7 : lang.tray_error_rate,
+                    404 : lang.tray_error_login % self.main.username,
+                    401 : lang.tray_error_login % self.main.username,
+                }[code], gtk.STOCK_DIALOG_ERROR if code != -4 else \
+                         gtk.STOCK_DIALOG_WARNING)
+            
             # Show GUI if minimized to tray
             gobject.idle_add(self.force_show)
             
             description = {
                 -4 : lang.error_network,
-                -3 : lang.error_user_not_found % self.message_user,
+                -3 : lang.error_user_not_found % self.main.message_user,
                 -2 : lang.error_already_retweeted,
                 0 : lang.error_internal % str(error),
                 -7 : rate_error,
-                401 : lang.error_login % self.username,
-                404 : lang.error_login % self.username
+                401 : lang.error_login % self.main.username,
+                404 : lang.error_login % self.main.username
             }[code]
-            dialog.MessageDialog(self, MESSAGE_ERROR, description,
+            dialog.MessageDialog(self, MESSAGE_ERROR if code != -4 else \
+                                 MESSAGE_WARNING, description,
                                  lang.error_title)
         
         self.update_status()
