@@ -115,6 +115,14 @@ class TrayIcon(gtk.StatusIcon):
             self.tooltip_img.set_from_pixbuf(buf)
             self.img = img
     
+    def set_tooltip_error(self, status, icon):
+        text = []
+        self.tooltip_label.set_markup(
+                           '<span size="large"><b>%s</b></span>\n%s\n%s' % \
+                           (lang.tray_title, status, "\n".join(text)))
+        
+        self.tooltip_img.set_from_stock(icon, 6)
+    
     
     # Events -------------------------------------------------------------------
     # --------------------------------------------------------------------------
