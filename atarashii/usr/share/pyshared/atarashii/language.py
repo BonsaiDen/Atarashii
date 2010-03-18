@@ -203,9 +203,9 @@ LANG = {
             '''Verbinde automatisch neu in %d Minute(n).''',
         
         # Error Button stuff
-        'error_button_twitter' : 'Twitterfehler',
+        'error_button_twitter' : 'Twitter-Serverfehler',
         'error_twitter' : 
-            'Ein unbekannter Fehler auf seitens Twitter ist aufgetreten.',
+            'Der Twitter Server hat keine Antwort gesendet.',
         
         'error_button_down' : 'Twitter ist derzeit offline',
         'error_down' : 'Twitter konnte nicht erreicht werden.',
@@ -215,7 +215,7 @@ LANG = {
             '''Twitter Requestlimit wurde überschritten.\n''' + \
             '''Automatische Aktualisierung in %d Minute(n).''',
         
-        'error_template' : '<b>%H:%M:%S Uhr</b>\n',
+        'error_template' : '<b>Fehler von %H:%M:%S Uhr:</b>\n',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warnung',
@@ -238,7 +238,11 @@ LANG = {
             '''wird alle 60 Sekunden versucht die Verbindung ''' + \
             '''wiederherzustellen.''',
         
-        'warning_template' : '<b>%H:%M:%S Uhr</b>\n',
+        'warning_template' : '<b>Warnung von %H:%M:%S Uhr:</b>\n',
+        
+        # Buttons
+        'button_close' : 'Zum Entfernen klicken',
+        'button_open' : 'Für weitere Informationen klicken',
         
         # Toolbar Items
         'tool_refresh' : 'Tweets aktualisieren',
@@ -461,19 +465,19 @@ LANG = {
              '''Automatic reconnect in %d minute(s).''',
         
         # Error Button stuff
-        'error_button_twitter' : 'Twitter error',
-        'error_twitter' : 'Internal Twitter error.',
+        'error_button_twitter' : 'Twitter server error',
+        'error_twitter' : 'The Twitter server did not respond to the request.',
         
         'error_button_down' : 'Twitter is offline',
         'error_down' : 
-            'Could not establish a connection to the Twitter Server.',
+            'Could not establish a connection to the Twitter server.',
         
         'error_button_rate_limit' : 'Ratelimit exceeded',
         'error_rate_limit' : 
             '''Twitters limit on requests has been exceeded.\n''' + \
             '''Automatic refresh in %d minute(s).''',
         
-        'error_template' : '<b>%H:%M:%S</b>\n',
+        'error_template' : '<b>Error from %H:%M:%S:</b>\n',
         
         # Warning Dialogs
         'warning_title' : 'Atarashii - Warning',
@@ -494,7 +498,11 @@ LANG = {
             '''Atarashii has lost the conntection to the Internet. It ''' + \
             '''will automatically try to reconnect itself every 60 seconds.''',
         
-        'warning_template' : '<b>%H:%M:%S</b>\n',
+        'warning_template' : '<b>Warning from %H:%M:%S:</b>\n',
+        
+        # Buttons
+        'button_close' : 'Click to remove',
+        'button_open' : 'Clock for more information',
         
         # Toolbar items
         'tool_refresh' : 'Refresh Tweets',
