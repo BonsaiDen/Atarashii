@@ -525,7 +525,8 @@ class ButtonDialog:
         self.button = gui.gtb.get_object(dtype + "_button")
         self.label = gui.gtb.get_object(dtype + "_label")
         self.image = gui.gtb.get_object(dtype + "_image")
-        self.button.connect("button-release-event", self.show_dialog)
+        self.button.connect("clicked", self.show_dialog)
+        self.button.set_tooltip_text(lang.button_open)
         self.dtype = dtype
         self.dialog = None
         self.shown = False
@@ -547,15 +548,6 @@ class ButtonDialog:
         if self.dialog != None:
             self.dialog.destroy()
             self.dialog = None
-            
-        self.button.set_tooltip_text(
-                    lang.button_close if info == None else lang.button_open)
-        
-        if info == None:
-            self.image.show()
-        
-        else:
-            self.image.hide()
         
         self.time = time.time()
         self.box.show()
@@ -569,10 +561,6 @@ class ButtonDialog:
         if self.dialog != None:
             self.dialog.destroy()
             self.dialog = None
-        
-        if self.information == None:
-            self.hide()
-            return True
         
         date = time.localtime(self.time)
         self.dialog = MessageDialog(self.gui,

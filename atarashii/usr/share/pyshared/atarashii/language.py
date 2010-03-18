@@ -241,7 +241,6 @@ LANG = {
         'warning_template' : '<b>Warnung von %H:%M:%S Uhr:</b>\n',
         
         # Buttons
-        'button_close' : 'Zum Entfernen klicken',
         'button_open' : 'Für weitere Informationen klicken',
         
         # Toolbar Items
@@ -501,7 +500,6 @@ LANG = {
         'warning_template' : '<b>Warning from %H:%M:%S:</b>\n',
         
         # Buttons
-        'button_close' : 'Click to remove',
         'button_open' : 'Clock for more information',
         
         # Toolbar items
