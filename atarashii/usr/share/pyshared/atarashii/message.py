@@ -155,7 +155,7 @@ class HTML(view.HTMLView):
     # Create Popup Items -------------------------------------------------------
     # --------------------------------------------------------------------------
     def ok_menu(self, link):
-        return not link in ("qmessage")
+        return not link in ("qmessage",)
     
     def create_menu(self, menu, item, item_id, link, full, user):
         # User Options
