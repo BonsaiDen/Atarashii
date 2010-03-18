@@ -480,7 +480,7 @@ class MessageDialog(gtk.MessageDialog):
             icon = gtk.MESSAGE_WARNING
         
         elif msg_type == MESSAGE_QUESTION:
-            icon = gtk.MESSAGE_QUESTION,
+            icon = gtk.MESSAGE_QUESTION
             buttons = gtk.BUTTONS_YES_NO
         
         elif msg_type == MESSAGE_INFO:
