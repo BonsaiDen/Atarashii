@@ -470,7 +470,7 @@ class AccountDialog(Dialog):
 # ------------------------------------------------------------------------------
 class MessageDialog(gtk.MessageDialog):
     def __init__(self, parent, msg_type, message, title, ok_callback = None,
-                yes_callback = None, no_callback = None):
+                yes_callback = None, no_callback = None, close_callback = None):
         
         buttons = gtk.BUTTONS_OK
         if msg_type == MESSAGE_ERROR:
@@ -496,6 +496,7 @@ class MessageDialog(gtk.MessageDialog):
         self.ok_callback = ok_callback
         self.yes_callback = yes_callback
         self.no_callback = no_callback
+        self.close_callback = close_callback
         self.set_default_response(gtk.RESPONSE_OK)
         self.connect('response', self.on_close)
         self.show_all()
@@ -511,6 +512,9 @@ class MessageDialog(gtk.MessageDialog):
         elif response == gtk.RESPONSE_NO and self.no_callback != None:
             self.no_callback()
 
+        if self.close_callback != None:
+            self.close_callback()
+        
 
 # Button Dialog ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -520,7 +524,8 @@ class ButtonDialog:
         self.box = gui.gtb.get_object(dtype)
         self.button = gui.gtb.get_object(dtype + "_button")
         self.label = gui.gtb.get_object(dtype + "_label")
-        self.button.connect("clicked", self.show_dialog)
+        self.image = gui.gtb.get_object(dtype + "_image")
+        self.button.connect("button-release-event", self.show_dialog)
         self.dtype = dtype
         self.dialog = None
         self.shown = False
@@ -542,6 +547,15 @@ class ButtonDialog:
         if self.dialog != None:
             self.dialog.destroy()
             self.dialog = None
+            
+        self.button.set_tooltip_text(
+                    lang.button_close if info == None else lang.button_open)
+        
+        if info == None:
+            self.image.show()
+        
+        else:
+            self.image.hide()
         
         self.time = time.time()
         self.box.show()
@@ -556,12 +570,15 @@ class ButtonDialog:
             self.dialog.destroy()
             self.dialog = None
         
-        self.hide()
+        if self.information == None:
+            self.hide()
+            return True
+        
         date = time.localtime(self.time)
         self.dialog = MessageDialog(self.gui,
                               MESSAGE_WARNING if self.dtype == "warning" else \
                               MESSAGE_ERROR,
                               time.strftime(self.template, date) + \
                               self.information,
-                              self.title)
+                              self.title, close_callback = self.hide)
 
