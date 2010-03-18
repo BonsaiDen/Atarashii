@@ -217,11 +217,9 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Send a message
         elif uri.startswith("message:") or uri.startswith("qmessage:"):
-            print uri
             ref, self.main.message_user, \
                 self.main.message_id, num = uri.split(":")
             
-            print self.main.message_user, self.main.message_id
             num = int(num)
             if extra != None:
                 self.main.message_text = unescape(self.get_text(extra))
