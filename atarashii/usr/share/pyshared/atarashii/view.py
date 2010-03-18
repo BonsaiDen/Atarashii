@@ -217,9 +217,11 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Send a message
         elif uri.startswith("message:") or uri.startswith("qmessage:"):
+            print uri
             ref, self.main.message_user, \
                 self.main.message_id, num = uri.split(":")
             
+            print self.main.message_user, self.main.message_id
             num = int(num)
             if extra != None:
                 self.main.message_text = unescape(self.get_text(extra))
@@ -297,6 +299,9 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     
         if uri.startswith("profile:"):
             return "profile", uri[8:], uri
+        
+        elif uri.startswith("rprofile:"):
+            return "rprofile", uri[9:], uri
         
         elif uri.startswith("user:"):
             return "user", uri[5:], uri

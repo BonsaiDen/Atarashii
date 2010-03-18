@@ -224,6 +224,9 @@ class ViewHelpers:
     def get_id(self, item):
         return self.get_attr(item, "id")
     
+    def get_recipient(self, item):
+        return self.get_attr(item, "recipient")
+    
     def get_protected(self, item):
         user = self.get_user(item)
         return hasattr(user, "protected") and user.protected

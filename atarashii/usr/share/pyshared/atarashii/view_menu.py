@@ -99,7 +99,7 @@ class ViewMenu:
             
             else:
                 # Profile
-                if link in ('user', 'profile'):
+                if link in ('user', 'profile', 'rprofile'):
                     user = full[full.rfind("/") + 1:]
                     self.add_menu_link(menu, lang.context_profile % user,
                                        lambda *args: self.context_link(full))
