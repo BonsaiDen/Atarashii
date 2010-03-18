@@ -46,9 +46,9 @@ class TextInput(gtk.TextView):
         self.has_typed = False
         self.is_changing = False
         self.change_contents = False
-        self.reply_regex = re.compile(ur"\B[@\uFF20]([a-z0-9_]{1,20})\s.*",
+        self.reply_regex = re.compile(ur"^[@\uFF20]([a-z0-9_]{1,20})\s.*",
                                      re.UNICODE | re.IGNORECASE)
-        
+         
         self.message_regex = re.compile('d ([a-z0-9_]{1,20})\s.*',
                                        re.UNICODE | re.IGNORECASE)
         
@@ -57,6 +57,7 @@ class TextInput(gtk.TextView):
         self.go_send_tweet = None
         
         self.contents_change = False
+        self.no_set = False
         
         # Colors
         self.default_bg = self.get_style().base[gtk.STATE_NORMAL]
@@ -70,7 +71,7 @@ class TextInput(gtk.TextView):
         self.set_pixels_inside_wrap(0)
         self.set_left_margin(2)
         self.set_right_margin(2)
-        self.set_accepts_tab(True)
+        self.set_accepts_tab(False)
         self.set_editable(True)
         self.set_cursor_visible(True)
         
@@ -78,9 +79,7 @@ class TextInput(gtk.TextView):
         self.connect("submit", self.submit)
         self.get_buffer().connect("changed", self.changed)
         self.connect("focus-in-event", self.focus)
-        self.connect("key-press-event", self.check_escape)
-        #self.connect("drag-motion", lambda *args: True)
-        #self.connect("drag-data-received", lambda *args: True)
+        self.connect("key-press-event", self.check_keys)
     
     
     # Focus Events -------------------------------------------------------------
@@ -126,13 +125,17 @@ class TextInput(gtk.TextView):
             
             self.change_contents = False
     
-    def check_escape(self, text, event, *args):
+    def check_keys(self, text, event, *args):
+        # Escape cancels the input
         if event.keyval == gtk.keysyms.Escape:
             if self.gui.mode == MODE_TWEETS:
                 self.gui.html.focus_me()
             
             elif self.gui.mode == MODE_MESSAGES:
                 self.gui.message.focus_me()
+            
+            return False
+    
     
     def reset(self):
         self.set_text("")
@@ -141,56 +144,51 @@ class TextInput(gtk.TextView):
         self.loose_focus()
     
     
-    # Sizing -------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def resize(self, line_count = 5):
-        # Set Label Text
-        self.gui.set_label()
-        
-        # Get Font Height
-        font = self.create_pango_context().get_font_description()
-        layout = self.create_pango_layout("")
-        layout.set_markup("WTF?!")
-        layout.set_font_description(font)
-        text_size = layout.get_pixel_size()[1]
-        
-        # Resize
-        lines = line_count if self.has_focus else 1
-        input_size = int((text_size + (6 if lines == 1 else 1.5)) * lines)
-        self.gui.text_scroll.set_size_request(0, input_size)
-        
-        if lines == 1:
-            self.gui.progress.set_size_request(0, input_size)
-        
-        if not self.initiated:
-            self.initiated = True
-            self.loose_focus()
-        
-        if not self.main.status(ST_LOGIN_SUCCESSFUL) and \
-           not self.main.status(ST_CONNECT):
-            self.gui.hide_all()
-    
-    
     # Events -------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def submit(self, *args):
-        text = unicode(self.get_text())
+        text = self.get_text().lstrip()
         if len(text) <= 140 + self.message_len and text.strip() != UNSET_TEXT:
             if self.gui.mode == MODE_MESSAGES:
-                if self.main.message_user != UNSET_TEXT:
-                    text = text[2:]
-                    text = text[len(self.main.message_user):].strip()
-                    if len(text) > 0:
-                        self.main.send(text)
+                # Prevent message to be send without text
+                ctext = text.strip()
+                if ctext[0:1] == "d":
+                    if ctext[2:].find(" ") == -1 or \
+                       self.main.message_user == UNSET_TEXT:
+                        self.set_text(text.lstrip())
+                        return
+                
+                if self.main.message_user == UNSET_TEXT:
+                    return
+                
+                ctext = ctext[2:]
+                ctext = ctext[len(self.main.message_user):].strip()
+                self.main.send(ctext)
             
             elif self.gui.mode == MODE_TWEETS:
-                self.main.send(text)
+                # Prevent @reply to be send without text
+                ctext = text.strip()
+                if ctext[0:1] in u"@\uFF20":
+                    if ctext.find(" ") == -1 or \
+                      self.main.reply_user == UNSET_TEXT:
+                        self.set_text(text.lstrip())
+                        return
+                
+                self.main.send(ctext)
             
             else: # TODO implement search field submit
                 pass
     
+    def clear_text(self, text, pos = 0):
+        self.is_changing = True
+        self.set_text(text)
+        self.is_changing = False
+        self.get_buffer().place_cursor(
+                          self.get_buffer().get_iter_at_offset(pos))
+            
+    
     def changed(self, *args):
-        text = self.get_text()
+        text = self.get_text().lstrip()
         
         # Message mode ---------------------------------------------------------
         if self.gui.mode == MODE_MESSAGES:
@@ -199,6 +197,11 @@ class TextInput(gtk.TextView):
                 self.main.message_user = UNSET_TEXT
                 self.main.message_id = UNSET_ID_NUM
                 self.main.message_text = UNSET_TEXT
+            
+            # Remove spaces only
+            if text.strip() == UNSET_TEXT:
+                self.set_text(UNSET_TEXT)
+                text = UNSET_TEXT
             
             # check for "d user"
             msg = self.message_regex.match(text)
@@ -213,10 +216,22 @@ class TextInput(gtk.TextView):
                         self.main.message_text = UNSET_TEXT
                         self.main.message_user = msg.group(1)
                         self.main.message_id = UNSET_ID_NUM
-            
+                        
+                # Remove space between username and text
+                check = text[self.message_len:]
+                length = len(check) - len(check.lstrip())
+                if length > 0:
+                    pos = self.get_buffer().get_iter_at_mark(
+                                    self.get_buffer().get_insert()).get_offset()
+                    
+                    check = text[0:self.message_len] + \
+                            text[self.message_len + length:]
+                    
+                    gobject.idle_add(self.clear_text, check, pos - length)
+                        
             elif self.main.message_id == UNSET_ID_NUM:
                 self.main.message_user = UNSET_TEXT
-        
+            
             # check for "d user" and switch to messaging
             at_user = self.reply_regex.match(text)
             if at_user != None:
@@ -232,12 +247,12 @@ class TextInput(gtk.TextView):
             self.message_len = 0
             
             # Cancel reply mode
-            if not unicode(text.strip())[0:1] in u"@\uFF20" and \
+            if not text.strip()[0:1] in u"@\uFF20" and \
                not self.is_changing:
                 self.main.reply_text = UNSET_TEXT
                 self.main.reply_user = UNSET_TEXT
                 self.main.reply_id = UNSET_ID_NUM
-                
+            
             # Remove spaces only
             if text.strip() == UNSET_TEXT:
                 self.set_text(UNSET_TEXT)
@@ -254,6 +269,8 @@ class TextInput(gtk.TextView):
             # check for @ Reply
             at_user = self.reply_regex.match(text)
             if at_user != None:
+                at_len = len('@%s ' % at_user.group(1))
+            
                 if self.main.reply_id == UNSET_ID_NUM:
                     self.main.reply_user = at_user.group(1)
                 
@@ -262,6 +279,16 @@ class TextInput(gtk.TextView):
                         self.main.reply_text = UNSET_TEXT
                         self.main.reply_user = at_user.group(1)
                         self.main.reply_id = UNSET_ID_NUM
+            
+                # Remove space between username and text
+                check = text[at_len:]
+                length = len(check) - len(check.lstrip())
+                if length > 0:
+                    pos = self.get_buffer().get_iter_at_mark(
+                                    self.get_buffer().get_insert()).get_offset()
+                    
+                    check = text[0:at_len] + text[at_len + length:]
+                    gobject.idle_add(self.clear_text, check, pos - length)
             
             elif self.main.reply_id == UNSET_ID_NUM:
                 self.main.reply_user = UNSET_TEXT
@@ -274,6 +301,11 @@ class TextInput(gtk.TextView):
                 
                 else:
                     self.go_send_message = self.get_text()
+        
+        # Strip left
+        if self.get_text()[0:1] == " ":
+            ctext = self.get_text().lstrip()
+            gobject.idle_add(self.clear_text, ctext)
         
         # Resize
         self.resize()
@@ -293,10 +325,10 @@ class TextInput(gtk.TextView):
             self.has_typed = False
             self.gui.update_status()
         
-        self.check_color(len(unicode(text)))
+        self.check_color(len(text))
     
     def check_length(self):
-        text = unicode(self.get_text())
+        text = self.get_text().lstrip()
         max_length = 140 + self.message_len
         if len(text) <= max_length:
             self.gui.set_status(lang.status_left % (max_length - len(text)))
@@ -409,17 +441,45 @@ class TextInput(gtk.TextView):
         self.change_contents = True
         self.is_changing = True
         self.grab_focus()
-        self.set_text(text)
+        self.set_text(text.lstrip())
         self.is_changing = False
     
     
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def get_text(self):
-        return self.get_buffer().get_text(*self.get_buffer().get_bounds())
+        return unicode(self.get_buffer().get_text(*self.get_buffer().get_bounds()))
     
     def set_text(self, text):
         self.get_buffer().set_text(text)
+    
+    
+    def resize(self, line_count = 5):
+        # Set Label Text
+        self.gui.set_label()
+        
+        # Get Font Height
+        font = self.create_pango_context().get_font_description()
+        layout = self.create_pango_layout("")
+        layout.set_markup("WTF?!")
+        layout.set_font_description(font)
+        text_size = layout.get_pixel_size()[1]
+        
+        # Resize
+        lines = line_count if self.has_focus else 1
+        input_size = int((text_size + (6 if lines == 1 else 1.5)) * lines)
+        self.gui.text_scroll.set_size_request(0, input_size)
+        
+        if lines == 1:
+            self.gui.progress.set_size_request(0, input_size)
+        
+        if not self.initiated:
+            self.initiated = True
+            self.loose_focus()
+        
+        if not self.main.status(ST_LOGIN_SUCCESSFUL) and \
+           not self.main.status(ST_CONNECT):
+            self.gui.hide_all()
 
 
 gtk.binding_entry_add_signal(TextInput, gtk.keysyms.Return, 0, "submit")
