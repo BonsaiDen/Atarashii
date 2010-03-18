@@ -37,33 +37,30 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-import os
-import calendar
 import time
-import math
+import os
 
 gtk.gdk.threads_init()
 gtk.gdk.threads_enter()
 
 import notify
-import send
+
 import gui
 import settings
 import updater
-import dialog
 
 from language import LANG as lang
-from constants import ST_CONNECT, ST_LOGIN_ERROR, \
-                      ST_LOGIN_SUCCESSFUL, ST_UPDATE, ST_WAS_RETWEET_NEW, \
-                      ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, ST_NONE, \
-                      ST_SEND, ST_DELETE, ST_WAS_SEND, ST_WAS_RETWEET, \
-                      ST_WAS_DELETE
+from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
+                      ST_UPDATE,ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, \
+                      ST_NONE, ST_SEND, ST_DELETE
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
-                      MODE_TWEETS, MODE_MESSAGES, HTML_UNSET_ID, MESSAGE_ERROR
+                      MODE_TWEETS, MODE_MESSAGES, HTML_UNSET_ID
+
+from atarashii_actions import AtarashiiActions
 
 
-class Atarashii:
+class Atarashii(AtarashiiActions):
     def __init__(self, version, debug = None):
         # Setup
         self.version = version
@@ -120,92 +117,6 @@ class Atarashii:
         
         # Start
         self.updater.start()
-    
-    
-    # Sending ------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def send(self, text):
-        if self.status(ST_SEND) or self.status(ST_DELETE):
-            return
-        
-        # Send
-        self.set_status(ST_SEND)
-        self.gui.text.set_sensitive(False)
-        self.gui.message_button.set_sensitive(False)
-        self.gui.show_progress()
-        if self.reply_user != UNSET_TEXT:
-            self.gui.set_status(lang.status_reply % self.reply_user)
-        
-        elif self.retweet_user != UNSET_TEXT:
-            self.gui.set_status(lang.status_retweet % self.retweet_user)
-        
-        elif self.message_text != UNSET_TEXT:
-            self.gui.set_status(lang.status_message_reply % self.message_user)
-        
-        elif self.message_user != UNSET_TEXT:
-            self.gui.set_status(lang.status_message % self.message_user)
-        
-        else:
-            self.gui.set_status(lang.status_send)
-        
-        # Sender
-        sender = send.Send(self, self.gui.mode, text)
-        sender.setDaemon(True)
-        sender.start()
-    
-    
-    # New style Retweet
-    def retweet(self, name, tweet_id, new_style = False):
-        # Abort if pending
-        if self.status(ST_SEND) or self.status(ST_DELETE):
-            return
-        
-        if new_style:
-            self.set_status(ST_WAS_RETWEET_NEW)
-        
-        # Setup
-        self.set_status(ST_SEND)
-        self.gui.text.set_sensitive(False)
-        self.gui.message_button.set_sensitive(False)
-        self.gui.show_progress()
-        self.gui.set_status(lang.status_retweet % name)
-        
-        # Retweeter
-        retweeter = send.Retweet(self, name, tweet_id)
-        retweeter.setDaemon(True)
-        retweeter.start()
-    
-    
-    # Delete
-    def delete(self, tweet_id = UNSET_ID_NUM, message_id = UNSET_ID_NUM):
-        # Abort if pending
-        if self.status(ST_SEND) or self.status(ST_DELETE):
-            return
-        
-        # Setup
-        self.set_status(ST_DELETE)
-        self.gui.text.set_sensitive(False)
-        self.gui.message_button.set_sensitive(False)
-        self.gui.show_progress()
-        self.gui.set_status(lang.status_deleting_tweet if \
-                            tweet_id != UNSET_ID_NUM else \
-                            lang.status_deleting_message)
-    
-        # Deleter
-        deleter = send.Delete(self, tweet_id, message_id)
-        deleter.setDaemon(True)
-        deleter.start()
-    
-    
-    # Favorite
-    def favorite(self, tweet_id, mode, name):
-        if not self.favorites_pending.has_key(tweet_id):
-            self.favorites_pending[tweet_id] = mode
-            
-            # Favoriter
-            favoriter = send.Favorite(self, tweet_id, mode, name)
-            favoriter.setDaemon(True)
-            favoriter.start()     
     
     
     # Login & Logout -----------------------------------------------------------
@@ -310,156 +221,8 @@ class Atarashii:
         gobject.idle_add(self.gui.html.init, True)
     
     
-    # Reconnect ----------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def reconnect(self):
-        ratelimit = self.api.oauth_rate_limit_status()
-        if ratelimit != None:
-            minutes = math.ceil((ratelimit['reset_time_in_seconds'] - \
-                                 calendar.timegm(time.gmtime())) / 60.0)
-        
-        else:
-            minutes = 5
-        
-        self.refresh_timeout = int(minutes * 60 + 2)
-        
-        # Schedule a reconnect if the actual login failed
-        if not self.status(ST_LOGIN_SUCCESSFUL):
-            self.reconnect_time = calendar.timegm(time.gmtime())
-            self.set_status(ST_RECONNECT)
-            self.reconnect_timeout = gobject.timeout_add(
-                                     int(self.refresh_timeout * 1000),
-                                     self.login)
-            
-            return -7, lang.error_ratelimit_reconnect % math.ceil(minutes)
-        
-        # Just display an error if we exiced the ratelimit while being logged in
-        else:
-            return -6, lang.error_ratelimit % math.ceil(minutes)
-    
-    
-    # Handle Errors and Warnings -----------------------------------------------
-    # --------------------------------------------------------------------------
-    def handle_error(self, error):
-        if self.status(ST_WAS_SEND) or self.status(ST_WAS_DELETE):
-            self.gui.show_input()
-            
-            if not self.status(ST_WAS_RETWEET) or \
-               (self.retweet_text != UNSET_TEXT or \
-               self.reply_user != UNSET_TEXT or \
-               self.reply_id != UNSET_ID_NUM):
-                
-                if not self.status(ST_WAS_RETWEET_NEW):
-                    self.gui.text.grab_focus()
-            
-            if self.gui.text.has_typed and \
-               (self.status(ST_WAS_RETWEET_NEW) or \
-               self.status(ST_WAS_DELETE)):
-                self.gui.text.grab_focus()
-        
-        
-        # Determine the kind of the error
-        rate_error = ""  
-        if isinstance(error, IOError):
-            msg = error.read()
-            
-        else:
-            msg = error.reason
-            error.code = error.response.status
-            error.errno = None
-        
-        # Catch common Twitter errors
-        if error.code in (400, 401, 403, 404, 500, 502, 503):
-            if msg.startswith("Share sharing"):
-                code = -2
-            
-            else:
-                code = error.code
-                
-                # Ratelimit errors
-                if (code == 400 and not self.status(ST_WAS_SEND)) or \
-                   (code == 403 and self.status(ST_WAS_SEND)):
-                    
-                    self.gui.refresh_button.set_sensitive(False)
-                    self.gui.tray.refresh_menu.set_sensitive(False)
-                    code, rate_error = self.reconnect()
-                
-                # Just normal 400's and 403'
-                elif (code == 400 and self.status(ST_WAS_SEND)) or \
-                     (code == 403 and not self.status(ST_WAS_SEND)):
-                    
-                    code = 500
-                
-                # A real 404! This may be raised if a user wasn't found
-                elif self.status(ST_WAS_SEND) and code == 404:
-                    code = -3 
-                    
-        # Catch network errors
-        elif error.errno == -2:
-            code = -4
-            if self.status(ST_LOGIN_SUCCESSFUL):
-                code = -5
-        
-        else:
-            code = -1
-        
-        # Reset stuff
-        self.unset_status(ST_WAS_SEND | ST_WAS_RETWEET | \
-                               ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
-        
-        
-        # Show Warning Button --------------------------------------------------
-        if code in (-5, 503):
-            if code == -5: # Network lost
-                info = lang.warning_network
-                button = lang.warning_button_network
-                
-            else: # overload warning
-                info = lang.warning_overload
-                button = lang.warning_button_overload
-            
-            self.gui.warning_button.show(button, info)
-        
-        # Show Error Button
-        elif code in (500, 502, -6):
-            if code != -6:
-                if code == 500: # internal twitter error
-                    button = lang.error_button_twitter
-                    info = lang.error_twitter
-                
-                else: # Twitter down
-                    button = lang.error_button_down
-                    info = lang.error_down
-            
-            # Rate limit exceeded
-            else:
-                info = rate_error
-                button = lang.error_button_rate_limit
-                
-            self.gui.error_button.show(button, info)
-        
-        # Show Error Dialog ----------------------------------------------------
-        else:
-            # Show GUI if minimized to tray
-            gobject.idle_add(self.gui.force_show)
-            
-            description = {
-                -4 : lang.error_network,
-                -3 : lang.error_user_not_found % self.message_user,
-                -2 : lang.error_already_retweeted,
-                0 : lang.error_internal % str(error),
-                -7 : rate_error,
-                401 : lang.error_login % self.username,
-                404 : lang.error_login % self.username
-            }[code]
-            dialog.MessageDialog(self, MESSAGE_ERROR, description,
-                                 lang.error_title)
-        
-        self.gui.update_status()
-    
-    
     # Helper Functions ---------------------------------------------------------
-    # -------------------------------------------------------------------------- 
+    # --------------------------------------------------------------------------
     def show_start_notifications(self):
         if not self.settings.is_true("notify") and \
            self.status(ST_LOGIN_SUCCESSFUL):
@@ -565,31 +328,3 @@ class Atarashii:
     def unset_status(self, flag):
         self.current_status &= ~flag
     
-    
-    # Start & Quit -------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def start(self):
-        gtk.quit_add(gtk.main_level(), self.save_on_quit)
-        gtk.main()
-
-    def quit(self):
-        self.updater.running = False
-        gtk.main_quit()
-        
-    def save_on_quit(self, *args):
-        self.save_mode()
-        self.save_settings()
-        self.settings.crash_file(False)
-        sys.exit(1)
-    
-    def save_settings(self):
-        self.settings['position'] = str(self.gui.get_position())
-        size = self.gui.get_allocation()
-        self.settings['size'] = str((size[2], size[3]))
-        self.settings['username'] = self.username
-        self.settings.save()
-    
-    def save_mode(self):
-        if self.username != UNSET_TEXT:
-            self.settings['mode_' + self.username] = self.gui.mode
-
