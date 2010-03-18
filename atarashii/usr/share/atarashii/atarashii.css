@@ -62,8 +62,13 @@ img, .loadmore, .loadmore a, .loading, .unloaded, .name, .time, .reply,
 ------------------------------------------------------------------------------*/
 .loading {
 	font-size: 14px;
-	margin-top: 8px;
-	color: #444;
+	margin-top: 16px;
+	color: #5b5b5b;
+}
+
+.loadingtext {
+    line-height: 40px;
+    padding-top: 8px;
 }
 
 .unloaded {

@@ -79,7 +79,8 @@ class ViewHTML:
         self.offset_count = 0
         self.render_html("""
             <body class="unloaded" ondragstart="return false">
-                <div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
+                <div class="loading"><img src="file://%s" /><br/>
+                <b class="loadingtext">%s</b></div>
             </body>""" % (self.main.get_image(), self.lang_loading))
     
     def splash(self):
@@ -87,7 +88,8 @@ class ViewHTML:
         self.offset_count = 0
         self.render_html("""
             <body class="unloaded" ondragstart="return false">
-                <div class="loading"><img src="file://%s" /><br/><b>%s</b></div>
+                <div class="loading"><img src="file://%s" /><br/>
+                <b class="loadingtext">%s</b></div>
             </body>""" % (self.main.get_image(), lang.html_welcome))
     
     def render_html(self, html):
