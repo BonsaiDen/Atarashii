@@ -29,7 +29,7 @@ import send
 from language import LANG as lang
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
-                      ST_WAS_RETWEET, ST_WAS_DELETE
+                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_NETWORK_FAILED
 
 from constants import UNSET_ID_NUM, UNSET_TEXT
 
@@ -203,15 +203,27 @@ class AtarashiiActions:
         # Determine the kind of the error
         rate_error = ""  
         if isinstance(error, IOError):
-            msg = error.read()
+            if hasattr(error, "read"):
+                msg = error.read()
             
+            else:
+                msg = ""
         else:
             msg = error.reason
             error.code = error.response.status
             error.errno = None
         
+        # Catch errors due to missing network
+        if error.errno == -2:
+            self.set_status(ST_NETWORK_FAILED)
+            code = -4
+            if self.status(ST_LOGIN_SUCCESSFUL):
+                code = -5
+                self.set_status(ST_NETWORK_FAILED)
+                self.gui.refresh_button.set_sensitive(False)
+        
         # Catch common Twitter errors
-        if error.code in (400, 401, 403, 404, 500, 502, 503):
+        elif error.code in (400, 401, 403, 404, 500, 502, 503):
             if msg.startswith("Share sharing"):
                 code = -2
             
@@ -237,11 +249,6 @@ class AtarashiiActions:
                     code = -3 
                     
         # Catch network errors
-        elif error.errno == -2:
-            code = -4
-            if self.status(ST_LOGIN_SUCCESSFUL):
-                code = -5
-        
         else:
             code = -1
         
