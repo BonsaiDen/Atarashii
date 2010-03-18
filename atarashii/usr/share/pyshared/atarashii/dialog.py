@@ -149,26 +149,6 @@ class AboutDialog(Dialog):
         self.get("title").set_markup(
         '<span size="x-large"><b>Atarashii %s</b></span>' % self.main.version)
         self.get("image").set_from_file(self.main.get_image())
-        
-        # License toggling
-        info = self.get("infobox")
-        text = self.get("textwindow")
-        self.get("about").set_markup(lang.about_description)
-        license_button = self.get("license")
-        license_button.set_label(lang.about_license_button)
-        
-        
-        def toggle(widget, *args):
-            if widget.get_property("active"):
-                text.show()
-                info.hide()
-            
-            else:
-                info.show()
-                text.hide()
-        
-        text.hide()
-        license_button.connect("toggled", toggle)
     
     def on_close(self, *args):
         self.__class__.instance = None
