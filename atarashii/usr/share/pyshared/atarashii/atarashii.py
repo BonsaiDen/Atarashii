@@ -199,7 +199,7 @@ class Atarashii(AtarashiiActions):
         self.gui.hide_all()
         self.gui.update_status()
         if error:
-            self.gui.handle_error(error)
+            self.handle_error(error)
         
         gobject.idle_add(self.gui.message.init, True)
         gobject.idle_add(self.gui.html.init, True)
