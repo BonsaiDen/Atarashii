@@ -163,7 +163,7 @@ class HTML(view.HTMLView):
         # User Options
         if user != None:
             if link == "profile" and user.lower() != self.main.username.lower():
-                reply = "message:%s:%d:-1" % (user, self.get_recipient(item).id)
+                reply = "message:%s:%d:-1" % (user, self.get_sender(item).id)
                 self.add_menu_link(menu, lang.context_reply % user,
                                    lambda *args: self.context_link(reply,
                                                               extra = item))
