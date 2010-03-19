@@ -163,7 +163,6 @@ class UpdaterTweet:
             self.html.load_history = True
             self.html.history_loaded = True
             self.html.history_count += len(updates)
-            self.gui.set_refresh_update(True)
         
         def update_view():
             self.html.push_updates()

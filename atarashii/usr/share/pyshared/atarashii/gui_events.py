@@ -54,7 +54,7 @@ class GUIEventHandler:
     # Handlers -----------------------------------------------------------------
     # --------------------------------------------------------------------------
     def on_refresh(self, *args):
-        self.set_refresh_update(False)
+        self.set_refresh_update(False, status = False)
         if self.mode == MODE_MESSAGES:
             self.main.updater.refresh_messages = True
         

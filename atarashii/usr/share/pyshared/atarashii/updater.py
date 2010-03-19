@@ -241,14 +241,15 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                     self.load_history_message()
                 
                 elif self.main.refresh_timeout != UNSET_TIMEOUT:
-                    self.check_for_update()
+                    if not self.check_for_update():
+                        self.end_update()
             
             time.sleep(0.1)
     
     
     def check_for_update(self):
         if self.main.refresh_time == UNSET_TIMEOUT:
-            return
+            return True
         
         if calendar.timegm(time.gmtime()) > self.main.refresh_time + \
            self.main.refresh_timeout or self.refresh_now or \
@@ -256,14 +257,17 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             
             self.main.set_status(ST_UPDATE)
             self.update()
-            
-            # Update crashfile
-            self.main.settings.crash_file(True)
-            self.main.refresh_time = calendar.timegm(time.gmtime())
             self.refresh_messages = False
             self.refresh_now = False
-            self.main.unset_status(ST_UPDATE)
-            gobject.idle_add(self.gui.update_status, True)
+    
+        return True
+    
+    def end_update(self):
+        self.main.settings.crash_file(True)
+        self.main.unset_status(ST_UPDATE)
+        self.main.refresh_time = calendar.timegm(time.gmtime())
+        gobject.idle_add(self.gui.set_refresh_update,
+                         not self.main.status(ST_NETWORK_FAILED))
     
     
     # Update -------------------------------------------------------------------
@@ -281,7 +285,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 gobject.idle_add(self.main.handle_error, error)
                 self.main.refresh_timeout = 60
                 self.main.refresh_time = calendar.timegm(time.gmtime())
-                return
+                return False
             
             if len(updates) > 0:
                 self.set_last_tweet(updates[0].id)
@@ -298,7 +302,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             except (IOError, TweepError), error:
                 gobject.idle_add(self.message.render)
                 gobject.idle_add(self.main.handle_error, error)
-                return
+                return False
             
             if len(messages) > 0:
                 self.set_last_message(messages[0].id)
@@ -329,11 +333,12 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             
             else:
                 self.message.render()
-    
+            
             # Update GUI
-            self.gui.set_refresh_update(not self.main.status(ST_NETWORK_FAILED))
+            gobject.idle_add(self.end_update)
         
         gobject.idle_add(update_views)
+        return True
     
     
     # Notifications ------------------------------------------------------------
