@@ -69,11 +69,6 @@ class ViewMenu:
     
     # Let's create our own nice little popup :)
     def on_button(self, view, event, *args):
-        # Give back focus to textbox
-        if self.give_text_focus:
-            gobject.idle_add(self.gui.text.grab_focus)
-            self.give_text_focus = False
-        
         if event.button == 3:
             # Calculate on which item the user clicked
             item_id, link = self.get_clicked_item(self.get_sizes(event), event)
