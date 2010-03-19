@@ -56,6 +56,9 @@ class ViewHTML:
         self.last_highlight = False
         self.last_mentioned = False
         
+        # Reset tooltip user
+        self.tooltip_user = None
+        
         # Do the rendering!
         self.renderitems = []
         for num, obj in enumerate(self.items):
@@ -201,12 +204,8 @@ class ViewHTML:
         return '<div class="spacer%s"></div>' % spacer
     
     
-    def avatar_html(self, user, img):
-        return ('''<a href="profile:http://twitter.com/%s">
-                  <img width="32" src="file://%s" title="''' + \
-                  lang.html_info + '''"/></a>''') % (
-                                      user.screen_name, img,
-                                      user.name, user.followers_count,
-                                      user.friends_count,
-                                      user.statuses_count)
+    def avatar_html(self, user, num, img):
+        return '''<a href="avatar:%d:http://twitter.com/%s">
+                  <img width="32" src="file://%s" title="avatar" /></a>''' % (
+                                      num, user.screen_name, img)
 

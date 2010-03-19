@@ -101,7 +101,7 @@ class HTML(view.HTMLView):
             self.new_avatar) \
             ) or num == len(self.items) - 1 or self.new_timeline:
             
-            avatar = self.avatar_html(user, img)
+            avatar = self.avatar_html(user, num, img)
         
         else:
             avatar = ""
@@ -206,7 +206,7 @@ class HTML(view.HTMLView):
     def create_menu(self, menu, item, item_id, link, full, user):
         # User Options
         if user != None:
-            if link == "profile":
+            if link in ("profile", "avatar"):
                 reply = "reply:%s:%d:-1" % (user, item_id)
                 self.add_menu_link(menu, lang.context_reply % user,
                                    lambda *args: self.context_link(reply, 
