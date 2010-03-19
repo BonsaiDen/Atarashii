@@ -110,10 +110,7 @@ class ViewHelpers:
     # This fixes an issue where the reply/favorite links wouldn't disapear if
     # the mouse left the view
     def fake_move(self):
-        # Don't steal focus from the text box
-        if self.gui.text.has_focus:
-            self.give_text_focus = True
-        
+        self.fake_mouse = True 
         event = gtk.gdk.Event(gtk.gdk.MOTION_NOTIFY)
         event.window = self.get_window()
         event.x = self.mouse_position[0]
@@ -125,7 +122,10 @@ class ViewHelpers:
         self.fake_move()
     
     def on_move(self, view, event, *args):
-        self.mouse_position = (event.y, event.x)
+        if not self.fake_mouse:
+            self.mouse_position = (event.x, event.y)
+        
+        self.fake_mouse = False
     
     def on_scroll(self, view, event, *args):
         pos = self.scroll.get_vscrollbar().get_value()
