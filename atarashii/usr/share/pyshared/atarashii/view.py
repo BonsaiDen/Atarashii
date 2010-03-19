@@ -54,7 +54,6 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Fix CSS hover stuff
         self.mouse_position = (-1.0, -1.0)
-        self.give_text_focus = False
         self.fake_mouse = False
         self.connect("motion-notify-event", self.on_move)
         self.connect("leave-notify-event", self.on_leave)
