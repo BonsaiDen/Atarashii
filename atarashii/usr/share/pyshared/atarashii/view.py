@@ -145,7 +145,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.items = self.items[self.history_count:]
         self.set_item_count(self.get_item_count() - self.history_count)
         self.history_count = 0
-        self.main.gui.history_button.set_sensitive(False)
+        self.gui.set_refresh_update(True)
         self.render()
     
     def read(self):

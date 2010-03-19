@@ -50,6 +50,7 @@ MESSAGE_INFO = 4         # Can be anything
 # Buttons
 BUTTON_REFRESH = 1
 BUTTON_READ = 2
+BUTTON_HISTORY = 3
 
 
 # Status Flags -----------------------------------------------------------------

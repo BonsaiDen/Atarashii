@@ -163,8 +163,12 @@ class UpdaterTweet:
             self.html.load_history = True
             self.html.history_loaded = True
             self.html.history_count += len(updates)
-            self.gui.history_button.set_sensitive(True)
+            self.gui.set_refresh_update(True)
         
-        gobject.idle_add(self.html.push_updates)
-        gobject.idle_add(self.gui.show_input)
+        def update_view():
+            self.html.push_updates()
+            self.gui.show_input()
+            self.gui.set_refresh_update(True)
+        
+        gobject.idle_add(update_view)
 

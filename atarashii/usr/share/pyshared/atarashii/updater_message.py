@@ -153,8 +153,11 @@ class UpdaterMessage:
             self.message.load_history = True
             self.message.history_loaded = True
             self.message.history_count += len(messages)
-            self.gui.history_button.set_sensitive(True)
+            
+        def update_view():
+            self.message.push_updates()
+            self.gui.show_input()
+            self.gui.set_refresh_update(True)
         
-        gobject.idle_add(self.message.push_updates)
-        gobject.idle_add(self.gui.show_input)
+        gobject.idle_add(update_view)
 
