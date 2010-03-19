@@ -39,7 +39,10 @@ LANG = {
         # HTML
         'html_welcome' : 'Willkommen bei Atarashii.',
         'html_loading' : 'Tweets werden geladen...',
-        'html_info' : 'Name: %s\nFollower: %d\nFollowing: %d\nTweets: %d',
+        'html_avatar_tooltip' : 
+            '''<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n''' + \
+            '''<b>%d</b> Follower\nFollowing <b>%d</b>''',
+        
         'html_profile' : '%s auf Twitter.com',
         'html_at' : '%s auf Twitter.com',
         'html_reply' : '%s antworten',
@@ -192,6 +195,9 @@ LANG = {
         'error_network' : 
             'Atarashii konnte keine Verbindung zum Internet herstellen.',
         
+        'error_network_timeout' : 
+            'Atarashii konnte keine Verbindung zu Twitter herstellen.',
+        
         'error_favorite_on' : 
             '<b>%s</b> Tweet konnte nicht favorisiert werden.',
         
@@ -234,8 +240,13 @@ LANG = {
         
         'warning_button_network' : 'Netzwerkfehler',
         'warning_network' : 
-            '''Atarashii hat die Verbindung zum Internet verloren, es ''' + \
-            '''wird alle 60 Sekunden versucht die Verbindung ''' + \
+            '''Atarashii hat die Verbindung zum <b>Internet</b> verloren,''' + \
+            ''' es wird alle 60 Sekunden versucht die Verbindung ''' + \
+            '''wiederherzustellen.''',
+        
+        'warning_network_timeout' : 
+            '''Atarashii hat die Verbindung zu <b>Twitter</b> verloren, ''' + \
+            '''es wird alle 60 Sekunden versucht die Verbindung ''' + \
             '''wiederherzustellen.''',
         
         'warning_template' : '<b>Warnung von %H:%M:%S Uhr</b>\n',
@@ -311,7 +322,10 @@ LANG = {
         # HTML
         'html_welcome' : 'Welcome to Atarashii.',
         'html_loading' : 'Loading Tweets...',
-        'html_info' : 'Name: %s\nFollower: %d\nFollowing: %d\nTweets: %d',
+        'html_avatar_tooltip' : 
+            '''<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n''' + \
+            '''<b>%d</b> Follower\nFollowing <b>%d</b>''',
+        
         'html_profile' : '%s at Twitter.com',
         'html_at' : '%s at Twitter.com',
         'html_reply' : 'Reply to %s',
@@ -459,6 +473,9 @@ LANG = {
         
         'error_network' : 
             'Atarashii could not establish a connection to the Internet.',
+            
+        'error_network_timeout' :
+            'Atarashii could not establish a connection to Twitter.',
         
         'error_favorite_on' : '<b>%s</b> Tweet couldn\'t be favorited.',
         'error_favorite_off' : '<b>%s</b> Tweet couldn\'t be unfavorited.',
@@ -497,9 +514,13 @@ LANG = {
             '''busy at the moment.''',
         
         'warning_button_network' : 'Network error',
-        'warning_network_lost' : 
+        'warning_network' : 
             '''Atarashii has lost the conntection to the Internet. It ''' + \
             '''will automatically try to reconnect itself every 60 seconds.''',
+        
+        'warning_network_timeout' : 
+            '''Atarashii has lost the conntection to Twitter. It ''' + \
+            '''will automatically try to reconnect itself every 60 seconds.''', 
         
         'warning_template' : '<b>Warning from %H:%M:%S</b>\n',
         
