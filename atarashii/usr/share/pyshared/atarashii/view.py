@@ -47,7 +47,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         webkit.WebView.__init__(self)
         self.connect("navigation-requested", self.open_link)
-        self.connect("load-finished", self.loaded)
+        self.connect("notify::load-status", self.loaded)
         self.connect("button-release-event", self.gui.text.html_focus)
         self.connect("button-press-event", self.on_button)
         self.connect("populate-popup", self.on_popup)
@@ -65,7 +65,6 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.last_hovered_link = ""
         self.connect("hovering-over-link", self.on_link_hover)
         self.connect("query-tooltip", self.on_tooltip)
-        
         
         # Tooltip
         gtb = gtk.Builder()

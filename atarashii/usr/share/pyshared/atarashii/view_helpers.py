@@ -18,6 +18,7 @@
 # ------------------------------------------------------------------------------
 import gobject
 import gtk
+import webkit
 
 import calendar
 import time
@@ -46,6 +47,13 @@ class ViewHelpers:
             return 0
     
     def loaded(self, *args):
+        # HACK! The value of the constant might change, but currently it's not
+        # exposed to pygtk webkit and since the "load-finished" signal is 
+        # deprecated, it's a 50/50 chance that one of those will evantually
+        # break the whole thing
+        if self.get_property("load-status") != 2:
+            return
+    
         if len(self.items) > 0 and self.has_newitems and not self.load_history:
             offset = self.get_offset()
         
