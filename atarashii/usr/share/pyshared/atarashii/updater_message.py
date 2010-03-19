@@ -56,7 +56,6 @@ class UpdaterMessage:
                 imgfile = self.get_image(i, True)
                 self.message.update_list.append((i, imgfile))
         
-        
         def render():
             self.message.push_updates()
             self.message.load_state = HTML_LOADED
@@ -65,7 +64,7 @@ class UpdaterMessage:
             if init:
                 self.started = True
                 gobject.idle_add(self.main.on_login)
-                gobject.idle_add(self.gui.check_read)
+                gobject.idle_add(self.gui.set_refresh_update, True)
             
             # Show login message
             if last:

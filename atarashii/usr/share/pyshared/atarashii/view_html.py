@@ -101,7 +101,8 @@ class ViewHTML:
         </html>""" % (self.main.get_resource("atarashii.css"), html)
         
         # FIXME This memory leaks EXTREMLY hard!
-        self.load_string(SPACES.sub(" ", data), "text/html", "UTF-8", "file:///")
+        self.load_string(SPACES.sub(" ", data), 
+                         "text/html", "UTF-8", "file:///")
     
     def set_html(self, renderitems):
         self.main.gui.set_app_title()

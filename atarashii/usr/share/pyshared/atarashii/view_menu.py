@@ -16,7 +16,6 @@
 
 # HTML View / Popup Menu / Tooltips --------------------------------------------
 # ------------------------------------------------------------------------------
-import gobject
 import gtk
 
 from language import LANG as lang

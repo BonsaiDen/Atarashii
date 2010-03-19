@@ -194,7 +194,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                     gobject.idle_add(self.gui.show_input)
                 
                 else:
-                    gobject.idle_add(self.gui.check_refresh)
+                    gobject.idle_add(self.gui.set_refresh_update, True)
             
             else:
                 self.message.load_state = HTML_RESET
@@ -207,7 +207,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                     gobject.idle_add(self.gui.show_input)
                 
                 else:
-                    gobject.idle_add(self.gui.check_refresh)
+                    gobject.idle_add(self.gui.set_refresh_update, True)
             
             else:
                 self.message.load_state = HTML_RESET
@@ -223,7 +223,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         # Init Timer
         self.main.refresh_time = calendar.timegm(time.gmtime())
-        gobject.idle_add(self.gui.check_read)
+        gobject.idle_add(self.gui.set_refresh_update, True)
     
     
     # Mainloop -----------------------------------------------------------------
@@ -261,12 +261,9 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             self.main.settings.crash_file(True)
             
             # Update GUI
-            gobject.idle_add(self.gui.refresh_button.set_sensitive, 
+            gobject.idle_add(self.gui.set_refresh_update, 
                              not self.main.status(ST_NETWORK_FAILED))
-            
-            gobject.idle_add(self.gui.tray.refresh_menu.set_sensitive, True)
-            
-            gobject.idle_add(self.gui.check_read)
+                        
             self.main.refresh_time = calendar.timegm(time.gmtime())
             self.refresh_messages = False
             self.refresh_now = False
@@ -319,7 +316,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         self.main.unset_status(ST_NETWORK_FAILED)
         
         # Disable read button before pushing updates into the trees
-        self.gui.read_button.set_sensitive(False)
+        self.gui.set_refresh_update(False)
         
         # Notify
         self.show_notifications(updates, messages)

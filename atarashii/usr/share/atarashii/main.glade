@@ -36,17 +36,6 @@
           </packing>
         </child>
         <child>
-          <object class="GtkToolButton" id="read">
-            <property name="visible">True</property>
-            <property name="use_underline">True</property>
-            <property name="stock_id">gtk-ok</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="homogeneous">True</property>
-          </packing>
-        </child>
-        <child>
           <object class="GtkSeparatorToolItem" id="separator1">
             <property name="visible">True</property>
           </object>
@@ -63,6 +52,15 @@
           <packing>
             <property name="expand">False</property>
             <property name="homogeneous">True</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkSeparatorToolItem" id="separator2">
+            <property name="visible">True</property>
+            <property name="draw">False</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
           </packing>
         </child>
         <child>

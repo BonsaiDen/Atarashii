@@ -24,7 +24,9 @@ import gobject
 import dialog
 
 from language import LANG as lang
-from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADING, HTML_LOADED
+from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADING, HTML_LOADED, \
+                      BUTTON_REFRESH
+
 
 class GUIEventHandler:
     def __init__(self):
@@ -53,12 +55,19 @@ class GUIEventHandler:
     # Handlers -----------------------------------------------------------------
     # --------------------------------------------------------------------------
     def on_refresh(self, *args):
-        self.refresh_button.set_sensitive(False)
+        self.set_refresh_update(False)
         if self.mode == MODE_MESSAGES:
             self.main.updater.refresh_messages = True
         
         else:
             self.main.updater.refresh_now = True
+    
+    def on_refresh_update(self, *args):
+        if self.refresh_read_state == BUTTON_REFRESH:
+            self.on_refresh()
+        
+        else:
+            self.on_read()
     
     def on_history(self, *args):
         if self.mode == MODE_MESSAGES:
@@ -87,14 +96,12 @@ class GUIEventHandler:
         
         if self.mode == MODE_MESSAGES:
             self.history_button.set_tooltip_text(lang.tool_history_message)
-            self.read_button.set_tooltip_text(lang.tool_read_message)
-            self.refresh_button.set_tooltip_text(lang.tool_refresh_message)
             self.html_scroll.hide()
             self.message_scroll.show()
             self.message.focus_me()
             self.message.fix_scroll()
             
-            self.check_read()
+            self.set_refresh_update(True)
             self.history_button.set_sensitive(self.message.history_loaded)
             
             if self.message.load_state == HTML_LOADING:
@@ -105,14 +112,12 @@ class GUIEventHandler:
         
         elif self.mode == MODE_TWEETS:
             self.history_button.set_tooltip_text(lang.tool_history)
-            self.read_button.set_tooltip_text(lang.tool_read)
-            self.refresh_button.set_tooltip_text(lang.tool_refresh)
             self.message_scroll.hide()
             self.html_scroll.show()
             self.html.focus_me()
             self.html.fix_scroll()
             
-            self.check_read()
+            self.set_refresh_update(True)
             self.history_button.set_sensitive(self.html.history_loaded)
             
             if self.html.load_state == HTML_LOADING:
@@ -128,7 +133,7 @@ class GUIEventHandler:
         self.text.check_mode()
         self.text.loose_focus()
     
-    def on_settings(self, menu):
+    def on_settings(self, button, menu):
         if not self.settings_toggle:
             self.settings_toggle = True
             if self.settings_button.get_active() and not self.settings_dialog:
@@ -148,7 +153,7 @@ class GUIEventHandler:
             
             self.settings_toggle = False
     
-    def on_about(self, menu):
+    def on_about(self, button, menu):
         if not self.about_toggle:
             self.about_toggle = True
             if self.about_button.get_active() and not self.about_dialog:

@@ -120,35 +120,7 @@ class GUIHelpers:
         
         else:
             self.tray.set_tooltip(lang.tray_logged_out)
-    
-    def check_refresh(self):
-        if self.is_ready():
-            self.refresh_button.set_sensitive(True)
-            self.tray.refresh_menu.set_sensitive(True)
-            
-            # Check for message/tweet switch
-            if self.text.go_send_message != None:
-                self.set_mode(MODE_MESSAGES)
-            
-            elif self.text.go_send_tweet != None:
-                self.set_mode(MODE_TWEETS)
-            
-            self.update_status()
-    
-    def check_read(self):
-        if self.mode == MODE_MESSAGES:
-            mode = self.message.last_id > self.message.init_id            
-            
-        elif self.mode == MODE_TWEETS:
-            mode = self.html.last_id > self.html.init_id
         
-        else:
-            mode = False
-        
-        self.read_button.set_sensitive(mode)
-        self.tray.read_menu.set_sensitive(mode)
-    
-    
     def set_mode(self, mode):
         if mode == self.mode:
             return

@@ -38,7 +38,7 @@ from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
 from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       MESSAGE_WARNING, MESSAGE_QUESTION, MESSAGE_INFO, \
                       UNSET_TIMEOUT, HTML_UNSET_ID, MESSAGE_ERROR, \
-                      MESSAGE_WARNING
+                      MESSAGE_WARNING, BUTTON_REFRESH, BUTTON_READ
 
 
 from gui_events import GUIEventHandler
@@ -66,17 +66,14 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         gtb.get_object("content").set_border_width(2)
         
         # Link Components
-        self.refresh_button = gtb.get_object("refresh")
-        self.refresh_button.connect("clicked", self.on_refresh)
-        self.refresh_button.set_tooltip_text(lang.tool_refresh)
-        
+        self.refresh_read_button = gtb.get_object("refresh")
+        self.refresh_read_button.connect("clicked", self.on_refresh_update)
+        self.refresh_read_button.set_tooltip_text(lang.tool_refresh)
+        self.refresh_read_state = BUTTON_REFRESH
+              
         self.history_button = gtb.get_object("history")
         self.history_button.connect("clicked", self.on_history)
         self.history_button.set_tooltip_text(lang.tool_history)
-        
-        self.read_button = gtb.get_object("read")
-        self.read_button.connect("clicked", self.on_read)
-        self.read_button.set_tooltip_text(lang.tool_read)
         
         self.message_button = gtb.get_object("message")
         self.message_button.connect("clicked", self.on_mode)
@@ -84,16 +81,14 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Settings Button
         self.settings_button = gtb.get_object("settings")
-        self.settings_button.connect("toggled",
-                                     lambda *args: self.on_settings(False))
+        self.settings_button.connect("toggled", self.on_settings, False)
         
         self.settings_button.set_tooltip_text(lang.tool_settings)
         self.settings_toggle = False
         
         # About Button
         self.about_button = gtb.get_object("about")
-        self.about_button.connect("toggled",
-                                  lambda *args: self.on_about(False))
+        self.about_button.connect("toggled", self.on_about, False)
         
         self.about_button.set_tooltip_text(lang.tool_about)
         self.about_toggle = False
@@ -241,8 +236,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.text.resize(1)
         
         self.text.set_sensitive(True)
-        self.check_refresh()
-        self.check_read()
+        self.set_refresh_update(True)
         self.message_button.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL))
     
     def show_progress(self):
@@ -272,15 +266,85 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.progress_visible = False
         
         self.text_scroll.hide()
-        self.refresh_button.set_sensitive(False)
-        self.tray.refresh_menu.set_sensitive(False)
-        self.read_button.set_sensitive(False)
-        self.tray.read_menu.set_sensitive(False)
+        self.set_refresh_update(False)
         self.history_button.set_sensitive(False)
         self.message_button.set_sensitive(False)
         
         self.warning_button.hide()
         self.error_button.hide()
+    
+    
+    # Refresh / Read Button ----------------------------------------------------
+    # --------------------------------------------------------------------------
+    def set_refresh_update(self, mode, refresh_mode = None, status = True):
+        # New items?
+        if self.mode == MODE_MESSAGES:
+            read_mode = self.message.last_id > self.message.init_id            
+            
+        elif self.mode == MODE_TWEETS:
+            read_mode = self.html.last_id > self.html.init_id
+        
+        else:
+            read_mode = False
+        
+        # Toggle to read mode
+        if read_mode:
+            if mode == False:
+                mode = False
+                
+            elif self.main.status(ST_UPDATE) or self.main.status(ST_CONNECT):
+                mode = False
+            
+            # Set icon and mode
+            self.refresh_read_state = BUTTON_READ 
+            self.refresh_read_button.set_stock_id(gtk.STOCK_OK)
+            
+            # Set Sensitive
+            self.refresh_read_button.set_sensitive(mode)
+            self.tray.read_menu.set_sensitive(mode)
+            
+            # Set Tooltip
+            if self.mode == MODE_TWEETS: 
+                self.refresh_read_button.set_tooltip_text(lang.tool_read)
+            
+            elif self.mode == MODE_MESSAGES:
+                self.refresh_read_button.set_tooltip_text(
+                                         lang.tool_read_message)
+        
+        # Toggle to refresh mode
+        else:
+            if refresh_mode != None:
+                mode = refresh_mode
+        
+            if not self.is_ready(): 
+                mode = False
+        
+            # Set icon and mode
+            self.refresh_read_state = BUTTON_REFRESH
+            self.refresh_read_button.set_stock_id(gtk.STOCK_REFRESH)
+        
+            # Set Sensitive
+            self.refresh_read_button.set_sensitive(mode)
+            self.tray.refresh_menu.set_sensitive(mode)
+            
+            # Set Tooltip
+            if self.mode == MODE_TWEETS: 
+                self.refresh_read_button.set_tooltip_text(lang.tool_refresh)
+            
+            elif self.mode == MODE_MESSAGES:
+                self.refresh_read_button.set_tooltip_text(
+                                         lang.tool_refresh_message)
+            
+            # Check for message/tweet switch
+            if self.is_ready():                
+                if self.text.go_send_message != None:
+                    self.set_mode(MODE_MESSAGES)
+                
+                elif self.text.go_send_tweet != None:
+                    self.set_mode(MODE_TWEETS)
+                
+                if status:
+                    self.update_status()
     
     
     # Statusbar ----------------------------------------------------------------
@@ -321,8 +385,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             pass
         
         elif self.main.status(ST_UPDATE):
-            self.refresh_button.set_sensitive(False)
-            self.tray.refresh_menu.set_sensitive(False)
+            self.set_refresh_update(False, None, False)
             self.set_status(lang.status_update)
         
         elif self.main.refresh_time == UNSET_TIMEOUT or \
@@ -340,8 +403,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 (calendar.timegm(time.gmtime()) - self.main.refresh_time)
             
             if wait == 0:
-                self.refresh_button.set_sensitive(False)
-                self.tray.refresh_menu.set_sensitive(False)
+                self.set_refresh_update(False, None, False)
                 self.set_status(lang.status_update)
             
             elif wait == 1:

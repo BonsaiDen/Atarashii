@@ -234,7 +234,8 @@ class AtarashiiActions:
             code = -4
             if self.status(ST_LOGIN_SUCCESSFUL):
                 code = -5
-                self.gui.refresh_button.set_sensitive(False)
+                self.gui.set_refresh_update(False)
+                self.gui.tray.refresh_menu.set_sensitive(False)
         
         # Catch common Twitter errors
         elif error.code in (400, 401, 403, 404, 500, 502, 503):
@@ -248,7 +249,7 @@ class AtarashiiActions:
                 if (code == 400 and not self.status(ST_WAS_SEND)) or \
                    (code == 403 and self.status(ST_WAS_SEND)):
                     
-                    self.gui.refresh_button.set_sensitive(False)
+                    self.gui.set_refresh_update(False)
                     self.gui.tray.refresh_menu.set_sensitive(False)
                     code, rate_error = self.reconnect()
                 

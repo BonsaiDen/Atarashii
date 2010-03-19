@@ -47,6 +47,10 @@ MESSAGE_WARNING = 2      # Can be anything
 MESSAGE_QUESTION = 3     # Can be anything
 MESSAGE_INFO = 4         # Can be anything
 
+# Buttons
+BUTTON_REFRESH = 1
+BUTTON_READ = 2
+
 
 # Status Flags -----------------------------------------------------------------
 ST_NONE = 0

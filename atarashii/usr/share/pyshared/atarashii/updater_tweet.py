@@ -63,7 +63,7 @@ class UpdaterTweet:
             if init:
                 self.started = True
                 gobject.idle_add(self.main.on_login)
-                gobject.idle_add(self.gui.check_read)      
+                gobject.idle_add(self.gui.set_refresh_update, True)     
             
             # Show login message
             if last:
