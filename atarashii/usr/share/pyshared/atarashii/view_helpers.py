@@ -50,7 +50,9 @@ class ViewHelpers:
         # HACK! The value of the constant might change, but currently it's not
         # exposed to pygtk webkit and since the "load-finished" signal is 
         # deprecated, it's a 50/50 chance that one of those will evantually
-        # break the whole thing
+        # break the whole thing.. so do you want to be eaten by the tiger 
+        # or the lion?
+        # Note from Ivo: Actually, the Lion won't eat me since I'm one too ;D
         if self.get_property("load-status") != 2:
             return
     
