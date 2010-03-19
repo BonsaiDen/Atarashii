@@ -67,7 +67,7 @@ class ViewHelpers:
                     document.getElementById("newcontainer").offsetHeight;''')
             return int(self.get_main_frame().get_title())
         
-        except:
+        except Exception:
             return 0
     
     def loaded(self, *args):

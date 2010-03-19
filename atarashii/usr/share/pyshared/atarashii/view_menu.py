@@ -215,6 +215,6 @@ class ViewMenu:
             title = self.get_main_frame().get_title()
             return title
             
-        except:
+        except Exception:
             return None
 
