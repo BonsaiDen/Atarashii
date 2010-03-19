@@ -129,13 +129,17 @@ class ViewHTML:
         if item.id > self.init_id:
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
-                spacer = "1" # Dark Gray
+                if self.last_highlight or highlight:
+                    spacer = "10" # Middle Dark Gray
+                
+                else:
+                    spacer = "1" # Dark Gray
             
             else:
                 # More @username
                 if highlight:
                     if not self.last_highlight:
-                        spacer = "1" # Dark Gray
+                        spacer = "10" # Middle Dark Gray
                     
                     else:
                         spacer = "6" # Normal/Dark Blue
@@ -151,13 +155,13 @@ class ViewHTML:
                 # Just more normal tweets
                 else:
                     if next_highlight and self.last_highlight:
-                        spacer = "1" # Dark Gray
+                        spacer = "1" #Dark Gray
                     
                     elif next and self.last_mentioned:
                         spacer = "1" # Normal Gray
                     
                     elif self.last_highlight:
-                        spacer = "1" # Dark Gray
+                        spacer = "10" # Middle Dark Gray
                     
                     else:
                         spacer = "4" # Dark/Normal Blue
@@ -166,13 +170,17 @@ class ViewHTML:
         else:
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
-                spacer = "" # Normal Gray
+                if self.last_highlight or highlight:
+                    spacer = "11" # Middle Normal Gray
+                
+                else:
+                    spacer = "" # Normal Gray
             
             else:
                 # More @username
                 if highlight:
                     if not self.last_highlight:
-                        spacer = "" # Normal Gray
+                        spacer = "11" # Middle Normal Gray
                     
                     else:
                         spacer = "7" # White/Light Blue
@@ -191,10 +199,10 @@ class ViewHTML:
                         spacer = "" # Normal Gray
                     
                     elif next and self.last_mentioned:
-                        spacer = "" # Normal Gray
+                        spacer = "1" # Normal Gray
                     
                     elif self.last_highlight:
-                        spacer = "" # Normal Gray
+                        spacer = "11" # Middle Normal Gray
                     
                     else:
                         spacer = "2" # Light Blue/White
