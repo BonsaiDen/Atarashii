@@ -116,16 +116,16 @@ class ViewHelpers:
         
         event = gtk.gdk.Event(gtk.gdk.MOTION_NOTIFY)
         event.window = self.get_window()
-        event.x = 1.0
-        event.y = self.mouse_position
+        event.x = self.mouse_position[0]
+        event.y = self.mouse_position[1]
         self.emit("motion_notify_event", event)
         
     def on_leave(self, view, event, *args):
-        self.mouse_position = -1.0
+        self.mouse_position = (-1.0, -1.0)
         self.fake_move()
     
     def on_move(self, view, event, *args):
-        self.mouse_position = event.y
+        self.mouse_position = (event.y, event.x)
     
     def on_scroll(self, view, event, *args):
         pos = self.scroll.get_vscrollbar().get_value()

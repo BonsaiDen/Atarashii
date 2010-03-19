@@ -53,7 +53,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.connect("populate-popup", self.on_popup)
         
         # Fix CSS hover stuff
-        self.mouse_position = -1.0
+        self.mouse_position = (-1.0, -1.0)
         self.give_text_focus = False
         self.fake_mouse = False
         self.connect("motion-notify-event", self.on_move)
