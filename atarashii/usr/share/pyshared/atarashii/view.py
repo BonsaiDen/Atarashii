@@ -81,7 +81,6 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         # Other Stuff
         self.give_text_focus = False
         self.scroll = scroll
-        self.scroll_position = 0
         self.set_maintains_back_forward_list(False)
         self.count = 0
         self.formatter = formatter.Formatter()

@@ -128,12 +128,9 @@ class ViewHelpers:
         self.fake_mouse = False
     
     def on_scroll(self, view, event):
-        pos = self.scroll.get_vscrollbar().get_value()
-        if pos != self.scroll_position:
-            self.scroll_position = pos
-            # FIXME sometimes this still doesn't remove the menu
-            gobject.timeout_add(10, self.fake_move, self.mouse_position)
-    
+        # FIXME sometimes this still doesn't remove the menu
+        gobject.timeout_add(10, self.fake_move, self.mouse_position)
+
     def fix_scroll(self):
         if self.scroll_to != -1 and self.main.gui.mode == self.mode_type:
             self.scroll.get_vscrollbar().set_value(self.scroll_to)
