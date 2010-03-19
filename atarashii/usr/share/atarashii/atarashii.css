@@ -3,6 +3,7 @@
 body {
 	font: 10px sans-serif;
 	overflow-x: hidden;
+	-webkit-user-select: none; /* Disable user selection of none tweet text */
 }
 
 body, td, tr, table {
@@ -20,12 +21,6 @@ img {
 
 a {
 	outline: none; /* Disable selection border */
-}
-
-img, .loadmore, .loadmore a, .loading, .unloaded, .name, .time, .reply, 
-.actions, .avatar, .spacer, .spacer1, .spacer3, .spacer2, .spacer4, 
-.spacer5, .spacer6, .spacer7, .spacer8 {
-	-webkit-user-select: none; /* Disable user selection of none tweet text */
 }
 
 
