@@ -71,7 +71,7 @@ class TextInput(gtk.TextView):
         self.set_pixels_inside_wrap(0)
         self.set_left_margin(2)
         self.set_right_margin(2)
-        self.set_accepts_tab(False)
+        self.set_accepts_tab(True)
         self.set_editable(True)
         self.set_cursor_visible(True)
         
