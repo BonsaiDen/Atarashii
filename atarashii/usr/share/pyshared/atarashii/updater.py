@@ -259,11 +259,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             
             # Update crashfile
             self.main.settings.crash_file(True)
-            
-            # Update GUI
-            gobject.idle_add(self.gui.set_refresh_update, 
-                             not self.main.status(ST_NETWORK_FAILED))
-                        
             self.main.refresh_time = calendar.timegm(time.gmtime())
             self.refresh_messages = False
             self.refresh_now = False
@@ -321,18 +316,24 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # Notify
         self.show_notifications(updates, messages)
         
-        # Update View
-        if len(updates) > 0:
-            gobject.idle_add(self.html.push_updates)
+        # Update Views
+        def update_views():
+            if len(updates) > 0:
+                self.html.push_updates()
+            
+            else:
+                self.html.render()
+            
+            if len(messages) > 0:
+                self.message.push_updates()
+            
+            else:
+                self.message.render()
+    
+            # Update GUI
+            self.gui.set_refresh_update(not self.main.status(ST_NETWORK_FAILED))
         
-        else:
-            gobject.idle_add(self.html.render)
-        
-        if len(messages) > 0:
-            gobject.idle_add(self.message.push_updates)
-        
-        else:
-            gobject.idle_add(self.message.render)
+        gobject.idle_add(update_views)
     
     
     # Notifications ------------------------------------------------------------
