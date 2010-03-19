@@ -26,8 +26,14 @@ class Notifier:
         self.main = main
     
     def show(self, objs):
-        if self.main.settings.is_true("sound"):
-            self.sound()
+        if len(objs) > 0 and self.main.settings.is_true("sound") and \
+           self.main.settings['soundfile'] != "None":
+            try:
+                subprocess.Popen(["mplayer", "-really-quiet", 
+                                  "-nolirc", self.main.settings['soundfile']])
+            
+            except OSError:
+                pass
         
         for obj in objs:
             self.notify(obj[0], obj[1], obj[2])
@@ -35,13 +41,4 @@ class Notifier:
     def notify(self, title, text, icon = None):
         notification = pynotify.Notification(title, text, icon)
         return notification.show()
-    
-    def sound(self):
-        if self.main.settings['soundfile'] != "None":
-            try:
-                subprocess.Popen(["mplayer", "-really-quiet", 
-                                  "-nolirc", self.main.settings['soundfile']])
-            
-            except OSError:
-                pass
 
