@@ -209,41 +209,42 @@ class HTML(view.HTMLView):
             if link in ("profile", "avatar"):
                 reply = "reply:%s:%d:-1" % (user, item_id)
                 self.add_menu_link(menu, lang.context_reply % user,
-                                   lambda *args: self.context_link(reply, 
-                                                              extra = item))
+                                   self.context_link, reply, item)
             
             else:
                 reply = "reply:%s:-1:-1" % user
                 self.add_menu_link(menu, lang.context_tweet % user,
-                                   lambda *args: self.context_link(reply))
+                                   self.context_link, reply)
         
         # Source
         elif link == "source":
             source = self.get_source(item)
             self.add_menu_link(menu, lang.context_source % lang.name(source),
-                               lambda *args: self.context_link(full))
+                               self.context_link, full)
         
-        # Retweet / Delete
+        # Copy / Retweet / Delete
         else:
+            self.add_menu_link(menu, lang.context_copy_tweet, 
+                               self.copy_tweet, None, item)
+            
+            self.add_menu_separator(menu)
+            
             name = self.get_user(item).screen_name
             full1 = "retweet:%s" % RETWEET_OLD
             self.add_menu_link(menu, lang.context_retweet_old % name,
-                               lambda *args: self.context_link(full1,
-                                                           extra = item))
+                               self.context_link, full1, item)
             
             if name.lower() != self.main.username.lower() and \
                not self.get_protected(item):
                 full2 = "retweet:%s" % RETWEET_NEW
                 self.add_menu_link(menu, lang.context_retweet_new % name,
-                                   lambda *args: self.context_link(full2,
-                                                               extra = item))
+                                   self.context_link, full2, item)
             
             if name.lower() == self.main.username.lower():
                 self.add_menu_separator(menu)
                 full3 = "delete:t:%d" % item_id
                 self.add_menu_link(menu, lang.context_delete_tweet,
-                                   lambda *args: self.context_link(full3,
-                                                               extra = item))
+                                   self.context_link, full3, item)
         
         return True
 

@@ -103,10 +103,10 @@ class ViewMenu:
             menu.popup(None, None, position, event.button, event.get_time())
             return True
     
-    def add_menu_link(self, menu, name, callback):
+    def add_menu_link(self, menu, name, callback, *args):
         item = gtk.MenuItem()
         item.set_label(name)
-        item.connect('activate', callback)
+        item.connect('activate', callback, *args)
         menu.append(item)
     
     def add_menu_separator(self, menu):
@@ -134,7 +134,7 @@ class ViewMenu:
                 if link in ('user', 'profile', 'rprofile', 'avatar'):
                     user = full[full.rfind("/") + 1:]
                     self.add_menu_link(menu, lang.context_profile % user,
-                                       lambda *args: self.context_link(full))
+                                       self.context_link, full)
                 
                 else:
                     user = None
@@ -147,21 +147,21 @@ class ViewMenu:
     def create_link_menu(self, menu, link, full):
         if link == "link":
             self.add_menu_link(menu, lang.context_browser,
-                               lambda *args: self.context_link(full))
+                               self.context_link, full)
             
             self.add_menu_link(menu, lang.context_copy,
-                               lambda *args: self.copy_link(full))  
+                               self.copy_link, full)  
             return True
     
     def create_status_tag_menu(self, menu, link, full):
         if link == "status":
             self.add_menu_link(menu, lang.context_view,
-                               lambda *args: self.context_link(full))
+                               self.context_link, full)
             return True
         
         elif link == "tag":
             self.add_menu_link(menu, lang.context_search,
-                               lambda *args: self.context_link(full))   
+                               self.context_link, full)   
             return True
     
     

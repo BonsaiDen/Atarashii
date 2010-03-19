@@ -166,29 +166,31 @@ class HTML(view.HTMLView):
                user.lower() != self.main.username.lower():
                 reply = "message:%s:%d:-1" % (user, self.get_sender(item).id)
                 self.add_menu_link(menu, lang.context_reply % user,
-                                   lambda *args: self.context_link(reply,
-                                                              extra = item))
+                                   self.context_link, reply, item)
             
             elif link == "rprofile" and \
                user.lower() != self.main.username.lower():
                 reply = "message:%s:%d:-1" % (user, self.get_recipient(item).id)
                 self.add_menu_link(menu, lang.context_message % user,
-                                   lambda *args: self.context_link(reply,
-                                                              extra = item))
+                                   self.context_link, reply, item)
             
             elif link == "user":
                 reply = "message:%s:-1:-1" % user
                 self.add_menu_link(menu, lang.context_message % user,
-                                   lambda *args: self.context_link(reply))    
+                                   self.context_link, reply)    
         
         # Retweet / Delete
         else:
+            self.add_menu_link(menu, lang.context_copy_message, 
+                               self.copy_message, None, item)
+            
+            self.add_menu_separator(menu)
+            
             name = item.sender.screen_name
             if name.lower() == self.main.username.lower():
                 full3 = "delete:m:%d" % item_id
                 self.add_menu_link(menu, lang.context_delete_message,
-                                   lambda *args: self.context_link(full3,
-                                                               extra = item))
+                                   self.context_link, full3, item)
         
         return True
 
