@@ -128,20 +128,28 @@ class TextInput(gtk.TextView):
     def check_keys(self, text, event, *args):
         # Escape cancels the input
         if event.keyval == gtk.keysyms.Escape:
-            if self.gui.mode == MODE_TWEETS:
-                self.gui.html.focus_me()
-            
-            elif self.gui.mode == MODE_MESSAGES:
-                self.gui.message.focus_me()
-            
+            self.unfocus()
             return False
+        
+        if event.keyval == gtk.keysyms.s:
+            if event.state & gtk.gdk.CONTROL_MASK == gtk.gdk.CONTROL_MASK:
+                self.reset()
+                return True    
     
+    
+    def unfocus(self):
+        if self.gui.mode == MODE_TWEETS:
+            self.gui.html.focus_me()
+        
+        elif self.gui.mode == MODE_MESSAGES:
+            self.gui.message.focus_me()
     
     def reset(self):
         self.set_text("")
         self.has_focus = False
         self.contents_change = False
         self.loose_focus()
+        self.unfocus()
     
     
     # Events -------------------------------------------------------------------
