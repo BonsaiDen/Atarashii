@@ -58,7 +58,9 @@ class ViewHTML:
             html = self.render_item(num, item, img)
             
             # Close Newest Container
-            if item.id == self.newest_id:
+            # <= beacause the ""firsttweet"" might get deleted
+            # causing everything to be considered as new
+            if item.id <= self.newest_id:
                 html = '</div>' + html
             
             self.renderitems.insert(0, html)
