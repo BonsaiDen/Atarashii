@@ -59,6 +59,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.connect("leave-notify-event", self.on_leave)
         self.last_scroll = 0
         self.connect("scroll-event", self.on_scroll)
+        self.connect("key-release-event", self.on_key)
         
         # Better link tooltips
         self.last_hovered_link = ""
@@ -305,19 +306,19 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         elif uri.startswith("fav:"):
             name, item_id = uri.split(":")[1:]
             gobject.idle_add(self.main.favorite, int(item_id), True, name)
-            if self.give_text_focus:
-                gobject.idle_add(self.gui.text.grab_focus)
         
         # Un-Favorite
         elif uri.startswith("unfav:"):
             name, item_id, = uri.split(":")[1:]
             gobject.idle_add(self.main.favorite, int(item_id), False, name)
-            if self.give_text_focus:
-                gobject.idle_add(self.gui.text.grab_focus)
         
         # Regular links
         else:
             webbrowser.open(self.get_link_type(uri)[1])
+        
+        # Don't close the textbox
+        if self.give_text_focus:
+            gobject.idle_add(self.gui.text.grab_focus)
         
         return True
     

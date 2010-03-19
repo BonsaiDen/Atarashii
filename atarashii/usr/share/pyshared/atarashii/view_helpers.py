@@ -79,7 +79,7 @@ class ViewHelpers:
         # Note from Ivo: Actually, the Lion won't eat me since I'm one too ;D
         if self.get_property("load-status") != 2:
             return
-    
+        
         if len(self.items) > 0 and self.has_newitems and not self.load_history:
             offset = self.get_offset()
         
@@ -109,7 +109,7 @@ class ViewHelpers:
     # Fakeman! Roger Buster!
     # This fixes an issue where the reply/favorite links wouldn't disapear if
     # the mouse left the view
-    def fake_move(self, pos, force = False):
+    def fake_move(self, pos, latest = False):
         self.fake_mouse = True 
         event = gtk.gdk.Event(gtk.gdk.MOTION_NOTIFY)
         event.window = self.get_window()
@@ -127,10 +127,11 @@ class ViewHelpers:
         
         self.fake_mouse = False
     
-    def on_scroll(self, view, event, *args):
+    def on_scroll(self, view, event):
         pos = self.scroll.get_vscrollbar().get_value()
         if pos != self.scroll_position:
             self.scroll_position = pos
+            # FIXME sometimes this still doesn't remove the menu
             gobject.timeout_add(10, self.fake_move, self.mouse_position)
     
     def fix_scroll(self):
@@ -138,6 +139,16 @@ class ViewHelpers:
             self.scroll.get_vscrollbar().set_value(self.scroll_to)
             gobject.timeout_add(25, self.check_offset)
             self.scroll_to = -1
+    
+    def on_key(self, view, event):
+        i = gtk.keysyms
+        # FIXME 65360 = Begin, it seems that the constant is broken, at least
+        # on my keyboard
+        if event.keyval in (i.Up, i.Down, i.Page_Up, i.Page_Down, i.End, 
+                            i.Begin, 65360, i.KP_Up, i.KP_Down, i.KP_Page_Up,
+                            i.KP_Page_Down, i.KP_End, i.KP_Begin):
+            
+            self.on_scroll(None, None)
     
     # Double check for some stupid scrolling bugs with webkit
     def check_scroll(self, pos):

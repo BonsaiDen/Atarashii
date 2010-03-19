@@ -4,6 +4,7 @@ body {
 	font: 10px sans-serif;
 	overflow-x: hidden;
 	-webkit-user-select: none; /* Disable user selection of none tweet text */
+	cursor: default;
 }
 
 body, td, tr, table {
