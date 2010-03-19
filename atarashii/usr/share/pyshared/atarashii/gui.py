@@ -179,8 +179,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                           0, self.text.start_message)
         
         # Show GUI
-        if not main.settings.is_true("tray", False) or \
-            main.settings.is_true("crashed", False): # show after crash
+        if not main.settings.is_true("tray", False) \
+           or main.settings.is_true("crashed", False): # show after crash
             self.show_gui()
         
         gobject.idle_add(self.main.on_init)
@@ -238,15 +238,15 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     def show_progress(self):
         def progress_activity():
             self.progress.pulse()
-            return self.main.status(ST_SEND) or \
-                self.main.status(ST_DELETE) or \
-                self.main.status(ST_CONNECT) or \
-                self.main.status(ST_HISTORY) or \
-                (self.mode == MODE_MESSAGES and \
-                self.message.load_state == HTML_LOADING) or \
-                (self.mode == MODE_TWEETS and \
-                self.html.load_state == HTML_LOADING)
-        
+            return self.main.status(ST_SEND) \
+                   or self.main.status(ST_DELETE) \
+                   or self.main.status(ST_CONNECT) \
+                   or self.main.status(ST_HISTORY) \
+                   or (self.mode == MODE_MESSAGES \
+                   and self.message.load_state == HTML_LOADING) \
+                   or (self.mode == MODE_TWEETS \
+                   and self.html.load_state == HTML_LOADING)
+            
         self.progress.set_fraction(0.0)
         self.progress.show()
         self.info_label.hide()
@@ -323,8 +323,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 self.multi_button.set_tooltip_text(lang.tool_read)
             
             elif self.mode == MODE_MESSAGES:
-                self.multi_button.set_tooltip_text(
-                                         lang.tool_read_message)
+                self.multi_button.set_tooltip_text( lang.tool_read_message)
             return
         
         # Toggle to refresh mode -----------------------------------------------
@@ -347,11 +346,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.multi_button.set_tooltip_text(lang.tool_refresh)
         
         elif self.mode == MODE_MESSAGES:
-            self.multi_button.set_tooltip_text(
-                                     lang.tool_refresh_message)
+            self.multi_button.set_tooltip_text(lang.tool_refresh_message)
         
         # Check for message/tweet switch
-        if self.is_ready():                
+        if self.is_ready():
             if self.text.go_send_message != None:
                 self.set_mode(MODE_MESSAGES)
             
@@ -382,11 +380,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                     lang.status_reconnect_minutes % math.ceil(wait / 60.0))
         
         elif self.main.status(ST_HISTORY):
-            self.set_status(
-                lang.status_load_history if \
-                self.html.load_history_id != HTML_UNSET_ID else \
-                lang.status_load_message_history)
-        
+            self.set_status(lang.status_load_history \
+                            if self.html.load_history_id != HTML_UNSET_ID \
+                            else lang.status_load_message_history)
+                    
         elif self.main.status(ST_CONNECT):
             self.set_status(lang.status_connecting % self.main.username)
         
@@ -403,15 +400,16 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.set_refresh_update(False, None, False)
             self.set_status(lang.status_update)
         
-        elif self.main.refresh_time == UNSET_TIMEOUT or \
-            (self.mode == MODE_MESSAGES and \
-            self.message.load_state == HTML_LOADING) or \
-            (self.mode == MODE_TWEETS and \
-            self.html.load_state == HTML_LOADING):
+        elif self.main.refresh_time == UNSET_TIMEOUT \
+             or  (self.mode == MODE_MESSAGES \
+             and self.message.load_state == HTML_LOADING) \
+             or (self.mode == MODE_TWEETS \
+             and self.html.load_state == HTML_LOADING):
+            
             self.set_status(lang.status_connected)
         
-        elif (not self.text.is_typing or not self.text.has_focus) and not \
-            self.main.status(ST_SEND):
+        elif (not self.text.is_typing or not self.text.has_focus) \
+              and not self.main.status(ST_SEND):
             
             wait = self.main.refresh_timeout - \
                 (calendar.timegm(time.gmtime()) - self.main.refresh_time)
@@ -471,39 +469,40 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                         yes_callback = yes, no_callback = noo)
     
     def show_delete_info(self, tweet, msg):
-        dialog.MessageDialog(self, MESSAGE_INFO,
-                        lang.delete_info_tweet if tweet != UNSET_ID_NUM else \
-                        lang.delete_info_message,
-                        lang.delete_info_title)
+        dialog.MessageDialog(self, MESSAGE_INFO, lang.delete_info_tweet \
+                             if tweet != UNSET_ID_NUM \
+                             else lang.delete_info_message,
+                             lang.delete_info_title)
     
     def show_favorite_error(self, name, mode):
         dialog.MessageDialog(self, MESSAGE_WARNING, 
-               lang.error_favorite_on % lang.name(name) if mode else \
-               lang.error_favorite_off % lang.name(name), lang.error_title)
-    
+                             lang.error_favorite_on % lang.name(name) \
+                             if mode else lang.error_favorite_off \
+                             % lang.name(name), lang.error_title)
+                    
     def show_crash_report(self):
         dialog.MessageDialog(self, MESSAGE_WARNING, 
                "Atarashii has crashed and automatically restarted itself.",
-               lang.error_title)   
+               lang.error_title)
     
     
     # Show Error Dialog --------------------------------------------------------
     # --------------------------------------------------------------------------
-    def show_error(self, code, error, rate_error):
+    def show_error(self, code, error_code, error_errno, rate_error):
         if code in (-9, -5, 503):
             if code == 503:# overload warning
                 info = lang.warning_overload
-                button = lang.warning_button_overload              
+                button = lang.warning_button_overload
                 
             else: # twitter/network lost
-                info = lang.warning_network_timeout if code == -9 else \
-                       lang.warning_network
+                info = lang.warning_network_timeout if code == -9 \
+                       else lang.warning_network
                 
                 button = lang.warning_button_network
                 self.tray.set_tooltip_error(
-                            (lang.tray_logged_in  % self.main.username) + \
-                            "\n" + lang.tray_warning_network, 
-                            gtk.STOCK_DIALOG_WARNING)             
+                            (lang.tray_logged_in  % self.main.username) \
+                            + "\n" + lang.tray_warning_network,
+                            gtk.STOCK_DIALOG_WARNING)
             
             self.warning_button.show(button, info)
         
@@ -534,8 +533,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                     -7 : lang.tray_error_rate,
                     404 : lang.tray_error_login % self.main.username,
                     401 : lang.tray_error_login % self.main.username,
-                }[code], gtk.STOCK_DIALOG_ERROR if code != -4 else \
-                         gtk.STOCK_DIALOG_WARNING)
+                }[code], gtk.STOCK_DIALOG_ERROR if code != -4 \
+                         else gtk.STOCK_DIALOG_WARNING)
             
             # Show GUI if minimized to tray
             gobject.idle_add(self.force_show)
@@ -545,13 +544,13 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 -4 : lang.error_network,
                 -3 : lang.error_user_not_found % self.main.message_user,
                 -2 : lang.error_already_retweeted,
-                0 : lang.error_internal % str(error),
+                0 : lang.error_internal,
                 -7 : rate_error,
                 401 : lang.error_login % self.main.username,
                 404 : lang.error_login % self.main.username
             }[code]
-            dialog.MessageDialog(self, MESSAGE_ERROR if code != -4 else \
-                                 MESSAGE_WARNING, description,
+            dialog.MessageDialog(self, MESSAGE_ERROR if code != -4 \
+                                 else MESSAGE_WARNING, description,
                                  lang.error_title)
         
         self.update_status()

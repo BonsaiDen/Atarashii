@@ -138,9 +138,9 @@ class AtarashiiActions:
         self.gui.text.set_sensitive(False)
         self.gui.message_button.set_sensitive(False)
         self.gui.show_progress()
-        self.gui.set_status(lang.status_deleting_tweet if \
-                            tweet_id != UNSET_ID_NUM else \
-                            lang.status_deleting_message)
+        self.gui.set_status(lang.status_deleting_tweet \
+                            if tweet_id != UNSET_ID_NUM \
+                            else lang.status_deleting_message)
     
         # Deleter
         deleter = send.Delete(self, tweet_id, message_id)
@@ -164,8 +164,8 @@ class AtarashiiActions:
     def reconnect(self):
         ratelimit = self.api.oauth_rate_limit_status()
         if ratelimit != None:
-            minutes = math.ceil((ratelimit['reset_time_in_seconds'] - \
-                                 calendar.timegm(time.gmtime())) / 60.0)
+            minutes = math.ceil((ratelimit['reset_time_in_seconds'] \
+                                 - calendar.timegm(time.gmtime())) / 60.0)
         
         else:
             minutes = 5
@@ -193,43 +193,46 @@ class AtarashiiActions:
         if self.status(ST_WAS_SEND) or self.status(ST_WAS_DELETE):
             self.gui.show_input()
             
-            if not self.status(ST_WAS_RETWEET) or \
-               (self.retweet_text != UNSET_TEXT or \
-               self.reply_user != UNSET_TEXT or \
-               self.reply_id != UNSET_ID_NUM):
+            if not self.status(ST_WAS_RETWEET) \
+               or (self.retweet_text != UNSET_TEXT \
+               or self.reply_user != UNSET_TEXT \
+               or self.reply_id != UNSET_ID_NUM):
                 
                 if not self.status(ST_WAS_RETWEET_NEW):
                     self.gui.text.grab_focus()
             
-            if self.gui.text.has_typed and \
-               (self.status(ST_WAS_RETWEET_NEW) or \
-               self.status(ST_WAS_DELETE)):
+            if self.gui.text.has_typed \
+               and (self.status(ST_WAS_RETWEET_NEW) \
+               or self.status(ST_WAS_DELETE)):
                 self.gui.text.grab_focus()
         
         
         # Determine the kind of the error
-        rate_error = ""  
-        if isinstance(error, IOError):
+        rate_error = ""
+        if isinstance(error, socket.timeout): # Timeout error
+            msg = ""
+            error_code = 0
+            error_errno = -3
+            code = -9
+        
+        # IOErrors
+        elif isinstance(error, IOError):
             if hasattr(error, "read"):
                 msg = error.read()
             
             else:
                 msg = ""
+            
+            error_errno = error.errno
+            error_code = error.code
         
-        # Timeout error
-        elif isinstance(error, socket.timeout):
-            msg = ""
-            error.code = 0
-            error.errno = -3
-            code = -9
-                
         else:
             msg = error.reason
-            error.code = error.response.status
-            error.errno = None
+            error_code = error.response.status
+            error_errno = None
         
         # Catch errors due to missing network
-        if error.errno == -2:
+        if error_errno == -2:
             self.set_status(ST_NETWORK_FAILED)
             code = -4
             if self.status(ST_LOGIN_SUCCESSFUL):
@@ -238,24 +241,24 @@ class AtarashiiActions:
                 self.gui.tray.refresh_menu.set_sensitive(False)
         
         # Catch common Twitter errors
-        elif error.code in (400, 401, 403, 404, 500, 502, 503):
+        elif error_code in (400, 401, 403, 404, 500, 502, 503):
             if msg.startswith("Share sharing"):
                 code = -2
             
             else:
-                code = error.code
+                code = error_code
                 
                 # Ratelimit errors
-                if (code == 400 and not self.status(ST_WAS_SEND)) or \
-                   (code == 403 and self.status(ST_WAS_SEND)):
+                if code == 400 and not self.status(ST_WAS_SEND) \
+                   or code == 403 and self.status(ST_WAS_SEND):
                     
                     self.gui.set_refresh_update(False)
                     self.gui.tray.refresh_menu.set_sensitive(False)
                     code, rate_error = self.reconnect()
                 
                 # Just normal 400's and 403'
-                elif (code == 400 and self.status(ST_WAS_SEND)) or \
-                     (code == 403 and not self.status(ST_WAS_SEND)):
+                elif code == 400 and self.status(ST_WAS_SEND) \
+                     or code == 403 and not self.status(ST_WAS_SEND):
                     
                     code = 500
                 
@@ -269,5 +272,5 @@ class AtarashiiActions:
                                ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
         
         # Leave it to GUI!
-        self.gui.show_error(code, error, rate_error)
+        self.gui.show_error(code, error_code, error_errno, rate_error)
 
