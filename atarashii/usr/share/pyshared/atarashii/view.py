@@ -230,7 +230,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Replies
         elif uri.startswith("reply:") or uri.startswith("qreply:"):
-            ref, self.main.reply_user, self.main.reply_id, num = uri.split(":")
+            self.main.reply_user, self.main.reply_id, num = uri.split(":")[1:]
             num = int(num)
             if extra != None:
                 self.main.reply_text = unescape(self.get_text(extra))
@@ -246,8 +246,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Send a message
         elif uri.startswith("message:") or uri.startswith("qmessage:"):
-            ref, self.main.message_user, \
-                self.main.message_id, num = uri.split(":")
+            self.main.message_user, \
+                 self.main.message_id, num = uri.split(":")[1:]
             
             num = int(num)
             if extra != None:
@@ -264,7 +264,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Retweet someone
         elif uri.startswith("retweet:"):
-            ref, ttype = uri.split(":")
+            ttype = uri.split(":")[1]
             tweet_id = self.get_id(extra)
             name = self.get_user(extra).screen_name
             
@@ -280,7 +280,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Delete
         elif uri.startswith("delete:"):
-            ref, dtype, item_id = uri.split(":")
+            dtype, item_id = uri.split(":")[1:]
             item_id = int(item_id)
             text = unescape(self.get_text(extra))
 
@@ -306,12 +306,12 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Favorite
         elif uri.startswith("fav:"):
-            ref, name, item_id = uri.split(":")
+            name, item_id = uri.split(":")[1:]
             gobject.idle_add(self.main.favorite, int(item_id), True, name)
         
         # Un-Favorite
         elif uri.startswith("unfav:"):
-            ref, name, item_id, = uri.split(":")
+            name, item_id, = uri.split(":")[1:]
             gobject.idle_add(self.main.favorite, int(item_id), False, name)
         
         # Regular links
