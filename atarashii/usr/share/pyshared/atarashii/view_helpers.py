@@ -30,6 +30,31 @@ class ViewHelpers:
     def __init__(self):
         pass
     
+    # Copy stuff to clipboard --------------------------------------------------
+    # --------------------------------------------------------------------------
+    def copy_data(self, data):
+        display = gtk.gdk.display_manager_get().get_default_display()
+        clipboard = gtk.Clipboard(display, "CLIPBOARD")
+        clipboard.set_text(data)
+        
+        # Make sure the textbox doesn't loose focus if it's opened
+        if self.gui.text.has_focus:
+            gobject.idle_add(self.gui.text.grab_focus)
+    
+    def copy_link(self, url):
+        self.copy_data(url)
+    
+    def copy_tweet(self, menu, uri, item):
+        user = self.get_user(item)
+        text = self.get_text(item)
+        self.copy_data("@%s\n%s" % (user.screen_name, text))
+
+    def copy_message(self, menu, uri, item):
+        user = self.get_user(item)
+        text = self.get_text(item)
+        self.copy_data("@%s\n%s" % (user.screen_name, text))
+    
+    
     # Scrolling ----------------------------------------------------------------
     # --------------------------------------------------------------------------
     def get_height(self):

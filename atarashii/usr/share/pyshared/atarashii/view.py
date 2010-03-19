@@ -206,7 +206,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     
     # Handle the opening of Links ----------------------------------------------
     # --------------------------------------------------------------------------
-    def context_link(self, uri, extra = None):
+    def context_link(self, menu, uri, extra = None):
         self.open_link(None, None, None, uri, extra)
     
     def open_link(self, view, frame, req, uri = None, extra = None):
@@ -361,13 +361,4 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         else:
             return "link", uri, uri
-    
-    def copy_link(self, url):
-        display = gtk.gdk.display_manager_get().get_default_display()
-        clipboard = gtk.Clipboard(display, "CLIPBOARD")
-        clipboard.set_text(url)
-        
-        # Make sure the textbox doesn't loose focus if it's opened
-        if self.gui.text.has_focus:
-            gobject.idle_add(self.gui.text.grab_focus)
 

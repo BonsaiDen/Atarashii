@@ -291,6 +291,8 @@ LANG = {
         # Context Menu
         'context_browser' : 'Im Browser öffnen',
         'context_copy' : 'Link kopieren',
+        'context_copy_tweet' : 'Tweet kopieren',
+        'context_copy_message' : 'Nachricht kopieren',
         'context_profile' : '%s auf Twitter.com',
         'context_reply' : '%s antworten...',
         'context_tweet' : 'Tweet an %s...',
@@ -564,6 +566,8 @@ LANG = {
         # Context Menu
         'context_browser' : 'Open in Browser',
         'context_copy' : 'Copy link location',
+        'context_copy_tweet' : 'Copy Tweet',
+        'context_copy_message' : 'Copy Message',
         'context_profile' : 'Visit %s on Twitter.com',
         'context_reply' : 'Reply to %s...',
         'context_tweet' : 'Tweet to %s...',
