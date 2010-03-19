@@ -32,8 +32,8 @@ class Notifier:
                 subprocess.Popen(["mplayer", "-really-quiet", 
                                   "-nolirc", self.main.settings['soundfile']])
             
-            except OSError:
-                pass
+            except OSError, error:
+                print "Failed to play sound", error
         
         for obj in objs:
             self.notify(obj[0], obj[1], obj[2])
