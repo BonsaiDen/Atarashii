@@ -75,9 +75,6 @@ class Settings:
             self.values = {}
         
         
-        # Check autostart
-        self.check_autostart()
-        
         # Check crash
         self.check_crash()
         self.crash_file(True)
@@ -158,10 +155,6 @@ class Settings:
     # Manage Autostart ---------------------------------------------------------
     # --------------------------------------------------------------------------
     def set_autostart(self, mode):
-        # Do nothing
-        if mode == self['autostart']:
-            return
-           
         # Create/Delete .desktop file
         try:
             cfp = open(COPY_FILE, "rb")
@@ -170,7 +163,7 @@ class Settings:
             
             dfp = open(DESKTOP_FILE, "wb")
             bmode = "true" if mode else "false"
-            text = text.replace("Exec=atarashii", "Exec=atarashii &")
+            text = text.replace("Exec=atarashii", "Exec=atarashii auto &")
             dfp.write(text + "\nX-GNOME-Autostart-enabled=%s" % bmode)
             dfp.close()
             
@@ -181,9 +174,25 @@ class Settings:
             print "Could not set autostart"
     
     def check_autostart(self):
-        self['autostart'] = os.path.exists(DESKTOP_FILE)
+        if os.path.exists(DESKTOP_FILE):
+            try:
+                cfp = open(DESKTOP_FILE, "rb")
+                text = cfp.read()
+                cfp.close()
+                if text.find("X-GNOME-Autostart-enabled=false") != -1:
+                    self['autostart'] = False
+                
+                else:
+                    self['autostart'] = True
+                
+            except IOError:
+                print "Could not check autostart"
+                self['autostart'] = False
         
-        
+        else:
+            self['autostart'] = False
+    
+    
     # Crash Handling -----------------------------------------------------------
     # --------------------------------------------------------------------------
     def check_crash(self):
