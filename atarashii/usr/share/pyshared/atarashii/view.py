@@ -323,41 +323,21 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     def get_link_type(self, uri):
         if uri == None:
             return None, None, None
-    
-        # TODO cleanup with dict
-        if uri.startswith("profile:"):
-            return "profile", uri[8:], uri
         
-        elif uri.startswith("avatar:"):
+        # Link types
+        types = ["profile", "rprofile", "user", "source", "status", "tag", 
+                 "fav", "unfav", "qreply", "qmessage"]
+        
+        # Generic cases
+        for i in types:
+            tag = i + ":"
+            if uri.startswith(tag):
+                return i, uri[len(tag):], uri
+        
+        # Special cases
+        if uri.startswith("avatar:"):
             stuff = uri[7:]
             return "avatar", stuff[stuff.find(":") + 1:], uri
-        
-        elif uri.startswith("rprofile:"):
-            return "rprofile", uri[9:], uri
-        
-        elif uri.startswith("user:"):
-            return "user", uri[5:], uri
-        
-        elif uri.startswith("source:"):
-            return "source", uri[7:], uri
-        
-        elif uri.startswith("status:"):
-            return "status", uri[7:], uri
-        
-        elif uri.startswith("tag:"):
-            return "tag", uri[4:], uri
-        
-        elif uri.startswith("fav:"):
-            return "fav", uri[4:], uri
-        
-        elif uri.startswith("unfav:"):
-            return "unfav", uri[6:], uri
-            
-        elif uri.startswith("qreply:"):
-            return "qreply", uri[7:], uri
-        
-        elif uri.startswith("qmessage:"):
-            return "qmessage", uri[9:], uri
         
         else:
             return "link", uri, uri
