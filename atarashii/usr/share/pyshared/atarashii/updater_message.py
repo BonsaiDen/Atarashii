@@ -38,7 +38,7 @@ class UpdaterMessage:
 
     
     # Load initial messages ----------------------------------------------------
-    def get_init_messages(self, last = False):
+    def get_init_messages(self, last = False, init = False):
         messages = []
         try:
             messages = self.try_get_messages(self.main.get_first_message_id())
@@ -60,7 +60,13 @@ class UpdaterMessage:
         def render():
             self.message.push_updates()
             self.message.load_state = HTML_LOADED
-                    
+            
+            # Finish the login
+            if init:
+                self.started = True
+                gobject.idle_add(self.main.on_login)
+                gobject.idle_add(self.gui.check_read)
+            
             # Show login message
             if last:
                 self.main.show_start_notifications()

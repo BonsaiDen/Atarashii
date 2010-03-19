@@ -37,7 +37,7 @@ class UpdaterTweet:
                                             len(self.html.items) - 1][0].id
     
     # Load initial tweets ------------------------------------------------------
-    def get_init_tweets(self, last = False):
+    def get_init_tweets(self, last = False, init = False):
         updates = []
         try:
             updates = self.try_get_updates(self.main.get_first_id())
@@ -58,7 +58,13 @@ class UpdaterTweet:
         def render():
             self.html.push_updates()
             self.html.load_state = HTML_LOADED
-                    
+            
+            # Finish the login
+            if init:
+                self.started = True
+                gobject.idle_add(self.main.on_login)
+                gobject.idle_add(self.gui.check_read)      
+            
             # Show login message
             if last:
                 self.main.show_start_notifications()

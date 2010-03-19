@@ -173,24 +173,19 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         # Lazy loading
         if self.gui.mode == MODE_MESSAGES:
-            if not self.get_init_messages():
+            if not self.get_init_messages(init = True):
                 self.message.load_state = HTML_RESET
                 self.html.load_state = HTML_RESET
                 return
         
         elif self.gui.mode == MODE_TWEETS:
-            if not self.get_init_tweets():
+            if not self.get_init_tweets(init = True):
                 self.message.load_state = HTML_RESET
                 self.html.load_state = HTML_RESET
                 return
         
         else: # TODO implement loading of search
             pass
-        
-        # Init the GUI
-        self.started = True
-        gobject.idle_add(self.main.on_login)
-        gobject.idle_add(self.gui.check_read)
         
         # Load other stuff
         if self.gui.mode == MODE_TWEETS:
