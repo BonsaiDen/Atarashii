@@ -13,8 +13,6 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-# TODO add real errors to the tray icon tooltip
-
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
