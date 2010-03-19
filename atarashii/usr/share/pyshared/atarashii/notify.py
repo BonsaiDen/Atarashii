@@ -18,23 +18,8 @@
 # ------------------------------------------------------------------------------
 import pynotify
 import subprocess
-import threading
 
 pynotify.init("Atarashii")
-
-
-class NotifierSound(threading.Thread):
-    def __init__(self, sound):
-        threading.Thread.__init__(self)
-        self.sound = sound
-    
-    def run(self):
-        try:
-            subprocess.call(["mplayer", self.sound])
-        
-        finally:
-            pass
-
 
 class Notifier:
     def __init__(self, main):
@@ -53,7 +38,10 @@ class Notifier:
     
     def sound(self):
         if self.main.settings['soundfile'] != "None":
-            snd = NotifierSound(self.main.settings['soundfile'])
-            snd.setDaemon(True)
-            snd.start()
+            try:
+                subprocess.Popen(["mplayer", "-really-quiet", 
+                                  "-nolirc", self.main.settings['soundfile']])
+            
+            except OSError:
+                pass
 
