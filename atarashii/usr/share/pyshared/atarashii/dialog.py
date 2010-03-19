@@ -168,6 +168,9 @@ class SettingsDialog(Dialog):
         self.dlg.set_transient_for(parent)
         self.parent = parent
         
+        # Check for autostart
+        self.main.settings.check_autostart()
+        
         # Stuff
         self.saved = False
         self.dlg.set_title(lang.settings_title)
