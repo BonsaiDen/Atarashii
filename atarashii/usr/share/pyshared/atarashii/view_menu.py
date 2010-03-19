@@ -14,7 +14,7 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
-# HTML View / Popup Menu -------------------------------------------------------
+# HTML View / Popup Menu / Tooltips --------------------------------------------
 # ------------------------------------------------------------------------------
 import gobject
 import gtk
@@ -28,7 +28,39 @@ class ViewMenu:
     def __init__(self):
         pass
     
-    # Event
+    # Tooltip Building ---------------------------------------------------------
+    def on_link_hover(self, view, title, url):
+        self.last_hovered_link = url    
+    
+    def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):        
+        if self.last_hovered_link.startswith("avatar:"):
+            uri = self.last_hovered_link[7:]
+            num = int(uri[:uri.find(":")])
+            user = self.get_user(num)
+            img = self.get_image(num)
+            
+            # Set only if something has changed
+            if user != self.tooltip_user or \
+               img != self.tooltip_img_file:
+                self.set_tooltip(user, img)
+                self.tooltip_user = user
+            
+            self.tooltip_window = tip
+            tip.set_custom(self.tooltip)
+            return True
+    
+    def set_tooltip(self, user, img):
+        self.tooltip_label.set_markup(
+             lang.html_avatar_tooltip  % (user.name, user.statuses_count, 
+                                      user.followers_count, user.friends_count))
+        
+        if img != self.tooltip_img_file:
+            buf = gtk.gdk.pixbuf_new_from_file_at_size(img, 48, 48)
+            self.tooltip_img.set_from_pixbuf(buf)
+            self.tooltip_img_file = img  
+        
+    
+    # Menu Events --------------------------------------------------------------
     def on_popup(self, view, menu, *args): # Kill of the original context menu!
         menu.hide()
         menu.cancel()
@@ -99,7 +131,7 @@ class ViewMenu:
             
             else:
                 # Profile
-                if link in ('user', 'profile', 'rprofile'):
+                if link in ('user', 'profile', 'rprofile', 'avatar'):
                     user = full[full.rfind("/") + 1:]
                     self.add_menu_link(menu, lang.context_profile % user,
                                        lambda *args: self.context_link(full))

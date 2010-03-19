@@ -55,12 +55,33 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         # Fix CSS hover stuff
         self.mouse_position = -1.0
         self.give_text_focus = False
+        self.fake_mouse = False
         self.connect("motion-notify-event", self.on_move)
         self.connect("leave-notify-event", self.on_leave)
         self.last_scroll = 0
         self.connect("scroll-event", self.on_scroll)
         
+        # Better link tooltips
+        self.last_hovered_link = ""
+        self.connect("hovering-over-link", self.on_link_hover)
+        self.connect("query-tooltip", self.on_tooltip)
+        
+        
+        # Tooltip
+        gtb = gtk.Builder()
+        gtb.add_from_file(self.main.get_resource("avatar.glade"))
+        self.tooltip = gtb.get_object("tooltip")  
+        self.tooltip_label = gtb.get_object("label") 
+        self.tooltip_img = gtb.get_object("image")
+        self.tooltip_img_file = None
+        self.tooltip_user = None
+        self.tooltip.show_all()
+        self.tooltip_window = None
+        self.scrolled = True
+                
+        # Other Stuff
         self.scroll = scroll
+        self.scroll_position = 0
         self.set_maintains_back_forward_list(False)
         self.count = 0
         self.formatter = formatter.Formatter()
@@ -295,8 +316,13 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         if uri == None:
             return None, None, None
     
+        # TODO cleanup with dict
         if uri.startswith("profile:"):
             return "profile", uri[8:], uri
+        
+        elif uri.startswith("avatar:"):
+            stuff = uri[7:]
+            return "avatar", stuff[stuff.find(":") + 1:], uri
         
         elif uri.startswith("rprofile:"):
             return "rprofile", uri[9:], uri

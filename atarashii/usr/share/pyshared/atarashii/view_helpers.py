@@ -78,15 +78,14 @@ class ViewHelpers:
     def fake_click(self):
         # Don't steal focus from the text box
         if self.gui.text.has_focus:
-            self.give_text_focus = True      
+            self.give_text_focus = True
         
         event = gtk.gdk.Event(gtk.gdk.BUTTON_PRESS)
-        event.x = 0.0
+        event.x = 1.0
         event.y = self.mouse_position
         event.button = 1
         self.emit("button_press_event", event)
         
-    
     def on_leave(self, view, event, *args):
         self.mouse_position = -1.0
         self.fake_click()
@@ -95,8 +94,11 @@ class ViewHelpers:
         self.mouse_position = event.y
     
     def on_scroll(self, view, event, *args):
-        gobject.timeout_add(10, self.fake_click)
-        
+        pos = self.scroll.get_vscrollbar().get_value()
+        if pos != self.scroll_position:
+            self.scroll_position = pos
+            gobject.timeout_add(10, self.fake_click)
+    
     def fix_scroll(self):
         if self.scroll_to != -1 and self.main.gui.mode == self.mode_type:
             self.scroll.get_vscrollbar().set_value(self.scroll_to)
@@ -206,14 +208,25 @@ class ViewHelpers:
         self.grab_focus()
         self.gui.text.html_focus()
     
+    # Get Image of an Item
+    def get_image(self, num):
+        return self.items[num][1]
+    
     # Attribute helpers for new style Retweets
     def get_attr(self, item, attr):
         item = self.items[item][0] if type(item) in (int, long) else item
-        return (item.retweeted_status if \
-                hasattr(item, "retweeted_status") else item).__dict__[attr]
+        status = item.retweeted_status if \
+                 hasattr(item, "retweeted_status") else item
+        
+        if status.__dict__.has_key(attr):
+            return status.__dict__[attr]
+        
+        else:
+            return None
     
     def get_user(self, item):
-        return self.get_attr(item, "user")
+        user = self.get_attr(item, "user")
+        return user if user != None else self.get_attr(item, "sender")
     
     def get_text(self, item):
         return self.get_attr(item, "text")
