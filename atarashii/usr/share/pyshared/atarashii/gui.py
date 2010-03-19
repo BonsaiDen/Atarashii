@@ -130,7 +130,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                                      lang.error_template, lang.error_title)
         
         
-        
         # Restore Position & Size ----------------------------------------------
         if main.settings.isset("position"):
             self.window_position = main.settings['position'][1:-1].split(",")
@@ -303,18 +302,21 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         if read_mode:
             if mode == False:
-                mode = False
+                read_mode = False
                 
             elif self.main.status(ST_UPDATE) or self.main.status(ST_CONNECT):
-                mode = False
+                read_mode = False
+        
+        # Set Sensitive
+        self.multi_button.set_sensitive(read_mode)
+        self.tray.read_menu.set_sensitive(read_mode)
+        
+        # Set icon and mode
+        if info == None and read_mode:
             
-            # Set icon and mode
             self.multi_state = BUTTON_READ 
             self.multi_button.set_stock_id(gtk.STOCK_OK)
             
-            # Set Sensitive
-            self.multi_button.set_sensitive(mode)
-            self.tray.read_menu.set_sensitive(mode)
             
             # Set Tooltip
             if self.mode == MODE_TWEETS: 
@@ -324,7 +326,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 self.multi_button.set_tooltip_text(
                                          lang.tool_read_message)
             return
-        
         
         # Toggle to refresh mode -----------------------------------------------
         if refresh_mode != None:
