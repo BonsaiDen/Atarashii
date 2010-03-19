@@ -18,7 +18,6 @@
 # ------------------------------------------------------------------------------
 import gobject
 import gtk
-import webkit
 
 import calendar
 import time
