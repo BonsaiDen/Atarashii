@@ -92,6 +92,16 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         self.scroll_to = -1
         self.init(True)
+        
+        # Disable everything we can, in order to fix the memleak.
+        off = ["enable_plugins", "enable_offline_web_application_cache",
+               "enable_html5_local_storage", "enable_html5_database",
+               "enable_developer_extras", "enable_private_browsing",
+               "enable_spell_checking", "enable_xss_auditor"]
+        
+        settings = self.get_settings()
+        for i in off:
+            settings.set_property(i, False)
     
     
     # Initiate a empty timeline ------------------------------------------------

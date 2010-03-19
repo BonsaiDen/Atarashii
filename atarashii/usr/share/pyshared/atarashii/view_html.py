@@ -17,6 +17,8 @@
 # HTML View / HTML -------------------------------------------------------------
 # ------------------------------------------------------------------------------
 from utils import compare_sub
+import re
+SPACES = re.compile("\s+")
 
 from language import LANG as lang
 from constants import HTML_UNSET_ID, ST_LOGIN_SUCCESSFUL
@@ -89,15 +91,17 @@ class ViewHTML:
             </body>""" % (self.main.get_image(), lang.html_welcome))
     
     def render_html(self, html):
-        self.load_string("""
+        data = """
         <html>
         <head>
         <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
         <link rel="stylesheet" type="text/css" media="screen" href="file://%s"/>
         </head>
         %s
-        </html>""" % (self.main.get_resource("atarashii.css"), html),
-                        "text/html", "UTF-8", "file:///")
+        </html>""" % (self.main.get_resource("atarashii.css"), html)
+        
+        # FIXME This memory leaks EXTREMLY hard!
+        self.load_string(SPACES.sub(" ", data), "text/html", "UTF-8", "file:///")
     
     def set_html(self, renderitems):
         self.main.gui.set_app_title()
