@@ -50,6 +50,8 @@ class AtarashiiActions:
         gtk.main_quit()
         
     def save_on_quit(self, *args):
+        self.gui.html.save_first()
+        self.gui.message.save_first()
         self.updater.running = False
         while self.status(ST_UPDATE):
             time.sleep(0.05)

@@ -124,6 +124,15 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     
     # History / Read Button ----------------------------------------------------
     # --------------------------------------------------------------------------
+    def save_first(self):
+        if len(self.items) > 0:
+            itemid = len(self.items) - self.item_count
+            if itemid < 0:
+                itemid = 0
+            
+            setting = self.first_setting + self.main.username
+            self.main.settings[setting] = self.items[itemid][0].id - 1
+    
     def clear(self):
         self.history_loaded = False
         self.items = self.items[self.history_count:]

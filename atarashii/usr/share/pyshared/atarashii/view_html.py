@@ -33,15 +33,6 @@ class ViewHTML:
         self.items.sort(compare_sub)
         self.count = 0
         
-        # Set the latest tweet for reloading on startup
-        if len(self.items) > 0:
-            itemid = len(self.items) - self.item_count
-            if itemid < 0:
-                itemid = 0
-            
-            setting = self.first_setting + self.main.username
-            self.main.settings[setting] = self.items[itemid][0].id - 1
-        
         # Newest Stuff
         self.newest = False
         self.newest_avatar = False
