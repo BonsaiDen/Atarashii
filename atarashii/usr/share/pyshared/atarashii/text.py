@@ -109,11 +109,11 @@ class TextInput(gtk.TextView):
             
             elif not self.has_typed:
                 self.modify_text(gtk.STATE_NORMAL,
-                                self.get_style().text[gtk.STATE_INSENSITIVE])
+                                 self.get_style().text[gtk.STATE_INSENSITIVE])
                 
-                self.set_text(
-                    lang.text_entry_message if self.gui.mode == MODE_MESSAGES \
-                    else lang.text_entry)
+                self.set_text(lang.text_entry_message \
+                              if self.gui.mode == MODE_MESSAGES \
+                              else lang.text_entry)
         
         return False
     
@@ -161,8 +161,9 @@ class TextInput(gtk.TextView):
                 # Prevent message to be send without text
                 ctext = text.strip()
                 if ctext[0:1] == "d":
-                    if ctext[2:].find(" ") == -1 or \
-                       self.main.message_user == UNSET_TEXT:
+                    if ctext[2:].find(" ") == -1 \
+                       or self.main.message_user == UNSET_TEXT:
+                       
                         self.set_text(text.lstrip())
                         return
                 
@@ -177,8 +178,9 @@ class TextInput(gtk.TextView):
                 # Prevent @reply to be send without text
                 ctext = text.strip()
                 if ctext[0:1] in u"@\uFF20":
-                    if ctext.find(" ") == -1 or \
-                      self.main.reply_user == UNSET_TEXT:
+                    if ctext.find(" ") == -1 \
+                       or self.main.reply_user == UNSET_TEXT:
+                       
                         self.set_text(text.lstrip())
                         return
                 
@@ -232,11 +234,11 @@ class TextInput(gtk.TextView):
                     pos = self.get_buffer().get_iter_at_mark(
                                     self.get_buffer().get_insert()).get_offset()
                     
-                    check = text[0:self.message_len] + \
-                            text[self.message_len + length:]
+                    check = text[0:self.message_len] \
+                            + text[self.message_len + length:]
                     
                     gobject.idle_add(self.clear_text, check, pos - length)
-                        
+            
             elif self.main.message_id == UNSET_ID_NUM:
                 self.main.message_user = UNSET_TEXT
             
@@ -255,8 +257,9 @@ class TextInput(gtk.TextView):
             self.message_len = 0
             
             # Cancel reply mode
-            if not text.strip()[0:1] in u"@\uFF20" and \
-               not self.is_changing:
+            if not text.strip()[0:1] in u"@\uFF20" \
+               and not self.is_changing:
+               
                 self.main.reply_text = UNSET_TEXT
                 self.main.reply_user = UNSET_TEXT
                 self.main.reply_id = UNSET_ID_NUM
@@ -287,7 +290,7 @@ class TextInput(gtk.TextView):
                         self.main.reply_text = UNSET_TEXT
                         self.main.reply_user = at_user.group(1)
                         self.main.reply_id = UNSET_ID_NUM
-            
+                
                 # Remove space between username and text
                 check = text[at_len:]
                 length = len(check) - len(check.lstrip())
@@ -502,8 +505,8 @@ class TextInput(gtk.TextView):
             self.initiated = True
             self.loose_focus()
         
-        if not self.main.status(ST_LOGIN_SUCCESSFUL) and \
-           not self.main.status(ST_CONNECT):
+        if not self.main.status(ST_LOGIN_SUCCESSFUL) \
+           and not self.main.status(ST_CONNECT):
             self.gui.hide_all()
 
 

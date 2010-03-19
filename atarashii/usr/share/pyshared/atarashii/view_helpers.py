@@ -161,8 +161,8 @@ class ViewHelpers:
     # Time ---------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def relative_time(self, date):
-        delta = long(calendar.timegm(time.gmtime())) - \
-                long(calendar.timegm(date.timetuple()))
+        delta = long(calendar.timegm(time.gmtime())) \
+                - long(calendar.timegm(date.timetuple()))
         
         if delta <= 1:
             return lang.html_about_second
@@ -196,8 +196,8 @@ class ViewHelpers:
             return time.strftime(lang.html_exact, date)
     
     def absolute_time(self, date):
-        delta = long(calendar.timegm(time.gmtime())) - \
-                long(calendar.timegm(date.timetuple()))
+        delta = long(calendar.timegm(time.gmtime())) \
+                - long(calendar.timegm(date.timetuple()))
         
         date = time.localtime(calendar.timegm(date.timetuple()))
         if delta <= 60 * 60 * 24:
@@ -238,9 +238,9 @@ class ViewHelpers:
     
     def is_protected(self, user):
         if hasattr(user, "protected") and user.protected:
-            return  ('<span class="protected" title="' + \
-                     lang.html_protected + '"></span>') % \
-                     lang.name(user.screen_name)
+            return  ('<span class="protected" title="' \
+                     + lang.html_protected + '"></span>') \
+                     % lang.name(user.screen_name)
         
         else:
             return ''
@@ -257,8 +257,8 @@ class ViewHelpers:
     # Attribute helpers for new style Retweets
     def get_attr(self, item, attr):
         item = self.items[item][0] if type(item) in (int, long) else item
-        status = item.retweeted_status if \
-                 hasattr(item, "retweeted_status") else item
+        status = item.retweeted_status \
+                 if hasattr(item, "retweeted_status") else item
         
         if status.__dict__.has_key(attr):
             return status.__dict__[attr]

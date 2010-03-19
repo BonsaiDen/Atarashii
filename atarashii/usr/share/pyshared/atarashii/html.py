@@ -77,9 +77,10 @@ class HTML(view.HTMLView):
             retweeted = True
             
             # Retweet Info
-            retweet = '<a href="user:http://twitter.com/%s" title="''' + \
-                    (self.relative_time(item.created_at)) + '">' + \
-                    lang.html_in_retweet + '</a>'
+            retweet = '<a href="user:http://twitter.com/%s" title="''' \
+                      + (self.relative_time(item.created_at)) + '">' \
+                      + lang.html_in_retweet + '</a>'
+            
             retweet = retweet % (item.user.screen_name,
                                     item.user.screen_name)
         
@@ -92,7 +93,8 @@ class HTML(view.HTMLView):
         
         # Spacers --------------------------------------------------------------
         highlight = self.main.username.lower() in \
-                        [i.lower() for i in self.formatter.users]
+                    [i.lower() for i in self.formatter.users]
+        
         mentioned = hasattr(tweet, "is_mentioned") and tweet.is_mentioned
         if num > 0:
             self.renderitems.insert(0,
@@ -104,21 +106,22 @@ class HTML(view.HTMLView):
         
         # Is this tweet a reply?
         if tweet.in_reply_to_screen_name and tweet.in_reply_to_status_id:
-            reply = '<a href="status:http://twitter.com/%s/statuses/%d">' + \
-                    lang.html_in_reply + '</a>'
-            reply = reply % (tweet.in_reply_to_screen_name,
-                            tweet.in_reply_to_status_id,
-                            tweet.in_reply_to_screen_name)
+            reply = ('<a href="status:http://twitter.com/%s/statuses/%d">' + \
+                     lang.html_in_reply + '</a>') \
+                     % (tweet.in_reply_to_screen_name,
+                        tweet.in_reply_to_status_id,
+                        tweet.in_reply_to_screen_name)
+        
         else:
             reply = ""
         
         
         # Avatar ---------------------------------------------------------------
         self.is_new_avatar(num)
-        if (num < len(self.items) - 1 and \
-            (user.screen_name != self.get_user(num + 1).screen_name or \
-            self.new_avatar) \
-            ) or num == len(self.items) - 1 or self.new_timeline:
+        if (num < len(self.items) - 1 \
+           and (user.screen_name != self.get_user(num + 1).screen_name \
+           or self.new_avatar)  ) or num == len(self.items) - 1 \
+           or self.new_timeline:
             
             avatar = self.avatar_html(user, num, img)
         
@@ -140,9 +143,9 @@ class HTML(view.HTMLView):
         # Source ---------------------------------------------------------------
         if tweet.source != "web":
             if hasattr(tweet, "source_url") and tweet.source_url != "":
-                by_user = lang.html_by % (
-                        '<a href="source:%s" title="%s">%s</a>' % \
-                        (tweet.source_url, tweet.source_url, tweet.source))
+                by_user = lang.html_by \
+                          % ('<a href="source:%s" title="%s">%s</a>' \
+                          % (tweet.source_url, tweet.source_url, tweet.source))
             
             else:
                 by_user =  lang.html_by % tweet.source
@@ -155,11 +158,11 @@ class HTML(view.HTMLView):
         if tweet.favorited:
             favorite = '''<div class="undofav">
                           <a href="unfav:%s:%d" title="''' + \
-                          lang.html_unfavorite +  '''"> </a></div>'''
+                          lang.html_unfavorite + '''"> </a></div>'''
         
         else:
             favorite = '''<div class="dofav"><a href="fav:%s:%d" title="''' + \
-                          lang.html_favorite +  '''"> </a></div>'''
+                          lang.html_favorite + '''"> </a></div>'''
         
         
         # HTML Snippet ---------------------------------------------------------
@@ -169,20 +172,18 @@ class HTML(view.HTMLView):
             <div class="blocker"></div>
             <div class="doreply">
                 <a href="qreply:%s:%d:%d" title="''' + \
-                (lang.html_reply % user.screen_name) + '''"> </a>
-            </div>
-            ''' + favorite + '''
+                (lang.html_reply % user.screen_name) + \
+                '''"> </a></div>''' + favorite + '''
         </div>
-        
         <div class="inner-text">
             <div><span class="name">''' + \
-                ("<b>RT</b>" if retweeted else "") + '''
-                 <b><a href="profile:http://twitter.com/%s" title="''' + \
+                ("<b>RT</b>" if retweeted else "") + \
+                '''<b><a href="profile:http://twitter.com/%s" title="''' + \
                 lang.html_profile + '''">%s</a></b></span>''' + \
                 self.is_protected(user) + '''%s</div>
             <div class="time">
             <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
-                (self.absolute_time(tweet.created_at)) + '''">%s</a>
+                self.absolute_time(tweet.created_at) + '''">%s</a>
                 ''' + by_user + '''</div>
             <div class="reply">%s</div>
             <div class="reply">%s</div>
@@ -253,8 +254,9 @@ class HTML(view.HTMLView):
             self.add_menu_link(menu, lang.context_retweet_old % name,
                                self.context_link, full1, item)
             
-            if name.lower() != self.main.username.lower() and \
-               not self.get_protected(item):
+            if name.lower() != self.main.username.lower() \
+               and not self.get_protected(item):
+               
                 full2 = "retweet:%s" % RETWEET_NEW
                 self.add_menu_link(menu, lang.context_retweet_new % name,
                                    self.context_link, full2, item)

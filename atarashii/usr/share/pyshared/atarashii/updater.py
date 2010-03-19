@@ -116,8 +116,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             token_ok = False
             key_name = 'xkey_' + self.main.username
             secret_name = 'xsecret_' + self.main.username
-            if self.settings.isset(key_name) and \
-               self.settings.isset(secret_name):
+            if self.settings.isset(key_name) \
+               and self.settings.isset(secret_name):
                 auth.set_access_token(self.settings[key_name],
                                       self.settings[secret_name])
                 
@@ -251,9 +251,9 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         if self.main.refresh_time == UNSET_TIMEOUT:
             return True
         
-        if calendar.timegm(time.gmtime()) > self.main.refresh_time + \
-           self.main.refresh_timeout or self.refresh_now or \
-           self.refresh_messages:
+        if calendar.timegm(time.gmtime()) > self.main.refresh_time \
+           + self.main.refresh_timeout or self.refresh_now \
+           or self.refresh_messages:
             
             self.main.set_status(ST_UPDATE)
             self.update()
@@ -292,8 +292,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         # Messages
         messages = []
-        if (self.message_counter > 1 or self.refresh_messages) and \
-            not self.refresh_now:
+        if (self.message_counter > 1 or self.refresh_messages) \
+           and not self.refresh_now:
             
             try:
                 messages = self.try_get_messages(self.message.last_id)
@@ -381,8 +381,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             tweet_list.reverse()
             if count > 1:
                 for num, i in enumerate(tweet_list):
-                    tweet_list[num][0] = lang.notification_index % (
-                                        tweet_list[num][0], num+1, count)
+                    tweet_list[num][0] = lang.notification_index \
+                                         % (tweet_list[num][0], num+1, count)
             
             self.notifier.show(tweet_list)
     
@@ -411,8 +411,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             self.main.refresh_timeout = 60
             return
         
-        minutes = (ratelimit['reset_time_in_seconds'] - \
-                   calendar.timegm(time.gmtime())) / 60
+        minutes = (ratelimit['reset_time_in_seconds'] \
+                   - calendar.timegm(time.gmtime())) / 60
         
         limit = ratelimit['remaining_hits']
         if limit > 0:
@@ -462,7 +462,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         # Check for user picture!
         if name.lower() == self.main.username.lower():
-            self.main.set_user_picture(imgfile)        
+            self.main.set_user_picture(imgfile)
         
         return imgfile
 

@@ -124,8 +124,8 @@ class Atarashii(AtarashiiActions):
     
     def login(self, change_user = None):
         # We need a username!
-        if self.username == UNSET_TEXT and (change_user == None or \
-           change_user == UNSET_TEXT):
+        if self.username == UNSET_TEXT \
+           and (change_user == None or change_user == UNSET_TEXT):
             self.gui.set_app_title()
             return
             
@@ -182,6 +182,10 @@ class Atarashii(AtarashiiActions):
         self.gui.set_title(lang.title_logged_in % self.username)
         self.gui.update_status()
         self.gui.show_input()
+        
+        import socket
+        self.handle_error(socket.timeout())
+        
     
     def on_login_failed(self, error = None):
         self.refresh_time = UNSET_TIMEOUT
@@ -222,8 +226,8 @@ class Atarashii(AtarashiiActions):
     # Helper Functions ---------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_start_notifications(self):
-        if not self.settings.is_true("notify") and \
-           self.status(ST_LOGIN_SUCCESSFUL):
+        if not self.settings.is_true("notify") \
+           and self.status(ST_LOGIN_SUCCESSFUL):
             return False
         
         info_text = []
@@ -231,8 +235,8 @@ class Atarashii(AtarashiiActions):
         # Tweet Info
         if self.gui.html.count > 0:
             info_text.append(
-              (lang.notification_login_tweets if self.gui.html.count > 1 else \
-               lang.notification_login_tweet) % self.gui.html.count)  
+              (lang.notification_login_tweets if self.gui.html.count > 1 \
+               else lang.notification_login_tweet) % self.gui.html.count)  
         
         # Message Info
         if self.gui.message.count > 0:
@@ -251,8 +255,8 @@ class Atarashii(AtarashiiActions):
     
     def get_user_picture(self):
         img = self.settings['picture_' + self.username]
-        if not self.status(ST_LOGIN_SUCCESSFUL) and \
-           not self.status(ST_CONNECT):
+        if not self.status(ST_LOGIN_SUCCESSFUL) \
+           and not self.status(ST_CONNECT):
             img = None
         
         if img == None or not os.path.exists(img):

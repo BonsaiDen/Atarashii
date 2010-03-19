@@ -34,7 +34,7 @@ class UpdaterMessage:
         self.settings['lastmessage_' + self.main.username] = item_id
         if len(self.message.items) > 0:
             self.message.newest_id = self.message.items[
-                                          len(self.message.items) - 1][0].id
+                                     len(self.message.items) - 1][0].id
 
     
     # Load initial messages ----------------------------------------------------
@@ -103,18 +103,18 @@ class UpdaterMessage:
         messages = []
         if since_id != HTML_UNSET_ID:
             if max_id == None:
-                messages = self.api.direct_messages(
-                                    since_id = since_id, count = max_count)
+                messages = self.api.direct_messages(since_id = since_id,
+                                                    count = max_count)
                 
-                messages += self.api.sent_direct_messages(
-                                     since_id = since_id, count = max_count)
+                messages += self.api.sent_direct_messages(since_id = since_id,
+                                                          count = max_count)
             
             else:
-                messages = self.api.direct_messages(
-                                    max_id = max_id,count = max_count)
+                messages = self.api.direct_messages(max_id = max_id,
+                                                    count = max_count)
                 
-                messages += self.api.sent_direct_messages(
-                                     max_id = max_id, count = max_count)
+                messages += self.api.sent_direct_messages(max_id = max_id,
+                                                          count = max_count)
         
         else:
             messages = self.api.direct_messages(

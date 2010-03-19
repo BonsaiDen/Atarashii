@@ -173,7 +173,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         self.render()
     
-    def add(self, item, append = False):        
+    def add(self, item, append = False):
         # Don't add items with the same ID twice
         if not item[0].id in [i[0].id for i in self.items]:
             if append:
@@ -254,7 +254,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         # Send a message
         elif uri.startswith("message:") or uri.startswith("qmessage:"):
             self.main.message_user, \
-                 self.main.message_id, num = uri.split(":")[1:]
+            self.main.message_id, num = uri.split(":")[1:]
             
             num = int(num)
             if extra != None:

@@ -31,7 +31,7 @@ class ViewMenu:
     def on_link_hover(self, view, title, url):
         self.last_hovered_link = url    
     
-    def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):        
+    def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
         if self.last_hovered_link.startswith("avatar:"):
             uri = self.last_hovered_link[7:]
             num = int(uri[:uri.find(":")])
@@ -39,8 +39,8 @@ class ViewMenu:
             img = self.get_image(num)
             
             # Set only if something has changed
-            if user != self.tooltip_user or \
-               img != self.tooltip_img_file:
+            if user != self.tooltip_user \
+               or img != self.tooltip_img_file:
                 self.set_tooltip(user, img)
                 self.tooltip_user = user
             
@@ -49,15 +49,15 @@ class ViewMenu:
             return True
     
     def set_tooltip(self, user, img):
-        self.tooltip_label.set_markup(
-             lang.html_avatar_tooltip  % (user.name, user.statuses_count, 
+        self.tooltip_label.set_markup(lang.html_avatar_tooltip \
+                                      % (user.name, user.statuses_count,
                                       user.followers_count, user.friends_count))
         
         if img != self.tooltip_img_file:
             buf = gtk.gdk.pixbuf_new_from_file_at_size(img, 48, 48)
             self.tooltip_img.set_from_pixbuf(buf)
             self.tooltip_img_file = img  
-        
+    
     
     # Menu Events --------------------------------------------------------------
     def on_popup(self, view, menu, *args): # Kill of the original context menu!
@@ -146,7 +146,7 @@ class ViewMenu:
                                self.context_link, full)
             
             self.add_menu_link(menu, lang.context_copy,
-                               self.copy_link, full)  
+                               self.copy_link, full)
             return True
     
     def create_status_tag_menu(self, menu, link, full):
@@ -157,7 +157,7 @@ class ViewMenu:
         
         elif link == "tag":
             self.add_menu_link(menu, lang.context_search,
-                               self.context_link, full)   
+                               self.context_link, full)
             return True
     
     
@@ -210,7 +210,7 @@ class ViewMenu:
             delete sizes;''' % (event.x, event.y))
             title = self.get_main_frame().get_title()
             return title
-            
+        
         except Exception:
             return None
 

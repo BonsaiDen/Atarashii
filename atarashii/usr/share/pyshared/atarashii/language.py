@@ -40,8 +40,8 @@ LANG = {
         'html_welcome' : 'Willkommen bei Atarashii.',
         'html_loading' : 'Tweets werden geladen...',
         'html_avatar_tooltip' : 
-            '''<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n''' + \
-            '''<b>%d</b> Follower\nFollowing <b>%d</b>''',
+            '<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n'
+            '<b>%d</b> Follower\nFollowing <b>%d</b>',
         
         'html_profile' : '%s auf Twitter.com',
         'html_at' : '%s auf Twitter.com',
@@ -187,8 +187,8 @@ LANG = {
         
         'error_internal' : '<b>Atarashii Fehler:</b> %s',
         'error_already_retweeted' : 
-            '''Es ist entweder nicht möglich diesen Tweet zu retweeten ''' + \
-            '''oder er wurde bereits von ihnen retweeted.''',
+            'Es ist entweder nicht möglich diesen Tweet zu retweeten '
+            'oder er wurde bereits von ihnen retweeted.',
         
         'error_user_not_found' : 'Der Benutzer <b>%s</b> existiert nicht.',
         
@@ -205,8 +205,8 @@ LANG = {
             '<b>%s</b> Tweet konnte nicht entfavorisiert werden.',
         
         'error_ratelimit_reconnect' : 
-            '''Twitter Requestlimit wurde überschritten.\n''' + \
-            '''Verbinde automatisch neu in %d Minute(n).''',
+            'Twitter Requestlimit wurde überschritten.\n'
+            'Verbinde automatisch neu in %d Minute(n).',
         
         # Error Button stuff
         'error_button_twitter' : 'Twitter-Serverfehler',
@@ -218,8 +218,8 @@ LANG = {
         
         'error_button_rate_limit' : 'Requestlimit überschritten',
         'error_rate_limit' : 
-            '''Twitter Requestlimit wurde überschritten.\n''' + \
-            '''Automatische Aktualisierung in %d Minute(n).''',
+            'Twitter Requestlimit wurde überschritten.\n'
+            'Automatische Aktualisierung in %d Minute(n).',
         
         'error_template' : '<b>Fehler von %H:%M:%S Uhr</b>\n',
         
@@ -228,26 +228,26 @@ LANG = {
         
         'warning_button_rate_limit' : 'Requestlimit verringert',
         'warning_rate_limit' : 
-            '''Twitter hat das Requestlimit auf %d Requests pro Stunde ''' + \
-            '''reduziert, das Aktualisierungsinterval wurde ''' + \
-            '''entsprechend angepasst.''',
+            'Twitter hat das Requestlimit auf %d Requests pro Stunde '
+            'reduziert, das Aktualisierungsinterval wurde '
+            'entsprechend angepasst.',
         
         'warning_button_overload' : 'Twitter überlastet',
         'warning_overload' : 
-            '''Atarashii konnte Twitter nicht erreichen, dies ist in ''' + \
-            '''den meisten Fällen lediglich ein temporäres Problem ''' + \
-            '''aufgrund von Überlastung seitens Twitter.''',
+            'Atarashii konnte Twitter nicht erreichen, dies ist in '
+            'den meisten Fällen lediglich ein temporäres Problem '
+            'aufgrund von Überlastung seitens Twitter.',
         
         'warning_button_network' : 'Netzwerkfehler',
         'warning_network' : 
-            '''Atarashii hat die Verbindung zum <b>Internet</b> verloren,''' + \
-            ''' es wird alle 60 Sekunden versucht die Verbindung ''' + \
-            '''wiederherzustellen.''',
+            'Atarashii hat die Verbindung zum <b>Internet</b> verloren,'
+            ' es wird alle 60 Sekunden versucht die Verbindung '
+            'wiederherzustellen.',
         
         'warning_network_timeout' : 
-            '''Atarashii hat die Verbindung zu <b>Twitter</b> verloren, ''' + \
-            '''es wird alle 60 Sekunden versucht die Verbindung ''' + \
-            '''wiederherzustellen.''',
+            'Atarashii hat die Verbindung zu <b>Twitter</b> verloren, '
+            'es wird alle 60 Sekunden versucht die Verbindung '
+            'wiederherzustellen.',
         
         'warning_template' : '<b>Warnung von %H:%M:%S Uhr</b>\n',
         
@@ -325,8 +325,8 @@ LANG = {
         'html_welcome' : 'Welcome to Atarashii.',
         'html_loading' : 'Loading Tweets...',
         'html_avatar_tooltip' : 
-            '''<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n''' + \
-            '''<b>%d</b> Follower\nFollowing <b>%d</b>''',
+            '<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n'
+            '<b>%d</b> Follower\nFollowing <b>%d</b>',
         
         'html_profile' : '%s at Twitter.com',
         'html_at' : '%s at Twitter.com',
@@ -468,8 +468,8 @@ LANG = {
         'error_login' : 'The login as <b>%s</b> has failed.',
         'error_internal' : '<b>Atarashii error:</b> %s',
         'error_already_retweeted' : 
-            '''Either it\'s not possible to retweet this Tweet or ''' + \
-            '''you\'ve already retweeted it.''',
+            'Either it\'s not possible to retweet this Tweet or '
+            'you\'ve already retweeted it.',
         
         'error_user_not_found' : 'The user <b>%s</b> does not exist.',
         
@@ -483,8 +483,8 @@ LANG = {
         'error_favorite_off' : '<b>%s</b> Tweet couldn\'t be unfavorited.',
         
         'error_ratelimit_reconnect' : 
-             '''Twitters limit on requests has been exceeded.\n''' + \
-             '''Automatic reconnect in %d minute(s).''',
+             'Twitters limit on requests has been exceeded.\n'
+             'Automatic reconnect in %d minute(s).',
         
         # Error Button stuff
         'error_button_twitter' : 'Twitter server error',
@@ -496,8 +496,8 @@ LANG = {
         
         'error_button_rate_limit' : 'Ratelimit exceeded',
         'error_rate_limit' : 
-            '''Twitters limit on requests has been exceeded.\n''' + \
-            '''Automatic refresh in %d minute(s).''',
+            'Twitters limit on requests has been exceeded.\n'
+            'Automatic refresh in %d minute(s).',
         
         'error_template' : '<b>Error from %H:%M:%S</b>\n',
         
@@ -506,23 +506,23 @@ LANG = {
 
         'warning_button_rate_limit' : 'Rate limit reduced',
         'warning_rate_limit' : 
-            '''Twitter has lowered the rate limit to %d requests per ''' + \
-            '''hour, the update interval has been adjusted accordingly.''',
+            'Twitter has lowered the rate limit to %d requests per '
+            'hour, the update interval has been adjusted accordingly.',
         
         'warning_button_overload' : 'Twitter over capacity',
         'warning_overload' : 
-            '''Atarashii couldn\'t connect to Twitter, in most cases ''' + \
-            '''this is just a temporary issue due to Twitter being too ''' + \
-            '''busy at the moment.''',
+            'Atarashii couldn\'t connect to Twitter, in most cases '
+            'this is just a temporary issue due to Twitter being too '
+            'busy at the moment.',
         
         'warning_button_network' : 'Network error',
         'warning_network' : 
-            '''Atarashii has lost the conntection to the Internet. It ''' + \
-            '''will automatically try to reconnect itself every 60 seconds.''',
+            'Atarashii has lost the conntection to the Internet. It '
+            'will automatically try to reconnect itself every 60 seconds.',
         
         'warning_network_timeout' : 
-            '''Atarashii has lost the conntection to Twitter. It ''' + \
-            '''will automatically try to reconnect itself every 60 seconds.''', 
+            'Atarashii has lost the conntection to Twitter. It '
+            'will automatically try to reconnect itself every 60 seconds.', 
         
         'warning_template' : '<b>Warning from %H:%M:%S</b>\n',
         

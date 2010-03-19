@@ -39,10 +39,10 @@ QUERY_CHARS = "[a-z0-9!\\*'\\(\\);:&=\\+\\$/%#\\[\\]\\-_\\.,~]"
 PATH_ENDING_CHARS = "[a-z0-9\\)=#/]"
 QUERY_ENDING_CHARS = "[a-z0-9_&=#]"
 
-URL_REGEX = re.compile("((" + PRE_CHARS + ")((https?://|www\\.)(" + \
-                       DOMAIN_CHARS + ")(/" + PATH_CHARS + "*" + \
-                       PATH_ENDING_CHARS + "?)?(\\?" + QUERY_CHARS + "*" + \
-                       QUERY_ENDING_CHARS + ")?))", re.UNICODE | re.IGNORECASE)
+URL_REGEX = re.compile("((" + PRE_CHARS + ")((https?://|www\\.)(" \
+                       + DOMAIN_CHARS + ")(/" + PATH_CHARS + "*" \
+                       + PATH_ENDING_CHARS + "?)?(\\?" + QUERY_CHARS + "*" \
+                       + QUERY_ENDING_CHARS + ")?))", re.UNICODE |re.IGNORECASE)
 
 from utils import escape
 
@@ -112,9 +112,9 @@ class Formatter:
             elif ttype == 2:
                 at_user = data[1:]
                 self.users.append(at_user)
-                result.append(
-                    ('<a href="user:http://twitter.com/%s" title="' + \
-                    lang.html_at + '">@%s</a>') % (at_user, at_user, at_user))
+                result.append(('<a href="user:http://twitter.com/%s" title="' \
+                                + lang.html_at + '">@%s</a>') \
+                                % (at_user, at_user, at_user))
             
             # tag
             elif ttype == 3:
@@ -122,9 +122,9 @@ class Formatter:
                 pre, tag = data[:pos], data[pos + 1:]
                 self.tags.append(tag)
                 result.append((
-                    '%s<a href="tag:http://search.twitter.com/search?%s"''' + \
-                    ' title="' + lang.html_search + '">#%s</a>') %
-                    (pre, urllib.urlencode({'q': '#' + tag}), tag, tag))
+                    '%s<a href="tag:http://search.twitter.com/search?%s"''' \
+                    + ' title="' + lang.html_search + '">#%s</a>') \
+                    % (pre, urllib.urlencode({'q': '#' + tag}), tag, tag))
         
         return "".join(result)
     

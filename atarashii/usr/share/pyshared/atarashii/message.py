@@ -27,7 +27,7 @@ class HTML(view.HTMLView):
     def __init__(self, main, gui):
         self.main = main
         self.gui = gui
-        view.HTMLView.__init__(self, main, gui, 
+        view.HTMLView.__init__(self, main, gui,
                               self.gui.message_scroll, MODE_MESSAGES)
         
         self.item_count = self.main.load_message_count
@@ -76,8 +76,9 @@ class HTML(view.HTMLView):
         # Spacers --------------------------------------------------------------
         mentioned = item.recipient_screen_name != self.main.username
         if num > 0:
-            next_highlight = self.items[num + 1][0].recipient_screen_name != \
-                self.main.username if num < len(self.items) - 1 else False
+            next_highlight = self.items[num + 1][0].recipient_screen_name \
+                             != self.main.username if num < len(self.items) \
+                             - 1 else False
             
             force = self.last_recipient != item.recipient_screen_name
             self.renderitems.insert(0,
@@ -91,11 +92,11 @@ class HTML(view.HTMLView):
         
         # Avatar ---------------------------------------------------------------
         self.is_new_avatar(num)
-        if (num < len(self.items) - 1 and \
-           (user.screen_name != self.items[num + 1][0].sender.screen_name \
-           or item.recipient_screen_name != \
-           self.items[num + 1][0].recipient_screen_name or self.new_avatar) \
-           ) or num == len(self.items) - 1 or self.new_timeline:
+        if (num < len(self.items) - 1 \
+           and (user.screen_name != self.items[num + 1][0].sender.screen_name \
+           or item.recipient_screen_name \
+           != self.items[num + 1][0].recipient_screen_name or self.new_avatar))\
+           or num == len(self.items) - 1 or self.new_timeline:
             
             avatar = self.avatar_html(user, num, img)
         
@@ -129,23 +130,24 @@ class HTML(view.HTMLView):
         html = '''
         <div class="viewitem %s" id="%d"><div class="avatar">%s</div>
         <div class="actions">
-            <div class="doretweet" style="''' + reply + \
-            '''"><a href="qmessage:%s:%d:%d" title="''' + \
-                (lang.html_reply % user.screen_name) + '''"></a>
+            <div class="doretweet" style="''' + reply \
+                + '''"><a href="qmessage:%s:%d:%d" title="''' \
+                + (lang.html_reply % user.screen_name) + '''"></a>
             </div>
         </div>
         
         <div class="inner-text">
             <div>
-                <span class="name"><b>''' + mode + \
-                ''' <a href="''' + ltype + \
-                ''':http://twitter.com/%s" title="''' + \
-                lang.html_profile + \
-                '''">%s</a></b></span>''' + self.is_protected(user) + \
-                '''%s</div>
+                <span class="name"><b>''' + mode \
+                + ''' <a href="''' + ltype \
+                + ''':http://twitter.com/%s" title="''' \
+                + lang.html_profile \
+                + '''">%s</a></b></span>''' \
+                + self.is_protected(user) \
+                + '''%s</div>
             <div class="time">
-            <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
-                (self.absolute_time(item.created_at)) + '''">%s</a>
+            <a href="status:http://twitter.com/%s/statuses/%d" title="''' \
+                + self.absolute_time(item.created_at) + '''">%s</a>
             </div>
         </div>
         </div>'''
@@ -182,14 +184,16 @@ class HTML(view.HTMLView):
     def create_menu(self, menu, item, item_id, link, full, user):
         # User Options
         if user != None:
-            if link in ("profile", "avatar") and \
-               user.lower() != self.main.username.lower():
+            if link in ("profile", "avatar") \
+               and user.lower() != self.main.username.lower():
+               
                 reply = "message:%s:%d:-1" % (user, self.get_sender(item).id)
                 self.add_menu_link(menu, lang.context_reply % user,
                                    self.context_link, reply, item)
             
-            elif link == "rprofile" and \
-               user.lower() != self.main.username.lower():
+            elif link == "rprofile" \
+                 and user.lower() != self.main.username.lower():
+                
                 reply = "message:%s:%d:-1" % (user, self.get_recipient(item).id)
                 self.add_menu_link(menu, lang.context_message % user,
                                    self.context_link, reply, item)

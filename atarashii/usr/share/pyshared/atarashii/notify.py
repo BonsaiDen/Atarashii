@@ -26,10 +26,11 @@ class Notifier:
         self.main = main
     
     def show(self, objs):
-        if len(objs) > 0 and self.main.settings.is_true("sound") and \
-           self.main.settings['soundfile'] != "None":
+        if len(objs) > 0 and self.main.settings.is_true("sound") \
+           and self.main.settings['soundfile'] != "None":
+           
             try:
-                subprocess.Popen(["mplayer", "-really-quiet", 
+                subprocess.Popen(["mplayer", "-really-quiet",
                                   "-nolirc", self.main.settings['soundfile']])
             
             except OSError, error:

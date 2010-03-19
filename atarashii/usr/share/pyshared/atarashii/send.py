@@ -126,6 +126,7 @@ class Send(threading.Thread):
         if self.main.message_id != UNSET_ID_NUM:
             message = self.main.api.send_direct_message(text = text,
                                         user_id = self.main.message_id)
+        
         else:
             message = self.main.api.send_direct_message(text = text,
                                         screen_name = self.main.message_user)

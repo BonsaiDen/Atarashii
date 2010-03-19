@@ -209,7 +209,6 @@ class ViewHTML:
         
         return '<div class="spacer%s"></div>' % spacer
     
-    
     def avatar_html(self, user, num, img):
         return '''<a href="avatar:%d:http://twitter.com/%s">
                   <img width="32" src="file://%s" title="avatar" /></a>''' % (

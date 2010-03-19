@@ -34,7 +34,7 @@ class UpdaterTweet:
         self.settings['lasttweet_' + self.main.username] = item_id
         if len(self.html.items) > 0:
             self.html.newest_id = self.html.items[
-                                            len(self.html.items) - 1][0].id
+                                  len(self.html.items) - 1][0].id
     
     # Load initial tweets ------------------------------------------------------
     def get_init_tweets(self, last = False, init = False):
@@ -63,7 +63,7 @@ class UpdaterTweet:
             if init:
                 self.started = True
                 gobject.idle_add(self.main.on_login)
-                gobject.idle_add(self.gui.set_refresh_update, True)     
+                gobject.idle_add(self.gui.set_refresh_update, True)
             
             # Show login message
             if last:
@@ -103,11 +103,11 @@ class UpdaterTweet:
         mentions = []
         if since_id != HTML_UNSET_ID:
             if max_id == None:
-                mentions = self.api.mentions(
-                                    since_id = since_id, count = max_count)
+                mentions = self.api.mentions(since_id = since_id,
+                                             count = max_count)
                 
-                updates = self.api.home_timeline(
-                                   since_id = since_id, count = max_count)
+                updates = self.api.home_timeline(since_id = since_id,
+                                                 count = max_count)
             
             else:
                 updates = self.api.home_timeline(

@@ -124,7 +124,7 @@ class PasswordDialog(Dialog):
         def key(widget, event, *args):
             if self.error_shown:
                 if len(self.password.get_text().strip()) >= 6:
-                    self.password.modify_base(gtk.STATE_NORMAL, 
+                    self.password.modify_base(gtk.STATE_NORMAL,
                                                     self.default_bg)
                     self.error.hide()
                     self.error_shown = False
@@ -306,8 +306,8 @@ class SettingsDialog(Dialog):
                 self.settings['username'] = ""
                 self.main.logout()
             
-            elif username != oldusername or \
-                not self.main.status(ST_LOGIN_SUCCESSFUL):
+            elif username != oldusername \
+                or not self.main.status(ST_LOGIN_SUCCESSFUL):
                 
                 self.main.login(username)
             
@@ -457,8 +457,8 @@ class AccountDialog(Dialog):
             if username == "":
                 self.get("username").grab_focus()
             
-            elif username in self.parent.user_accounts and \
-                username != self.username:
+            elif username in self.parent.user_accounts \
+                 and username != self.username:
                 self.get("username").grab_focus()
             
             else:
@@ -567,8 +567,8 @@ class ButtonDialog:
         
         date = time.localtime(self.time)
         self.dialog = MessageDialog(self.gui,
-                              MESSAGE_WARNING if self.dtype == "warning" else \
-                              MESSAGE_ERROR,
+                              MESSAGE_WARNING if self.dtype == "warning" \
+                              else MESSAGE_ERROR,
                               time.strftime(self.template, date) + \
                               self.information,
                               self.title, close_callback = self.hide)

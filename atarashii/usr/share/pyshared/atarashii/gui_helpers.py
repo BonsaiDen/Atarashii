@@ -39,9 +39,9 @@ class GUIHelpers:
         if self.main.status(ST_SEND):
             return
         
-        if self.main.reply_user == UNSET_TEXT and \
-            self.main.retweet_user == UNSET_TEXT and \
-            self.main.message_user == UNSET_TEXT:
+        if self.main.reply_user == UNSET_TEXT \
+           and self.main.retweet_user == UNSET_TEXT \
+           and self.main.message_user == UNSET_TEXT:
             
             self.info_label.set_markup(UNSET_LABEL)
             self.info_label.hide()
@@ -74,37 +74,34 @@ class GUIHelpers:
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def set_app_title(self):
-        if self.main.username == UNSET_TEXT or \
-            (not self.main.status(ST_LOGIN_SUCCESSFUL) and \
-            not self.main.status(ST_CONNECT)):
+        if self.main.username == UNSET_TEXT \
+           or (not self.main.status(ST_LOGIN_SUCCESSFUL) \
+           and not self.main.status(ST_CONNECT)):
             self.set_title(lang.title)
         
         elif self.mode == MODE_MESSAGES:
             if self.html.count > 0:
-                self.set_title(
-                     (lang.title_tweets if self.html.count > 1 else \
-                      lang.title_tweet) % self.html.count)
+                self.set_title((lang.title_tweets if self.html.count > 1 \
+                                else lang.title_tweet) % self.html.count)
             
             else:
                 self.set_title(lang.title_logged_in % self.main.username)
         
         elif self.mode == MODE_TWEETS:
             if self.message.count > 0:
-                self.set_title(
-                     (lang.title_messages if self.html.count > 1 else \
-                      lang.title_message) % self.message.count)
+                self.set_title((lang.title_messages if self.html.count > 1 \
+                                else lang.title_message) % self.message.count)
             
             else:
                 self.set_title(lang.title_logged_in % self.main.username)
         
         # Tray Tooltip
-        if not self.main.status(ST_CONNECT) and \
-           self.main.status(ST_LOGIN_COMPLETE):
+        if not self.main.status(ST_CONNECT) \
+           and self.main.status(ST_LOGIN_COMPLETE):
            
-            if self.main.username == UNSET_TEXT or \
-                (not self.main.status(ST_LOGIN_SUCCESSFUL) and \
-                not self.main.status(ST_CONNECT)):
-                
+            if self.main.username == UNSET_TEXT \
+               or (not self.main.status(ST_LOGIN_SUCCESSFUL) \
+               and not self.main.status(ST_CONNECT)):
                 self.tray.set_tooltip(lang.tray_logged_out)
             
             elif self.mode == MODE_MESSAGES:
@@ -141,8 +138,8 @@ class GUIHelpers:
         return not self.main.status(ST_UPDATE) and self.load_state()
     
     def load_state(self):
-        return self.message.load_state == HTML_LOADED and \
-               self.html.load_state == HTML_LOADED
+        return self.message.load_state == HTML_LOADED \
+               and self.html.load_state == HTML_LOADED
     
     def show_in_taskbar(self, mode):
         self.main.settings['taskbar'] = mode

@@ -98,16 +98,16 @@ class TrayIcon(gtk.StatusIcon):
     def set_tooltip(self, status, twt = 0, msg = 0):
         text = []
         if twt > 0:
-            text.append((lang.tray_tweets if twt > 1 else \
-                                lang.tray_tweet) % twt)
+            text.append((lang.tray_tweets if twt > 1 \
+                         else lang.tray_tweet) % twt)
         
         if msg > 0:
-            text.append((lang.tray_messages if msg > 1 else \
-                                lang.tray_message) % msg)
+            text.append((lang.tray_messages if msg > 1 \
+                         else lang.tray_message) % msg)
         
         self.tooltip_label.set_markup(
-                           '<span size="large"><b>%s</b></span>\n%s\n%s' % \
-                           (lang.tray_title, status, "\n".join(text)))
+                           '<span size="large"><b>%s</b></span>\n%s\n%s' \
+                           % (lang.tray_title, status, "\n".join(text)))
         
         img = self.main.get_user_picture()
         if img != self.tooltip_img_file:
@@ -196,6 +196,7 @@ class TrayIcon(gtk.StatusIcon):
         position = self.gui.get_position()
         if position[0] < 0 - size[0] or position[0] > screen.get_width() \
            or position[1] < 0 - size[1] or position[1] > screen.get_height():
+           
             return False
             
         else:

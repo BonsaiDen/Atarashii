@@ -38,7 +38,7 @@ class Settings:
             os.mkdir(self.dir)
         
         # Record running time
-        self.init_time = time.time()        
+        self.init_time = time.time()
         self.values = {}
         self.load()
         
@@ -87,7 +87,7 @@ class Settings:
             del self.values['crashed']
         
         if self.values.has_key("time_before_crash"):
-            del self.values['time_before_crash']         
+            del self.values['time_before_crash']
         
         # Test
         settings_file = open(os.path.join(self.dir, 'atarashii.conf'), "w")
