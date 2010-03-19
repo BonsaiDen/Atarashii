@@ -24,19 +24,19 @@ import urllib
 AT_REGEX = re.compile(ur"\B[@\uFF20]([a-z0-9_]{1,20})",
                       re.UNICODE | re.IGNORECASE)
 
-UTF_CHARS = ur"[a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff]"
-TAG_EXP = ur"(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+%s*)" % UTF_CHARS
+UTF_CHARS = ur"a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff"
+TAG_EXP = ur"(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+[%s]*)" % UTF_CHARS
 TAG_REGEX = re.compile(TAG_EXP, re.UNICODE | re.IGNORECASE)
 
-PRE_CHARS = "(?:[^/\"':!=]|^|\\:)"
-DOMAIN_CHARS = "(?:[\\.-]|[^\\s])+\\.[a-z]{2,}(?::[0-9]+)?"
-PATH_CHARS = "(?:[\\.,]?[a-z0-9!\\*'\\(\\);:=\\+\\$/%#\\[\\]\\-_,~@])"
-QUERY_CHARS = "[a-z0-9!\\*'\\(\\);:&=\\+\\$/%#\\[\\]\\-_\\.,~]"
+PRE_CHARS = ur"(?:[^/\"':!=]|^|\:)"
+DOMAIN_CHARS = ur"(?:[\.-]|[^\s])+\.[a-z]{2,}(?::[0-9]+)?"
+PATH_CHARS = ur"(?:[\.,]?[%s!\*'\(\);:=\+\$/%s#\[\]\-_,~@])" % (UTF_CHARS, "%")
+QUERY_CHARS = ur"[a-z0-9!\*'\(\);:&=\+\$/%#\[\]\-_\.,~]"
 
 # Valid end-of-path chracters (so /foo. does not gobble the period).
 # 1. Allow ) for Wikipedia URLs.
 # 2. Allow =&# for empty URL parameters and other URL-join artifacts
-PATH_ENDING_CHARS = "[a-z0-9\\)=#/]"
+PATH_ENDING_CHARS = ur"[%s\)=#/]" % UTF_CHARS
 QUERY_ENDING_CHARS = "[a-z0-9_&=#]"
 
 URL_REGEX = re.compile("((" + PRE_CHARS + ")((https?://|www\\.)(" \
