@@ -386,8 +386,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def process_updates(self, updates):
-        ids = [] # Remove doubled mentions
+    def process_updates(self, updates): # Remove doubled mentions
+        ids = []
         def unique(i):
             # Check if this item is already in the list
             if i.id in ids:
@@ -397,7 +397,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 ids.append(i.id)
                 return True
         
-        updates = filter(unique, updates)
+        updates = [i for i in updates if unique(i)]
         updates.sort(compare)
         return updates
     
