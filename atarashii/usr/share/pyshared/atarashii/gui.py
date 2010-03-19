@@ -159,6 +159,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.connect("delete_event", self.delete_event)
         self.connect("destroy", self.destroy_event)
         self.connect("window-state-event", self.state_event)
+        self.connect("focus-out-event", self.fix_tooltips)
         
         # Dialogs
         self.about_dialog = None
