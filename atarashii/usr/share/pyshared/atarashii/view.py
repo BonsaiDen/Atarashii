@@ -78,6 +78,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.scrolled = True
                 
         # Other Stuff
+        self.give_text_focus = False
         self.scroll = scroll
         self.scroll_position = 0
         self.set_maintains_back_forward_list(False)
@@ -304,11 +305,15 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         elif uri.startswith("fav:"):
             name, item_id = uri.split(":")[1:]
             gobject.idle_add(self.main.favorite, int(item_id), True, name)
+            if self.give_text_focus:
+                gobject.idle_add(self.gui.text.grab_focus)
         
         # Un-Favorite
         elif uri.startswith("unfav:"):
             name, item_id, = uri.split(":")[1:]
             gobject.idle_add(self.main.favorite, int(item_id), False, name)
+            if self.give_text_focus:
+                gobject.idle_add(self.gui.text.grab_focus)
         
         # Regular links
         else:

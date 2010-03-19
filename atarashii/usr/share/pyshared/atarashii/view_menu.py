@@ -69,6 +69,8 @@ class ViewMenu:
     
     # Let's create our own nice little popup :)
     def on_button(self, view, event, *args):
+        self.give_text_focus = self.gui.text.has_focus
+        
         if event.button == 3:
             # Calculate on which item the user clicked
             item_id, link = self.get_clicked_item(self.get_sizes(event), event)

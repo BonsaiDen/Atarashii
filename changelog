@@ -1,3 +1,15 @@
+atarashii (0.99.13-1) all;
+
+  * Don't allow selection anymore, instead offer context menu options for
+    copying tweets/messages.
+  * Added CTRL+D and CTRL+T to quick start a message/tweet.
+  * Added CTRL+S shortcut for canceling tweet/message writing completely.
+  * New shiny avatar tooltips.
+  * Improved handling of network errors.
+  * The usual internal cleanup and bugfixing.
+  
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 19 Mar 2010 08:51:00 +0100
+
 atarashii (0.99.12a-1) all;
 
   * Improved the textbox, it now trys to remove unnecessary whitespace by 
