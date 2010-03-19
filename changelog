@@ -1,3 +1,14 @@
+atarashii (0.99.14-1) all;
+
+  * Merged the Refresh/Read/History buttons in to one that changes its state
+    as needed.
+  * Fixed non disabled tray menu items.
+  * Update spacer css.
+  * Added support for accents in urls.
+  * Fixed issues with keyboard scrolling in the views.
+  
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 19 Mar 2010 23:30:00 +0100
+
 atarashii (0.99.13-1) all;
 
   * Don't allow selection anymore, instead offer context menu options for
