@@ -104,22 +104,22 @@ class ViewHelpers:
         
         self.load_history = False
         self.has_newitems = False
-        self.fake_move()
+        self.fake_move(self.mouse_position)
     
     # Fakeman! Roger Buster!
     # This fixes an issue where the reply/favorite links wouldn't disapear if
     # the mouse left the view
-    def fake_move(self):
+    def fake_move(self, pos, force = False):
         self.fake_mouse = True 
         event = gtk.gdk.Event(gtk.gdk.MOTION_NOTIFY)
         event.window = self.get_window()
-        event.x = self.mouse_position[0]
-        event.y = self.mouse_position[1]
+        event.x = pos[0]
+        event.y = pos[1]
         self.emit("motion_notify_event", event)
-        
+    
     def on_leave(self, view, event, *args):
         self.mouse_position = (-1.0, -1.0)
-        self.fake_move()
+        self.fake_move(self.mouse_position)
     
     def on_move(self, view, event, *args):
         if not self.fake_mouse:
@@ -131,7 +131,7 @@ class ViewHelpers:
         pos = self.scroll.get_vscrollbar().get_value()
         if pos != self.scroll_position:
             self.scroll_position = pos
-            gobject.timeout_add(10, self.fake_move)
+            gobject.timeout_add(10, self.fake_move, self.mouse_position)
     
     def fix_scroll(self):
         if self.scroll_to != -1 and self.main.gui.mode == self.mode_type:

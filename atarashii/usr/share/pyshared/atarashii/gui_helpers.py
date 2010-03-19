@@ -177,17 +177,14 @@ class GUIHelpers:
         self.set_property('skip-taskbar-hint', not mode)
 
     # Fix tooltips that would stay on screen when switching workspaces
+    # This doesn't work 100% of the time, but it's better than nothing
     def fix_tooltips(self, *args):
         if self.mode == MODE_TWEETS:
-            self.html.mouse_position = (-1.0, -1.0)
-            self.html.fake_move()
+            self.html.fake_move((-1.0, -1.0), True)
          
         elif self.mode == MODE_MESSAGES:
-            self.message.mouse_position = (-1.0, -1.0)
-            self.message.fake_move()
+            self.message.fake_move((-1.0, -1.0), True)
         
         else: # TODO implement search
             pass
-        print "foo"
-
 
