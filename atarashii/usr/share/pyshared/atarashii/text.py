@@ -453,10 +453,27 @@ class TextInput(gtk.TextView):
         self.is_changing = False
     
     
+    # Acceleratores ------------------------------------------------------------
+    def start_tweet(self, *args):
+        if not self.has_typed:
+            self.is_changing = True
+            self.grab_focus()
+            self.set_text("")
+            self.is_changing = False
+    
+    def start_message(self, *args):
+        if not self.has_typed:
+            self.is_changing = True
+            self.grab_focus()
+            self.set_text("d ")
+            self.is_changing = False
+    
+    
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def get_text(self):
-        return unicode(self.get_buffer().get_text(*self.get_buffer().get_bounds()))
+        text = self.get_buffer().get_text(*self.get_buffer().get_bounds())
+        return unicode(text)
     
     def set_text(self, text):
         self.get_buffer().set_text(text)

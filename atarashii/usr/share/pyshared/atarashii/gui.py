@@ -137,7 +137,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.error_button = dialog.ButtonDialog(self, "error",
                                      lang.error_template, lang.error_title)
         
-        # Restore Position & Size
+        
+        
+        # Restore Position & Size ----------------------------------------------
         if main.settings.isset("position"):
             self.window_position = main.settings['position'][1:-1].split(",")
             self.move(int(self.window_position[0]),
@@ -173,6 +175,16 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.set_mode(self.mode)
         self.set_app_title()
         self.on_mode()
+        
+        
+        # Accelerators ---------------------------------------------------------
+        acc = gtk.AccelGroup()
+        self.add_accel_group(acc)
+        acc.connect_group(gtk.keysyms.t, gtk.gdk.CONTROL_MASK, 
+                          0, self.text.start_tweet)
+        
+        acc.connect_group(gtk.keysyms.d, gtk.gdk.CONTROL_MASK, 
+                          0, self.text.start_message)
         
         # Show GUI
         if not main.settings.is_true("tray", False) or \
