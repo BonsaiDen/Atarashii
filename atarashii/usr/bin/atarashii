@@ -20,6 +20,10 @@ if arg == "main":
     atarashii.start()
 
 else:
+    if arg == "auto":
+        import time
+        time.sleep(2)
+    
     # Wrap arround crazy random GDK and XOrg Erros ^.^"
     import subprocess
     error = 0
