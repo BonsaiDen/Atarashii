@@ -401,18 +401,20 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     # Show Error Dialog --------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_error(self, code, error, rate_error):
-        if code in (-5, 503):
-            if code == -5: # Network lost
-                info = lang.warning_network
+        if code in (-9, -5, 503):
+            if code == 503:# overload warning
+                info = lang.warning_overload
+                button = lang.warning_button_overload              
+                
+            else: # twitter/network lost
+                info = lang.warning_network_timeout if code == -9 else \
+                       lang.warning_network
+                
                 button = lang.warning_button_network
                 self.tray.set_tooltip_error(
                             (lang.tray_logged_in  % self.main.username) + \
                             "\n" + lang.tray_warning_network, 
-                            gtk.STOCK_DIALOG_WARNING)
-                
-            else: # overload warning
-                info = lang.warning_overload
-                button = lang.warning_button_overload
+                            gtk.STOCK_DIALOG_WARNING)             
             
             self.warning_button.show(button, info)
         
@@ -450,6 +452,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             gobject.idle_add(self.force_show)
             
             description = {
+                -9 : lang.error_network_timeout,
                 -4 : lang.error_network,
                 -3 : lang.error_user_not_found % self.main.message_user,
                 -2 : lang.error_already_retweeted,

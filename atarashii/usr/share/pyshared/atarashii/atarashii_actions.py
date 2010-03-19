@@ -23,6 +23,7 @@ import sys
 import calendar
 import time
 import math
+import socket
 
 import send
 
@@ -212,6 +213,14 @@ class AtarashiiActions:
             
             else:
                 msg = ""
+        
+        # Timeout error
+        elif isinstance(error, socket.timeout):
+            msg = ""
+            error.code = 0
+            error.errno = -3
+            code = -9
+                
         else:
             msg = error.reason
             error.code = error.response.status
@@ -223,7 +232,6 @@ class AtarashiiActions:
             code = -4
             if self.status(ST_LOGIN_SUCCESSFUL):
                 code = -5
-                self.set_status(ST_NETWORK_FAILED)
                 self.gui.refresh_button.set_sensitive(False)
         
         # Catch common Twitter errors
@@ -251,11 +259,8 @@ class AtarashiiActions:
                 # A real 404! This may be raised if a user wasn't found
                 elif self.status(ST_WAS_SEND) and code == 404:
                     code = -3 
-                    
-        # Catch network errors
-        else:
-            code = -1
         
+                
         # Reset stuff
         self.unset_status(ST_WAS_SEND | ST_WAS_RETWEET | \
                                ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
