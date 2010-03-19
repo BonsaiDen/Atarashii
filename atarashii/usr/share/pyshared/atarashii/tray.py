@@ -35,7 +35,7 @@ class TrayIcon(gtk.StatusIcon):
         self.tooltip = gtb.get_object("tooltip")  
         self.tooltip_label = gtb.get_object("label") 
         self.tooltip_img = gtb.get_object("image")
-        self.img = None
+        self.tooltip_img_file = None
         self.tooltip.show_all()
         
         # Create Tray Icon
@@ -110,10 +110,10 @@ class TrayIcon(gtk.StatusIcon):
                            (lang.tray_title, status, "\n".join(text)))
         
         img = self.main.get_user_picture()
-        if img != self.img:
+        if img != self.tooltip_img_file:
             buf = gtk.gdk.pixbuf_new_from_file_at_size(img, 48, 48)
             self.tooltip_img.set_from_pixbuf(buf)
-            self.img = img
+            self.tooltip_img_file = img
     
     def set_tooltip_error(self, status, icon):
         text = []
