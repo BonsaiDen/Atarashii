@@ -24,8 +24,9 @@ import urllib
 AT_REGEX = re.compile(ur"\B[@\uFF20]([a-z0-9_]{1,20})",
                       re.UNICODE | re.IGNORECASE)
 
-TAG_REGEX = re.compile(ur"(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+[a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff]*)",
-                       re.UNICODE | re.IGNORECASE)
+UTF_CHARS = ur"[a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff]"
+TAG_EXP = ur"(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+%s*)" % UTF_CHARS
+TAG_REGEX = re.compile(TAG_EXP, re.UNICODE | re.IGNORECASE)
 
 PRE_CHARS = "(?:[^/\"':!=]|^|\\:)"
 DOMAIN_CHARS = "(?:[\\.-]|[^\\s])+\\.[a-z]{2,}(?::[0-9]+)?"
