@@ -20,7 +20,7 @@ import view
 
 from language import LANG as lang
 
-from constants import UNSET_TEXT, MODE_MESSAGES
+from constants import UNSET_TEXT, MODE_MESSAGES, HTML_UNSET_ID
 
 
 class HTML(view.HTMLView):
@@ -30,11 +30,7 @@ class HTML(view.HTMLView):
         view.HTMLView.__init__(self, main, gui, 
                               self.gui.message_scroll, MODE_MESSAGES)
         
-        self.get_latest = self.main.get_latest_message_id
         self.item_count = self.main.load_message_count
-        
-        self.get_item_count = self.main.get_message_count
-        self.set_item_count = self.main.set_message_count
         
         self.lang_loading = lang.message_loading
         self.lang_empty = lang.message_empty
@@ -45,6 +41,30 @@ class HTML(view.HTMLView):
         self.last_mentioned = UNSET_TEXT
         
         self.first_setting = 'firstmessage_'
+    
+    
+    # Items --------------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def get_latest(self):
+        if self.main.settings.isset('lastmessage_' + self.main.username):
+            return self.main.settings['lastmessage_' + self.main.username]
+        
+        else:
+            return HTML_UNSET_ID
+    
+    def get_first(self):
+        if self.main.settings.isset('firstmessage_' + self.main.username):
+            return self.main.settings['firstmessage_' + self.main.username]
+        
+        else:
+            return HTML_UNSET_ID
+         
+    
+    def set_item_count(self, count):
+        self.max_message_count = count
+    
+    def get_item_count(self):
+        return self.max_message_count
     
     
     # Render the Timeline ------------------------------------------------------

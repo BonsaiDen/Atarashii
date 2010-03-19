@@ -20,7 +20,8 @@ import view
 
 from language import LANG as lang
 
-from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, MODE_TWEETS
+from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, MODE_TWEETS, \
+                      HTML_UNSET_ID
 
 
 class HTML(view.HTMLView):
@@ -30,11 +31,8 @@ class HTML(view.HTMLView):
         view.HTMLView.__init__(self, main, gui,
                                self.gui.html_scroll, MODE_TWEETS)
         
-        self.get_latest = self.main.get_latest_id
+
         self.item_count = self.main.load_tweet_count
-        
-        self.get_item_count = self.main.get_tweet_count
-        self.set_item_count = self.main.set_tweet_count
         
         self.lang_loading = lang.html_loading
         self.lang_empty = lang.html_empty
@@ -45,6 +43,27 @@ class HTML(view.HTMLView):
         self.last_mentioned = UNSET_TEXT
         
         self.first_setting = 'firsttweet_'
+    
+    
+    def get_latest(self):
+        if self.main.settings.isset('lasttweet_' + self.main.username):
+            return self.main.settings['lasttweet_' + self.main.username]
+        
+        else:
+            return HTML_UNSET_ID
+    
+    def get_first(self):
+        if self.main.settings.isset('firsttweet_' + self.main.username):
+            return self.main.settings['firsttweet_' + self.main.username]
+        
+        else:
+            return HTML_UNSET_ID
+        
+    def set_item_count(self, count):
+        self.main.max_tweet_count = count
+    
+    def get_item_count(self):
+        return self.main.max_tweet_count
     
     
     # Render the Timeline ------------------------------------------------------

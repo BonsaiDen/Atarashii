@@ -84,11 +84,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.set_maintains_back_forward_list(False)
         self.count = 0
         self.formatter = formatter.Formatter()
-        self.get_latest = None
         self.item_count = 20
-        self.get_item_count = None
-        self.set_item_count = None
-        
+                
         self.lang_loading = ""
         self.lang_load = ""
         self.lang_empty = ""

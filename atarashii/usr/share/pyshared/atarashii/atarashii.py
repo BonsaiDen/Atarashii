@@ -13,7 +13,6 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import dbus
@@ -53,7 +52,7 @@ from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_NONE, ST_SEND, ST_DELETE
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
-                      MODE_TWEETS, MODE_MESSAGES, HTML_UNSET_ID
+                      MODE_TWEETS, MODE_MESSAGES
 
 from atarashii_actions import AtarashiiActions
 
@@ -277,46 +276,7 @@ class Atarashii(AtarashiiActions):
             return os.path.join(self.debug,
                                 "atarashii/usr/share/atarashii", res)
     
-    def get_latest_id(self):
-        if self.settings.isset('lasttweet_' + self.username):
-            return long(self.settings['lasttweet_' + self.username])
-        
-        else:
-            return HTML_UNSET_ID
-    
-    def get_first_id(self):
-        if self.settings.isset('firsttweet_' + self.username):
-            return long(self.settings['firsttweet_' + self.username])
-        
-        else:
-            return HTML_UNSET_ID
-    
-    def get_latest_message_id(self):
-        if self.settings.isset('lastmessage_' + self.username):
-            return long(self.settings['lastmessage_' + self.username])
-        
-        else:
-            return HTML_UNSET_ID
-    
-    def get_first_message_id(self):
-        if self.settings.isset('firstmessage_' + self.username):
-            return long(self.settings['firstmessage_' + self.username])
-        
-        else:
-            return HTML_UNSET_ID
-    
-    def set_tweet_count(self, count):
-        self.max_tweet_count = count
-    
-    def get_tweet_count(self):
-        return self.max_tweet_count
-    
-    def set_message_count(self, count):
-        self.max_message_count = count
-    
-    def get_message_count(self):
-        return self.max_message_count
-    
+    # Statuses
     def status(self, flag):
         return self.current_status & flag == flag
     

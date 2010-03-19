@@ -40,7 +40,7 @@ class UpdaterTweet:
     def get_init_tweets(self, last = False, init = False):
         updates = []
         try:
-            updates = self.try_get_updates(self.main.get_first_id())
+            updates = self.try_get_updates(self.html.get_first())
         
         except (IOError, TweepError), error:
             gobject.idle_add(self.main.on_login_failed, error)

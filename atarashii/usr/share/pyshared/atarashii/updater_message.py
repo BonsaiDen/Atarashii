@@ -41,7 +41,7 @@ class UpdaterMessage:
     def get_init_messages(self, last = False, init = False):
         messages = []
         try:
-            messages = self.try_get_messages(self.main.get_first_message_id())
+            messages = self.try_get_messages(self.message.get_first())
         
         except (IOError, TweepError), error:
             gobject.idle_add(self.main.on_login_failed, error)

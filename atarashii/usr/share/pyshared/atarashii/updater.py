@@ -89,8 +89,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         self.html.load_state = HTML_RESET
         
         # InitID = the last read tweet
-        self.html.init_id = self.main.get_latest_id()
-        self.message.init_id = self.main.get_latest_message_id()
+        self.html.init_id = self.html.get_latest()
+        self.message.init_id = self.message.get_latest()
         
         # Try to Login
         auth = self.login()
