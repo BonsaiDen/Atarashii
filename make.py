@@ -141,15 +141,23 @@ print ">> Created!"
 print ""
 # Create package
 print "The kittens are building your package..."
+dpkg = False
 try:
     subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"], 
                     stdout = open("/dev/null", "wb"))
+                    
+    dkpg = True
     shutil.move(os.path.join(sys.path[0], "atarashii.deb"), 
                 os.path.join(sys.path[0], 
                 "atarashii_%s-1_all.deb" % atarashii.__version__))
 
 except:
-    print """ERROR: Could not build Atarashii package due to missing 'fakeroot'.\n       Please install 'fakeroot' via the package manager and try again."""
+    if not dpkg:
+        print """ERROR: Could not build Atarashii package due to missing 'fakeroot'.\n       Please install 'fakeroot' via the package manager and try again."""
+    
+    else:
+        print """ERROR: dpkg-deb failed to create the package."""
+    
     # Move all those temp files back
     for file, to in tempFiles:
         shutil.move(to, file)
