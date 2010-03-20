@@ -131,7 +131,7 @@ Depends: python (>= 2.6), python-webkit, python-gtk2, python-gconf, python-gobje
 Maintainer: Ivo Wetzel <ivo.wetzel@googlemail.com>
 Homepage: http://github.com/BonsaiDen/Atarashii
 Description: Twitter Client for the GNOME Desktop
- Atarashii(Japanese for "New") is a Twitter Client specifically designed for the 
+ Atarashii is a Twitter Client specifically designed for the 
  GNOME Desktop. It uses GTK+ and webkit to archive a slim and functional design.
  The code itself is written in Python and uses the corresponding Python bindings
  for the GTK+ libraries.
