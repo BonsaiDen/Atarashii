@@ -100,8 +100,7 @@ class ViewMenu:
             return True
     
     def add_menu_link(self, menu, name, callback, *args):
-        item = gtk.MenuItem()
-        item.set_label(name)
+        item = gtk.MenuItem(name)
         item.connect('activate', callback, *args)
         menu.append(item)
     

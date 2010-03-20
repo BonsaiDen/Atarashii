@@ -47,50 +47,58 @@ class TrayIcon(gtk.StatusIcon):
         self.connect("query-tooltip", self.on_tooltip)
         
         # Create Tray Menu
-        menu = gtk.Menu()
+        self.menu = gtk.Menu()
+        
+        # Do we have a recent version of gtk?
+        # This fixes a crash for version of gtk that don't have
+        # gtk.ImageMenuItem.set_label()
+        self.new_gtk_version = True
+        try:
+            menu_item = gtk.ImageMenuItem()
+            menu_item.set_label("")
+            
+        except AttributeError:
+            self.new_gtk_version = False
         
         # Refresh
-        menu_item = gtk.ImageMenuItem(gtk.STOCK_REFRESH)
-        menu_item.set_label(lang.menu_update)
-        menu_item.connect('activate', self.gui.on_refresh)
-        menu.append(menu_item)
-        self.refresh_menu = menu_item
-        
+        self.refresh_menu = self.add_menu(lang.menu_update, gtk.STOCK_REFRESH,
+                                          self.gui.on_refresh)
+            
         # Readall
-        menu_item = gtk.ImageMenuItem(gtk.STOCK_OK)
-        menu_item.set_label(lang.menu_read)
-        menu_item.connect('activate', self.gui.on_read_all)
-        menu.append(menu_item)
-        self.read_menu = menu_item
+        self.read_menu = self.add_menu(lang.menu_read, gtk.STOCK_OK,
+                                       self.gui.on_read_all)
         
         # Settings
-        menu_item = gtk.ImageMenuItem(gtk.STOCK_PREFERENCES)
-        menu_item.set_label(lang.menu_settings)
-        menu_item.connect('activate',
-                          lambda *args: self.gui.on_settings(True))
-        
-        menu.append(menu_item)
-        self.settings_menu = menu_item
-        
-        # Abvout
-        menu_item = gtk.ImageMenuItem(gtk.STOCK_ABOUT)
-        menu_item.set_label(lang.menu_about)
-        menu_item.connect('activate',
-                          lambda *args: self.gui.on_about(True))
-        
-        menu.append(menu_item)
+        self.settings_menu = self.add_menu(lang.menu_settings,
+                                           gtk.STOCK_PREFERENCES, 
+                                           lambda *args:
+                                           self.gui.on_settings(None, True))
+    
+        # About
+        self.add_menu(lang.menu_about, gtk.STOCK_ABOUT,
+                      lambda *args: self.gui.on_about(None, True))
         
         # Separator
-        menu.append(gtk.SeparatorMenuItem())
+        self.menu.append(gtk.SeparatorMenuItem())
         
         # Quit
-        menu_item = gtk.ImageMenuItem(gtk.STOCK_QUIT)
-        menu_item.set_label(lang.menu_quit)
-        menu_item.connect('activate', self.gui.on_quit, self)
-        menu.append(menu_item)
+        self.add_menu(lang.menu_quit, gtk.STOCK_QUIT, self.gui.on_quit)
         
         # Popup
-        self.connect("popup-menu", self.on_popup, menu)
+        self.connect("popup-menu", self.on_popup, self.menu)
+    
+    
+    def add_menu(self, text, image, callback):
+        if self.new_gtk_version:
+            item = gtk.ImageMenuItem(image)
+            item.set_label(text)
+            
+        else:
+            item = gtk.MenuItem(text)
+        
+        item.connect('activate', callback)
+        self.menu.append(item)   
+        return item
     
     
     # Tooltip ------------------------------------------------------------------
