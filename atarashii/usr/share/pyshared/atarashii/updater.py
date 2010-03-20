@@ -222,6 +222,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         gobject.idle_add(self.gui.set_app_title)
         
         # Init Timer
+        self.main.save_settings(True)
         self.main.refresh_time = calendar.timegm(time.gmtime())
         gobject.idle_add(self.gui.set_refresh_update, True)
     
@@ -263,6 +264,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         return True
     
     def end_update(self):
+        self.main.save_settings(True)
         self.main.unset_status(ST_UPDATE)
         self.main.refresh_time = calendar.timegm(time.gmtime())
         gobject.idle_add(self.gui.set_refresh_update,

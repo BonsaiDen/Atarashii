@@ -195,6 +195,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.error_button.hide()
         self.on_mode()
         
+        
         # Statusbar Updater
         self.update_status()
         gobject.timeout_add(1000, self.update_status)

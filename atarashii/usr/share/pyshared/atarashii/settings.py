@@ -41,6 +41,7 @@ class Settings:
         self.values = {}
         self.load()
         self.save_count = 0
+        self.has_changed = False
         
     
     # Load ---------------------------------------------------------------------
@@ -81,45 +82,38 @@ class Settings:
     
     # Save ---------------------------------------------------------------------
     def save(self):
-        self.save_count += 1
-        if self.save_count > 1:
+        if not self.has_changed:
             return
-        
-        print "Saving..."      
-        try:
-            # Don't save crash stuff
-            if self.values.has_key("crashed"):
-                del self.values['crashed']
-            
-            if self.values.has_key("crash_reason"):
-                del self.values['crash_reason']
-            
-            # Test
-            settings_file = open(os.path.join(self.dir, 'atarashii.conf'), "w")
-            keys = self.values.keys()
-            keys.sort()
-            for name in keys:
-                value = self.values[name]
-                cls = type(value)
-                if cls == int or cls == long:
-                    vtype = "long"
-                
-                elif cls == bool:
-                    vtype = "bool"
-                
-                else:
-                    vtype = "str"
-                
-                settings_file.write("%s %s %s\n" 
-                                     % (urllib.quote(name), vtype, value))
-            
-            settings_file.close()
     
-            # Check avatar cache
-            self.check_cache()
+        # Don't save crash stuff
+        if self.values.has_key("crashed"):
+            del self.values['crashed']
         
-        except KeyboardInterrupt:
-            self.save()
+        if self.values.has_key("crash_reason"):
+            del self.values['crash_reason']
+        
+           
+        # Test
+        settings_file = open(os.path.join(self.dir, 'atarashii.conf'), "w")
+        keys = self.values.keys()
+        keys.sort()
+        for name in keys:
+            value = self.values[name]
+            cls = type(value)
+            if cls == int or cls == long:
+                vtype = "long"
+            
+            elif cls == bool:
+                vtype = "bool"
+            
+            else:
+                vtype = "str"
+            
+            settings_file.write("%s %s %s\n" 
+                                 % (urllib.quote(name), vtype, value))
+        
+        settings_file.close()
+        self.has_changed = False
     
     
     # Get / Set ----------------------------------------------------------------
@@ -130,10 +124,13 @@ class Settings:
             return None
     
     def __setitem__(self, key, value):
-        self.values[key] = value
+        if not self.values.has_key(key) or self.values[key] != value:
+            self.has_changed = True
+            self.values[key] = value
     
     def __delitem__(self, key):
         if self.values.has_key(key):
+            self.has_changed = True
             del self.values[key]
     
     def isset(self, key):

@@ -160,6 +160,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                 self.items = self.items[pos:]
             
             self.render()
+            gobject.idle_add(self.main.save_settings, True)
     
     
     # Item management ----------------------------------------------------------

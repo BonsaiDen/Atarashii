@@ -128,6 +128,9 @@ class GUIEventHandler:
         self.set_app_title()
         self.text.check_mode()
         self.text.loose_focus()
+        
+        if self.is_shown:
+            self.main.save_settings(True)
     
     def on_settings(self, button, menu):
         if not self.settings_toggle:

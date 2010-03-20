@@ -300,7 +300,7 @@ class SettingsDialog(Dialog):
                 username = ""
             
             # Save Settings
-            self.main.save_settings()
+            self.main.save_settings(False)
             if username == "":
                 self.main.username = ""
                 self.settings['username'] = ""

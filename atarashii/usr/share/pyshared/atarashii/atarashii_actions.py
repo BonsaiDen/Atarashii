@@ -45,28 +45,24 @@ class AtarashiiActions:
     # Start & Quit -------------------------------------------------------------
     # --------------------------------------------------------------------------
     def start(self):
-        # Ratioooo!!!!! Make sure we save, whatever happens!
-        signal.signal(signal.SIGQUIT, self.save_on_quit)
-        signal.signal(signal.SIGTERM, self.save_on_quit)
-        signal.signal(signal.SIGILL, self.save_on_quit)
-        gtk.quit_add(gtk.main_level(), self.save_on_quit)
         gtk.main()
     
     def quit(self):
         gtk.main_quit()
-    
-    def save_on_quit(self, *args):
-        self.gui.html.save_first()
-        self.gui.message.save_first()
         self.updater.running = False
         while self.status(ST_UPDATE):
-            time.sleep(0.05)
+            time.sleep(0.1)
         
-        self.save_mode()
-        self.save_settings()
+        self.settings.check_cache()
+        self.save_settings(True)
         sys.exit(os.EX_OK)
     
-    def save_settings(self):
+    def save_settings(self, mode = False):
+        if mode:
+            self.save_mode()
+        
+        self.gui.html.save_first()
+        self.gui.message.save_first()
         self.settings['position'] = str(self.gui.get_position())
         size = self.gui.get_allocation()
         self.settings['size'] = str((size[2], size[3]))
