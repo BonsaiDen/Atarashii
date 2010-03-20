@@ -119,6 +119,17 @@ print "\n---- Packaging ----"
 
 # Write control file
 print "Creating control file..."
+try:
+    os.remove(os.path.join(sys.path[0], "atarashii/DEBIAN/postinst~"))
+    
+except:
+    pass
+
+try:
+    os.remove(os.path.join(sys.path[0], "atarashii/DEBIAN/postrm~"))
+except:
+    pass
+
 c = open(os.path.join(sys.path[0], "atarashii/DEBIAN/control"), "w")
 
 c.write("""Package: atarashii

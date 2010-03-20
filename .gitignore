@@ -4,4 +4,6 @@ atarashii/DEBIAN/control
 atarashii/DEBIAN/md5sums
 *.deb
 *.gz
-
+icon
+repo
+repo.sh
