@@ -13,16 +13,18 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
+# TODO notification sound is sometimes not played
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import dbus
 import dbus.service
 import sys
+import os
 if 'org.Atarashii' in dbus.Interface(dbus.SessionBus().get_object(
    "org.freedesktop.DBus", "/org/freedesktop/DBus"), 
    "org.freedesktop.DBus").ListNames():
-    sys.exit(2)
+    sys.exit(os.EX_UNAVAILABLE)
 
 DBUS = dbus.SessionBus()
 DBUSNAME = dbus.service.BusName('org.Atarashii', bus = DBUS)

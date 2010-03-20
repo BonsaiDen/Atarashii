@@ -19,6 +19,7 @@
 import gtk
 import gobject
 
+import os
 import sys
 import calendar
 import time
@@ -63,7 +64,7 @@ class AtarashiiActions:
         
         self.save_mode()
         self.save_settings()
-        sys.exit(1)
+        sys.exit(os.EX_OK)
     
     def save_settings(self):
         self.settings['position'] = str(self.gui.get_position())

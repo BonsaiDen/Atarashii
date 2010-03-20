@@ -1,3 +1,9 @@
+atarashii (0.99.14c-1) all;
+
+  * Fix problems with killall and the crash handling.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 20 Mar 2010 17:16:00 +0100
+
 atarashii (0.99.14b-1) all;
 
   * Fixed the crash handling and made sure that Atarashii always saves.
