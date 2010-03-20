@@ -22,7 +22,7 @@ if arg == "main":
 else:
     if arg == "auto":
         import time
-        time.sleep(2)
+        time.sleep(3)
     
     # Wrap arround crazy random GDK and XOrg Erros ^.^"
     import subprocess
