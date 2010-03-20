@@ -52,11 +52,8 @@ class AtarashiiActions:
             sys.exit(os.EX_SOFTWARE)
     
     def quit(self):
-        gtk.main_quit()
+        gtk.main_quit()        
         self.updater.running = False
-        while self.status(ST_UPDATE):
-            time.sleep(0.1)
-        
         self.settings.check_cache()
         self.save_settings(True)
         self.exited = True
