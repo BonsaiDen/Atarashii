@@ -91,8 +91,8 @@ class Settings:
             if self.values.has_key("crashed"):
                 del self.values['crashed']
             
-            if self.values.has_key("time_before_crash"):
-                del self.values['time_before_crash']
+            if self.values.has_key("crash_reason"):
+                del self.values['crash_reason']
             
             # Test
             settings_file = open(os.path.join(self.dir, 'atarashii.conf'), "w")
@@ -110,8 +110,8 @@ class Settings:
                 else:
                     vtype = "str"
                 
-                settings_file.write("%s %s %s\n" % (urllib.quote(name), vtype,
-                                    value))
+                settings_file.write("%s %s %s\n" 
+                                     % (urllib.quote(name), vtype, value))
             
             settings_file.close()
     
@@ -207,6 +207,9 @@ class Settings:
     def check_crash(self):
         self['crashed'] = os.path.exists(CRASH_FILE)
         if self['crashed']:
+            cfp = open(CRASH_FILE, "rb")
+            self['crash_reason'] = cfp.read()
+            cfp.close()
             print "ERROR: Atarashii crashed!"
     
     
@@ -227,10 +230,11 @@ class Settings:
     
 # Create Crashfile -------------------------------------------------------------
 # ------------------------------------------------------------------------------
-def crash_file(mode):
+def crash_file(mode, data = None):
     try:
         if mode:
             cfp = open(CRASH_FILE, "wb")
+            cfp.write(str(data))
             cfp.close()
         
         elif os.path.exists(CRASH_FILE):
