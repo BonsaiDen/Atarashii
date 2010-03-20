@@ -24,6 +24,7 @@ import calendar
 import time
 import math
 import socket
+import signal
 
 import send
 
@@ -43,12 +44,16 @@ class AtarashiiActions:
     # Start & Quit -------------------------------------------------------------
     # --------------------------------------------------------------------------
     def start(self):
+        # Ratioooo!!!!! Make sure we save, whatever happens!
+        signal.signal(signal.SIGQUIT, self.save_on_quit)
+        signal.signal(signal.SIGTERM, self.save_on_quit)
+        signal.signal(signal.SIGILL, self.save_on_quit)
         gtk.quit_add(gtk.main_level(), self.save_on_quit)
         gtk.main()
-
+    
     def quit(self):
         gtk.main_quit()
-        
+    
     def save_on_quit(self, *args):
         self.gui.html.save_first()
         self.gui.message.save_first()

@@ -82,37 +82,41 @@ class Settings:
     
     # Save ---------------------------------------------------------------------
     def save(self):
-        # Don't save crash stuff
-        if self.values.has_key("crashed"):
-            del self.values['crashed']
-        
-        if self.values.has_key("time_before_crash"):
-            del self.values['time_before_crash']
-        
-        # Test
-        settings_file = open(os.path.join(self.dir, 'atarashii.conf'), "w")
-        keys = self.values.keys()
-        keys.sort()
-        for name in keys:
-            value = self.values[name]
-            cls = type(value)
-            if cls == int or cls == long:
-                vtype = "long"
+        try:
+            # Don't save crash stuff
+            if self.values.has_key("crashed"):
+                del self.values['crashed']
             
-            elif cls == bool:
-                vtype = "bool"
+            if self.values.has_key("time_before_crash"):
+                del self.values['time_before_crash']
             
-            else:
-                vtype = "str"
+            # Test
+            settings_file = open(os.path.join(self.dir, 'atarashii.conf'), "w")
+            keys = self.values.keys()
+            keys.sort()
+            for name in keys:
+                value = self.values[name]
+                cls = type(value)
+                if cls == int or cls == long:
+                    vtype = "long"
+                
+                elif cls == bool:
+                    vtype = "bool"
+                
+                else:
+                    vtype = "str"
+                
+                settings_file.write("%s %s %s\n" % (urllib.quote(name), vtype,
+                                    value))
             
-            settings_file.write("%s %s %s\n" % (urllib.quote(name), vtype,
-                                value))
-        
-        settings_file.close()
+            settings_file.close()
     
-        # Check avatar cache
-        self.check_cache()
-    
+            # Check avatar cache
+            self.check_cache()
+        
+        except KeyboardInterrupt:
+            self.save()
+
     
     # Get / Set ----------------------------------------------------------------
     def __getitem__(self, key):
@@ -186,7 +190,7 @@ class Settings:
                 else:
                     self['autostart'] = True
                 
-            except IOError:
+            except OSError, IOError:
                 print "Could not check autostart"
                 self['autostart'] = False
         
@@ -214,10 +218,10 @@ class Settings:
                 cfp.write(str(int(time.time() - self.init_time)))
                 cfp.close()
                 
-            else:
+            elif os.path.exists(CRASH_FILE):
                 os.unlink(CRASH_FILE)
         
-        except IOError:
+        except OSError, IOError:
             print "IO on crashfile failed"
     
     
@@ -232,6 +236,6 @@ class Settings:
                     try:
                         os.unlink(cache_file)
                     
-                    except IOError:
+                    except OSError, IOError:
                         print "Could not delete file %s" % i
     
