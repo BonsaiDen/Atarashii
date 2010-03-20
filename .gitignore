@@ -2,5 +2,7 @@
 *.pyc
 atarashii/DEBIAN/control
 atarashii/DEBIAN/md5sums
-*.deb
-*.gz
+./*.deb
+/debs
+changelog*.gz
+atarashii/usr/share/man
