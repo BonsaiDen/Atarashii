@@ -46,10 +46,9 @@
         <child>
           <object class="GtkSeparatorToolItem" id="separator2">
             <property name="visible">True</property>
-            <property name="draw">False</property>
           </object>
           <packing>
-            <property name="expand">True</property>
+            <property name="expand">False</property>
           </packing>
         </child>
         <child>
