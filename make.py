@@ -16,7 +16,7 @@
 
 # Debian Packager Creator ------------------------------------------------------
 # ------------------------------------------------------------------------------
-import sys, os, shutil, subprocess, hashlib
+import sys, os, shutil, subprocess, hashlib, time
 
 def getFileMD5(file):
     f = open(file, "rb")
@@ -138,6 +138,7 @@ Description: Twitter Client for the GNOME Desktop
 """)
 c.close()
 print ">> Created!"
+time.sleep(0.1) # make sure dpkg-deb finds the control file!
 print ""
 # Create package
 print "The kittens are building your package..."
