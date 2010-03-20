@@ -1,11 +1,11 @@
 [Desktop Entry]
-Version=0.99.14c
+Version=0.99.14d
 Name=Atarashii
 GenericName=Twitter Client
 Comment=Twitter on your GNOME Desktop
 Comment[de]=Twitter auf deinem GNOME Desktop
 Exec=atarashii
-Icon=atarashii.png
+Icon=atarashii
 StartupNotify=true
 Terminal=false
 Encoding=UTF-8
