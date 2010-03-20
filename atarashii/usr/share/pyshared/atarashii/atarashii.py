@@ -65,6 +65,7 @@ class Atarashii(AtarashiiActions):
         # Setup
         self.version = version
         self.debug = debug
+        self.exited = False
         
         # Load Settings
         self.settings = settings.Settings()

@@ -43,18 +43,19 @@ else:
             print "Importing Atarashii failed"
             break
         
-        elif error in (os.EX_OK, 1): # 1 = Due to a sigkill etc. 
-            print "Atarashii has been closed"
+        # 1 = ??, -9/-11 for kill and quit
+        elif error in (os.EX_OK, 1, -9, -11): 
+            print "Atarashii has been closed with status %d" % error
             break
         
         else:
             atarashii.crash(error)
-            if restart_count > restart_max:
+            if restart_count >= restart_max:
                 break
             
             restart_count += 1
-            print "Atarashii crashed! Restart #%d/%d" \
-                   % (restart_count, restart_max) 
+            print "Atarashii crashed with %d! Restart #%d/%d" \
+                   % (error, restart_count, restart_max) 
     
     exit(error)
 

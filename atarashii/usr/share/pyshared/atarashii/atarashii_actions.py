@@ -25,7 +25,6 @@ import calendar
 import time
 import math
 import socket
-import signal
 
 import send
 
@@ -45,7 +44,12 @@ class AtarashiiActions:
     # Start & Quit -------------------------------------------------------------
     # --------------------------------------------------------------------------
     def start(self):
+        sys.exitfunc = self.crash_exit
         gtk.main()
+    
+    def crash_exit(self):
+        if not self.exited:
+            sys.exit(os.EX_SOFTWARE)
     
     def quit(self):
         gtk.main_quit()
@@ -55,6 +59,7 @@ class AtarashiiActions:
         
         self.settings.check_cache()
         self.save_settings(True)
+        self.exited = True
         sys.exit(os.EX_OK)
     
     def save_settings(self, mode = False):
