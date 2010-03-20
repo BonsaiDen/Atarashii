@@ -157,7 +157,7 @@ class AtarashiiActions:
             # Favoriter
             favoriter = send.Favorite(self, tweet_id, mode, name)
             favoriter.setDaemon(True)
-            favoriter.start()     
+            favoriter.start()
     
     
     # Reconnect ----------------------------------------------------------------
@@ -243,9 +243,12 @@ class AtarashiiActions:
         
         # Catch common Twitter errors
         elif error_code in (400, 401, 403, 404, 500, 502, 503):
-            if msg.startswith("Share sharing"):
+            if msg.lower().startswith("share sharing"):
                 code = -2
             
+            elif msg.lower().startswith("status is a duplicate"):
+                code = -11
+                
             else:
                 code = error_code
                 
@@ -265,7 +268,7 @@ class AtarashiiActions:
                 
                 # A real 404! This may be raised if a user wasn't found
                 elif self.status(ST_WAS_SEND) and code == 404:
-                    code = -3 
+                    code = -3
         
                 
         # Reset stuff

@@ -39,7 +39,7 @@ LANG = {
         # HTML
         'html_welcome' : 'Willkommen bei Atarashii.',
         'html_loading' : 'Tweets werden geladen...',
-        'html_avatar_tooltip' : 
+        'html_avatar_tooltip' :
             '<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n'
             '<b>%d</b> Follower\nFollowing <b>%d</b>',
         
@@ -143,14 +143,14 @@ LANG = {
         'about_title' : 'Über Atarashii',
         'about_license_button' : 'Lizenz',
         'about_okbutton' : 'OK',
-        'about_description' : 
+        'about_description' :
             'Ein simpler Twitter Client für den GNOME Desktop.',
         
         # Account Dialog
         'account_edit' : 'Benutzer bearbeiten',
         'account_create' : 'Benutzer erstellen',
         'account_delete' : 'Benutzer löschen',
-        'account_delete_description' : 
+        'account_delete_description' :
         'Möchten sie den Benutzer <b>%s</b> wirklich löschen?',
         
         'account_button' : 'OK',
@@ -170,54 +170,55 @@ LANG = {
         
         # Delete Dialogs
         'delete_title' : 'Löschen bestätigen',
-        'delete_tweet_question' : 
+        'delete_tweet_question' :
         '<b>Diesen Tweet wirklich löschen?</b>\n<i>%s</i>',
         
-        'delete_message_question' : 
+        'delete_message_question' :
         '<b>Diese Nachricht wirklich löschen?</b>\n<i>%s</i>',
         
         'delete_info_title' : 'Löschen erfolgreich',
-        'delete_info_tweet' : 'Der Tweet wurde erfolgreich gelöscht.',    
+        'delete_info_tweet' : 'Der Tweet wurde erfolgreich gelöscht.',
         'delete_info_message' : 'Die Nachricht wurde erfolgreich gelöscht.',
         
         # Error Dialogs
         'error_title' : 'Atarashii - Fehler',
-        'error_login' : 
+        'error_login' :
             'Die Anmeldung als <b>%s</b> ist fehlgeschlagen.',
         
         'error_internal' : '<b>Atarashii Fehler:</b> %s',
-        'error_already_retweeted' : 
+        'error_already_retweeted' :
             'Es ist entweder nicht möglich diesen Tweet zu retweeten '
             'oder er wurde bereits von ihnen retweeted.',
         
         'error_user_not_found' : 'Der Benutzer <b>%s</b> existiert nicht.',
+        'error_duplicate' : 'Sie haben dies bereits getweetet.',
         
-        'error_network' : 
+        'error_network' :
             'Atarashii konnte keine Verbindung zum Internet herstellen.',
         
-        'error_network_timeout' : 
+        'error_network_timeout' :
             'Atarashii konnte keine Verbindung zu Twitter herstellen.',
         
-        'error_favorite_on' : 
+        'error_favorite_on' :
             '<b>%s</b> Tweet konnte nicht favorisiert werden.',
         
-        'error_favorite_off' : 
+        'error_favorite_off' :
             '<b>%s</b> Tweet konnte nicht entfavorisiert werden.',
         
-        'error_ratelimit_reconnect' : 
+        'error_ratelimit_reconnect' :
             'Twitter Requestlimit wurde überschritten.\n'
             'Verbinde automatisch neu in %d Minute(n).',
         
         # Error Button stuff
         'error_button_twitter' : 'Twitter-Serverfehler',
-        'error_twitter' : 
+        'error_twitter' :
             'Der Twitter Server hat keine Antwort gesendet.',
         
         'error_button_down' : 'Twitter ist derzeit offline',
         'error_down' : 'Twitter konnte nicht erreicht werden.',
         
         'error_button_rate_limit' : 'Requestlimit überschritten',
-        'error_rate_limit' : 
+        'error_rate_limit' :
             'Twitter Requestlimit wurde überschritten.\n'
             'Automatische Aktualisierung in %d Minute(n).',
         
@@ -227,24 +228,24 @@ LANG = {
         'warning_title' : 'Atarashii - Warnung',
         
         'warning_button_rate_limit' : 'Requestlimit verringert',
-        'warning_rate_limit' : 
+        'warning_rate_limit' :
             'Twitter hat das Requestlimit auf %d Requests pro Stunde '
             'reduziert, das Aktualisierungsinterval wurde '
             'entsprechend angepasst.',
         
         'warning_button_overload' : 'Twitter überlastet',
-        'warning_overload' : 
+        'warning_overload' :
             'Atarashii konnte Twitter nicht erreichen, dies ist in '
             'den meisten Fällen lediglich ein temporäres Problem '
             'aufgrund von Überlastung seitens Twitter.',
         
         'warning_button_network' : 'Netzwerkfehler',
-        'warning_network' : 
+        'warning_network' :
             'Atarashii hat die Verbindung zum <b>Internet</b> verloren,'
             ' es wird alle 60 Sekunden versucht die Verbindung '
             'wiederherzustellen.',
         
-        'warning_network_timeout' : 
+        'warning_network_timeout' :
             'Atarashii hat die Verbindung zu <b>Twitter</b> verloren, '
             'es wird alle 60 Sekunden versucht die Verbindung '
             'wiederherzustellen.',
@@ -319,12 +320,12 @@ LANG = {
         'title_tweets' : '%d new Tweets',
         
         # Username
-        'name' : lambda x: x + "'s" if x[-1:] in "xs" else x + "s", 
+        'name' : lambda x: x + "'s" if x[-1:] in "xs" else x + "s",
         
         # HTML
         'html_welcome' : 'Welcome to Atarashii.',
         'html_loading' : 'Loading Tweets...',
-        'html_avatar_tooltip' : 
+        'html_avatar_tooltip' :
             '<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n'
             '<b>%d</b> Follower\nFollowing <b>%d</b>',
         
@@ -428,14 +429,14 @@ LANG = {
         'about_title' : 'About Atarashii',
         'about_license_button' : 'License',
         'about_okbutton' : 'OK',
-        'about_description' : 
+        'about_description' :
             'A simple Twitter Client for the GNOME Desktop.',
         
         # Account Dialog
         'account_edit' : 'Edit user',
         'account_create' : 'Create a new user',
         'account_delete' : 'Delete user',
-        'account_delete_description' : 
+        'account_delete_description' :
         'Do you really want to delete the user <b>%s</b>?',
         
         'account_button' : 'OK',
@@ -453,27 +454,28 @@ LANG = {
         
         # Delete Dialogs
         'delete_title' : 'Confirm delete',
-        'delete_tweet_question' : 
+        'delete_tweet_question' :
         '<b>Are you sure to delete this Tweet?</b>\n<i>%s</i>',
         
-        'delete_message_question' : 
+        'delete_message_question' :
         '<b>Are you sure to delete this Message?</b>\n<i>%s</i>',
         
         'delete_info_title' : 'Deletion successful',
-        'delete_info_tweet' : 'The Tweet has been successfully deleted.',    
-        'delete_info_message' : 'The Message has been successfully deleted.',  
+        'delete_info_tweet' : 'The Tweet has been successfully deleted.',
+        'delete_info_message' : 'The Message has been successfully deleted.',
         
         # Error Dialogs
         'error_title' : 'Atarashii - Error',
         'error_login' : 'The login as <b>%s</b> has failed.',
         'error_internal' : '<b>Atarashii error:</b> %s',
-        'error_already_retweeted' : 
+        'error_already_retweeted' :
             'Either it\'s not possible to retweet this Tweet or '
             'you\'ve already retweeted it.',
         
         'error_user_not_found' : 'The user <b>%s</b> does not exist.',
+        'error_duplicate' : 'You\'ve already tweeted this.',
         
-        'error_network' : 
+        'error_network' :
             'Atarashii could not establish a connection to the Internet.',
             
         'error_network_timeout' :
@@ -482,7 +484,7 @@ LANG = {
         'error_favorite_on' : '<b>%s</b> Tweet couldn\'t be favorited.',
         'error_favorite_off' : '<b>%s</b> Tweet couldn\'t be unfavorited.',
         
-        'error_ratelimit_reconnect' : 
+        'error_ratelimit_reconnect' :
              'Twitters limit on requests has been exceeded.\n'
              'Automatic reconnect in %d minute(s).',
         
@@ -491,11 +493,11 @@ LANG = {
         'error_twitter' : 'The Twitter server did not respond to the request.',
         
         'error_button_down' : 'Twitter is offline',
-        'error_down' : 
+        'error_down' :
             'Could not establish a connection to the Twitter server.',
         
         'error_button_rate_limit' : 'Ratelimit exceeded',
-        'error_rate_limit' : 
+        'error_rate_limit' :
             'Twitters limit on requests has been exceeded.\n'
             'Automatic refresh in %d minute(s).',
         
@@ -505,24 +507,24 @@ LANG = {
         'warning_title' : 'Atarashii - Warning',
 
         'warning_button_rate_limit' : 'Rate limit reduced',
-        'warning_rate_limit' : 
+        'warning_rate_limit' :
             'Twitter has lowered the rate limit to %d requests per '
             'hour, the update interval has been adjusted accordingly.',
         
         'warning_button_overload' : 'Twitter over capacity',
-        'warning_overload' : 
+        'warning_overload' :
             'Atarashii couldn\'t connect to Twitter, in most cases '
             'this is just a temporary issue due to Twitter being too '
             'busy at the moment.',
         
         'warning_button_network' : 'Network error',
-        'warning_network' : 
+        'warning_network' :
             'Atarashii has lost the conntection to the Internet. It '
             'will automatically try to reconnect itself every 60 seconds.',
         
-        'warning_network_timeout' : 
+        'warning_network_timeout' :
             'Atarashii has lost the conntection to Twitter. It '
-            'will automatically try to reconnect itself every 60 seconds.', 
+            'will automatically try to reconnect itself every 60 seconds.',
         
         'warning_template' : '<b>Warning from %H:%M:%S</b>\n',
         
@@ -591,7 +593,7 @@ class Language:
             stuff = LANG['en_US']
         
         # set instance fields
-        for key, value in stuff.iteritems():            
+        for key, value in stuff.iteritems():
             self.__dict__[key] = value
 
 # Select Language

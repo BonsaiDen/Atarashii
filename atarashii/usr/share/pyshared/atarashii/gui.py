@@ -172,10 +172,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         # Accelerators ---------------------------------------------------------
         acc = gtk.AccelGroup()
         self.add_accel_group(acc)
-        acc.connect_group(gtk.keysyms.t, gtk.gdk.CONTROL_MASK, 
+        acc.connect_group(gtk.keysyms.t, gtk.gdk.CONTROL_MASK,
                           0, self.text.start_tweet)
         
-        acc.connect_group(gtk.keysyms.d, gtk.gdk.CONTROL_MASK, 
+        acc.connect_group(gtk.keysyms.d, gtk.gdk.CONTROL_MASK,
                           0, self.text.start_message)
         
         # Show GUI
@@ -281,10 +281,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             info = lang.tool_history
         
         else:
-            info = None  
+            info = None
             
         if info != None:
-            self.multi_state = BUTTON_HISTORY 
+            self.multi_state = BUTTON_HISTORY
             self.multi_button.set_tooltip_text(info)
             self.multi_button.set_stock_id(gtk.STOCK_GOTO_TOP)
             self.multi_button.set_sensitive(True)
@@ -314,12 +314,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         # Set icon and mode
         if info == None and read_mode:
             
-            self.multi_state = BUTTON_READ 
+            self.multi_state = BUTTON_READ
             self.multi_button.set_stock_id(gtk.STOCK_OK)
             
             
             # Set Tooltip
-            if self.mode == MODE_TWEETS: 
+            if self.mode == MODE_TWEETS:
                 self.multi_button.set_tooltip_text(lang.tool_read)
             
             elif self.mode == MODE_MESSAGES:
@@ -330,7 +330,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         if refresh_mode != None:
             mode = refresh_mode
     
-        if not self.is_ready(): 
+        if not self.is_ready():
             mode = False
     
         # Set icon and mode
@@ -342,7 +342,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.tray.refresh_menu.set_sensitive(mode)
         
         # Set Tooltip
-        if self.mode == MODE_TWEETS: 
+        if self.mode == MODE_TWEETS:
             self.multi_button.set_tooltip_text(lang.tool_refresh)
         
         elif self.mode == MODE_MESSAGES:
@@ -475,13 +475,13 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                              lang.delete_info_title)
     
     def show_favorite_error(self, name, mode):
-        dialog.MessageDialog(self, MESSAGE_WARNING, 
+        dialog.MessageDialog(self, MESSAGE_WARNING,
                              lang.error_favorite_on % lang.name(name) \
                              if mode else lang.error_favorite_off \
                              % lang.name(name), lang.error_title)
                     
     def show_crash_report(self):
-        dialog.MessageDialog(self, MESSAGE_WARNING, 
+        dialog.MessageDialog(self, MESSAGE_WARNING,
                ("Atarashii has crashed and automatically restarted itself.\n"
                "<b>Error:</b> %s") % self.main.settings['crash_reason'],
                lang.error_title)
@@ -541,6 +541,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             gobject.idle_add(self.force_show)
             
             description = {
+                -11 : lang.error_duplicate,
                 -9 : lang.error_network_timeout,
                 -4 : lang.error_network,
                 -3 : lang.error_user_not_found % self.main.message_user,
