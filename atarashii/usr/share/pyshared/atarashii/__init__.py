@@ -16,7 +16,7 @@
 """
 Atarashii Twitter Client
 """
-__version__ = '0.99.14c'
+__version__ = '0.99.14d'
 __author__ = 'Ivo Wetzel <ivo.wetzel@googlemail.com>'
 __copyright__ = 'Copyright (c) 2010 Ivo Wetzel'
 __license__ = 'GPL 3'
@@ -34,7 +34,7 @@ def debug(path):
     from atarashii import Atarashii
     Atarashii(__version__, path).start()
 
-def crash():
+def crash(error):
     from settings import crash_file
-    crash_file(True)
+    crash_file(True, error)
 
