@@ -69,8 +69,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         # Tooltip
         gtb = gtk.Builder()
         gtb.add_from_file(self.main.get_resource("avatar.glade"))
-        self.tooltip = gtb.get_object("tooltip")  
-        self.tooltip_label = gtb.get_object("label") 
+        self.tooltip = gtb.get_object("tooltip")
+        self.tooltip_label = gtb.get_object("label")
         self.tooltip_img = gtb.get_object("image")
         self.tooltip_img_file = None
         self.tooltip_user = None
@@ -337,7 +337,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             return None, None, None
         
         # Link types
-        types = ["profile", "rprofile", "user", "source", "status", "tag", 
+        types = ["profile", "rprofile", "user", "source", "status", "tag",
                  "fav", "unfav", "qreply", "qmessage"]
         
         # Generic cases

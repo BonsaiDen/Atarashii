@@ -92,7 +92,7 @@ class UpdaterTweet:
                 if count == 2:
                     raise error
             
-            # Failsafe 
+            # Failsafe
             except:
                 return []
     

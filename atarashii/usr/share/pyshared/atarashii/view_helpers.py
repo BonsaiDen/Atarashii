@@ -72,9 +72,9 @@ class ViewHelpers:
     
     def loaded(self, *args):
         # HACK! The value of the constant might change, but currently it's not
-        # exposed to pygtk webkit and since the "load-finished" signal is 
+        # exposed to pygtk webkit and since the "load-finished" signal is
         # deprecated, it's a 50/50 chance that one of those will evantually
-        # break the whole thing.. so do you want to be eaten by the tiger 
+        # break the whole thing.. so do you want to be eaten by the tiger
         # or the lion?
         # Note from Ivo: Actually, the Lion won't eat me since I'm one too ;D
         if self.get_property("load-status") != 2:
@@ -110,7 +110,7 @@ class ViewHelpers:
     # This fixes an issue where the reply/favorite links wouldn't disapear if
     # the mouse left the view
     def fake_move(self, pos, latest = False):
-        self.fake_mouse = True 
+        self.fake_mouse = True
         event = gtk.gdk.Event(gtk.gdk.MOTION_NOTIFY)
         event.window = self.get_window()
         event.x = pos[0]
@@ -141,7 +141,7 @@ class ViewHelpers:
         i = gtk.keysyms
         # FIXME 65360 = Begin, it seems that the constant is broken, at least
         # on my keyboard
-        if event.keyval in (i.Up, i.Down, i.Page_Up, i.Page_Down, i.End, 
+        if event.keyval in (i.Up, i.Down, i.Page_Up, i.Page_Down, i.End,
                             i.Begin, 65360, i.KP_Up, i.KP_Down, i.KP_Page_Up,
                             i.KP_Page_Down, i.KP_End, i.KP_Begin):
             

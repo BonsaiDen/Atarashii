@@ -201,11 +201,11 @@ class HTML(view.HTMLView):
             elif link == "user":
                 reply = "message:%s:-1:-1" % user
                 self.add_menu_link(menu, lang.context_message % user,
-                                   self.context_link, reply)    
+                                   self.context_link, reply)
         
         # Retweet / Delete
         else:
-            self.add_menu_link(menu, lang.context_copy_message, 
+            self.add_menu_link(menu, lang.context_copy_message,
                                self.copy_message, None, item)
             
             self.add_menu_separator(menu)

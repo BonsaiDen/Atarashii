@@ -109,7 +109,7 @@ class Settings:
             else:
                 vtype = "str"
             
-            settings_file.write("%s %s %s\n" 
+            settings_file.write("%s %s %s\n"
                                  % (urllib.quote(name), vtype, value))
         
         settings_file.close()

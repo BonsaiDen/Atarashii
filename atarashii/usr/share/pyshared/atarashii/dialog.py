@@ -323,7 +323,7 @@ class SettingsDialog(Dialog):
             if self.get_drop_active() == -1:
                 self.main.username = ""
                 self.settings['username'] = ""
-                self.main.logout()      
+                self.main.logout()
         
         self.__class__.instance = None
         self.gui.settings_dialog = None
@@ -490,7 +490,7 @@ class MessageDialog(gtk.MessageDialog):
             icon = gtk.MESSAGE_INFO
         
         # Init
-        gtk.MessageDialog.__init__(self, parent, 
+        gtk.MessageDialog.__init__(self, parent,
                           gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
                           icon, buttons, "")
         

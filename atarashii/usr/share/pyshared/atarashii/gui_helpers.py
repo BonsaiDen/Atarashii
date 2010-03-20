@@ -35,7 +35,7 @@ class GUIHelpers:
     
     # Info Label ---------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def set_label(self):    
+    def set_label(self):
         if self.main.status(ST_SEND):
             return
         
@@ -108,7 +108,7 @@ class GUIHelpers:
                 self.tray.set_tooltip(lang.tray_logged_in % self.main.username,
                                       self.html.count, self.message.count)
             
-            elif self.mode == MODE_TWEETS:                
+            elif self.mode == MODE_TWEETS:
                 self.tray.set_tooltip(lang.tray_logged_in % self.main.username,
                                       self.html.count, self.message.count)
         

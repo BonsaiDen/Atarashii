@@ -212,7 +212,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             else:
                 self.message.load_state = HTML_RESET
                 self.html.load_state = HTML_RESET
-                return 
+                return
         
         else: # TODO implement loading of search
             pass
@@ -321,7 +321,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # Update Views
         def update_views(updates, messages):
             # Notifications this INSERTS the tweets/messages
-            self.show_notifications(updates, messages)    
+            self.show_notifications(updates, messages)
             
             if len(updates) > 0:
                 self.html.push_updates()
@@ -432,7 +432,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 self.main.set_status(ST_WARNING_RATE)
                 
                 gobject.idle_add(self.gui.warning_button.show,
-                                 lang.warning_button_rate_limit, 
+                                 lang.warning_button_rate_limit,
                                  lang.warning_rate_limit % count)
         
         else:

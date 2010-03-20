@@ -22,7 +22,7 @@ import dbus.service
 import sys
 import os
 if 'org.Atarashii' in dbus.Interface(dbus.SessionBus().get_object(
-   "org.freedesktop.DBus", "/org/freedesktop/DBus"), 
+   "org.freedesktop.DBus", "/org/freedesktop/DBus"),
    "org.freedesktop.DBus").ListNames():
     sys.exit(os.EX_UNAVAILABLE)
 
@@ -234,7 +234,7 @@ class Atarashii(AtarashiiActions):
         if self.gui.html.count > 0:
             info_text.append(
               (lang.notification_login_tweets if self.gui.html.count > 1 \
-               else lang.notification_login_tweet) % self.gui.html.count)  
+               else lang.notification_login_tweet) % self.gui.html.count)
         
         # Message Info
         if self.gui.message.count > 0:

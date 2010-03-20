@@ -32,14 +32,14 @@ class TrayIcon(gtk.StatusIcon):
         # Tooltip
         gtb = gtk.Builder()
         gtb.add_from_file(self.main.get_resource("tooltip.glade"))
-        self.tooltip = gtb.get_object("tooltip")  
-        self.tooltip_label = gtb.get_object("label") 
+        self.tooltip = gtb.get_object("tooltip")
+        self.tooltip_label = gtb.get_object("label")
         self.tooltip_img = gtb.get_object("image")
         self.tooltip_img_file = None
         self.tooltip.show_all()
         
         # Create Tray Icon
-        gtk.StatusIcon.__init__(self) 
+        gtk.StatusIcon.__init__(self)
         self.set_from_file(gui.main.get_image())
         self.set_visible(True)
         self.set_property("has-tooltip", True)
@@ -70,7 +70,7 @@ class TrayIcon(gtk.StatusIcon):
         
         # Settings
         self.settings_menu = self.add_menu(lang.menu_settings,
-                                           gtk.STOCK_PREFERENCES, 
+                                           gtk.STOCK_PREFERENCES,
                                            lambda *args:
                                            self.gui.on_settings(None, True))
     
@@ -97,7 +97,7 @@ class TrayIcon(gtk.StatusIcon):
             item = gtk.MenuItem(text)
         
         item.connect('activate', callback)
-        self.menu.append(item)   
+        self.menu.append(item)
         return item
     
     

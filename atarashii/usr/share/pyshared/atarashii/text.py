@@ -134,7 +134,7 @@ class TextInput(gtk.TextView):
         if event.keyval == gtk.keysyms.s:
             if event.state & gtk.gdk.CONTROL_MASK == gtk.gdk.CONTROL_MASK:
                 self.reset()
-                return True    
+                return True
     
     
     def unfocus(self):
@@ -403,7 +403,7 @@ class TextInput(gtk.TextView):
         self.modify_text(gtk.STATE_NORMAL, self.default_fg)
         self.resize()
     
-    def retweet(self):    
+    def retweet(self):
         self.change_contents = True
         self.is_changing = True
         self.grab_focus()

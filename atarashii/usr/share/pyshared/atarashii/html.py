@@ -244,7 +244,7 @@ class HTML(view.HTMLView):
         
         # Copy / Retweet / Delete
         else:
-            self.add_menu_link(menu, lang.context_copy_tweet, 
+            self.add_menu_link(menu, lang.context_copy_tweet,
                                self.copy_tweet, None, item)
             
             self.add_menu_separator(menu)

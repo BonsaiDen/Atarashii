@@ -21,7 +21,7 @@ import gtk
 from language import LANG as lang
 
 
-# This is the hacked part of Atarashii, getting this menu to work is quite a 
+# This is the hacked part of Atarashii, getting this menu to work is quite a
 # pain. The kittens spend some real time developing this...
 class ViewMenu:
     def __init__(self):
@@ -29,7 +29,7 @@ class ViewMenu:
     
     # Tooltip Building ---------------------------------------------------------
     def on_link_hover(self, view, title, url):
-        self.last_hovered_link = url    
+        self.last_hovered_link = url
     
     def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
         if self.last_hovered_link.startswith("avatar:"):
@@ -56,7 +56,7 @@ class ViewMenu:
         if img != self.tooltip_img_file:
             buf = gtk.gdk.pixbuf_new_from_file_at_size(img, 48, 48)
             self.tooltip_img.set_from_pixbuf(buf)
-            self.tooltip_img_file = img  
+            self.tooltip_img_file = img
     
     
     # Menu Events --------------------------------------------------------------
@@ -203,7 +203,7 @@ class ViewMenu:
             delete pos;
             delete items;
             var link = document.elementFromPoint(%d, %d);
-            document.title = sizes.join(";") + "|" + 
+            document.title = sizes.join(";") + "|" +
             (link.href != undefined ? link.href : link.parentNode.href);
             delete link;
             delete sizes;''' % (event.x, event.y))
