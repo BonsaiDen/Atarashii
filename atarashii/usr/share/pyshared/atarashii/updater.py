@@ -321,7 +321,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         def update_views(updates, messages):
             # Notifications this INSERTS the tweets/messages
             self.show_notifications(updates, messages)    
-        
+            
             if len(updates) > 0:
                 self.html.push_updates()
             
@@ -333,6 +333,9 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             
             else:
                 self.message.render()
+            
+            del updates
+            del messages
             
             # Update GUI
             gobject.idle_add(self.end_update)
