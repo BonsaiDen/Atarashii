@@ -63,7 +63,6 @@ class AtarashiiActions:
         
         self.save_mode()
         self.save_settings()
-        self.settings.crash_file(False)
         sys.exit(1)
     
     def save_settings(self):

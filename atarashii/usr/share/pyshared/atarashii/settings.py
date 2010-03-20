@@ -38,9 +38,9 @@ class Settings:
             os.mkdir(self.dir)
         
         # Record running time
-        self.init_time = time.time()
         self.values = {}
         self.load()
+        self.save_count = 0
         
     
     # Load ---------------------------------------------------------------------
@@ -74,14 +74,18 @@ class Settings:
         except IOError:
             self.values = {}
         
-        
         # Check crash
         self.check_crash()
-        self.crash_file(True)
+        crash_file(False)
     
     
     # Save ---------------------------------------------------------------------
     def save(self):
+        self.save_count += 1
+        if self.save_count > 1:
+            return
+        
+        print "Saving..."      
         try:
             # Don't save crash stuff
             if self.values.has_key("crashed"):
@@ -116,7 +120,7 @@ class Settings:
         
         except KeyboardInterrupt:
             self.save()
-
+    
     
     # Get / Set ----------------------------------------------------------------
     def __getitem__(self, key):
@@ -203,26 +207,7 @@ class Settings:
     def check_crash(self):
         self['crashed'] = os.path.exists(CRASH_FILE)
         if self['crashed']:
-            cfp = open(CRASH_FILE, "rb")
-            self['time_before_crash'] = int(cfp.read())
-            cfp.close()
-            
             print "ERROR: Atarashii crashed!"
-            print "Runtime before crash %2.2f minutes" % \
-                   (self['time_before_crash'] / 60.0)
-    
-    def crash_file(self, mode):
-        try:
-            if mode:
-                cfp = open(CRASH_FILE, "wb")
-                cfp.write(str(int(time.time() - self.init_time)))
-                cfp.close()
-                
-            elif os.path.exists(CRASH_FILE):
-                os.unlink(CRASH_FILE)
-        
-        except OSError, IOError:
-            print "IO on crashfile failed"
     
     
     # Avatar Cache Handling ----------------------------------------------------
@@ -239,3 +224,18 @@ class Settings:
                     except OSError, IOError:
                         print "Could not delete file %s" % i
     
+    
+# Create Crashfile -------------------------------------------------------------
+# ------------------------------------------------------------------------------
+def crash_file(mode):
+    try:
+        if mode:
+            cfp = open(CRASH_FILE, "wb")
+            cfp.close()
+        
+        elif os.path.exists(CRASH_FILE):
+            os.unlink(CRASH_FILE)
+    
+    except OSError, IOError:
+        print "IO on crashfile failed"
+

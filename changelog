@@ -1,9 +1,14 @@
+atarashii (0.99.14b-1) all;
+
+  * Fixed the crash handling and made sure that Atarashii always saves.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 20 Mar 2010 15:19:00 +0100
+
 atarashii (0.99.14a-1) all;
 
   * Fix broken insertion of tweets/messages into the timelines.
   
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 20 Mar 2010 01:12:00 +0100
-
 
 atarashii (0.99.14-1) all;
 

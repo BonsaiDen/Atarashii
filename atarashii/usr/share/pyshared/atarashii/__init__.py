@@ -16,10 +16,11 @@
 """
 Atarashii Twitter Client
 """
-__version__ = '0.99.14a'
+__version__ = '0.99.14b'
 __author__ = 'Ivo Wetzel <ivo.wetzel@googlemail.com>'
 __copyright__ = 'Copyright (c) 2010 Ivo Wetzel'
 __license__ = 'GPL 3'
+
 
 import sys
 if sys.path[0] == "/usr/share/pyshared": 
@@ -32,4 +33,8 @@ def start():
 def debug(path):
     from atarashii import Atarashii
     Atarashii(__version__, path).start()
+
+def crash():
+    from settings import crash_file
+    crash_file(True)
 

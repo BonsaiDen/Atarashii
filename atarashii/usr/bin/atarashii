@@ -1,24 +1,27 @@
 #!/usr/bin/python
 import sys
 
+# Import Atarashii -------------------------------------------------------------
+sys.path.insert(0, "/usr/share/pyshared")
+try:
+    import atarashii
+    
+except:
+    if sys.path[0] == "/usr/share/pyshared": 
+        sys.path.pop(0)
+        
+    sys.exit(3)
+
+# Check what we should start ----------------------------------------------------
 arg = ""
 if len(sys.argv) == 2:
     arg = sys.argv[1]
 
+# Application
 if arg == "main":
-    sys.path.insert(0, "/usr/share/pyshared")
-    try:
-        import atarashii
-        
-    except:
-        if sys.path[0] == "/usr/share/pyshared": 
-            sys.path.pop(0)
-        
-        sys.exit(3)
-    
-    # Launch
     atarashii.start()
 
+# Crash Wrapper
 else:
     if arg == "auto":
         import time
@@ -31,6 +34,7 @@ else:
         print "Starting Atarashii..."
         error = subprocess.call(["atarashii", "main"])
         if error == 0:
+            atarashii.crash()
             print "Atarashii crashed, restarting"
         
         elif error == 2:
