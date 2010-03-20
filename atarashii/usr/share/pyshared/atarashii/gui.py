@@ -300,12 +300,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         else:
             read_mode = False
         
-        if read_mode:
-            if mode == False:
-                read_mode = False
-                
-            elif self.main.status(ST_UPDATE) or self.main.status(ST_CONNECT):
-                read_mode = False
+        if mode == False:
+            read_mode = False
+            
+        elif self.main.status(ST_UPDATE) or self.main.status(ST_CONNECT):
+            read_mode = False
         
         # Set Sensitive
         self.multi_button.set_sensitive(read_mode)

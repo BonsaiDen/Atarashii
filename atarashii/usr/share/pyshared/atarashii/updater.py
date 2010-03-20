@@ -289,7 +289,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             
             if len(updates) > 0:
                 self.set_last_tweet(updates[0].id)
-        
+                
         # Messages
         messages = []
         if (self.message_counter > 1 or self.refresh_messages) \
@@ -317,11 +317,11 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # Disable read button before pushing updates into the trees
         self.gui.set_refresh_update(False)
         
-        # Notify
-        self.show_notifications(updates, messages)
-        
         # Update Views
-        def update_views():
+        def update_views(updates, messages):
+            # Notifications this INSERTS the tweets/messages
+            self.show_notifications(updates, messages)    
+        
             if len(updates) > 0:
                 self.html.push_updates()
             
@@ -337,7 +337,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             # Update GUI
             gobject.idle_add(self.end_update)
         
-        gobject.idle_add(update_views)
+        gobject.idle_add(update_views, updates, messages)
         return True
     
     

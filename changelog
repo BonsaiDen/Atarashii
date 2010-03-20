@@ -1,3 +1,10 @@
+atarashii (0.99.14a-1) all;
+
+  * Fix broken insertion of tweets/messages into the timelines.
+  
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 20 Mar 2010 01:12:00 +0100
+
+
 atarashii (0.99.14-1) all;
 
   * Merged the Refresh/Read/History buttons in to one that changes its state
