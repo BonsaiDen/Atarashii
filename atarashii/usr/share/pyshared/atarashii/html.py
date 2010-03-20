@@ -177,7 +177,7 @@ class HTML(view.HTMLView):
         </div>
         <div class="inner-text">
             <div><span class="name">''' + \
-                ("<b>RT</b>" if retweeted else "") + \
+                ("<b>RT</b> " if retweeted else "") + \
                 '''<b><a href="profile:http://twitter.com/%s" title="''' + \
                 lang.html_profile + '''">%s</a></b></span>''' + \
                 self.is_protected(user) + '''%s</div>
