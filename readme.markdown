@@ -11,14 +11,26 @@ The code itself is written in *Python* and uses the corresponding *Python* bindi
 *And **Kittens** like it!*
 
 ## Installation
-To install **Atarashii** from source run `python make.py` to create the debian package, after that just install the package that was created. 
+There are currently two ways for you to get **Atarashii**.
 
-Alternatively, you can check for a recent DEBIAN-Package at the downloads section on GitHub (<http://github.com/BonsaiDen/Atarashii/downloads>).
-Atarashii has been successfully installed on two distinct Ubuntu 9.10 systems, if you encounter any problems please send me an e-mail at <ivo.wetzel@googlemail.com> or file an issues at GitHub.
+#### #1: Use the prebuild Package - The recommended way  
+This is most likely the simpelst one is to install the pre build Debian-Package from the Downloads section:  
+<http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.15-1_all.deb>
+> The package will automatically setup the repo config and install the public key,
+> so you don't have to check for updates on GitHub, instead just use the UpdateManager.
 
-#### Notes
-> If you've downloaded the source you can start **Atarashii** without installing it by running `python debug.py`.
-> You may need to install `fakeroot` via the package manager in order to be able to create the package by yourself.
+#### #2: Install from the repo - For those GIT freaks!  
+Open a shell and issue the following commands
+`git clone git://github.com/BonsaiDen/Atarashii.git`
+`python make.py`
+> You may need to install `fakeroot` via the package manager in order to be able to build the package.
+> Also there is a rare bug where dpkg-deb fails to open/find the control file. If you encounter this please send me a mail with more details.
+
+After that just run the created Debian-Package.
+
+#### #3: Debug without installing - For real Coding Kittens ^.^"  
+If you want to hack on **Atarashii** you can just clone the repo and then run "python debug.py" to start Atarashii.
+> Due to hardlinks in the CSS file the favorite/reply icons won't work until **Atarashii** has been installed with one of the above methods.
 
 ## TODO
 - Add more translations(See <http://github.com/BonsaiDen/Atarashii/issues#issue/6>)
