@@ -1,3 +1,11 @@
+atarashii (0.99.15a-1) all;
+
+  * Fixes to the sound file chooser.
+  * Workarounds for bugs under older versions of GTK.
+  * Also a couple of other minor fixes here and there.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 21 Mar 2010 08:57:00 +0100
+
 atarashii (0.99.15-1) all;
 
   * Atarashii now has a repository @ http://bonsaiden.github.com/Atarashii
