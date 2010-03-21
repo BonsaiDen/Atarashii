@@ -1,5 +1,23 @@
-Archive: stable
-Component: main
+Architectures: all
+Codename: karmic
+Components: contrib
+Date: Sun, 21 Mar 2010 01:24:08 UTC
+Description: The Atarashii Twitter Client
+Label: Atarashii
 Origin: Ivo Wetzel
-Label: Atarashii Twitter Client
-Architecture: all
+Suite: stable
+MD5Sum:
+ 0a30b00d173f19c26bf4dd790b105a5d              866 contrib/binary-all/Packages
+ 2e4866eb9a38841a64643750e261a7a3              639 contrib/binary-all/Packages.bz2
+ f64349f54f3e01dba641db067fef6bef              567 contrib/binary-all/Packages.gz
+ d41d8cd98f00b204e9800998ecf8427e                0 contrib/binary-all/Release
+SHA1:
+ a45e9d0b24f286cb93fd23a61e1d7194c2e817fd              866 contrib/binary-all/Packages
+ 993ebcafd3bdd93bb8e47043606d4cc930f2e90f              639 contrib/binary-all/Packages.bz2
+ b2c73ae38a1d8bb7233acf3dd1f9a099fdbb9baf              567 contrib/binary-all/Packages.gz
+ da39a3ee5e6b4b0d3255bfef95601890afd80709                0 contrib/binary-all/Release
+SHA256:
+ 5649427b812c99de2796d16a1706c8d688ec270535ad7dafe44bc4daaea0ff30              866 contrib/binary-all/Packages
+ 4664ccf6be5e8a44d072c091190d6fa96d712ae2a4cdd4ae5f747bf82525290e              639 contrib/binary-all/Packages.bz2
+ 8705aa38d8eb938f269f60021b6b1a1a5e215c7bdbf3fb2908f08423adf24cab              567 contrib/binary-all/Packages.gz
+ e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855                0 contrib/binary-all/Release
