@@ -247,26 +247,50 @@ class SettingsDialog(Dialog):
         taskbar.set_active(self.settings.is_true('taskbar'))
         tray.set_active(self.settings.is_true('tray', False))
         
-        # Sound File
-        file_widget = self.get("soundfile")
-        file_widget.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
+        
+        # Sound File Chooser, create it here to fix some bugs ------------------
+        # ----------------------------------------------------------------------
+        file_chooser = gtk.FileChooserDialog(None, self.dlg,
+                                         action = gtk.FILE_CHOOSER_ACTION_OPEN,
+                                         buttons = ("OK", gtk.RESPONSE_OK,
+                                         "Abbrechen", gtk.RESPONSE_CANCEL))
+        
+        
+        # Fix a bug were the button would be empty if the dialog is canceled
+        # for the first time
+        def choosen(chooser, code):
+            if code != gtk.RESPONSE_OK:
+                file_chooser.set_filename(str(self.settings['soundfile']))
+        
+        file_widget = gtk.FileChooserButton(file_chooser)
+        self.get("notifybox").pack_end(file_widget)
+        file_widget.show()
+        file_chooser.connect("response", choosen)
+        file_chooser.set_title(lang.settings_file)
+        if str(self.settings['soundfile']) in ("", "None"):
+            file_chooser.set_current_folder("/usr/share/sounds")
+        
+        else:
+            file_chooser.set_filename(str(self.settings['soundfile']))  
+        
+        # File Filter
         file_filter = gtk.FileFilter()
         file_filter.set_name(lang.settings_file_filter)
         file_filter.add_pattern("*.mp3")
         file_filter.add_pattern("*.wav")
         file_filter.add_pattern("*.ogg")
-        file_widget.add_filter(file_filter)
-        file_widget.set_title(lang.settings_file)
+        file_chooser.add_filter(file_filter)  
+        file_chooser.set_filter(file_filter)
         
-        if str(self.settings['soundfile']) in ("", "None"):
-            file_widget.set_current_folder("/usr/share/sounds")
+        # Fix bug with the file filter no beeing selected
+        def select_file(chooser):
+            if file_chooser.get_filter() == None:
+                file_chooser.set_filter(file_filter)
         
-        else:
-            file_widget.set_filename(str(self.settings['soundfile']))
+        file_chooser.connect("selection-changed", select_file)
         
-        file_widget.set_filter(file_filter)
         
-        # Notification Setting
+        # Notification Setting -------------------------------------------------
         notify.set_active(self.settings.is_true("notify"))
         sound.set_active(self.settings.is_true("sound"))
         notify.set_sensitive(True)
