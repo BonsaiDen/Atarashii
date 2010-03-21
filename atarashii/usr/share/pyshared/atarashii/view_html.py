@@ -101,6 +101,8 @@ class ViewHTML:
         </html>""" % (self.main.get_resource("atarashii.css"), html)
         
         # FIXME This memory leaks EXTREMLY hard!
+        # Even removing the dom stuff per javascript doesn't help
+        # I guess it's a problem with the html data not been freed
         self.load_string(SPACES.sub(" ", data),
                          "text/html", "UTF-8", "file:///")
     
