@@ -11,29 +11,29 @@ The code itself is written in *Python* and uses the corresponding *Python* bindi
 *And **Kittens** like it!*
 
 ## Installation
-There are currently two ways for you to get **Atarashii**.
+There are currently three ways for you to get **Atarashii**.
   
 
-**#1: Use the prebuild Package - The recommended way**  
+**#1: Use the pre build Package - The way of the user...**  
 This is most likely the simpelst one is to install the pre build Debian-Package from the Downloads section:  
-[Click to Download the lastest Version](http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.15-1_all.deb)
+[Click here to download the lastest version](http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.15-1_all.deb).
 
-> The package will automatically setup the repo config and install the public key,
+> The package will automatically setup the repo config and install the public key,  
 > so you don't have to check for updates on GitHub, instead just use your systems update manager.
-  
 
-**#2: Install from the repo - For those GIT freaks!**  
+
+**#2: Install from the repo - GIT lovers choice**  
 Open a shell and issue the following commands  
-`git clone git://github.com/BonsaiDen/Atarashii.git`
-`python make.py`
+`git clone git://github.com/BonsaiDen/Atarashii.git`  
+`python make.py`  
+After that just run the created Debian-Package.
+
 > You may need to install `fakeroot` via the package manager in order to be able to build the package.
 > Also there is a rare bug where dpkg-deb fails to open/find the control file. If you encounter this please send me a mail with more details.
 
-After that just run the created Debian-Package.
-  
 
-**#3: Debug without installing - For real Coding Kittens ^.^"**  
-If you want to hack on **Atarashii** you can just clone the repo and then run ´python debug.py´ to start Atarashii.
+**#3: Debug without installing - For real Coding Kittens!**  
+If you want to hack on **Atarashii** you can just clone the repo and then run `python debug.py` to start Atarashii.
 > Due to hardlinks in the CSS file the favorite/reply icons won't work until **Atarashii** has been installed with one of the above methods.
 
 
