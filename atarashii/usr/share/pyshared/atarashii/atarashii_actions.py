@@ -52,6 +52,7 @@ class AtarashiiActions:
             sys.exit(os.EX_SOFTWARE)
     
     def quit(self):
+        self.save_settings()
         gtk.main_quit()        
         self.updater.running = False
         self.settings.check_cache()
