@@ -1,0 +1,47 @@
+#!/bin/sh
+#  This file is part of Atarashii.
+#
+#  Atarashii is free software: you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Atarashii is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
+# 
+#  You should have received a copy of the GNU General Public License along with
+#  Atarashii. If not, see <http://www.gnu.org/licenses/>.
+
+
+# Add repository ---------------------------------------------------------------
+# ------------------------------------------------------------------------------
+REPO_FILE=/etc/apt/sources.list.d/atarashii.list
+REPO="deb http://bonsaiden.github.com/Atarashii /"
+
+# Create the repo file
+echo "Checking for repository file..."
+if [ -e $REPO_FILE ]; then
+    DATA=$(cat $REPO_FILE)
+    if [ "$DATA" = "$REPO" ]; then
+        echo "File found and up to date! Doing nothing."
+        
+    else
+        echo "File found but contents are invalid! Removing..."
+        rm $REPO_FILE
+        
+        echo "Creating new file..."
+        touch $REPO_FILE
+        echo $REPO >> $REPO_FILE
+        
+        echo "Done!"
+    fi
+else 
+    echo "File not Found. Creating new one..."
+    touch $REPO_FILE
+    echo $REPO >> $REPO_FILE
+    
+    echo "Done!"
+fi
+
