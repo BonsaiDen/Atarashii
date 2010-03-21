@@ -40,8 +40,8 @@ class ViewHelpers:
         if self.gui.text.has_focus:
             gobject.idle_add(self.gui.text.grab_focus)
     
-    def copy_link(self, url):
-        self.copy_data(url)
+    def copy_link(self, menu, uri):
+        self.copy_data(uri)
     
     def copy_tweet(self, menu, uri, item):
         user = self.get_user(item)
