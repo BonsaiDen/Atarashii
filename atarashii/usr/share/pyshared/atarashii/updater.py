@@ -242,17 +242,16 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                     self.load_history_message()
                 
                 elif self.main.refresh_timeout != UNSET_TIMEOUT:
-                    if not self.check_for_update():
-                        self.end_update()
+                    self.check_for_update()
             
             time.sleep(0.1)
     
     
     def check_for_update(self):
         if self.main.refresh_time == UNSET_TIMEOUT:
-            return True
+            return False
         
-        if calendar.timegm(time.gmtime()) > self.main.refresh_time \
+        elif calendar.timegm(time.gmtime()) > self.main.refresh_time \
            + self.main.refresh_timeout or self.refresh_now \
            or self.refresh_messages:
             
@@ -260,12 +259,12 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             self.update()
             self.refresh_messages = False
             self.refresh_now = False
-    
-        return True
-    
+            return True
+        
     def end_update(self):
         self.main.save_settings(True)
         self.main.unset_status(ST_UPDATE)
+        
         self.main.refresh_time = calendar.timegm(time.gmtime())
         gobject.idle_add(self.gui.set_refresh_update,
                          not self.main.status(ST_NETWORK_FAILED))
@@ -314,9 +313,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             self.message_counter += 1
         
         self.main.unset_status(ST_NETWORK_FAILED)
-        
-        # Disable read button before pushing updates into the trees
-        self.gui.set_refresh_update(False)
         
         # Update Views
         def update_views(updates, messages):
