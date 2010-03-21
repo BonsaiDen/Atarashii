@@ -249,6 +249,7 @@ class SettingsDialog(Dialog):
         
         # Sound File
         file_widget = self.get("soundfile")
+        file_widget.set_action(gtk.FILE_CHOOSER_ACTION_OPEN)
         file_filter = gtk.FileFilter()
         file_filter.set_name(lang.settings_file_filter)
         file_filter.add_pattern("*.mp3")
@@ -256,8 +257,14 @@ class SettingsDialog(Dialog):
         file_filter.add_pattern("*.ogg")
         file_widget.add_filter(file_filter)
         file_widget.set_title(lang.settings_file)
-        file_widget.set_filename(str(self.settings['soundfile']))
         
+        if str(self.settings['soundfile']) in ("", "None"):
+            file_widget.set_current_folder("/usr/share/sounds")
+        
+        else:
+            file_widget.set_filename(str(self.settings['soundfile']))
+        
+        file_widget.set_filter(file_filter)
         
         # Notification Setting
         notify.set_active(self.settings.is_true("notify"))
