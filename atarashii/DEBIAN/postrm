@@ -19,12 +19,19 @@
 # ------------------------------------------------------------------------------
 REPO_FILE=/etc/apt/sources.list.d/atarashii.list
 
+action="$1"
+
+# Only do complete clean-up on purge.
+if [ "$action" != "purge" ] ; then
+    echo "No --purge means no cleanup!"
+    exit 0
+fi
+
 # Remove repo file
 echo "Removing repository list..."
 if [ -e $REPO_FILE ]; then
     echo "File found! Removing..."
     rm $REPO_FILE
-    
     echo "Done!"
 else
     echo "File not"
