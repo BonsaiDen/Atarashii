@@ -335,9 +335,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             else:
                 self.message.render()
             
-            del updates
-            del messages
-            
             # Update GUI
             gobject.idle_add(self.end_update)
         
