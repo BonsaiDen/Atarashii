@@ -32,7 +32,8 @@ class ViewMenu:
         self.last_hovered_link = url
     
     def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
-        if self.last_hovered_link.startswith("avatar:"):
+        if self.last_hovered_link != None \
+           and self.last_hovered_link.startswith("avatar:"):
             uri = self.last_hovered_link[7:]
             num = int(uri[:uri.find(":")])
             user = self.get_user(num)
