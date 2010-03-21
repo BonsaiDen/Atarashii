@@ -21,14 +21,17 @@ import urllib
 import time
 
 # File Paths
-DESKTOP_FILE = os.path.join(os.path.expanduser('~'), '.config',
+HOME_DIR = os.path.expanduser('~')
+DESKTOP_FILE = os.path.join(HOME_DIR, '.config',
                             'autostart', 'atarashii.desktop')
 
-CACHE_DIR = os.path.join(os.path.expanduser('~'), '.atarashii')
+AUTOSTART_DIR = os.path.join(HOME_DIR, '.config', 'autostart')
+
+CACHE_DIR = os.path.join(HOME_DIR, '.atarashii')
 CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
 
 COPY_FILE = '/usr/share/applications/atarashii.desktop'
-CRASH_FILE = os.path.join(os.path.expanduser('~'), '.atarashii', 'crashed')
+CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
 
 
 class Settings:
@@ -137,6 +140,7 @@ class Settings:
         if self[key] != None:
             if type(self[key]) == long or type(self[key]) == int:
                 return self[key] != -1
+            
             else:
                 return self[key].strip() != ""
     
@@ -162,10 +166,16 @@ class Settings:
     def set_autostart(self, mode):
         # Create/Delete .desktop file
         try:
+            # Try to create the folder if it doesn't exists
+            if not os.path.exists(AUTOSTART_DIR):
+                os.mkdir(AUTOSTART_DIR)
+            
+            # Get contents of the desktop file
             cfp = open(COPY_FILE, "rb")
             text = cfp.read()
             cfp.close()
             
+            # Tweak the file bit
             dfp = open(DESKTOP_FILE, "wb")
             bmode = "true" if mode else "false"
             text = text.replace("Exec=atarashii", "Exec=atarashii auto")
@@ -223,8 +233,8 @@ class Settings:
                     
                     except OSError, IOError:
                         print "Could not delete file %s" % i
-    
-    
+
+
 # Create Crashfile -------------------------------------------------------------
 # ------------------------------------------------------------------------------
 def crash_file(mode, data = None):
