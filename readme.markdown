@@ -16,7 +16,8 @@ There are currently two ways for you to get **Atarashii**.
 
 **#1: Use the prebuild Package - The recommended way**  
 This is most likely the simpelst one is to install the pre build Debian-Package from the Downloads section:  
-<http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.15-1_all.deb>
+[Click to Download the lastest Version](http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.15-1_all.deb)
+
 > The package will automatically setup the repo config and install the public key,
 > so you don't have to check for updates on GitHub, instead just use your systems update manager.
 
@@ -31,7 +32,7 @@ python make.py``
 After that just run the created Debian-Package.
 
 
-**#3: Debug without installing - For real Coding Kittens ^.^"  **
+**#3: Debug without installing - For real Coding Kittens ^.^"**  
 If you want to hack on **Atarashii** you can just clone the repo and then run ´python debug.py´ to start Atarashii.
 > Due to hardlinks in the CSS file the favorite/reply icons won't work until **Atarashii** has been installed with one of the above methods.
 
