@@ -1,3 +1,9 @@
+atarashii (0.99.15-1) all;
+
+  * Atarashii now has a repository @ http://bonsaiden.github.com/Atarashii
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 21 Mar 2010 02:49:00 +0100
+
 atarashii (0.99.14e-1) all;
 
   * Catch internal python errors and treat them as crashes.
