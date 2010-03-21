@@ -38,11 +38,29 @@ class TrayIcon(gtk.StatusIcon):
         self.tooltip_img_file = None
         self.tooltip.show_all()
         
+        self.tooltip_changed = False
+        self.tooltip_icon = None
+        self.tooltip_buf = None
+        self.tooltip_markup = ""
+        
         # Create Tray Icon
         gtk.StatusIcon.__init__(self)
         self.set_from_file(gui.main.get_image())
         self.set_visible(True)
-        self.set_property("has-tooltip", True)
+        
+        # FIXME This breaks in older gtk versions
+        try:
+            self.set_has_tooltip(True)
+        
+        # Try something else...
+        except Exception:
+            try:
+                self.set_tooltip_text("...")
+            
+            # Didn't work either, last chance...
+            except Exception:
+                self.set_tooltip_text("WTF!")
+        
         self.connect("activate", self.on_activate)
         self.connect("query-tooltip", self.on_tooltip)
         
@@ -113,28 +131,38 @@ class TrayIcon(gtk.StatusIcon):
             text.append((lang.tray_messages if msg > 1 \
                          else lang.tray_message) % msg)
         
-        self.tooltip_label.set_markup(
-                           '<span size="large"><b>%s</b></span>\n%s\n%s' \
-                           % (lang.tray_title, status, "\n".join(text)))
+        self.tooltip_markup = '<span size="large"><b>%s</b></span>\n%s\n%s' \
+                              % (lang.tray_title, status, "\n".join(text))
         
         img = self.main.get_user_picture()
         if img != self.tooltip_img_file:
-            buf = gtk.gdk.pixbuf_new_from_file_at_size(img, 48, 48)
-            self.tooltip_img.set_from_pixbuf(buf)
+            self.tooltip_buf = gtk.gdk.pixbuf_new_from_file_at_size(img, 48, 48)
             self.tooltip_img_file = img
+        
+        self.tooltip_changed = True
     
     def set_tooltip_error(self, status, icon):
-        text = []
-        self.tooltip_label.set_markup(
-                           '<span size="large"><b>%s</b></span>\n%s\n%s' % \
-                           (lang.tray_title, status, "\n".join(text)))
+        self.tooltip_markup = '<span size="large"><b>%s</b></span>\n%s' \
+                              % (lang.tray_title, status)
         
-        self.tooltip_img.set_from_stock(icon, 6)
+        self.tooltip_icon = icon
+        self.tooltip_changed = True
     
     
     # Events -------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
+        if self.tooltip_changed:
+            if self.tooltip_icon != None:
+                self.tooltip_img.set_from_stock(icon, 6)
+            
+            elif self.tooltip_buf != None:
+                 self.tooltip_img.set_from_pixbuf(self.tooltip_buf)
+            
+            self.tooltip_label.set_markup(self.tooltip_markup)
+            self.tooltip_icon = None
+            self.tooltip_changed = False
+        
         tip.set_custom(self.tooltip)
         return True
     
