@@ -482,9 +482,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                     
     def show_crash_report(self):
         dialog.MessageDialog(self, MESSAGE_WARNING,
-               ("Atarashii has crashed and automatically restarted itself.\n"
-               "<b>Error:</b> %s") % self.main.settings['crash_reason'],
-               lang.error_title)
+               (lang.error_crashed) % self.main.settings['crash_reason'],
+                lang.error_title)
     
     
     # Show Error Dialog --------------------------------------------------------

@@ -138,6 +138,8 @@ LANG = {
         'settings_add' : 'Erstellen',
         'settings_edit' : 'Bearbeiten',
         'settings_delete' : 'Löschen',
+        'settings_file_ok' : 'OK',
+        'settings_file_cancel' : 'Abbrechen',
         
         # About Dialog
         'about_title' : 'Über Atarashii',
@@ -184,6 +186,12 @@ LANG = {
         'error_title' : 'Atarashii - Fehler',
         'error_login' :
             'Die Anmeldung als <b>%s</b> ist fehlgeschlagen.',
+        
+        'error_crashed' : 
+            'Ups... Atarashii ist abgestürzt, hat sich aber automatisch neu'
+            'gestartet ^.^"\n'
+            'Im Normalfall sollten keine Daten verloren gegangen sein.\n\n'
+            '<b>Fehlercode:</b> %s',
         
         'error_internal' : '<b>Atarashii Fehler:</b> %s',
         'error_already_retweeted' :
@@ -424,6 +432,8 @@ LANG = {
         'settings_add' : 'Add',
         'settings_edit' : 'Edit',
         'settings_delete' : 'Delete',
+        'settings_file_ok' : 'OK',
+        'settings_file_cancel' : 'Cancel',
         
         # About Dialog
         'about_title' : 'About Atarashii',
@@ -467,6 +477,11 @@ LANG = {
         # Error Dialogs
         'error_title' : 'Atarashii - Error',
         'error_login' : 'The login as <b>%s</b> has failed.',
+        'error_crashed' : 
+            'Oops! Atarashii has crashed, but it automatically restarted itself ^.^"\n'
+            'Normally there shouldn\'t be any data lost.\n\n'
+            '<b>Error code:</b> %s',
+        
         'error_internal' : '<b>Atarashii error:</b> %s',
         'error_already_retweeted' :
             'Either it\'s not possible to retweet this Tweet or '

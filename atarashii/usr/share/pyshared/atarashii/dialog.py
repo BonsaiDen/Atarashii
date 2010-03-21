@@ -252,8 +252,10 @@ class SettingsDialog(Dialog):
         # ----------------------------------------------------------------------
         file_chooser = gtk.FileChooserDialog(None, self.dlg,
                                          action = gtk.FILE_CHOOSER_ACTION_OPEN,
-                                         buttons = ("OK", gtk.RESPONSE_OK,
-                                         "Abbrechen", gtk.RESPONSE_CANCEL))
+                                         buttons = (lang.settings_file_cancel,
+                                         gtk.RESPONSE_CANCEL,
+                                         lang.settings_file_ok,
+                                         gtk.RESPONSE_OK))
         
         
         # Fix a bug were the button would be empty if the dialog is canceled
