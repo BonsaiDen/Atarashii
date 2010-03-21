@@ -24,7 +24,7 @@ This is most likely the simpelst one is to install the pre build Debian-Package 
 
 **#2: Install from the repo - For those GIT freaks!**  
 Open a shell and issue the following commands  
-``git clone git://github.com/BonsaiDen/Atarashii.git  
+``git clone git://github.com/BonsaiDen/Atarashii.git
 python make.py``
 > You may need to install `fakeroot` via the package manager in order to be able to build the package.
 > Also there is a rare bug where dpkg-deb fails to open/find the control file. If you encounter this please send me a mail with more details.
