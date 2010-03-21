@@ -6,7 +6,7 @@ Maintainer: Ivo Wetzel <ivo.wetzel@googlemail.com>
 Architecture: all
 Version: 0.99.14e-1
 Depends: python (>= 2.6), python-webkit, python-gtk2, python-gconf, python-gobject, python-dbus, python-notify, mplayer-nogui
-Filename: dists/karmic/contrib/binary-all/atarashii_0.99.14e-1_all.deb
+Filename: contrib/binary-all/atarashii_0.99.14e-1_all.deb
 Size: 89352
 MD5sum: 1798e9c519651212bcced528d7890344
 SHA1: 6e1ed97ed8a5c7cf8f9413b474800129e315a6df
