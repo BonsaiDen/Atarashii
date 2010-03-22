@@ -228,8 +228,9 @@ class Settings:
         for i in os.listdir(ATARASHII_DIR):
             cache_file = os.path.join(ATARASHII_DIR, i)
             
+            # TODO determin wether to check for last access or last modification
             if time.time() - os.stat(cache_file).st_atime > CACHE_TIMEOUT:
-                if cache_file[-4:].lower() in ('.jpg', '.png', 'gif'):
+                if cache_file[-4:].lower() in ('jpeg', '.jpg', '.png', 'gif'):
                     try:
                         os.unlink(cache_file)
                     
