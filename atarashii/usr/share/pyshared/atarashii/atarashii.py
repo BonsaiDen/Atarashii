@@ -145,8 +145,10 @@ class Atarashii(AtarashiiActions):
             self.gui.set_app_title()
             return
             
-        # Wait until the last update is complete
-        while self.status(ST_UPDATE):
+        # Wait until the last update/delete/send is complete
+        while self.status(ST_UPDATE) or self.status(ST_DELETE) \
+              or self.status(ST_SEND):
+            
             time.sleep(0.1)
         
         # Switch User
