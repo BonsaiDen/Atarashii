@@ -288,6 +288,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.multi_button.set_tooltip_text(info)
             self.multi_button.set_stock_id(gtk.STOCK_GOTO_TOP)
             self.multi_button.set_sensitive(True)
+            if status:
+                self.update_status()
+            
             return
         
         
@@ -300,13 +303,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         else:
             read_mode = False
-        
-        if mode == False:
-            read_mode = False
-            
-        elif self.main.status(ST_UPDATE) or self.main.status(ST_CONNECT):
-            read_mode = False
-        
+                
         # Set Sensitive
         self.multi_button.set_sensitive(read_mode)
         self.tray.read_menu.set_sensitive(read_mode)
@@ -324,6 +321,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             elif self.mode == MODE_MESSAGES:
                 self.multi_button.set_tooltip_text( lang.tool_read_message)
+            
+            if status:
+                self.update_status()
+            
             return
         
         # Toggle to refresh mode -----------------------------------------------
