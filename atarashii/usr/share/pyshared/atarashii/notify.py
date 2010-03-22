@@ -24,22 +24,34 @@ pynotify.init("Atarashii")
 class Notifier:
     def __init__(self, main):
         self.main = main
-    
+        self.player = None
+        
     def show(self, objs):
         if len(objs) > 0 and self.main.settings.is_true("sound") \
            and self.main.settings['soundfile'] != "None":
-           
+            
             try:
-                subprocess.Popen(["mplayer", "-really-quiet",
-                                  "-nolirc", self.main.settings['soundfile']])
+                # Check for Zombieeeeeees!
+                try:
+                    if self.player != None:
+                        self.player.kill()
+                        print "Zombieeeees!"
+                
+                except OSError:
+                    pass
+                
+                self.player = subprocess.Popen(["mplayer", "-really-quiet",
+                                          "-nolirc",
+                                          self.main.settings['soundfile']])
             
             except OSError, error:
                 print "Failed to play sound", error
         
+        # Shot notification
         for obj in objs:
-            self.notify(obj[0], obj[1], obj[2])
-    
-    def notify(self, title, text, icon = None):
-        notification = pynotify.Notification(title, text, icon)
-        return notification.show()
+            try:
+                pynotify.Notification(obj[0], obj[1], obj[2]).show()
+                            
+            except Exception, error:
+                print "Notify error", error
 
