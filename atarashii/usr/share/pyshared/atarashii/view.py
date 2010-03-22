@@ -51,6 +51,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.connect("button-release-event", self.gui.text.html_focus)
         self.connect("button-press-event", self.on_button)
         self.connect("populate-popup", self.on_popup)
+        self.popup_open = False
         
         # Fix CSS hover stuff
         self.mouse_position = (-1.0, -1.0)

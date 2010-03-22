@@ -17,6 +17,7 @@
 # HTML View / Popup Menu / Tooltips --------------------------------------------
 # ------------------------------------------------------------------------------
 import gtk
+import gobject
 
 from language import LANG as lang
 
@@ -70,8 +71,7 @@ class ViewMenu:
     # Let's create our own nice little popup :)
     def on_button(self, view, event, *args):
         self.give_text_focus = self.gui.text.has_focus
-        
-        if event.button == 3:
+        if event.button == 3 and not self.popup_open:
             # Calculate on which item the user clicked
             item_id, link = self.get_clicked_item(self.get_sizes(event), event)
             if item_id == -1:
@@ -93,11 +93,11 @@ class ViewMenu:
             # This makes the menu popup just besides the mouse pointer
             # It fixes an issues were the user would release the mouse button
             # and trigger an menu item without wanting to do so
-            def position(*args):
-                return (int(event.x_root), int(event.y_root), True)
-            
+            root_pos = (int(event.x_root), int(event.y_root), True)
             menu.attach_to_widget(self, lambda *args: False)
-            menu.popup(None, None, position, event.button, event.get_time())
+            gobject.idle_add(menu.popup, None, None, lambda *arg: root_pos, event.button, event.get_time())
+            print "opening"
+            self.popup_open = True
             return True
     
     def add_menu_link(self, menu, name, callback, *args):
@@ -110,7 +110,9 @@ class ViewMenu:
         menu.append(item)
     
     def on_popup_close(self, *args):
-        self.gui.text.html_focus()
+        self.popup_open = False
+        print "closing"
+        gobject.idle_add(self.gui.text.html_focus)
     
     
     # Menu Building ------------------------------------------------------------
