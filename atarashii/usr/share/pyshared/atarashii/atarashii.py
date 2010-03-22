@@ -42,12 +42,12 @@ import gtk
 import gobject
 
 import time
+import signal
 
 gtk.gdk.threads_init()
 gtk.gdk.threads_enter()
 
 import notify
-
 import gui
 import settings
 import updater
@@ -70,7 +70,14 @@ class Atarashii(AtarashiiActions):
         self.debug = debug
         self.exited = False
         self.start_time = time.time()
+        
+        # Catch python errors
         sys.exitfunc = self.crash_exit
+        
+        # Catch shutdown / logout
+        signal.signal(signal.SIGINT, self.quit)
+        signal.signal(signal.SIGTSTP, self.quit)
+        signal.signal(signal.SIGQUIT, self.quit)
         
         # Load Settings
         self.settings = settings.Settings()
