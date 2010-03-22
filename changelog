@@ -1,3 +1,16 @@
+atarashii (0.99.15b-1) all;
+
+  * New "edit" Tweet feature! This basically performs a delete/send in one row
+    and preserves @replies.
+  * Add error messages for cases when trying to delete items that have already
+    been delete form another client.
+  * Fix broken copying of links.
+  * Fix the sometimes flickering refresh button when a lot of tweets are loaded.
+  * Updated crash dialogs, additionally a crashlog gets generated on python
+    errors.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 22 Mar 2010 08:06:00 +0100
+
 atarashii (0.99.15a-1) all;
 
   * Fixes to the sound file chooser.
