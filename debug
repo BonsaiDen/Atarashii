@@ -65,8 +65,8 @@ else:
             print "Importing Atarashii failed"
             break
         
-        # 1 = ??, -9/-11 for kill and quit
-        elif error in (os.EX_OK, 1, -9, -11): 
+        # Detect normal exit
+        elif error in (os.EX_OK, -15, -9): 
             print "Atarashii has been closed with status %d" % error
             break
         
