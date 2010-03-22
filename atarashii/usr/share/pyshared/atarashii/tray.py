@@ -157,7 +157,7 @@ class TrayIcon(gtk.StatusIcon):
                 self.tooltip_img.set_from_stock(icon, 6)
             
             elif self.tooltip_buf != None:
-                 self.tooltip_img.set_from_pixbuf(self.tooltip_buf)
+                self.tooltip_img.set_from_pixbuf(self.tooltip_buf)
             
             self.tooltip_label.set_markup(self.tooltip_markup)
             self.tooltip_icon = None

@@ -56,17 +56,18 @@ class AtarashiiActions:
             # Save the crashlog
             import traceback
             from settings import CRASH_LOG_FILE
-            f = open(CRASH_LOG_FILE, "wb")
+            crash_file = open(CRASH_LOG_FILE, "wb")
             trace = traceback.extract_tb(sys.last_traceback)
-            f.write("Atarashii %s\nStarted at %s\nCrashed at %s\n\nTraceback:\n"
-                     % (self.version,
-                     time.strftime('%a %b %d %H:%M:%S +0000 %Y',
-                     time.gmtime(time.time())),
-                     time.strftime('%a %b %d %H:%M:%S +0000 %Y', time.gmtime())
-                     ))
-            
-            f.write("\n".join(traceback.format_list(trace)))
-            f.close()
+            crash_file.write(
+                 """Atarashii %s\nStarted at %s\nCrashed at %s"\nTraceback:\n"""
+                 % (self.version,
+                 time.strftime('%a %b %d %H:%M:%S +0000 %Y',
+                 time.gmtime(time.time())),
+                 time.strftime('%a %b %d %H:%M:%S +0000 %Y', time.gmtime())
+                 ))
+        
+            crash_file.write("\n".join(traceback.format_list(trace)))
+            crash_file.close()
             
             # Exit with specific error
             sys.exit(os.EX_SOFTWARE)

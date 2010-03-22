@@ -56,7 +56,6 @@ import gtk
 import gobject
 
 import time
-import os
 
 gtk.gdk.threads_init()
 gtk.gdk.threads_enter()

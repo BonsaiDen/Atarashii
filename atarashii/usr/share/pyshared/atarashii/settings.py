@@ -203,7 +203,7 @@ class Settings:
                 else:
                     self['autostart'] = True
                 
-            except OSError, IOError:
+            except (OSError, IOError):
                 print "Could not check autostart"
                 self['autostart'] = False
         
@@ -233,7 +233,7 @@ class Settings:
                     try:
                         os.unlink(cache_file)
                     
-                    except OSError, IOError:
+                    except (OSError, IOError):
                         print "Could not delete file %s" % i
 
 
@@ -249,6 +249,6 @@ def crash_file(mode, data = None):
         elif os.path.exists(CRASH_FILE):
             os.unlink(CRASH_FILE)
     
-    except OSError, IOError:
+    except (OSError, IOError):
         print "IO on crashfile failed"
 
