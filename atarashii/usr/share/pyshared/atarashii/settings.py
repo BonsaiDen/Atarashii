@@ -32,6 +32,7 @@ CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
 
 COPY_FILE = '/usr/share/applications/atarashii.desktop'
 CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
+CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, "crash.log")
 
 
 class Settings:
