@@ -209,11 +209,12 @@ class HTML(view.HTMLView):
             self.add_menu_link(menu, lang.context_copy_message,
                                self.copy_message, None, item)
             
-            self.add_menu_separator(menu)
+            
             
             # Delete
             name = item.sender.screen_name
             if name.lower() == self.main.username.lower():
+                self.add_menu_separator(menu)
                 full = 'delete:m:%d' % item_id
                 self.add_menu_link(menu, lang.context_delete_message,
                                    self.context_link, full, item)
