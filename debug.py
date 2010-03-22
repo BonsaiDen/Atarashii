@@ -1,4 +1,5 @@
 #!/usr/bin/python
+
 #  This file is part of Atarashii.
 #
 #  Atarashii is free software: you can redistribute it and/or

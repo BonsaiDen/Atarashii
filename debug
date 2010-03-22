@@ -19,14 +19,10 @@
 # Atarashii Crash Wrapper ------------------------------------------------------
 # ------------------------------------------------------------------------------
 
-# Catch SIGTERM
-STOPPED=false
-trap logout_shutdown 15
-
-logout_shutdown() {
-    echo "15" >~/Desktop/term.info
-    $STOPPED=true
-}
+# Autostart wait
+if [ "$1" == "auto" ]; then 
+    sleep 3
+fi
 
 # Start Atarashii
 RESTART=0
@@ -42,12 +38,12 @@ do
     let RESTART=RESTART+1
     
     # Checks
-    if [ $CODE -eq 0 ]; then
+    if [ $CODE -eq 0 -o  $CODE -eq 1 ]; then # dont care about xwindow stuff
         echo "Atarashii has exited normally."
         exit 0
     
     elif [ $CODE -eq 69 ]; then
-        echo "Atarashii is alreay running."
+        echo "Atarashii is already running."
         exit 0
     
     elif [ $CODE -eq 70 ]; then
@@ -67,8 +63,8 @@ do
         echo "Atarashii has been terminated."
         exit 1
     
-    elif [ ! $STOPPED ]; then
-        echo $? >~/.atarashii/crash.log
+    else
+        echo $CODE >~/.atarashii/crashed
         echo "Atarashii crashed due to an external error!"
         echo "Restarting..."
     fi
