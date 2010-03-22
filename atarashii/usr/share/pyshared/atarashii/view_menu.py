@@ -96,7 +96,6 @@ class ViewMenu:
             root_pos = (int(event.x_root), int(event.y_root), True)
             menu.attach_to_widget(self, lambda *args: False)
             gobject.idle_add(menu.popup, None, None, lambda *arg: root_pos, event.button, event.get_time())
-            print "opening"
             self.popup_open = True
             return True
     
@@ -111,7 +110,6 @@ class ViewMenu:
     
     def on_popup_close(self, *args):
         self.popup_open = False
-        print "closing"
         self.gui.text.html_focus()
     
     
