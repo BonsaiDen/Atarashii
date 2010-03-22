@@ -55,9 +55,9 @@ class Edit(threading.Thread):
             self.main.edit_reply_user = UNSET_TEXT
             
             # Reset Input
-            self.gui.text.set_text(UNSET_TEXT)
-            self.gui.show_input(False)
-            self.gui.html.focus_me()
+            gobject.idle_add(self.gui.text.set_text, UNSET_TEXT)
+            gobject.idle_add(self.gui.show_input, False)
+            gobject.idle_add(self.gui.html.focus_me)
         
         # Show Error Message
         except (IOError, TweepError), error:
@@ -97,6 +97,7 @@ class Edit(threading.Thread):
             imgfile = self.main.updater.get_image(update)
             self.gui.html.update_list.append((update, imgfile))
             gobject.idle_add(self.gui.html.push_updates)
+    
     
     # Delete a Tweet -----------------------------------------------------------
     # --------------------------------------------------------------------------
