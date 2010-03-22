@@ -53,9 +53,11 @@ print "Copying logs and manpage..."
 log1 = os.path.join(sys.path[0], "atarashii/usr/share/doc/atarashii/changelog")
 log2 = os.path.join(sys.path[0], "atarashii/usr/share/doc/atarashii/changelog.Debian")
 man1 = os.path.join(sys.path[0], "atarashii/usr/share/man/man1/atarashii.1")
+man2 = os.path.join(sys.path[0], "atarashii/usr/share/man/man1/atarashiigui.1")
 shutil.copyfile(log, log1)
 shutil.copyfile(log, log2)
 shutil.copyfile(man, man1)
+shutil.copyfile(man, man2)
 print "Removing old logs and manpage..."
 try:
     os.unlink(log1 + '.gz')
@@ -69,10 +71,15 @@ try:
     os.unlink(man1 + '.gz')
 except:
     pass
+try:
+    os.unlink(man2 + '.gz')
+except:
+    pass
 print "Packing new logs and manpage..."
 subprocess.call(["gzip", "--best", log1])
 subprocess.call(["gzip", "--best", log2])
 subprocess.call(["gzip", "--best", man1])
+subprocess.call(["gzip", "--best", man2])
 
 # Check all files
 print "\n---- Cleaning up ----"
@@ -99,7 +106,7 @@ for i in dirs:
             print "- deleting %s" % file
         
         else:
-            if f == "atarashii":
+            if f == "atarashii" or f == "atarashiigui":
                 subprocess.call(["chmod", "644", file])
                 subprocess.call(["chmod", "+x", file])
             else:
