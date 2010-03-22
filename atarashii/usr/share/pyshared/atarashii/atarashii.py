@@ -42,7 +42,6 @@ import gtk
 import gobject
 
 import time
-import signal
 
 gtk.gdk.threads_init()
 gtk.gdk.threads_enter()
@@ -73,11 +72,6 @@ class Atarashii(AtarashiiActions):
         
         # Catch python errors
         sys.exitfunc = self.crash_exit
-        
-        # Catch shutdown / logout
-        signal.signal(signal.SIGINT, self.quit)
-        signal.signal(signal.SIGTSTP, self.quit)
-        signal.signal(signal.SIGQUIT, self.quit)
         
         # Load Settings
         self.settings = settings.Settings()

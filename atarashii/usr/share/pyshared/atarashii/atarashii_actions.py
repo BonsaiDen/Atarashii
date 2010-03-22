@@ -72,9 +72,6 @@ class AtarashiiActions:
             # Exit with specific error
             sys.exit(os.EX_SOFTWARE)
     
-    def on_shutdown_logout():
-        sys.exit(os.EX_OK)
-    
     def quit(self):
         self.save_settings()
         gtk.main_quit()        
