@@ -60,6 +60,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         self.load_history_message_id = HTML_UNSET_ID
         self.ratelimit = 150
         self.message_counter = 0
+        self.finish = False
         
         self.path = os.path.expanduser('~')
     
@@ -74,6 +75,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         self.message = self.gui.message
         
         # Reset
+        self.finish = False
         self.message_counter = 0
         self.do_init = False
         self.started = False
@@ -222,7 +224,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         gobject.idle_add(self.gui.set_app_title)
         
         # Init Timer
-        self.main.save_settings(True)
+        gobject.idle_add(self.main.save_settings, True)
         self.main.refresh_time = calendar.timegm(time.gmtime())
         gobject.idle_add(self.gui.set_refresh_update, True)
     
@@ -235,7 +237,12 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 self.init()
             
             elif self.started:
-                if self.html.load_history_id != HTML_UNSET_ID:
+                if self.finish:
+                    print "foo"
+                    self.finish = False
+                    self.end_update()
+                
+                elif self.html.load_history_id != HTML_UNSET_ID:
                     self.load_history()
                 
                 elif self.message.load_history_id != HTML_UNSET_ID:
@@ -244,7 +251,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 elif self.main.refresh_timeout != UNSET_TIMEOUT:
                     self.check_for_update()
             
-            time.sleep(0.1)
+            time.sleep(0.025)
     
     
     def check_for_update(self):
@@ -262,7 +269,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             return True
         
     def end_update(self):
-        self.main.save_settings(True)
+        gobject.idle_add(self.main.save_settings, True)
         self.main.unset_status(ST_UPDATE)
         
         self.main.refresh_time = calendar.timegm(time.gmtime())
@@ -332,7 +339,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 self.message.render()
             
             # Update GUI
-            gobject.idle_add(self.end_update)
+            self.finish = True
         
         gobject.idle_add(update_views, updates, messages)
         return True

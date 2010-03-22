@@ -68,7 +68,7 @@ class UpdaterMessage:
             
             # Show login message
             if last:
-                self.main.show_start_notifications()
+                gobject.idle_add(self.main.show_start_notifications)
         
         gobject.idle_add(render)
         return True
