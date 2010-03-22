@@ -19,7 +19,6 @@
 import gtk
 import gobject
 
-import os
 import sys
 import calendar
 import time
@@ -32,7 +31,8 @@ import send
 from language import LANG as lang
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
-                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_NETWORK_FAILED
+                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_COMPLETE, \
+                      ST_NETWORK_FAILED
 
 from constants import UNSET_ID_NUM, UNSET_TEXT
 
@@ -72,7 +72,7 @@ class AtarashiiActions:
             crash_file.close()
             
             # Exit with specific error
-            sys.exit(os.EX_SOFTWARE)
+            sys.exit(70) # os.EX_SOFTWARE
     
     def quit(self):
         notify.uninit()
@@ -81,7 +81,7 @@ class AtarashiiActions:
         self.updater.running = False
         self.settings.check_cache()
         self.exited = True
-        sys.exit(os.EX_OK)
+        sys.exit(0) # os.EX_OK
     
     def save_settings(self, mode = False):
         if mode:
@@ -290,10 +290,11 @@ class AtarashiiActions:
         
         
         # Catch errors due to missing network
-        if error_errno == -2:
+        if error_errno in (-2, -3):
             self.set_status(ST_NETWORK_FAILED)
             code = -4
-            if self.status(ST_LOGIN_SUCCESSFUL):
+            
+            if self.status(ST_LOGIN_COMPLETE):
                 code = -5
                 self.gui.set_refresh_update(False)
                 self.gui.tray.refresh_menu.set_sensitive(False)
@@ -333,7 +334,7 @@ class AtarashiiActions:
                 elif self.status(ST_WAS_SEND) and code == 404:
                     code = -3
         
-                
+        
         # Reset stuff
         self.unset_status(ST_WAS_SEND | ST_WAS_RETWEET | \
                                ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
