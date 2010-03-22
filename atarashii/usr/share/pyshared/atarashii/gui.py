@@ -486,7 +486,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         code = self.main.settings['crash_reason']
         
         # Python error, link to the traceback file
-        if code == EX_SOFTWARE:
+        if code == str(EX_SOFTWARE):
             from settings import CRASH_LOG_FILE
             info = lang.error_crashed_python % CRASH_LOG_FILE
             title = lang.error_crashed__python_title
