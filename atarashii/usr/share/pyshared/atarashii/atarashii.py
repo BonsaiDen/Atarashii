@@ -26,7 +26,7 @@ import os
 if 'org.Atarashii' in dbus.Interface(dbus.SessionBus().get_object(
    'org.freedesktop.DBus', '/org/freedesktop/DBus'),
    'org.freedesktop.DBus').ListNames():
-    sys.exit(os.EX_UNAVAILABLE)
+    sys.exit(69) # os.EX_UNAVAILABLE
 
 DBUS = dbus.SessionBus()
 DBUSNAME = dbus.service.BusName('org.Atarashii', bus = DBUS)

@@ -482,11 +482,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                              % lang.name(name), lang.error_title)
                     
     def show_crash_report(self):
-        from os import EX_SOFTWARE
         code = self.main.settings['crash_reason']
         
         # Python error, link to the traceback file
-        if code == str(EX_SOFTWARE):
+        if code == "70": #str(EX_SOFTWARE)
             from settings import CRASH_LOG_FILE
             info = lang.error_crashed_python % CRASH_LOG_FILE
             title = lang.error_crashed__python_title
