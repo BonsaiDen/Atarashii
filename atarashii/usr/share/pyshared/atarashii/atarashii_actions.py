@@ -55,8 +55,8 @@ class AtarashiiActions:
                         
             # Save the crashlog
             import traceback
-            from settings import ATARASHII_DIR
-            f = open(os.path.join(ATARASHII_DIR, "crash.log"), "wb")
+            from settings import CRASH_LOG_FILE
+            f = open(CRASH_LOG_FILE, "wb")
             trace = traceback.extract_tb(sys.last_traceback)
             f.write("Atarashii %s\nStarted at %s\nCrashed at %s\n\nTraceback:\n"
                      % (self.version,

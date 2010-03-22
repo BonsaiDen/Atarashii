@@ -482,9 +482,22 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                              % lang.name(name), lang.error_title)
                     
     def show_crash_report(self):
-        dialog.MessageDialog(self, MESSAGE_WARNING,
-               (lang.error_crashed) % self.main.settings['crash_reason'],
-                lang.error_title)
+        from os import EX_SOFTWARE
+        code = self.main.settings['crash_reason']
+        
+        # Python error, link to the traceback file
+        if code == EX_SOFTWARE:
+            from settings import CRASH_LOG_FILE
+            info = lang.error_crashed_python % CRASH_LOG_FILE
+            title = lang.error_crashed__python_title
+        
+        # Other errors, just display the code since that's all we got
+        else:
+            title = lang.error_crashed_title
+            info = lang.error_crashed % code
+        
+        dialog.MessageDialog(self, MESSAGE_WARNING, lang.error_general + info,
+                             title)
     
     
     # Show Error Dialog --------------------------------------------------------
