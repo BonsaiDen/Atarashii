@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import sys
 import os
+import signal
 
 # Import Atarashii -------------------------------------------------------------
 sys.path.insert(0, "/usr/share/pyshared")
@@ -44,7 +45,7 @@ else:
             break
         
         # Detect normal exit
-        elif error in (os.EX_OK, -15, -9): 
+        elif error in (os.EX_OK, 1, -15, -9): # 1 
             print "Atarashii has been closed with status %d" % error
             break
         
