@@ -39,17 +39,33 @@ class GUIHelpers:
         if self.main.status(ST_SEND):
             return
         
+        # Unset
         if self.main.reply_user == UNSET_TEXT \
            and self.main.retweet_user == UNSET_TEXT \
-           and self.main.message_user == UNSET_TEXT:
+           and self.main.message_user == UNSET_TEXT \
+           and self.main.edit_text == UNSET_TEXT:
             
             self.info_label.set_markup(UNSET_LABEL)
             self.info_label.hide()
         
+        # Edit
+        elif self.main.edit_text != UNSET_TEXT:
+            if self.main.edit_reply_user != UNSET_TEXT:
+                self.set_label_text(lang.label_edit_reply,
+                                    self.main.edit_reply_user,
+                                    self.main.edit_text)
+            
+            else:
+                self.set_label_text(lang.label_edit, self.main.edit_text)
+            
+            self.info_label.show()
+        
+        # RT
         elif self.main.retweet_user != UNSET_TEXT:
             self.set_label_text(lang.label_retweet, self.main.retweet_user)
             self.info_label.show()
         
+        # Reply
         elif self.main.reply_text != UNSET_TEXT:
             self.set_label_text(lang.label_reply_text, self.main.reply_text)
             self.info_label.show()
@@ -67,9 +83,14 @@ class GUIHelpers:
             self.set_label_text(lang.label_message, self.main.message_user)
             self.info_label.show()
     
-    def set_label_text(self, info, label_text):
-        self.info_label.set_markup(info % escape(label_text))
-    
+    def set_label_text(self, info, label_text, label_extra = None):
+        if label_extra:
+            self.info_label.set_markup(info \
+                                       % (escape(label_text),
+                                          escape(label_extra)))
+        
+        else:
+            self.info_label.set_markup(info % escape(label_text))
     
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------

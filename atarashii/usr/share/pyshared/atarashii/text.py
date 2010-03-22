@@ -175,6 +175,12 @@ class TextInput(gtk.TextView):
                 self.main.send(ctext)
             
             elif self.gui.mode == MODE_TWEETS:
+                # Don't submit in edit mode when the text doesn't have been
+                # edited
+                if self.main.edit_text != UNSET_TEXT:
+                    if self.main.edit_text.lower() == text.lower().strip():
+                        return
+                
                 # Prevent @reply to be send without text
                 ctext = text.strip()
                 if ctext[0:1] in u"@\uFF20":
@@ -276,6 +282,10 @@ class TextInput(gtk.TextView):
                 self.main.reply_id = UNSET_ID_NUM
                 self.main.reweetText = UNSET_TEXT
                 self.main.retweet_user = UNSET_TEXT
+                self.main.edit_id = UNSET_ID_NUM
+                self.main.edit_text = UNSET_TEXT
+                self.main.edit_reply_user = UNSET_TEXT
+                self.main.edit_reply_id = UNSET_ID_NUM
             
             # check for @ Reply
             at_user = self.reply_regex.match(text)
@@ -362,6 +372,10 @@ class TextInput(gtk.TextView):
         self.main.reply_id = UNSET_ID_NUM
         self.main.retweet_text = UNSET_TEXT
         self.main.retweet_user = UNSET_TEXT
+        self.main.edit_id = UNSET_ID_NUM
+        self.main.edit_text = UNSET_TEXT
+        self.main.edit_reply_id = UNSET_ID_NUM
+        self.main.edit_reply_user = UNSET_TEXT
         self.main.message_user = UNSET_TEXT
         self.main.message_id = UNSET_ID_NUM
         self.main.message_text = UNSET_TEXT
@@ -385,6 +399,14 @@ class TextInput(gtk.TextView):
             self.main.retweet_user = UNSET_TEXT
             text = UNSET_TEXT
         
+        # Cancel Edit
+        elif self.main.edit_text != UNSET_TEXT:
+            self.main.edit_id = UNSET_ID_NUM
+            self.main.edit_text = UNSET_TEXT
+            self.main.edit_reply_id = UNSET_ID_NUM
+            self.main.edit_reply_user = UNSET_TEXT
+            text = UNSET_TEXT
+        
         # Check for already existing reply
         if text[0:1] == "@":
             space = text.find(" ")
@@ -403,6 +425,35 @@ class TextInput(gtk.TextView):
         self.modify_text(gtk.STATE_NORMAL, self.default_fg)
         self.resize()
     
+    def edit(self):
+        self.change_contents = True
+        self.is_changing = True
+        self.grab_focus()
+        self.has_focus = True
+        text = self.get_text()
+        if not self.has_typed:
+            text = ""
+        
+        # Cancel Retweet
+        if self.main.retweet_text != UNSET_TEXT:
+            self.main.retweet_text = UNSET_TEXT
+            self.main.retweet_user = UNSET_TEXT
+            text = UNSET_TEXT
+        
+        # Cancel reply
+        self.main.reply_user = UNSET_TEXT
+        self.main.reply_id = UNSET_ID_NUM
+        
+        # Check for already existing reply
+        text = self.main.edit_text
+        self.set_text(text)
+        self.is_changing = False
+        self.check_color(len(text))
+        self.changed()
+        self.modify_text(gtk.STATE_NORMAL, self.default_fg)
+        self.resize()
+    
+    
     def retweet(self):
         self.change_contents = True
         self.is_changing = True
@@ -412,6 +463,14 @@ class TextInput(gtk.TextView):
         # Cancel reply
         self.main.reply_user = UNSET_TEXT
         self.main.reply_id = UNSET_ID_NUM
+        
+        # Cancel edit
+        self.main.edit_id = UNSET_ID_NUM
+        self.main.edit_text = UNSET_TEXT
+        self.main.edit_reply_id = UNSET_ID_NUM
+        self.main.edit_reply_user = UNSET_TEXT
+
+        # Set text        
         text = "RT @%s: %s" % (self.main.retweet_user, self.main.retweet_text)
         self.set_text(text)
         

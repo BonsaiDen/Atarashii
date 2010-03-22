@@ -27,6 +27,95 @@ from constants import MODE_TWEETS, MODE_MESSAGES, UNSET_TEXT, UNSET_ID_NUM
 from utils import TweepError
 
 
+# Edit Tweets ------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class Edit(threading.Thread):
+    def __init__(self, main, tweet_id, text, reply):
+        threading.Thread.__init__(self)
+        self.gui = main.gui
+        self.main = main
+        self.tweet_id = tweet_id
+        self.text = text
+        self.reply = reply
+        
+    def run(self):
+        # Delete the old tweet
+        if not self.delete():
+            return
+        
+        # Send a new one!
+        self.main.set_status(ST_WAS_SEND)
+        try:
+            self.send_tweet(self.text)
+            
+            # Reset
+            self.main.edit_id = UNSET_ID_NUM
+            self.main.edit_text = UNSET_TEXT
+            self.main.edit_reply_id = UNSET_ID_NUM
+            self.main.edit_reply_user = UNSET_TEXT
+            
+            # Reset Input
+            self.gui.text.set_text(UNSET_TEXT)
+            self.gui.show_input(False)
+            self.gui.html.focus_me()
+        
+        # Show Error Message
+        except (IOError, TweepError), error:
+            gobject.idle_add(self.gui.html.remove, self.tweet_id)
+            gobject.idle_add(self.main.handle_error, error)
+        
+        self.main.unset_status(ST_WAS_SEND)
+    
+    
+    # Send a Tweet -------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def send_tweet(self, text):
+        if self.main.edit_reply_id != UNSET_ID_NUM:
+            # Send Tweet
+            update = self.main.api.update_status(text,
+                                in_reply_to_status_id = self.main.edit_reply_id)
+            self.main.updater.set_last_tweet(update.id)
+            
+            # Remove old tweet
+            gobject.idle_add(self.gui.html.remove, self.tweet_id)
+            
+            # Insert temporary tweet
+            imgfile = self.main.updater.get_image(update)
+            self.gui.html.update_list.append((update, imgfile))
+            gobject.idle_add(self.gui.html.push_updates)
+        
+        # Normal Tweet / Retweet
+        else:
+            # Send Tweet
+            update = self.main.api.update_status(text)
+            self.main.updater.set_last_tweet(update.id)
+                
+            # Remove old tweet
+            gobject.idle_add(self.gui.html.remove, self.tweet_id)
+            
+            # Insert temporary tweet
+            imgfile = self.main.updater.get_image(update)
+            self.gui.html.update_list.append((update, imgfile))
+            gobject.idle_add(self.gui.html.push_updates)
+    
+    # Delete a Tweet -----------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def delete(self):
+        self.main.set_status(ST_WAS_DELETE)
+        try:
+            # Delete
+            self.main.api.destroy_status(self.tweet_id)
+            self.main.unset_status(ST_WAS_DELETE)
+        
+        # Show error, but don't show the success message
+        except (IOError, TweepError), error:
+            gobject.idle_add(self.main.handle_error, error)
+            return False
+        
+        self.main.unset_status(ST_DELETE)
+        return True
+
+
 # Send Tweets/Messages ---------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Send(threading.Thread):
@@ -220,6 +309,9 @@ class Delete(threading.Thread):
             # Show Info
             gobject.idle_add(self.gui.show_delete_info,
                              self.tweet_id, self.message_id)
+        
+            self.main.delete_tweet_id = UNSET_ID_NUM
+            self.main.delete_message_id = UNSET_ID_NUM
         
         except (IOError, TweepError), error:
             gobject.idle_add(self.main.handle_error, error)

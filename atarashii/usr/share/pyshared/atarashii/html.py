@@ -242,30 +242,38 @@ class HTML(view.HTMLView):
             self.add_menu_link(menu, lang.context_source % lang.name(source),
                                self.context_link, full)
         
-        # Copy / Retweet / Delete
+        # More
         else:
+            # Copy Tweet
             self.add_menu_link(menu, lang.context_copy_tweet,
                                self.copy_tweet, None, item)
             
             self.add_menu_separator(menu)
             
+            # RT old
             name = self.get_user(item).screen_name
-            full1 = "retweet:%s" % RETWEET_OLD
+            full = "retweet:%s" % RETWEET_OLD
             self.add_menu_link(menu, lang.context_retweet_old % name,
-                               self.context_link, full1, item)
+                               self.context_link, full, item)
             
+            # RT New
             if name.lower() != self.main.username.lower() \
                and not self.get_protected(item):
-               
-                full2 = "retweet:%s" % RETWEET_NEW
+                
+                full = "retweet:%s" % RETWEET_NEW
                 self.add_menu_link(menu, lang.context_retweet_new % name,
-                                   self.context_link, full2, item)
+                                   self.context_link, full, item)
             
+            # Edit / Delete
             if name.lower() == self.main.username.lower():
                 self.add_menu_separator(menu)
-                full3 = "delete:t:%d" % item_id
+                full = "edit:%d" % item_id
+                self.add_menu_link(menu, lang.context_edit_tweet,
+                                   self.context_link, full, item)
+                
+                full = "delete:t:%d" % item_id
                 self.add_menu_link(menu, lang.context_delete_tweet,
-                                   self.context_link, full3, item)
+                                   self.context_link, full, item)
         
         return True
 

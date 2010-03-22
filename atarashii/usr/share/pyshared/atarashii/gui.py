@@ -550,16 +550,28 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 }[code], gtk.STOCK_DIALOG_ERROR if code != -4 \
                          else gtk.STOCK_DIALOG_WARNING)
             
+            # Clear already deleted tweets
+            if self.main.delete_tweet_id != UNSET_ID_NUM:
+                gobject.idle_add(self.html.remove, self.main.delete_tweet_id)
+                
+            elif self.main.delete_message_id != UNSET_ID_NUM:
+                gobject.idle_add(self.message.remove,
+                                 self.main.delete_message_id)
+            
+            self.main.delete_tweet_id = UNSET_ID_NUM
+            self.main.delete_message_id = UNSET_ID_NUM
+            
             # Show GUI if minimized to tray
             gobject.idle_add(self.force_show)
             
             description = {
+                -13 : lang.error_message_not_found,
+                -12 : lang.error_tweet_not_found,
                 -11 : lang.error_duplicate,
                 -9 : lang.error_network_timeout,
                 -4 : lang.error_network,
                 -3 : lang.error_user_not_found % self.main.message_user,
                 -2 : lang.error_already_retweeted,
-                0 : lang.error_internal,
                 -7 : rate_error,
                 401 : lang.error_login % self.main.username,
                 404 : lang.error_login % self.main.username

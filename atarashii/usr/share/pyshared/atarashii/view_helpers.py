@@ -279,6 +279,12 @@ class ViewHelpers:
     def get_id(self, item):
         return self.get_attr(item, "id")
     
+    def get_reply_id(self, item):
+        return self.get_attr(item, "in_reply_to_status_id")
+    
+    def get_reply_user(self, item):
+        return self.get_attr(item, "in_reply_to_screen_name")
+    
     def get_recipient(self, item):
         return self.get_attr(item, "recipient")
     

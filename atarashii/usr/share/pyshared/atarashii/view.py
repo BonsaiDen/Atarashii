@@ -322,6 +322,15 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             name, item_id, = uri.split(":")[1:]
             gobject.idle_add(self.main.favorite, int(item_id), False, name)
         
+        # Edit
+        elif uri.startswith("edit:"):
+            self.main.edit_text = unescape(self.get_text(extra))
+            self.main.edit_reply_id = self.get_reply_id(extra) or UNSET_ID_NUM
+            self.main.edit_reply_user = self.get_reply_user(extra) or UNSET_TEXT
+            self.main.edit_id = self.get_id(extra)
+            self.main.gui.text.edit()
+            self.main.gui.text.html_focus()
+        
         # Regular links
         else:
             webbrowser.open(self.get_link_type(uri)[1])
@@ -338,7 +347,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Link types
         types = ["profile", "rprofile", "user", "source", "status", "tag",
-                 "fav", "unfav", "qreply", "qmessage"]
+                 "fav", "unfav", "qreply", "qmessage", "edit"]
         
         # Generic cases
         for i in types:

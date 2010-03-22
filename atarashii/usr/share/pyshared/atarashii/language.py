@@ -113,6 +113,8 @@ LANG = {
         'status_reconnect_minutes' : 'Automatischer Reconnect in %d Minuten.',
         'status_deleting_tweet' : 'Lösche Tweet...',
         'status_deleting_message' : 'Lösche Nachricht...',
+        'status_edit' : 'Bearbeite Tweet...',
+        'status_edit_reply' : 'Bearbeite Antwort an %s...',
         
         # Info Label
         'label_reply' : '<b>Tweet an %s:</b>',
@@ -120,6 +122,8 @@ LANG = {
         'label_retweet' : '<b>%s retweeten:</b>',
         'label_message' : '<b>Nachricht an %s:</b>',
         'label_message_text' : '<b>Antwort auf:</b> %s',
+        'label_edit' : '<b>Tweet bearbeiten:</b> %s',
+        'label_edit_reply' : '<b>Antwort an %s bearbeiten:</b> %s',
         
         # Settings Dialog
         'settings_title' : 'Atarashii - Einstellungen',
@@ -210,6 +214,9 @@ LANG = {
         
         'error_user_not_found' : 'Der Benutzer <b>%s</b> existiert nicht.',
         'error_duplicate' : 'Sie haben dies bereits getweetet.',
+        'error_tweet_not_found' : 'Dieser Tweet wurde bereits gelöscht.',
+        'error_message_not_found' : 'Diese Nachricht wurde bereits gelöscht.',    
+        
         
         'error_network' :
             'Atarashii konnte keine Verbindung zum Internet herstellen.',
@@ -322,7 +329,8 @@ LANG = {
         'context_retweet_old' : '%s via RT retweeten',
         'context_retweet_new' : '%s via Twitter retweeten',
         'context_delete_tweet' : 'Tweet löschen',
-        'context_delete_message' : 'Nachricht löschen'
+        'context_delete_message' : 'Nachricht löschen',
+        'context_edit_tweet' : 'Tweet bearbeiten'
     },
     
     # English ------------------------------------------------------------------
@@ -417,6 +425,8 @@ LANG = {
         'status_reconnect_minutes' : 'Automatic reconnect in %d minutes.',
         'status_deleting_tweet' : 'Deleting Tweet...',
         'status_deleting_message' : 'Deleting Message...',
+        'status_edit' : 'Editing Tweet...',
+        'status_edit_reply' : 'Editing Reply to %s...',
         
         # Info Label
         'label_reply' : '<b>Tweet to %s:</b>',
@@ -424,6 +434,8 @@ LANG = {
         'label_retweet' : '<b>Retweet %s:</b>',
         'label_message' : '<b>Message to %s:</b>',
         'label_message_text' : '<b>Message on:</b> %s',
+        'label_edit' : '<b>Edit Tweet:</b> %s',
+        'label_edit_reply' : '<b>Edit Reply to %s:</b> %s',
         
         # Settings Dialog
         'settings_title' : 'Atarashii - Preferences',
@@ -509,6 +521,8 @@ LANG = {
         
         'error_user_not_found' : 'The user <b>%s</b> does not exist.',
         'error_duplicate' : 'You\'ve already tweeted this.',
+        'error_tweet_not_found' : 'This Tweet has already been deleted.',
+        'error_message_not_found' : 'This Message has already been deleted.',
         
         'error_network' :
             'Atarashii could not establish a connection to the Internet.',
@@ -615,7 +629,8 @@ LANG = {
         'context_retweet_old' : 'Retweet %s via RT',
         'context_retweet_new' : 'Retweet %s via Twitter',
         'context_delete_tweet' : 'Delete Tweet',
-        'context_delete_message' : 'Delete Message'
+        'context_delete_message' : 'Delete Message',
+        'context_edit_tweet' : 'Edit Tweet'
     }
 }
 

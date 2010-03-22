@@ -108,7 +108,20 @@ class AtarashiiActions:
         self.gui.text.set_sensitive(False)
         self.gui.message_button.set_sensitive(False)
         self.gui.show_progress()
-        if self.reply_user != UNSET_TEXT:
+        
+        # Statusbar
+        edit = False
+        if self.edit_text != UNSET_TEXT:
+            if self.edit_reply_user != UNSET_TEXT:
+                self.gui.set_status(lang.status_edit_reply \
+                                    % self.edit_reply_user)
+            
+            else:
+                self.gui.set_status(lang.status_edit)
+        
+            edit = True
+        
+        elif self.reply_user != UNSET_TEXT:
             self.gui.set_status(lang.status_reply % self.reply_user)
         
         elif self.retweet_user != UNSET_TEXT:
@@ -123,10 +136,17 @@ class AtarashiiActions:
         else:
             self.gui.set_status(lang.status_send)
         
+        # Editer
+        if edit:
+            editer = send.Edit(self, self.edit_id, text, self.edit_reply_id)
+            editer.setDaemon(True)
+            editer.start()
+        
         # Sender
-        sender = send.Send(self, self.gui.mode, text)
-        sender.setDaemon(True)
-        sender.start()
+        else:
+            sender = send.Send(self, self.gui.mode, text)
+            sender.setDaemon(True)
+            sender.start()
     
     
     # New style Retweet
@@ -158,6 +178,8 @@ class AtarashiiActions:
             return
         
         # Setup
+        self.delete_tweet_id = tweet_id
+        self.delete_message_id = message_id
         self.set_status(ST_DELETE)
         self.gui.text.set_sensitive(False)
         self.gui.message_button.set_sensitive(False)
@@ -222,12 +244,17 @@ class AtarashiiActions:
                or self.reply_user != UNSET_TEXT \
                or self.reply_id != UNSET_ID_NUM):
                 
-                if not self.status(ST_WAS_RETWEET_NEW):
+                if self.status(ST_WAS_DELETE):
+                    if self.gui.text.has_typed:
+                        self.gui.text.grab_focus()
+                
+                elif not self.status(ST_WAS_RETWEET_NEW):
                     self.gui.text.grab_focus()
             
             if self.gui.text.has_typed \
                and (self.status(ST_WAS_RETWEET_NEW) \
                or self.status(ST_WAS_DELETE)):
+                
                 self.gui.text.grab_focus()
         
         
@@ -244,6 +271,9 @@ class AtarashiiActions:
             if hasattr(error, "read"):
                 msg = error.read()
             
+            elif hasattr(error, "msg"):
+                msg = error.msg
+            
             else:
                 msg = ""
             
@@ -254,6 +284,7 @@ class AtarashiiActions:
             msg = error.reason
             error_code = error.response.status
             error_errno = None
+        
         
         # Catch errors due to missing network
         if error_errno == -2:
@@ -266,7 +297,13 @@ class AtarashiiActions:
         
         # Catch common Twitter errors
         elif error_code in (400, 401, 403, 404, 500, 502, 503):
-            if msg.lower().startswith("share sharing"):
+            if msg.lower().startswith("no status"):
+                code = -12
+        
+            elif msg.lower().startswith("no direct message"):
+                code = -13
+        
+            elif msg.lower().startswith("share sharing"):
                 code = -2
             
             elif msg.lower().startswith("status is a duplicate"):

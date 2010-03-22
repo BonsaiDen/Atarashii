@@ -14,24 +14,10 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 # TODO notification sound is sometimes not played
+# TODO clean up text.py
 # TODO add "edit" function, by deleting and sending a new tweet, just one less
 # click
 
-
-#Edit:
-#- Get tweetid = main.edit_id
-#- Get tweettext = main.edit_text
-#- Get replyid = main.edit_reply
-
-#Don't allow editing of new style rts
-
-#"<b>Edit Tweet:</b> %s"
-#"<b>Edit Reply to %s</b>: %s"
-
-#On send:
-#Delete > wait > send > finish
-
-#supress delete message if it succeedes, otherwise show error and abort
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -104,6 +90,14 @@ class Atarashii(AtarashiiActions):
         self.message_user = UNSET_TEXT
         self.message_id = UNSET_ID_NUM
         self.message_text = UNSET_TEXT
+        
+        self.edit_id = UNSET_ID_NUM
+        self.edit_text = UNSET_TEXT
+        self.edit_reply_id = UNSET_ID_NUM
+        self.edit_reply_user = UNSET_TEXT
+        
+        self.delete_tweet_id = UNSET_ID_NUM
+        self.delete_message_id = UNSET_ID_NUM
         
         self.load_tweet_count = 20
         self.max_tweet_count = 200
