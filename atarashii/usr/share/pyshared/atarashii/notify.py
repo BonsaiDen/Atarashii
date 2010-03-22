@@ -18,8 +18,33 @@
 # ------------------------------------------------------------------------------
 import pynotify
 import subprocess
+import threading
 
-pynotify.init("Atarashii")
+class Sound(threading.Thread):
+    def __init__(self, parent, snd_file):
+        threading.Thread.__init__(self)
+        self.snd_file = snd_file
+        self.parent = parent
+    
+    def run(self):
+        try:
+            # Check for Zombieeeeeees!
+            try:
+                if self.parent.player != None:
+                    self.parent.player.kill()
+                    print "Zombieeeees!"
+            
+            except OSError:
+                pass
+            
+            self.parent.player = subprocess.Popen(["mplayer", "-really-quiet",
+                                                   "-nolirc", self.snd_file])
+            
+            self.parent.player.wait()
+        
+        except OSError, error:
+            print "Failed to play sound", error
+        
 
 class Notifier:
     def __init__(self, main):
@@ -29,23 +54,9 @@ class Notifier:
     def show(self, objs):
         if len(objs) > 0 and self.main.settings.is_true("sound") \
            and self.main.settings['soundfile'] != "None":
-            
-            try:
-                # Check for Zombieeeeeees!
-                try:
-                    if self.player != None:
-                        self.player.kill()
-                        print "Zombieeeees!"
-                
-                except OSError:
-                    pass
-                
-                self.player = subprocess.Popen(["mplayer", "-really-quiet",
-                                          "-nolirc",
-                                          self.main.settings['soundfile']])
-            
-            except OSError, error:
-                print "Failed to play sound", error
+            snd = Sound(self, self.main.settings['soundfile'])
+            snd.setDaemon(True)
+            snd.start()
         
         # Shot notification
         for obj in objs:
@@ -54,4 +65,11 @@ class Notifier:
                             
             except Exception, error:
                 print "Notify error", error
+
+
+def init():
+    pynotify.init("Atarashii")
+
+def uninit():
+    pynotify.uninit()
 

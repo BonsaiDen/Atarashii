@@ -26,6 +26,7 @@ import time
 import math
 import socket
 
+import notify
 import send
 
 from language import LANG as lang
@@ -49,6 +50,8 @@ class AtarashiiActions:
     def crash_exit(self):
         # Catch Python Errors
         if not self.exited:
+            notify.uninit()
+            
             # Set date format to english
             import locale
             locale.setlocale(locale.LC_TIME, 'C')
@@ -73,6 +76,7 @@ class AtarashiiActions:
             sys.exit(os.EX_SOFTWARE)
     
     def quit(self):
+        notify.uninit()
         self.save_settings()
         gtk.main_quit()        
         self.updater.running = False

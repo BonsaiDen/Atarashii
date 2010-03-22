@@ -15,8 +15,6 @@
 
 # TODO notification sound is sometimes not played
 # TODO clean up text.py
-# TODO add "edit" function, by deleting and sending a new tweet, just one less
-# click
 
 
 # DBUS Integration -------------------------------------------------------------
@@ -137,6 +135,7 @@ class Atarashii(AtarashiiActions):
     # Login & Logout -----------------------------------------------------------
     # --------------------------------------------------------------------------
     def on_init(self):
+        notify.init()
         self.login()
     
     def login(self, change_user = None):
