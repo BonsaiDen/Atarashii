@@ -238,7 +238,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             
             elif self.started:
                 if self.finish:
-                    print "foo"
                     self.finish = False
                     self.end_update()
                 
