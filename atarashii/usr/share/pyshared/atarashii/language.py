@@ -182,18 +182,28 @@ LANG = {
         'delete_info_tweet' : 'Der Tweet wurde erfolgreich gelöscht.',
         'delete_info_message' : 'Die Nachricht wurde erfolgreich gelöscht.',
         
-        # Error Dialogs
+        
+        # Crash Error Dialogs
+        'error_general' : 
+            '<span size="large"><b>Atarashii ist abgestürzt...</b></span>\n'
+            '...hat sich aber automatisch neu gestartet!\n\n'
+            'Im Normalfall sollten keine Daten verloren gegangen sein.\n\n',
+        
+        'error_crashed_title' : 'Keizoku wa chikara nari',
+        'error_crashed' : 
+            'Es handelt sich um einen <b>externen</b> Fehler mit dem Code '
+            '<b>%s</b>, mehr konnten die Kätzchen leider nicht herausfinden.',
+        
+        'error_crashed__python_title' : 'Snake? Snake? Snaaaaaaaaaaake!',
+        'error_crashed_python' : 
+            'Es handelt sich um einen <b>internen</b> Fehler das Log finden '
+            'sie <a href="file://%s">hier</a>.',
+        
+        # User Errors
         'error_title' : 'Atarashii - Fehler',
         'error_login' :
             'Die Anmeldung als <b>%s</b> ist fehlgeschlagen.',
         
-        'error_crashed' : 
-            'Ups... Atarashii ist abgestürzt, hat sich aber automatisch neu'
-            'gestartet ^.^"\n'
-            'Im Normalfall sollten keine Daten verloren gegangen sein.\n\n'
-            '<b>Fehlercode:</b> %s',
-        
-        'error_internal' : '<b>Atarashii Fehler:</b> %s',
         'error_already_retweeted' :
             'Es ist entweder nicht möglich diesen Tweet zu retweeten '
             'oder er wurde bereits von ihnen retweeted.',
@@ -474,15 +484,25 @@ LANG = {
         'delete_info_tweet' : 'The Tweet has been successfully deleted.',
         'delete_info_message' : 'The Message has been successfully deleted.',
         
-        # Error Dialogs
+        # Crash Error Dialogs
+        'error_general' : 
+            '<span size="large"><b>Atarashii has crashed...</b></span>\n'
+            '...but it has automatically restarted itself!\n\n'
+            'In the normal case no data was lost.\n\n',
+        
+        'error_crashed_title' : 'Keizoku wa chikara nari',
+        'error_crashed' : 
+            'The error was an <b>external</b> one with the code <b>%s</b>,'
+            ' that\'s all the Kittens could find out.',
+        
+        'error_crashed__python_title' : 'Snake? Snake? Snaaaaaaaaaaake!',
+        'error_crashed_python' : 
+            'The error was an <b>internal</b> one, you\'ll find the log '
+            '<a href="file://%s">here</a>.',        
+        
+        # User Errors
         'error_title' : 'Atarashii - Error',
         'error_login' : 'The login as <b>%s</b> has failed.',
-        'error_crashed' : 
-            'Oops! Atarashii has crashed, but it automatically restarted itself ^.^"\n'
-            'Normally there shouldn\'t be any data lost.\n\n'
-            '<b>Error code:</b> %s',
-        
-        'error_internal' : '<b>Atarashii error:</b> %s',
         'error_already_retweeted' :
             'Either it\'s not possible to retweet this Tweet or '
             'you\'ve already retweeted it.',
