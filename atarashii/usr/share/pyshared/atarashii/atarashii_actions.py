@@ -44,11 +44,31 @@ class AtarashiiActions:
     # Start & Quit -------------------------------------------------------------
     # --------------------------------------------------------------------------
     def start(self):
-        sys.exitfunc = self.crash_exit
         gtk.main()
     
     def crash_exit(self):
+        # Catch Python Errors
         if not self.exited:
+            # Set date format to english
+            import locale
+            locale.setlocale(locale.LC_TIME, 'C')
+                        
+            # Save the crashlog
+            import traceback
+            from settings import ATARASHII_DIR
+            f = open(os.path.join(ATARASHII_DIR, "crash.log"), "wb")
+            trace = traceback.extract_tb(sys.last_traceback)
+            f.write("Atarashii %s\nStarted at %s\nCrashed at %s\n\nTraceback:\n"
+                     % (self.version,
+                     time.strftime('%a %b %d %H:%M:%S +0000 %Y',
+                     time.gmtime(time.time())),
+                     time.strftime('%a %b %d %H:%M:%S +0000 %Y', time.gmtime())
+                     ))
+            
+            f.write("\n".join(traceback.format_list(trace)))
+            f.close()
+            
+            # Exit with specific error
             sys.exit(os.EX_SOFTWARE)
     
     def quit(self):

@@ -14,6 +14,24 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 # TODO notification sound is sometimes not played
+# TODO add "edit" function, by deleting and sending a new tweet, just one less
+# click
+
+
+#Edit:
+#- Get tweetid = main.edit_id
+#- Get tweettext = main.edit_text
+#- Get replyid = main.edit_reply
+
+#Don't allow editing of new style rts
+
+#"<b>Edit Tweet:</b> %s"
+#"<b>Edit Reply to %s</b>: %s"
+
+#On send:
+#Delete > wait > send > finish
+
+#supress delete message if it succeedes, otherwise show error and abort
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -66,6 +84,8 @@ class Atarashii(AtarashiiActions):
         self.version = version
         self.debug = debug
         self.exited = False
+        self.start_time = time.time()
+        sys.exitfunc = self.crash_exit
         
         # Load Settings
         self.settings = settings.Settings()
