@@ -267,7 +267,6 @@ class SettingsDialog(Dialog):
             
             else:
                 self.tmp_file = str(file_chooser.get_filename())
-                print self.tmp_file
         
         file_widget = gtk.FileChooserButton(file_chooser)
         self.get("notifybox").pack_end(file_widget)
@@ -320,7 +319,6 @@ class SettingsDialog(Dialog):
         oldusername = self.main.username
         def save(*args):
             self.saved = True
-            print self.tmp_file
             self.settings['soundfile'] = self.tmp_file
             
             self.settings['notify'] = notify.get_active()
