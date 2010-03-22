@@ -260,9 +260,14 @@ class SettingsDialog(Dialog):
         
         # Fix a bug were the button would be empty if the dialog is canceled
         # for the first time
+        self.tmp_file = str(self.settings['soundfile'])
         def choosen(chooser, code):
             if code != gtk.RESPONSE_OK:
                 file_chooser.set_filename(str(self.settings['soundfile']))
+            
+            else:
+                self.tmp_file = str(file_chooser.get_filename())
+                print self.tmp_file
         
         file_widget = gtk.FileChooserButton(file_chooser)
         self.get("notifybox").pack_end(file_widget)
@@ -283,6 +288,7 @@ class SettingsDialog(Dialog):
         file_filter.add_pattern("*.ogg")
         file_chooser.add_filter(file_filter)  
         file_chooser.set_filter(file_filter)
+        self.file_chooser = file_chooser
         
         # Fix bug with the file filter no beeing selected
         def select_file(chooser):
@@ -314,7 +320,9 @@ class SettingsDialog(Dialog):
         oldusername = self.main.username
         def save(*args):
             self.saved = True
-            self.settings['soundfile'] = str(file_widget.get_filename())
+            print self.tmp_file
+            self.settings['soundfile'] = self.tmp_file
+            
             self.settings['notify'] = notify.get_active()
             self.settings['sound'] = sound.get_active()
             self.settings['tray'] = tray.get_active()
@@ -352,6 +360,7 @@ class SettingsDialog(Dialog):
         gobject.idle_add(self.drop.grab_focus)
     
     def on_close(self, *args):
+        self.file_chooser.hide()
         if not self.saved:
             if self.get_drop_active() == -1:
                 self.main.username = ""
