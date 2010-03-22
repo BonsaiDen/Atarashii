@@ -112,7 +112,7 @@ class ViewMenu:
     def on_popup_close(self, *args):
         self.popup_open = False
         print "closing"
-        gobject.idle_add(self.gui.text.html_focus)
+        self.gui.text.html_focus()
     
     
     # Menu Building ------------------------------------------------------------
