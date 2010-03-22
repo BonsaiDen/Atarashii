@@ -122,7 +122,7 @@ class Formatter:
                 pre, tag = data[:pos], data[pos + 1:]
                 self.tags.append(tag)
                 result.append((
-                    '%s<a href="tag:http://search.twitter.com/search?%s"''' \
+                    '%s<a href="tag:http://search.twitter.com/search?%s"' \
                     + ' title="' + lang.html_search + '">#%s</a>') \
                     % (pre, urllib.urlencode({'q': '#' + tag}), tag, tag))
         
