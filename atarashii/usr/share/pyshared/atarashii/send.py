@@ -41,6 +41,7 @@ class Edit(threading.Thread):
     def run(self):
         # Delete the old tweet
         if not self.delete():
+            self.main.unset_status(ST_SEND)
             return
         
         # Send a new one!
@@ -64,6 +65,7 @@ class Edit(threading.Thread):
             gobject.idle_add(self.gui.html.remove, self.tweet_id)
             gobject.idle_add(self.main.handle_error, error)
         
+        self.main.unset_status(ST_SEND)
         self.main.unset_status(ST_WAS_SEND)
     
     
