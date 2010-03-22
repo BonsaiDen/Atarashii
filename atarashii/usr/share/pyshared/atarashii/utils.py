@@ -32,15 +32,15 @@ finally:
 # Utility stuff ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 ENTITIES = {
-    "&": "&amp;",
-    '"': "&quot;",
-    "'": "&apos;",
-    ">": "&gt;",
-    "<": "&lt;"
+    '&': '&amp;',
+    '"': '&quot;',
+    '\'': '&apos;',
+    '>': '&gt;',
+    '<': '&lt;'
 }
 
 def escape(text):
-    return "".join(ENTITIES.get(c, c) for c in text)
+    return ''.join(ENTITIES.get(c, c) for c in text)
 
 def unescape(text):
     for key, value in ENTITIES.iteritems():

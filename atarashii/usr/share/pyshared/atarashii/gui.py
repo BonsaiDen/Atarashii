@@ -61,83 +61,83 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Load Components
         self.gtb = gtb = gtk.Builder()
-        gtb.add_from_file(main.get_resource("main.glade"))
-        frame = gtb.get_object("frame")
+        gtb.add_from_file(main.get_resource('main.glade'))
+        frame = gtb.get_object('frame')
         self.add(frame)
-        gtb.get_object("content").set_border_width(2)
+        gtb.get_object('content').set_border_width(2)
         
         # Link Components
-        self.multi_button = gtb.get_object("refresh")
-        self.multi_button.connect("clicked", self.on_refresh_update)
+        self.multi_button = gtb.get_object('refresh')
+        self.multi_button.connect('clicked', self.on_refresh_update)
         self.multi_button.set_tooltip_text(lang.tool_refresh)
         self.multi_state = BUTTON_REFRESH
         
-        self.message_button = gtb.get_object("message")
-        self.message_button.connect("clicked", self.on_mode)
+        self.message_button = gtb.get_object('message')
+        self.message_button.connect('clicked', self.on_mode)
         self.message_button.set_tooltip_text(lang.tool_mode)
         
         # Settings Button
-        self.settings_button = gtb.get_object("settings")
-        self.settings_button.connect("toggled", self.on_settings, False)
+        self.settings_button = gtb.get_object('settings')
+        self.settings_button.connect('toggled', self.on_settings, False)
         
         self.settings_button.set_tooltip_text(lang.tool_settings)
         self.settings_toggle = False
         
         # About Button
-        self.about_button = gtb.get_object("about")
-        self.about_button.connect("toggled", self.on_about, False)
+        self.about_button = gtb.get_object('about')
+        self.about_button.connect('toggled', self.on_about, False)
         
         self.about_button.set_tooltip_text(lang.tool_about)
         self.about_toggle = False
         
-        self.quit_button = gtb.get_object("quit")
-        self.quit_button.connect("clicked", self.on_quit)
+        self.quit_button = gtb.get_object('quit')
+        self.quit_button.connect('clicked', self.on_quit)
         self.quit_button.set_tooltip_text(lang.tool_quit)
         
         # Info Label
-        self.info_label = gtb.get_object("label")
+        self.info_label = gtb.get_object('label')
         
         # Text Input
-        self.text_scroll = gtb.get_object("textscroll")
+        self.text_scroll = gtb.get_object('textscroll')
         self.text = text.TextInput(self)
         self.text_scroll.add(self.text)
         
         # HTML
-        self.html_scroll = gtb.get_object("htmlscroll")
+        self.html_scroll = gtb.get_object('htmlscroll')
         self.html = html.HTML(self.main, self)
         self.html_scroll.add(self.html)
         self.html_scroll.set_shadow_type(gtk.SHADOW_IN)
         self.html.splash()
         
         # Messages
-        self.message_scroll = gtb.get_object("messagescroll")
+        self.message_scroll = gtb.get_object('messagescroll')
         self.message = message.HTML(self.main, self)
         self.message_scroll.add(self.message)
         self.message_scroll.set_shadow_type(gtk.SHADOW_IN)
         self.message.splash()
         
         # Bars
-        self.toolbar = gtb.get_object("toolbar")
-        self.progress = gtb.get_object("progressbar")
-        self.status = gtb.get_object("statusbar")
+        self.toolbar = gtb.get_object('toolbar')
+        self.progress = gtb.get_object('progressbar')
+        self.status = gtb.get_object('statusbar')
         
         # Warning Button
-        self.warning_button = dialog.ButtonDialog(self, "warning",
+        self.warning_button = dialog.ButtonDialog(self, 'warning',
                                      lang.warning_template, lang.warning_title)
         
         # Error Button
-        self.error_button = dialog.ButtonDialog(self, "error",
+        self.error_button = dialog.ButtonDialog(self, 'error',
                                      lang.error_template, lang.error_title)
         
         
         # Restore Position & Size ----------------------------------------------
-        if main.settings.isset("position"):
-            self.window_position = main.settings['position'][1:-1].split(",")
+        if main.settings.isset('position'):
+            self.window_position = main.settings['position'][1:-1].split(',')
             self.move(int(self.window_position[0]),
                       int(self.window_position[1]))
         
-        if main.settings.isset("size"):
-            size = main.settings['size'][1:-1].split(",")
+        if main.settings.isset('size'):
+            size = main.settings['size'][1:-1].split(',')
             self.resize(int(size[0]), int(size[1]))
         
         else:
@@ -147,10 +147,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.tray = tray.TrayIcon(self)
         
         # Events
-        self.connect("delete_event", self.delete_event)
-        self.connect("destroy", self.destroy_event)
-        self.connect("window-state-event", self.state_event)
-        self.connect("focus-out-event", self.fix_tooltips)
+        self.connect('delete_event', self.delete_event)
+        self.connect('destroy', self.destroy_event)
+        self.connect('window-state-event', self.state_event)
+        self.connect('focus-out-event', self.fix_tooltips)
         
         # Dialogs
         self.about_dialog = None
@@ -179,8 +179,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                           0, self.text.start_message)
         
         # Show GUI
-        if not main.settings.is_true("tray", False) \
-           or main.settings.is_true("crashed", False): # show after crash
+        if not main.settings.is_true('tray', False) \
+           or main.settings.is_true('crashed', False): # show after crash
             self.show_gui()
         
         gobject.idle_add(self.main.on_init)
@@ -201,7 +201,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         gobject.timeout_add(1000, self.update_status)
         
         # Crash Info
-        if self.main.settings.is_true("crashed", False):
+        if self.main.settings.is_true('crashed', False):
             gobject.timeout_add(250, self.show_crash_report)
         
         # Show
@@ -515,7 +515,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 button = lang.warning_button_network
                 self.tray.set_tooltip_error(
                             (lang.tray_logged_in  % self.main.username) \
-                            + "\n" + lang.tray_warning_network,
+                            + '\n' + lang.tray_warning_network,
                             gtk.STOCK_DIALOG_WARNING)
             
             self.warning_button.show(button, info)

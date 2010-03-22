@@ -24,8 +24,8 @@ import dbus.service
 import sys
 import os
 if 'org.Atarashii' in dbus.Interface(dbus.SessionBus().get_object(
-   "org.freedesktop.DBus", "/org/freedesktop/DBus"),
-   "org.freedesktop.DBus").ListNames():
+   'org.freedesktop.DBus', '/org/freedesktop/DBus'),
+   'org.freedesktop.DBus').ListNames():
     sys.exit(os.EX_UNAVAILABLE)
 
 DBUS = dbus.SessionBus()
@@ -240,7 +240,7 @@ class Atarashii(AtarashiiActions):
     # Helper Functions ---------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_start_notifications(self):
-        if not self.settings.is_true("notify") \
+        if not self.settings.is_true('notify') \
            and self.status(ST_LOGIN_SUCCESSFUL):
             return False
         
@@ -260,7 +260,7 @@ class Atarashii(AtarashiiActions):
         
         # Create notification
         info = [(lang.notification_login % self.username,
-                "\n".join(info_text), self.get_user_picture())]
+                '\n'.join(info_text), self.get_user_picture())]
         
         self.notifier.show(info)
     
@@ -289,11 +289,11 @@ class Atarashii(AtarashiiActions):
     
     def get_resource(self, res):
         if self.debug == None:
-            return os.path.join("/usr/share/atarashii", res)
+            return os.path.join('/usr/share/atarashii', res)
         
         else:
             return os.path.join(self.debug,
-                                "atarashii/usr/share/atarashii", res)
+                                'atarashii/usr/share/atarashii', res)
     
     # Statuses
     def status(self, flag):

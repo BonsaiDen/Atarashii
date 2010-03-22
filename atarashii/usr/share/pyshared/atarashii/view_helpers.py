@@ -33,7 +33,7 @@ class ViewHelpers:
     # --------------------------------------------------------------------------
     def copy_data(self, data):
         display = gtk.gdk.display_manager_get().get_default_display()
-        clipboard = gtk.Clipboard(display, "CLIPBOARD")
+        clipboard = gtk.Clipboard(display, 'CLIPBOARD')
         clipboard.set_text(data)
         
         # Make sure the textbox doesn't loose focus if it's opened
@@ -46,12 +46,12 @@ class ViewHelpers:
     def copy_tweet(self, menu, uri, item):
         user = self.get_user(item)
         text = self.get_text(item)
-        self.copy_data("@%s\n%s" % (user.screen_name, text))
+        self.copy_data('@%s\n%s' % (user.screen_name, text))
 
     def copy_message(self, menu, uri, item):
         user = self.get_user(item)
         text = self.get_text(item)
-        self.copy_data("@%s\n%s" % (user.screen_name, text))
+        self.copy_data('@%s\n%s' % (user.screen_name, text))
     
     
     # Scrolling ----------------------------------------------------------------
@@ -77,7 +77,7 @@ class ViewHelpers:
         # break the whole thing.. so do you want to be eaten by the tiger
         # or the lion?
         # Note from Ivo: Actually, the Lion won't eat me since I'm one too ;D
-        if self.get_property("load-status") != 2:
+        if self.get_property('load-status') != 2:
             return
         
         if len(self.items) > 0 and self.has_newitems and not self.load_history:
@@ -115,7 +115,7 @@ class ViewHelpers:
         event.window = self.get_window()
         event.x = pos[0]
         event.y = pos[1]
-        self.emit("motion_notify_event", event)
+        self.emit('motion_notify_event', event)
     
     def on_leave(self, view, event, *args):
         self.mouse_position = (-1.0, -1.0)
@@ -237,7 +237,7 @@ class ViewHelpers:
             self.newest_avatar = True
     
     def is_protected(self, user):
-        if hasattr(user, "protected") and user.protected:
+        if hasattr(user, 'protected') and user.protected:
             return  ('<span class="protected" title="' \
                      + lang.html_protected + '"></span>') \
                      % lang.name(user.screen_name)
@@ -258,7 +258,7 @@ class ViewHelpers:
     def get_attr(self, item, attr):
         item = self.items[item][0] if type(item) in (int, long) else item
         status = item.retweeted_status \
-                 if hasattr(item, "retweeted_status") else item
+                 if hasattr(item, 'retweeted_status') else item
         
         if status.__dict__.has_key(attr):
             return status.__dict__[attr]
@@ -267,31 +267,31 @@ class ViewHelpers:
             return None
     
     def get_user(self, item):
-        user = self.get_attr(item, "user")
-        return user if user != None else self.get_attr(item, "sender")
+        user = self.get_attr(item, 'user')
+        return user if user != None else self.get_attr(item, 'sender')
     
     def get_text(self, item):
-        return self.get_attr(item, "text")
+        return self.get_attr(item, 'text')
         
     def get_source(self, item):
-        return self.get_attr(item, "source")
+        return self.get_attr(item, 'source')
     
     def get_id(self, item):
-        return self.get_attr(item, "id")
+        return self.get_attr(item, 'id')
     
     def get_reply_id(self, item):
-        return self.get_attr(item, "in_reply_to_status_id")
+        return self.get_attr(item, 'in_reply_to_status_id')
     
     def get_reply_user(self, item):
-        return self.get_attr(item, "in_reply_to_screen_name")
+        return self.get_attr(item, 'in_reply_to_screen_name')
     
     def get_recipient(self, item):
-        return self.get_attr(item, "recipient")
+        return self.get_attr(item, 'recipient')
     
     def get_sender(self, item):
-        return self.get_attr(item, "sender")
+        return self.get_attr(item, 'sender')
     
     def get_protected(self, item):
         user = self.get_user(item)
-        return hasattr(user, "protected") and user.protected
+        return hasattr(user, 'protected') and user.protected
 

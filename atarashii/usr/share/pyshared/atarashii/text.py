@@ -30,7 +30,7 @@ from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, MODE_TWEETS
 
 class TextInput(gtk.TextView):
     __gsignals__ = {
-        "submit": (gobject.SIGNAL_RUN_LAST | gobject.SIGNAL_ACTION, None, ())
+        'submit': (gobject.SIGNAL_RUN_LAST | gobject.SIGNAL_ACTION, None, ())
     }
     
     def __init__(self, gui):
@@ -46,7 +46,7 @@ class TextInput(gtk.TextView):
         self.has_typed = False
         self.is_changing = False
         self.change_contents = False
-        self.reply_regex = re.compile(ur"^[@\uFF20]([a-z0-9_]{1,20})\s.*",
+        self.reply_regex = re.compile(ur'^[@\uFF20]([a-z0-9_]{1,20})\s.*',
                                      re.UNICODE | re.IGNORECASE)
          
         self.message_regex = re.compile('d ([a-z0-9_]{1,20})\s.*',
@@ -76,10 +76,10 @@ class TextInput(gtk.TextView):
         self.set_cursor_visible(True)
         
         # Events
-        self.connect("submit", self.submit)
-        self.get_buffer().connect("changed", self.changed)
-        self.connect("focus-in-event", self.focus)
-        self.connect("key-press-event", self.check_keys)
+        self.connect('submit', self.submit)
+        self.get_buffer().connect('changed', self.changed)
+        self.connect('focus-in-event', self.focus)
+        self.connect('key-press-event', self.check_keys)
     
     
     # Focus Events -------------------------------------------------------------
@@ -145,7 +145,7 @@ class TextInput(gtk.TextView):
             self.gui.message.focus_me()
     
     def reset(self):
-        self.set_text("")
+        self.set_text('')
         self.has_focus = False
         self.contents_change = False
         self.loose_focus()
@@ -160,8 +160,8 @@ class TextInput(gtk.TextView):
             if self.gui.mode == MODE_MESSAGES:
                 # Prevent message to be send without text
                 ctext = text.strip()
-                if ctext[0:1] == "d":
-                    if ctext[2:].find(" ") == -1 \
+                if ctext[0:1] == 'd':
+                    if ctext[2:].find(' ') == -1 \
                        or self.main.message_user == UNSET_TEXT:
                        
                         self.set_text(text.lstrip())
@@ -183,8 +183,8 @@ class TextInput(gtk.TextView):
                 
                 # Prevent @reply to be send without text
                 ctext = text.strip()
-                if ctext[0:1] in u"@\uFF20":
-                    if ctext.find(" ") == -1 \
+                if ctext[0:1] in u'@\uFF20':
+                    if ctext.find(' ') == -1 \
                        or self.main.reply_user == UNSET_TEXT:
                        
                         self.set_text(text.lstrip())
@@ -263,7 +263,7 @@ class TextInput(gtk.TextView):
             self.message_len = 0
             
             # Cancel reply mode
-            if not text.strip()[0:1] in u"@\uFF20" \
+            if not text.strip()[0:1] in u'@\uFF20' \
                and not self.is_changing:
                
                 self.main.reply_text = UNSET_TEXT
@@ -324,7 +324,7 @@ class TextInput(gtk.TextView):
                     self.go_send_message = self.get_text()
         
         # Strip left
-        if self.get_text()[0:1] == " ":
+        if self.get_text()[0:1] == ' ':
             ctext = self.get_text().lstrip()
             gobject.idle_add(self.clear_text, ctext)
         
@@ -391,7 +391,7 @@ class TextInput(gtk.TextView):
         self.has_focus = True
         text = self.get_text()
         if not self.has_typed:
-            text = ""
+            text = ''
         
         # Cancel Retweet
         if self.main.retweet_text != UNSET_TEXT:
@@ -408,15 +408,15 @@ class TextInput(gtk.TextView):
             text = UNSET_TEXT
         
         # Check for already existing reply
-        if text[0:1] == "@":
-            space = text.find(" ")
+        if text[0:1] == '@':
+            space = text.find(' ')
             if space == -1:
                 space = len(text)
             
-            text = ("@%s " % self.main.reply_user) + text[space + 1:]
+            text = ('@%s ' % self.main.reply_user) + text[space + 1:]
         
         else:
-            text = ("@%s " % self.main.reply_user) + text
+            text = ('@%s ' % self.main.reply_user) + text
         
         self.set_text(text)
         self.is_changing = False
@@ -432,7 +432,7 @@ class TextInput(gtk.TextView):
         self.has_focus = True
         text = self.get_text()
         if not self.has_typed:
-            text = ""
+            text = ''
         
         # Cancel Retweet
         if self.main.retweet_text != UNSET_TEXT:
@@ -471,7 +471,7 @@ class TextInput(gtk.TextView):
         self.main.edit_reply_user = UNSET_TEXT
 
         # Set text        
-        text = "RT @%s: %s" % (self.main.retweet_user, self.main.retweet_text)
+        text = 'RT @%s: %s' % (self.main.retweet_user, self.main.retweet_text)
         self.set_text(text)
         
         self.is_changing = False
@@ -487,16 +487,16 @@ class TextInput(gtk.TextView):
         self.has_focus = True
         text = self.get_text()
         if not self.has_typed:
-            text = ""
+            text = ''
         
         # Check for already existing message
         msg = self.message_regex.match(text)
         if msg != None:
             space = 2 + len(msg.group(1))
-            text = ("d %s " % self.main.message_user) + text[space + 1:]
+            text = ('d %s ' % self.main.message_user) + text[space + 1:]
         
         else:
-            text = ("d %s " % self.main.message_user) + text
+            text = ('d %s ' % self.main.message_user) + text
         
         self.set_text(text)
         self.is_changing = False
@@ -520,14 +520,14 @@ class TextInput(gtk.TextView):
         if not self.has_typed:
             self.is_changing = True
             self.grab_focus()
-            self.set_text("")
+            self.set_text('')
             self.is_changing = False
     
     def start_message(self, *args):
         if not self.has_typed:
             self.is_changing = True
             self.grab_focus()
-            self.set_text("d ")
+            self.set_text('d ')
             self.is_changing = False
     
     
@@ -547,8 +547,8 @@ class TextInput(gtk.TextView):
         
         # Get Font Height
         font = self.create_pango_context().get_font_description()
-        layout = self.create_pango_layout("")
-        layout.set_markup("WTF?!")
+        layout = self.create_pango_layout('')
+        layout.set_markup('WTF?!')
         layout.set_font_description(font)
         text_size = layout.get_pixel_size()[1]
         
@@ -569,6 +569,6 @@ class TextInput(gtk.TextView):
             self.gui.hide_all()
 
 
-gtk.binding_entry_add_signal(TextInput, gtk.keysyms.Return, 0, "submit")
-gtk.binding_entry_add_signal(TextInput, gtk.keysyms.KP_Enter, 0, "submit")
+gtk.binding_entry_add_signal(TextInput, gtk.keysyms.Return, 0, 'submit')
+gtk.binding_entry_add_signal(TextInput, gtk.keysyms.KP_Enter, 0, 'submit')
 

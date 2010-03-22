@@ -34,9 +34,9 @@ class ViewMenu:
     
     def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
         if self.last_hovered_link != None \
-           and self.last_hovered_link.startswith("avatar:"):
+           and self.last_hovered_link.startswith('avatar:'):
             uri = self.last_hovered_link[7:]
-            num = int(uri[:uri.find(":")])
+            num = int(uri[:uri.find(':')])
             user = self.get_user(num)
             img = self.get_image(num)
             
@@ -88,14 +88,16 @@ class ViewMenu:
                 return False
             
             menu.show_all()
-            menu.connect("hide", self.on_popup_close)
+            menu.connect('hide', self.on_popup_close)
             
             # This makes the menu popup just besides the mouse pointer
             # It fixes an issues were the user would release the mouse button
             # and trigger an menu item without wanting to do so
             root_pos = (int(event.x_root), int(event.y_root), True)
             menu.attach_to_widget(self, lambda *args: False)
-            gobject.idle_add(menu.popup, None, None, lambda *arg: root_pos, event.button, event.get_time())
+            gobject.idle_add(menu.popup, None, None, lambda *arg: root_pos,
+                             event.button, event.get_time())
+            
             self.popup_open = True
             return True
     
@@ -128,7 +130,7 @@ class ViewMenu:
             else:
                 # Profile
                 if link in ('user', 'profile', 'rprofile', 'avatar'):
-                    user = full[full.rfind("/") + 1:]
+                    user = full[full.rfind('/') + 1:]
                     self.add_menu_link(menu, lang.context_profile % user,
                                        self.context_link, full)
                 
@@ -141,7 +143,7 @@ class ViewMenu:
             return False
     
     def create_link_menu(self, menu, link, full):
-        if link == "link":
+        if link == 'link':
             self.add_menu_link(menu, lang.context_browser,
                                self.context_link, full)
             
@@ -150,12 +152,12 @@ class ViewMenu:
             return True
     
     def create_status_tag_menu(self, menu, link, full):
-        if link == "status":
+        if link == 'status':
             self.add_menu_link(menu, lang.context_view,
                                self.context_link, full)
             return True
         
-        elif link == "tag":
+        elif link == 'tag':
             self.add_menu_link(menu, lang.context_search,
                                self.context_link, full)
             return True
@@ -167,16 +169,16 @@ class ViewMenu:
             return -1
         
         # Get Positions and Link
-        items, link = items.split("|")
-        if link == "undefined":
+        items, link = items.split('|')
+        if link == 'undefined':
             link = None
         
-        items = items.split(";")
+        items = items.split(';')
         mouse_y = event.y + self.scroll.get_vscrollbar().get_value()
         item_num = -1
         last_pos = 0
         for i in items:
-            data = i.split(",")
+            data = i.split(',')
             if len(data) > 1:
                 pos = int(data[1])
                 if mouse_y >= last_pos and mouse_y < pos:

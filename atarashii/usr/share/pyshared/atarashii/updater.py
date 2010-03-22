@@ -109,8 +109,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # xAuth Login, yes the app stuff is here, were else should it go?
         # Why should anyone else use the Atarashii App for posting from HIS
         # client? :D
-        auth = tweepy.OAuthHandler("PYuZHIEoIGnNNSJb7nIY0Q",
-                                   "Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg",
+        auth = tweepy.OAuthHandler('PYuZHIEoIGnNNSJb7nIY0Q',
+                                   'Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg',
                                    secure = True)
         
         try:
@@ -131,8 +131,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                     raise error
                 
                 except TweepError, error:
-                    self.settings[key_name] = ""
-                    self.settings[secret_name] = ""
+                    self.settings[key_name] = ''
+                    self.settings[secret_name] = ''
             
             # Get a new token!
             if not token_ok:
@@ -144,7 +144,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                     time.sleep(0.1)
                 
                 # Try to login with the new password
-                if self.main.api_temp_password != "":
+                if self.main.api_temp_password != '':
                     token = auth.get_xauth_access_token(
                                  self.main.username,
                                  self.main.api_temp_password)
@@ -367,8 +367,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 # Don't add mentions twice
                 if not i.id in tweet_ids:
                     tweet_ids.append(i.id)
-                    if hasattr(i, "retweeted_status"):
-                        name = "RT %s" % i.retweeted_status.user.screen_name
+                    if hasattr(i, 'retweeted_status'):
+                        name = 'RT %s' % i.retweeted_status.user.screen_name
                         text = i.retweeted_status.text
                     else:
                         name = i.user.screen_name
@@ -380,7 +380,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         # Show Notifications
         count = len(tweet_list)
-        if count > 0 and self.settings.is_true("notify"):
+        if count > 0 and self.settings.is_true('notify'):
             tweet_list.reverse()
             if count > 1:
                 for num, i in enumerate(tweet_list):
@@ -444,7 +444,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             name = item.sender.screen_name
         
         else:
-            if hasattr(item, "retweeted_status"):
+            if hasattr(item, 'retweeted_status'):
                 url = item.retweeted_status.user.profile_image_url
                 userid = item.retweeted_status.user.id
                 name = item.retweeted_status.user.screen_name
@@ -455,7 +455,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 name = item.user.screen_name
         
         image = url[url.rfind('/') + 1:]
-        imgdir = os.path.join(self.path, ".atarashii")
+        imgdir = os.path.join(self.path, '.atarashii')
         if not os.path.exists(imgdir):
             os.mkdir(imgdir)
         

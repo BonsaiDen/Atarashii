@@ -18,7 +18,7 @@
 # ------------------------------------------------------------------------------
 from utils import compare_sub
 import re
-SPACES = re.compile("\s+")
+SPACES = re.compile('\s+')
 
 from language import LANG as lang
 from constants import HTML_UNSET_ID, ST_LOGIN_SUCCESSFUL
@@ -44,8 +44,8 @@ class ViewHTML:
     
     def render(self):
         self.init_render()
-        self.last_name = ""
-        self.last_recipient = ""
+        self.last_name = ''
+        self.last_recipient = ''
         self.last_highlight = False
         self.last_mentioned = False
         
@@ -98,13 +98,13 @@ class ViewHTML:
         <link rel="stylesheet" type="text/css" media="screen" href="file://%s"/>
         </head>
         %s
-        </html>""" % (self.main.get_resource("atarashii.css"), html)
+        </html>""" % (self.main.get_resource('atarashii.css'), html)
         
         # FIXME This memory leaks EXTREMLY hard!
         # Even removing the dom stuff per javascript doesn't help
         # I guess it's a problem with the html data not been freed
-        self.load_string(SPACES.sub(" ", data),
-                         "text/html", "UTF-8", "file:///")
+        self.load_string(SPACES.sub(' ', data),
+                         'text/html', 'UTF-8', 'file:///')
     
     def set_html(self, renderitems):
         self.main.gui.set_app_title()
@@ -113,7 +113,7 @@ class ViewHTML:
                 <body ondragstart="return false">
                     <div><div id="newcontainer">%s</div>
                     <div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
-                </body>""" % ("".join(renderitems),
+                </body>""" % (''.join(renderitems),
                                 self.items[0][0].id, self.lang_load))
         
         elif self.main.status(ST_LOGIN_SUCCESSFUL):
@@ -127,87 +127,87 @@ class ViewHTML:
     def insert_spacer(self, item, user, highlight, mentioned,
                     next_highlight = False, force = False):
         
-        spacer = "foo"
+        spacer = 'foo'
         if item.id > self.init_id:
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if self.last_highlight or highlight:
-                    spacer = "10" # Middle Dark Gray
+                    spacer = '10' # Middle Dark Gray
                 
                 else:
-                    spacer = "1" # Dark Gray
+                    spacer = '1' # Dark Gray
             
             else:
                 # More @username
                 if highlight:
                     if not self.last_highlight:
-                        spacer = "10" # Middle Dark Gray
+                        spacer = '10' # Middle Dark Gray
                     
                     else:
-                        spacer = "6" # Normal/Dark Blue
+                        spacer = '6' # Normal/Dark Blue
                 
                 # More mentions
                 elif mentioned:
                     if not self.last_mentioned:
-                        spacer = "1" # Dark Gray
+                        spacer = '1' # Dark Gray
                     
                     else:
-                        spacer = "5" # Yellow
+                        spacer = '5' # Yellow
                 
                 # Just more normal tweets
                 else:
                     if next_highlight and self.last_highlight:
-                        spacer = "1" #Dark Gray
+                        spacer = '1' #Dark Gray
                     
                     elif next and self.last_mentioned:
-                        spacer = "1" # Normal Gray
+                        spacer = '1' # Normal Gray
                     
                     elif self.last_highlight:
-                        spacer = "10" # Middle Dark Gray
+                        spacer = '10' # Middle Dark Gray
                     
                     else:
-                        spacer = "4" # Dark/Normal Blue
+                        spacer = '4' # Dark/Normal Blue
         
         # Old Tweets
         else:
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if self.last_highlight or highlight:
-                    spacer = "11" # Middle Normal Gray
+                    spacer = '11' # Middle Normal Gray
                 
                 else:
-                    spacer = "" # Normal Gray
+                    spacer = '' # Normal Gray
             
             else:
                 # More @username
                 if highlight:
                     if not self.last_highlight:
-                        spacer = "11" # Middle Normal Gray
+                        spacer = '11' # Middle Normal Gray
                     
                     else:
-                        spacer = "7" # White/Light Blue
+                        spacer = '7' # White/Light Blue
                 
                 # More mentions
                 elif mentioned:
                     if not self.last_mentioned:
-                        spacer = "" # Dark Gray
+                        spacer = '' # Dark Gray
                     
                     else:
-                        spacer = "8" # Yellow
+                        spacer = '8' # Yellow
                 
                 # Just more normal tweets
                 else:
                     if next_highlight and self.last_highlight:
-                        spacer = "" # Normal Gray
+                        spacer = '' # Normal Gray
                     
                     elif next and self.last_mentioned:
-                        spacer = "1" # Normal Gray
+                        spacer = '1' # Normal Gray
                     
                     elif self.last_highlight:
-                        spacer = "11" # Middle Normal Gray
+                        spacer = '11' # Middle Normal Gray
                     
                     else:
-                        spacer = "2" # Light Blue/White
+                        spacer = '2' # Light Blue/White
         
         return '<div class="spacer%s"></div>' % spacer
     

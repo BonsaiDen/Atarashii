@@ -31,17 +31,17 @@ class TrayIcon(gtk.StatusIcon):
         
         # Tooltip
         gtb = gtk.Builder()
-        gtb.add_from_file(self.main.get_resource("tooltip.glade"))
-        self.tooltip = gtb.get_object("tooltip")
-        self.tooltip_label = gtb.get_object("label")
-        self.tooltip_img = gtb.get_object("image")
+        gtb.add_from_file(self.main.get_resource('tooltip.glade'))
+        self.tooltip = gtb.get_object('tooltip')
+        self.tooltip_label = gtb.get_object('label')
+        self.tooltip_img = gtb.get_object('image')
         self.tooltip_img_file = None
         self.tooltip.show_all()
         
         self.tooltip_changed = False
         self.tooltip_icon = None
         self.tooltip_buf = None
-        self.tooltip_markup = ""
+        self.tooltip_markup = ''
         
         # Create Tray Icon
         gtk.StatusIcon.__init__(self)
@@ -55,14 +55,14 @@ class TrayIcon(gtk.StatusIcon):
         # Try something else...
         except Exception:
             try:
-                self.set_tooltip_text("...")
+                self.set_tooltip_text('...')
             
             # Didn't work either, last chance...
             except Exception:
-                self.set_tooltip_text("WTF!")
+                self.set_tooltip_text('WTF!')
         
-        self.connect("activate", self.on_activate)
-        self.connect("query-tooltip", self.on_tooltip)
+        self.connect('activate', self.on_activate)
+        self.connect('query-tooltip', self.on_tooltip)
         
         # Create Tray Menu
         self.menu = gtk.Menu()
@@ -73,7 +73,7 @@ class TrayIcon(gtk.StatusIcon):
         self.new_gtk_version = True
         try:
             menu_item = gtk.ImageMenuItem()
-            menu_item.set_label("")
+            menu_item.set_label('')
             
         except AttributeError:
             self.new_gtk_version = False
@@ -103,7 +103,7 @@ class TrayIcon(gtk.StatusIcon):
         self.add_menu(lang.menu_quit, gtk.STOCK_QUIT, self.gui.on_quit)
         
         # Popup
-        self.connect("popup-menu", self.on_popup, self.menu)
+        self.connect('popup-menu', self.on_popup, self.menu)
     
     
     def add_menu(self, text, image, callback):
@@ -132,7 +132,7 @@ class TrayIcon(gtk.StatusIcon):
                          else lang.tray_message) % msg)
         
         self.tooltip_markup = '<span size="large"><b>%s</b></span>\n%s\n%s' \
-                              % (lang.tray_title, status, "\n".join(text))
+                              % (lang.tray_title, status, '\n'.join(text))
         
         img = self.main.get_user_picture()
         if img != self.tooltip_img_file:
@@ -187,7 +187,7 @@ class TrayIcon(gtk.StatusIcon):
             iconified = False
         
         # Show!
-        if not self.gui.get_property("visible"):
+        if not self.gui.get_property('visible'):
             self.gui.present()
             pos = self.gui.window_position
             self.gui.move(pos[0], pos[1])

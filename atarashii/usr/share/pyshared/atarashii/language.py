@@ -34,7 +34,7 @@ LANG = {
         'title_tweets' : '%d neue Tweets',
         
         # Username
-        'name' : lambda x: x + "'" if x[-1:] in "xs" else x + "s",
+        'name' : lambda x: x + '\'' if x[-1:] in 'xs' else x + 's',
 
         # HTML
         'html_welcome' : 'Willkommen bei Atarashii.',
@@ -79,11 +79,11 @@ LANG = {
         # Notifications
         'notification_message' : 'Nachricht von %s',
         'notification_index' : '%s (%d von %d)', # "Message (3 of 4)"
-        'notification_login' : "%s wurde angemeldet",
-        'notification_login_tweet' : "%d neuer Tweet",
-        'notification_login_message' : "%d neue Nachricht",
-        'notification_login_tweets' : "%d neue Tweets",
-        'notification_login_messages' : "%d neue Nachrichten",
+        'notification_login' : '%s wurde angemeldet',
+        'notification_login_tweet' : '%d neuer Tweet',
+        'notification_login_message' : '%d neue Nachricht',
+        'notification_login_tweets' : '%d neue Tweets',
+        'notification_login_messages' : '%d neue Nachrichten',
         
         # Textbox
         'text_entry' : 'Was passiert gerade?',
@@ -135,10 +135,10 @@ LANG = {
         'settings_sound' : 'Sound abspielen',
         'settings_file' : 'Sounddatei',
         'settings_file_filter' : 'Soundateien',
-        'settings_general' : "Allgemein",
-        'settings_autostart' : "Atarashii beim Login starten",
-        'settings_tray' : "Minimiert starten(System Tray)",
-        'settings_taskbar' : "Atarashii in der Taskleiste anzeigen",
+        'settings_general' : 'Allgemein',
+        'settings_autostart' : 'Atarashii beim Login starten',
+        'settings_tray' : 'Minimiert starten(System Tray)',
+        'settings_taskbar' : 'Atarashii in der Taskleiste anzeigen',
         'settings_add' : 'Erstellen',
         'settings_edit' : 'Bearbeiten',
         'settings_delete' : 'Löschen',
@@ -168,7 +168,7 @@ LANG = {
         'password_button_cancel' : 'Abbrechen',
         'password_title' : 'Passwort',
         'password_question' : '<b>%s</b> Passwort:',
-        'password_too_short' : "<i><b>Fehler:</b> Mindestens 6 Zeichen.</i>",
+        'password_too_short' : '<i><b>Fehler:</b> Mindestens 6 Zeichen.</i>',
         
         # Retweet Dialogs
         'retweet_info_title' : 'Retweet erfolgreich',
@@ -215,7 +215,7 @@ LANG = {
         'error_user_not_found' : 'Der Benutzer <b>%s</b> existiert nicht.',
         'error_duplicate' : 'Sie haben dies bereits getweetet.',
         'error_tweet_not_found' : 'Dieser Tweet wurde bereits gelöscht.',
-        'error_message_not_found' : 'Diese Nachricht wurde bereits gelöscht.',    
+        'error_message_not_found' : 'Diese Nachricht wurde bereits gelöscht.',
         
         
         'error_network' :
@@ -305,10 +305,10 @@ LANG = {
         'tray_logged_out' : 'Nicht verbunden.',
         'tray_logged_in' : 'Angemeldet als <b>%s</b>.',
         
-        'tray_tweet' : "<b>%d</b> neuer Tweet",
-        'tray_message' : "<b>%d</b> neue Nachricht",
-        'tray_tweets' : "<b>%d</b> neue Tweets",
-        'tray_messages' : "<b>%d</b> neue Nachrichten" ,
+        'tray_tweet' : '<b>%d</b> neuer Tweet',
+        'tray_message' : '<b>%d</b> neue Nachricht',
+        'tray_tweets' : '<b>%d</b> neue Tweets',
+        'tray_messages' : '<b>%d</b> neue Nachrichten' ,
         
         'tray_error_login' : 'Anmeldung als <b>%s</b> fehlgeschlagen.',
         'tray_error_rate' : 'Requestlimit überschritten.',
@@ -346,7 +346,7 @@ LANG = {
         'title_tweets' : '%d new Tweets',
         
         # Username
-        'name' : lambda x: x + "'s" if x[-1:] in "xs" else x + "s",
+        'name' : lambda x: x + '\'s' if x[-1:] in 'xs' else x + 's',
         
         # HTML
         'html_welcome' : 'Welcome to Atarashii.',
@@ -391,11 +391,11 @@ LANG = {
         # Notifications
         'notification_message' : 'Message from %s',
         'notification_index' : '%s (%d of %d)',
-        'notification_login' : "%s has logged in",
-        'notification_login_tweet' : "%d new Tweet",
-        'notification_login_message' : "%d new Message",
-        'notification_login_tweets' : "%d new Tweets",
-        'notification_login_messages' : "%d new Messages",
+        'notification_login' : '%s has logged in',
+        'notification_login_tweet' : '%d new Tweet',
+        'notification_login_message' : '%d new Message',
+        'notification_login_tweets' : '%d new Tweets',
+        'notification_login_messages' : '%d new Messages',
         
         # Textbox
         'text_entry' : 'What\'s happening?',
@@ -447,10 +447,10 @@ LANG = {
         'settings_sound' : 'Play sound',
         'settings_file' : 'Soundfile',
         'settings_file_filter' : 'Soundfiles',
-        'settings_general' : "General",
-        'settings_autostart' : "Launch Atarashii on user login",
-        'settings_tray' : "Start minimized(system tray)",
-        'settings_taskbar' : "Show Atarashii in the Taskbar",
+        'settings_general' : 'General',
+        'settings_autostart' : 'Launch Atarashii on user login',
+        'settings_tray' : 'Start minimized(system tray)',
+        'settings_taskbar' : 'Show Atarashii in the Taskbar',
         'settings_add' : 'Add',
         'settings_edit' : 'Edit',
         'settings_delete' : 'Delete',
@@ -478,7 +478,7 @@ LANG = {
         'password_button_cancel' : 'Cancel',
         'password_title' : 'Password',
         'password_question' : '<b>%s</b> password:',
-        'password_too_short' : "<i><b>Error:</b> At least 6 characters.</i>",
+        'password_too_short' : '<i><b>Error:</b> At least 6 characters.</i>',
         
         # Retweet Dialogs
         'retweet_info_title' : 'Retweet successful',
@@ -605,10 +605,10 @@ LANG = {
         'tray_logged_out' : 'Not connected.',
         'tray_logged_in' : 'Logged in as <b>%s</b>.',
         
-        'tray_tweet' : "<b>%d</b> new Tweet",
-        'tray_message' : "<b>%d</b> new Message",
-        'tray_tweets' : "<b>%d</b> new Tweets",
-        'tray_messages' : "<b>%d</b> new Messages",
+        'tray_tweet' : '<b>%d</b> new Tweet',
+        'tray_message' : '<b>%d</b> new Message',
+        'tray_tweets' : '<b>%d</b> new Tweets',
+        'tray_messages' : '<b>%d</b> new Messages',
         
         'tray_error_login' : 'Login as <b>%s</b> failed.',
         'tray_error_rate' : 'Request limit exceeded.',

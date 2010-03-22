@@ -101,7 +101,7 @@ class HTML(view.HTMLView):
             avatar = self.avatar_html(user, num, img)
         
         else:
-            avatar = ""
+            avatar = ''
         
         
         # Background -----------------------------------------------------------
@@ -109,21 +109,21 @@ class HTML(view.HTMLView):
         if item.recipient_screen_name.lower() != self.main.username.lower():
             mode = lang.message_to
             name = item.recipient_screen_name
-            reply = "display: none;"
-            cls = "mentionedold" if item.id <= self.init_id else "mentioned"
+            reply = 'display: none;'
+            cls = 'mentionedold' if item.id <= self.init_id else 'mentioned'
             username = item.recipient_screen_name
             user_realname = item.recipient.name.strip()
             toid = item.recipient.id
-            ltype = "rprofile"
+            ltype = 'rprofile'
         
         else:
             mode = lang.message_from
             name = user.screen_name
-            reply = ""
+            reply = ''
             toid = user.id
             username = user.screen_name
             user_realname = user.name.strip()
-            ltype = "profile"
+            ltype = 'profile'
         
                 
         # HTML Snippet ---------------------------------------------------------
@@ -179,27 +179,27 @@ class HTML(view.HTMLView):
     # Create Popup Items -------------------------------------------------------
     # --------------------------------------------------------------------------
     def ok_menu(self, link):
-        return not link in ("qmessage",)
+        return not link in ('qmessage',)
     
     def create_menu(self, menu, item, item_id, link, full, user):
         # User Options
         if user != None:
-            if link in ("profile", "avatar") \
+            if link in ('profile', 'avatar') \
                and user.lower() != self.main.username.lower():
                
-                reply = "message:%s:%d:-1" % (user, self.get_sender(item).id)
+                reply = 'message:%s:%d:-1' % (user, self.get_sender(item).id)
                 self.add_menu_link(menu, lang.context_reply % user,
                                    self.context_link, reply, item)
             
-            elif link == "rprofile" \
+            elif link == 'rprofile' \
                  and user.lower() != self.main.username.lower():
                 
-                reply = "message:%s:%d:-1" % (user, self.get_recipient(item).id)
+                reply = 'message:%s:%d:-1' % (user, self.get_recipient(item).id)
                 self.add_menu_link(menu, lang.context_message % user,
                                    self.context_link, reply, item)
             
-            elif link == "user":
-                reply = "message:%s:-1:-1" % user
+            elif link == 'user':
+                reply = 'message:%s:-1:-1' % user
                 self.add_menu_link(menu, lang.context_message % user,
                                    self.context_link, reply)
         
@@ -214,7 +214,7 @@ class HTML(view.HTMLView):
             # Delete
             name = item.sender.screen_name
             if name.lower() == self.main.username.lower():
-                full = "delete:m:%d" % item_id
+                full = 'delete:m:%d' % item_id
                 self.add_menu_link(menu, lang.context_delete_message,
                                    self.context_link, full, item)
         

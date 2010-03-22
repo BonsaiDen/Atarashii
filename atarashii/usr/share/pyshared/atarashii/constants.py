@@ -22,8 +22,8 @@ RETWEET_OLD = 2          # Can be anything
 
 # General Stuff
 UNSET_ID_NUM = -1        # Must be lower than 0
-UNSET_TEXT = ""          # Must be ""
-UNSET_LABEL = ""         # Should be ""
+UNSET_TEXT = ''          # Must be ""
+UNSET_LABEL = ''         # Should be ""
 UNSET_TIMEOUT = -1       # Don't know if this is needed anymore at all...
 
 # Modes

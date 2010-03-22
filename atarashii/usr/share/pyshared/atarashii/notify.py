@@ -35,20 +35,21 @@ class Sound(threading.Thread):
                 try:
                     if self.parent.player != None:
                         self.parent.player.kill()
-                        print "Zombieeeees!"
+                        print 'Zombieeeees!'
                 
                 except OSError:
                     pass
                 
-                self.parent.player = subprocess.Popen(["mplayer", "-really-quiet",
-                                                       "-nolirc", self.snd_file])
+                self.parent.player = subprocess.Popen(
+                                                ['mplayer', '-really-quiet',
+                                                 '-nolirc', self.snd_file])
                 
                 code = self.parent.player.wait()
                 if code != 0:
-                    print "sound failed!"
+                    print 'sound failed!'
             
             except OSError, error:
-                print "Failed to play sound", error
+                print 'Failed to play sound', error
         
             tries += 1
 
@@ -58,8 +59,8 @@ class Notifier:
         self.player = None
         
     def show(self, objs):
-        if len(objs) > 0 and self.main.settings.is_true("sound") \
-           and self.main.settings['soundfile'] != "None":
+        if len(objs) > 0 and self.main.settings.is_true('sound') \
+           and self.main.settings['soundfile'] != 'None':
             snd = Sound(self, self.main.settings['soundfile'])
             snd.setDaemon(True)
             snd.start()
@@ -70,11 +71,11 @@ class Notifier:
                 pynotify.Notification(obj[0], obj[1], obj[2]).show()
                             
             except Exception, error:
-                print "Notify error", error
+                print 'Notify error', error
 
 
 def init():
-    pynotify.init("Atarashii")
+    pynotify.init('Atarashii')
 
 def uninit():
     pynotify.uninit()

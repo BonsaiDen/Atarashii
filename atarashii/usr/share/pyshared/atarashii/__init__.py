@@ -23,7 +23,7 @@ __license__ = 'GPL 3'
 
 
 import sys
-if sys.path[0] == "/usr/share/pyshared":
+if sys.path[0] == '/usr/share/pyshared':
     sys.path.pop(0)
 
 def start():

@@ -46,33 +46,33 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.mode_type = mode
         
         webkit.WebView.__init__(self)
-        self.connect("navigation-requested", self.open_link)
-        self.connect("notify::load-status", self.loaded)
-        self.connect("button-release-event", self.gui.text.html_focus)
-        self.connect("button-press-event", self.on_button)
-        self.connect("populate-popup", self.on_popup)
+        self.connect('navigation-requested', self.open_link)
+        self.connect('notify::load-status', self.loaded)
+        self.connect('button-release-event', self.gui.text.html_focus)
+        self.connect('button-press-event', self.on_button)
+        self.connect('populate-popup', self.on_popup)
         self.popup_open = False
         
         # Fix CSS hover stuff
         self.mouse_position = (-1.0, -1.0)
         self.fake_mouse = False
-        self.connect("motion-notify-event", self.on_move)
-        self.connect("leave-notify-event", self.on_leave)
+        self.connect('motion-notify-event', self.on_move)
+        self.connect('leave-notify-event', self.on_leave)
         self.last_scroll = 0
-        self.connect("scroll-event", self.on_scroll)
-        self.connect("key-release-event", self.on_key)
+        self.connect('scroll-event', self.on_scroll)
+        self.connect('key-release-event', self.on_key)
         
         # Better link tooltips
-        self.last_hovered_link = ""
-        self.connect("hovering-over-link", self.on_link_hover)
-        self.connect("query-tooltip", self.on_tooltip)
+        self.last_hovered_link = ''
+        self.connect('hovering-over-link', self.on_link_hover)
+        self.connect('query-tooltip', self.on_tooltip)
         
         # Tooltip
         gtb = gtk.Builder()
-        gtb.add_from_file(self.main.get_resource("avatar.glade"))
-        self.tooltip = gtb.get_object("tooltip")
-        self.tooltip_label = gtb.get_object("label")
-        self.tooltip_img = gtb.get_object("image")
+        gtb.add_from_file(self.main.get_resource('avatar.glade'))
+        self.tooltip = gtb.get_object('tooltip')
+        self.tooltip_label = gtb.get_object('label')
+        self.tooltip_img = gtb.get_object('image')
         self.tooltip_img_file = None
         self.tooltip_user = None
         self.tooltip.show_all()
@@ -87,18 +87,18 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.formatter = formatter.Formatter()
         self.item_count = 20
                 
-        self.lang_loading = ""
-        self.lang_load = ""
-        self.lang_empty = ""
+        self.lang_loading = ''
+        self.lang_load = ''
+        self.lang_empty = ''
         
         self.scroll_to = -1
         self.init(True)
         
         # Disable everything we can, in order to fix the memleak.
-        off = ["enable_plugins", "enable_offline_web_application_cache",
-               "enable_html5_local_storage", "enable_html5_database",
-               "enable_developer_extras", "enable_private_browsing",
-               "enable_spell_checking", "enable_xss_auditor"]
+        off = ['enable_plugins', 'enable_offline_web_application_cache',
+               'enable_html5_local_storage', 'enable_html5_database',
+               'enable_developer_extras', 'enable_private_browsing',
+               'enable_spell_checking', 'enable_xss_auditor']
         
         settings = self.get_settings()
         for i in off:
@@ -203,7 +203,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         for i in range(len(self.items)):
             item = self.items[i][0]
             if self.get_id(item) == item_id:
-                if hasattr(item, "retweeted_status"):
+                if hasattr(item, 'retweeted_status'):
                     self.items[i][0].retweeted_status.favorited = mode
                 
                 else:
@@ -224,13 +224,13 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             uri = req.get_uri()
         
         # Local links
-        if uri.startswith("file:///"):
+        if uri.startswith('file:///'):
             return False
         
         # Load history
-        if uri.startswith("more:"):
+        if uri.startswith('more:'):
             if not self.main.status(ST_HISTORY):
-                self.load_history_id = int(uri.split(":")[1]) - 1
+                self.load_history_id = int(uri.split(':')[1]) - 1
                 if self.load_history_id != HTML_UNSET_ID:
                     self.main.set_status(ST_HISTORY)
                     self.gui.show_progress()
@@ -238,8 +238,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                     self.main.gui.text.html_focus()
         
         # Replies
-        elif uri.startswith("reply:") or uri.startswith("qreply:"):
-            self.main.reply_user, self.main.reply_id, num = uri.split(":")[1:]
+        elif uri.startswith('reply:') or uri.startswith('qreply:'):
+            self.main.reply_user, self.main.reply_id, num = uri.split(':')[1:]
             num = int(num)
             if extra != None:
                 self.main.reply_text = unescape(self.get_text(extra))
@@ -254,9 +254,9 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             self.main.gui.text.html_focus()
         
         # Send a message
-        elif uri.startswith("message:") or uri.startswith("qmessage:"):
+        elif uri.startswith('message:') or uri.startswith('qmessage:'):
             self.main.message_user, \
-            self.main.message_id, num = uri.split(":")[1:]
+            self.main.message_id, num = uri.split(':')[1:]
             
             num = int(num)
             if extra != None:
@@ -272,8 +272,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             self.main.gui.text.html_focus()
         
         # Retweet someone
-        elif uri.startswith("retweet:"):
-            ttype = uri.split(":")[1]
+        elif uri.startswith('retweet:'):
+            ttype = uri.split(':')[1]
             tweet_id = self.get_id(extra)
             name = self.get_user(extra).screen_name
             
@@ -288,8 +288,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                 self.main.gui.text.html_focus()
         
         # Delete
-        elif uri.startswith("delete:"):
-            dtype, item_id = uri.split(":")[1:]
+        elif uri.startswith('delete:'):
+            dtype, item_id = uri.split(':')[1:]
             item_id = int(item_id)
             text = unescape(self.get_text(extra))
 
@@ -301,30 +301,30 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                 self.main.delete(message_id = item_id)
             
             # Ask
-            if dtype == "t":
+            if dtype == 't':
                 gobject.idle_add(self.main.gui.ask_for_delete_tweet,
                                  text,
                                  delete_tweet,
                                  None)
             
-            elif dtype == "m":
+            elif dtype == 'm':
                 gobject.idle_add(self.main.gui.ask_for_delete_message,
                                  text,
                                  delete_message,
                                  None)
         
         # Favorite
-        elif uri.startswith("fav:"):
-            name, item_id = uri.split(":")[1:]
+        elif uri.startswith('fav:'):
+            name, item_id = uri.split(':')[1:]
             gobject.idle_add(self.main.favorite, int(item_id), True, name)
         
         # Un-Favorite
-        elif uri.startswith("unfav:"):
-            name, item_id, = uri.split(":")[1:]
+        elif uri.startswith('unfav:'):
+            name, item_id, = uri.split(':')[1:]
             gobject.idle_add(self.main.favorite, int(item_id), False, name)
         
         # Edit
-        elif uri.startswith("edit:"):
+        elif uri.startswith('edit:'):
             self.main.edit_text = unescape(self.get_text(extra))
             self.main.edit_reply_id = self.get_reply_id(extra) or UNSET_ID_NUM
             self.main.edit_reply_user = self.get_reply_user(extra) or UNSET_TEXT
@@ -347,20 +347,20 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             return None, None, None
         
         # Link types
-        types = ["profile", "rprofile", "user", "source", "status", "tag",
-                 "fav", "unfav", "qreply", "qmessage", "edit"]
+        types = ['profile', 'rprofile', 'user', 'source', 'status', 'tag',
+                 'fav', 'unfav', 'qreply', 'qmessage', 'edit']
         
         # Generic cases
         for i in types:
-            tag = i + ":"
+            tag = i + ':'
             if uri.startswith(tag):
                 return i, uri[len(tag):], uri
         
         # Special cases
-        if uri.startswith("avatar:"):
+        if uri.startswith('avatar:'):
             stuff = uri[7:]
-            return "avatar", stuff[stuff.find(":") + 1:], uri
+            return 'avatar', stuff[stuff.find(':') + 1:], uri
         
         else:
-            return "link", uri, uri
+            return 'link', uri, uri
 

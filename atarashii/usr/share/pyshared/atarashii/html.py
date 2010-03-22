@@ -71,8 +71,8 @@ class HTML(view.HTMLView):
     def render_item(self, num, item, img):
         # Check for new style retweet
         retweeted = False
-        retweet = ""
-        if hasattr(item, "retweeted_status"):
+        retweet = ''
+        if hasattr(item, 'retweeted_status'):
             tweet = item.retweeted_status
             retweeted = True
             

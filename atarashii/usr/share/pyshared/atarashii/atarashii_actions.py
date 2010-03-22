@@ -32,8 +32,7 @@ import send
 from language import LANG as lang
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
-                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_NETWORK_FAILED, \
-                      ST_UPDATE
+                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_NETWORK_FAILED
 
 from constants import UNSET_ID_NUM, UNSET_TEXT
 
@@ -59,7 +58,7 @@ class AtarashiiActions:
             # Save the crashlog
             import traceback
             from settings import CRASH_LOG_FILE
-            crash_file = open(CRASH_LOG_FILE, "wb")
+            crash_file = open(CRASH_LOG_FILE, 'wb')
             trace = traceback.extract_tb(sys.last_traceback)
             crash_file.write(
                  """Atarashii %s\nStarted at %s\nCrashed at %s"\nTraceback:\n"""
@@ -69,7 +68,7 @@ class AtarashiiActions:
                  time.strftime('%a %b %d %H:%M:%S +0000 %Y', time.gmtime())
                  ))
         
-            crash_file.write("\n".join(traceback.format_list(trace)))
+            crash_file.write('\n'.join(traceback.format_list(trace)))
             crash_file.close()
             
             # Exit with specific error
@@ -263,23 +262,23 @@ class AtarashiiActions:
         
         
         # Determine the kind of the error
-        rate_error = ""
+        rate_error = ''
         if isinstance(error, socket.timeout): # Timeout error
-            msg = ""
+            msg = ''
             error_code = 0
             error_errno = -3
             code = -9
         
         # IOErrors
         elif isinstance(error, IOError):
-            if hasattr(error, "read"):
+            if hasattr(error, 'read'):
                 msg = error.read()
             
-            elif hasattr(error, "msg"):
+            elif hasattr(error, 'msg'):
                 msg = error.msg
             
             else:
-                msg = ""
+                msg = ''
             
             error_errno = error.errno
             error_code = error.code
@@ -301,16 +300,16 @@ class AtarashiiActions:
         
         # Catch common Twitter errors
         elif error_code in (400, 401, 403, 404, 500, 502, 503):
-            if msg.lower().startswith("no status"):
+            if msg.lower().startswith('no status'):
                 code = -12
         
-            elif msg.lower().startswith("no direct message"):
+            elif msg.lower().startswith('no direct message'):
                 code = -13
         
-            elif msg.lower().startswith("share sharing"):
+            elif msg.lower().startswith('share sharing'):
                 code = -2
             
-            elif msg.lower().startswith("status is a duplicate"):
+            elif msg.lower().startswith('status is a duplicate'):
                 code = -11
                 
             else:

@@ -21,28 +21,28 @@ import urllib
                       
 # Some of this code has been translated from the twitter-text-java library:
 # <http://github.com/mzsanford/twitter-text-java>
-AT_REGEX = re.compile(ur"\B[@\uFF20]([a-z0-9_]{1,20})",
+AT_REGEX = re.compile(ur'\B[@\uFF20]([a-z0-9_]{1,20})',
                       re.UNICODE | re.IGNORECASE)
 
-UTF_CHARS = ur"a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff"
-TAG_EXP = ur"(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+[%s]*)" % UTF_CHARS
+UTF_CHARS = ur'a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff'
+TAG_EXP = ur'(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+[%s]*)' % UTF_CHARS
 TAG_REGEX = re.compile(TAG_EXP, re.UNICODE | re.IGNORECASE)
 
-PRE_CHARS = ur"(?:[^/\"':!=]|^|\:)"
-DOMAIN_CHARS = ur"(?:[\.-]|[^\s])+\.[a-z]{2,}(?::[0-9]+)?"
-PATH_CHARS = ur"(?:[\.,]?[%s!\*'\(\);:=\+\$/%s#\[\]\-_,~@])" % (UTF_CHARS, "%")
-QUERY_CHARS = ur"[a-z0-9!\*'\(\);:&=\+\$/%#\[\]\-_\.,~]"
+PRE_CHARS = ur'(?:[^/"\':!=]|^|\:)'
+DOMAIN_CHARS = ur'(?:[\.-]|[^\s])+\.[a-z]{2,}(?::[0-9]+)?'
+PATH_CHARS = ur'(?:[\.,]?[%s!\*\'\(\);:=\+\$/%s#\[\]\-_,~@])' % (UTF_CHARS, '%')
+QUERY_CHARS = ur'[a-z0-9!\*\'\(\);:&=\+\$/%#\[\]\-_\.,~]'
 
 # Valid end-of-path chracters (so /foo. does not gobble the period).
 # 1. Allow ) for Wikipedia URLs.
 # 2. Allow =&# for empty URL parameters and other URL-join artifacts
-PATH_ENDING_CHARS = ur"[%s\)=#/]" % UTF_CHARS
-QUERY_ENDING_CHARS = "[a-z0-9_&=#]"
+PATH_ENDING_CHARS = ur'[%s\)=#/]' % UTF_CHARS
+QUERY_ENDING_CHARS = '[a-z0-9_&=#]'
 
-URL_REGEX = re.compile("((" + PRE_CHARS + ")((https?://|www\\.)(" \
-                       + DOMAIN_CHARS + ")(/" + PATH_CHARS + "*" \
-                       + PATH_ENDING_CHARS + "?)?(\\?" + QUERY_CHARS + "*" \
-                       + QUERY_ENDING_CHARS + ")?))", re.UNICODE |re.IGNORECASE)
+URL_REGEX = re.compile('((' + PRE_CHARS + ')((https?://|www\\.)(' \
+                       + DOMAIN_CHARS + ')(/' + PATH_CHARS + '*' \
+                       + PATH_ENDING_CHARS + '?)?(\\?' + QUERY_CHARS + '*' \
+                       + QUERY_ENDING_CHARS + ')?))', re.UNICODE |re.IGNORECASE)
 
 from utils import escape
 
@@ -85,24 +85,24 @@ class Formatter:
             # URL
             elif ttype == 1:
                 # Fix a bug in the Regex
-                start = data.find("http")
+                start = data.find('http')
                 if start == -1:
-                    start = data.find("www")
+                    start = data.find('www')
                 
-                pre = ""
+                pre = ''
                 if start != -1:
                     pre = data[:start]
                     data = data[start:]
                 
                 # Shorten URLS
                 if len(data) > 30:
-                    text = data[0:27] + "..."
+                    text = data[0:27] + '...'
                 
                 else:
                     text = data
 
-                if data.startswith("www"):
-                    data = "http://%s" % data
+                if data.startswith('www'):
+                    data = 'http://%s' % data
 
                 result.append(
                     '%s<a href="%s" title="%s">%s</a>' %
@@ -118,7 +118,7 @@ class Formatter:
             
             # tag
             elif ttype == 3:
-                pos = data.rfind("#")
+                pos = data.rfind('#')
                 pre, tag = data[:pos], data[pos + 1:]
                 self.tags.append(tag)
                 result.append((
@@ -126,7 +126,7 @@ class Formatter:
                     + ' title="' + lang.html_search + '">#%s</a>') \
                     % (pre, urllib.urlencode({'q': '#' + tag}), tag, tag))
         
-        return "".join(result)
+        return ''.join(result)
     
     # Crazy filtering and splitting :O
     def filter_by(self, regex, stype):

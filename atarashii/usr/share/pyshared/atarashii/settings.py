@@ -32,7 +32,7 @@ CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
 
 COPY_FILE = '/usr/share/applications/atarashii.desktop'
 CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
-CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, "crash.log")
+CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')
 
 
 class Settings:
@@ -51,7 +51,7 @@ class Settings:
     def load(self):
         try:
             settings_file = open(os.path.join(ATARASHII_DIR,
-                                 'atarashii.conf'), "r")
+                                 'atarashii.conf'), 'r')
             
             lines = settings_file.read().split('\n')
             settings_file.close()
@@ -62,16 +62,16 @@ class Settings:
                 value = i[len(vtype)+1:]
                 try:
                     if vtype == 'long':
-                        if value == "":
+                        if value == '':
                             value = long(-1)
                         
                         else:
                             value = long(value)
                     
                     elif vtype == 'bool':
-                        value = True if value == "True" else False
+                        value = True if value == 'True' else False
                     
-                    if name != "":
+                    if name != '':
                         self.values[urllib.unquote(name)] = value
                 
                 except ValueError, detail:
@@ -91,30 +91,30 @@ class Settings:
             return
     
         # Don't save crash stuff
-        if self.values.has_key("crashed"):
+        if self.values.has_key('crashed'):
             del self.values['crashed']
         
-        if self.values.has_key("crash_reason"):
+        if self.values.has_key('crash_reason'):
             del self.values['crash_reason']
         
            
         # Test
-        settings_file = open(os.path.join(ATARASHII_DIR, 'atarashii.conf'), "w")
+        settings_file = open(os.path.join(ATARASHII_DIR, 'atarashii.conf'), 'w')
         keys = self.values.keys()
         keys.sort()
         for name in keys:
             value = self.values[name]
             cls = type(value)
             if cls == int or cls == long:
-                vtype = "long"
+                vtype = 'long'
             
             elif cls == bool:
-                vtype = "bool"
+                vtype = 'bool'
             
             else:
-                vtype = "str"
+                vtype = 'str'
             
-            settings_file.write("%s %s %s\n"
+            settings_file.write('%s %s %s\n'
                                  % (urllib.quote(name), vtype, value))
         
         settings_file.close()
@@ -144,7 +144,7 @@ class Settings:
                 return self[key] != -1
             
             else:
-                return self[key].strip() != ""
+                return self[key].strip() != ''
     
     def is_true(self, key, default = True):
         if self[key] == None:
@@ -156,7 +156,7 @@ class Settings:
     def get_accounts(self):
         accounts = []
         for i in self.values.keys():
-            if i.startswith("account_"):
+            if i.startswith('account_'):
                 accounts.append(i[8:])
         
         accounts.sort()
@@ -173,38 +173,38 @@ class Settings:
                 os.mkdir(AUTOSTART_DIR)
             
             # Get contents of the desktop file
-            cfp = open(COPY_FILE, "rb")
+            cfp = open(COPY_FILE, 'rb')
             text = cfp.read()
             cfp.close()
             
             # Tweak the file bit
-            dfp = open(DESKTOP_FILE, "wb")
-            bmode = "true" if mode else "false"
-            text = text.replace("Exec=atarashii", "Exec=atarashii auto")
-            text = text.replace("StartupNotify=true", "StartupNotify=false")
-            dfp.write(text + "\nX-GNOME-Autostart-enabled=%s" % bmode)
+            dfp = open(DESKTOP_FILE, 'wb')
+            bmode = 'true' if mode else 'false'
+            text = text.replace('Exec=atarashii', 'Exec=atarashii auto')
+            text = text.replace('StartupNotify=true', 'StartupNotify=false')
+            dfp.write(text + '\nX-GNOME-Autostart-enabled=%s' % bmode)
             dfp.close()
             
             # Only save if we succeeded
             self['autostart'] = mode
         
         except IOError:
-            print "Could not set autostart"
+            print 'Could not set autostart'
     
     def check_autostart(self):
         if os.path.exists(DESKTOP_FILE):
             try:
-                cfp = open(DESKTOP_FILE, "rb")
+                cfp = open(DESKTOP_FILE, 'rb')
                 text = cfp.read()
                 cfp.close()
-                if text.find("X-GNOME-Autostart-enabled=false") != -1:
+                if text.find('X-GNOME-Autostart-enabled=false') != -1:
                     self['autostart'] = False
                 
                 else:
                     self['autostart'] = True
                 
             except (OSError, IOError):
-                print "Could not check autostart"
+                print 'Could not check autostart'
                 self['autostart'] = False
         
         else:
@@ -216,10 +216,10 @@ class Settings:
     def check_crash(self):
         self['crashed'] = os.path.exists(CRASH_FILE)
         if self['crashed']:
-            cfp = open(CRASH_FILE, "rb")
+            cfp = open(CRASH_FILE, 'rb')
             self['crash_reason'] = cfp.read()
             cfp.close()
-            print "ERROR: Atarashii crashed!"
+            print 'ERROR: Atarashii crashed!'
     
     
     # Avatar Cache Handling ----------------------------------------------------
@@ -235,7 +235,7 @@ class Settings:
                         os.unlink(cache_file)
                     
                     except (OSError, IOError):
-                        print "Could not delete file %s" % i
+                        print 'Could not delete file %s' % i
 
 
 # Create Crashfile -------------------------------------------------------------
@@ -243,7 +243,7 @@ class Settings:
 def crash_file(mode, data = None):
     try:
         if mode:
-            cfp = open(CRASH_FILE, "wb")
+            cfp = open(CRASH_FILE, 'wb')
             cfp.write(str(data))
             cfp.close()
         
@@ -251,5 +251,5 @@ def crash_file(mode, data = None):
             os.unlink(CRASH_FILE)
     
     except (OSError, IOError):
-        print "IO on crashfile failed"
+        print 'IO on crashfile failed'
 
