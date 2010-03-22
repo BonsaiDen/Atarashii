@@ -1,62 +1,72 @@
-#!/usr/bin/python
-import sys
-import os
-import signal
+#!/bin/bash
 
-# Import Atarashii -------------------------------------------------------------
-sys.path.insert(0, "/usr/share/pyshared")
-try:
-    import atarashii
+#  This file is part of Atarashii.
+#
+#  Atarashii is free software: you can redistribute it and/or
+#  modify it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  Atarashii is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+#  GNU General Public License for more details.
+# 
+#  You should have received a copy of the GNU General Public License along with
+#  Atarashii. If not, see <http://www.gnu.org/licenses/>.
+
+
+# Atarashii Crash Wrapper ------------------------------------------------------
+# ------------------------------------------------------------------------------
+
+# Autostart wait
+if [ "$1" == "auto" ]; then 
+    sleep 3
+fi
+
+# Start Atarashii
+RESTART=0
+CODE=0
+echo "Starting Atarashii..."
+while [ $RESTART -lt 3 ]
+do
+    # Start
+    atarashiigui
     
-except:
-    if sys.path[0] == "/usr/share/pyshared": 
-        sys.path.pop(0)
-        
-    sys.exit(os.EX_TEMPFAIL)
-
-# Check what we should start ----------------------------------------------------
-arg = ""
-if len(sys.argv) == 2:
-    arg = sys.argv[1]
-
-# Application
-if arg == "main":
-    atarashii.start()
-
-# Crash Wrapper
-else:
-    if arg == "auto":
-        import time
-        time.sleep(3)
+    # Varas
+    let CODE=$?
+    let RESTART=RESTART+1
     
-    # Wrap arround crazy random GDK and XOrg Erros ^.^"
-    import subprocess
-    restart_max = 2
-    restart_count = 0
-    while True:
-        print "Starting Atarashii..."
-        error = subprocess.call(["atarashii", "main"])
-        if error == os.EX_UNAVAILABLE:
-            print "Atarashii is already running"
-            break
-        
-        elif error == os.EX_TEMPFAIL:
-            print "Importing Atarashii failed"
-            break
-        
-        # Detect normal exit
-        elif error in (os.EX_OK, 1, -15, -9): # 1 
-            print "Atarashii has been closed with status %d" % error
-            break
-        
-        else:
-            atarashii.crash(error)
-            if restart_count >= restart_max:
-                break
-            
-            restart_count += 1
-            print "Atarashii crashed with %d! Restart #%d/%d" \
-                   % (error, restart_count, restart_max) 
+    # Checks
+    if [ $CODE -eq 0 -o  $CODE -eq 1 ]; then # dont care about xwindow stuff
+        echo "Atarashii has exited normally."
+        exit 0
     
-    exit(error)
+    elif [ $CODE -eq 69 ]; then
+        echo "Atarashii is already running."
+        exit 0
+    
+    elif [ $CODE -eq 70 ]; then
+        echo "70" >~/.atarashii/crash.log
+        echo "Atarashii crashed due to an internal error!"
+        echo "Restarting..."
+    
+    elif [ $CODE -eq 75 ]; then
+        echo "Atarashii could not be started!"
+        exit 2
+    
+    elif [ $CODE -eq -9 ]; then
+        echo "Atarashii has been killed."
+        exit 1
+    
+    elif [ $CODE -eq -15 ]; then
+        echo "Atarashii has been terminated."
+        exit 1
+    
+    else
+        echo $CODE >~/.atarashii/crashed
+        echo "Atarashii crashed due to an external error!"
+        echo "Restarting..."
+    fi
+done
 
