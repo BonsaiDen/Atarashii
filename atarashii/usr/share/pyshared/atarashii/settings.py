@@ -27,7 +27,7 @@ DESKTOP_FILE = os.path.join(HOME_DIR, '.config',
 
 AUTOSTART_DIR = os.path.join(HOME_DIR, '.config', 'autostart')
 
-CACHE_DIR = os.path.join(HOME_DIR, '.atarashii')
+ATARASHII_DIR = os.path.join(HOME_DIR, '.atarashii')
 CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
 
 COPY_FILE = '/usr/share/applications/atarashii.desktop'
@@ -36,9 +36,8 @@ CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
 
 class Settings:
     def __init__(self):
-        self.dir = os.path.join(os.path.expanduser('~'), ".atarashii")
-        if not os.path.exists(self.dir):
-            os.mkdir(self.dir)
+        if not os.path.exists(ATARASHII_DIR):
+            os.mkdir(ATARASHII_DIR )
         
         # Record running time
         self.values = {}
@@ -50,7 +49,9 @@ class Settings:
     # Load ---------------------------------------------------------------------
     def load(self):
         try:
-            settings_file = open(os.path.join(self.dir, 'atarashii.conf'), "r")
+            settings_file = open(os.path.join(ATARASHII_DIR,
+                                 'atarashii.conf'), "r")
+            
             lines = settings_file.read().split('\n')
             settings_file.close()
             for i in lines:
@@ -97,7 +98,7 @@ class Settings:
         
            
         # Test
-        settings_file = open(os.path.join(self.dir, 'atarashii.conf'), "w")
+        settings_file = open(os.path.join(ATARASHII_DIR, 'atarashii.conf'), "w")
         keys = self.values.keys()
         keys.sort()
         for name in keys:
@@ -223,8 +224,8 @@ class Settings:
     # Avatar Cache Handling ----------------------------------------------------
     # --------------------------------------------------------------------------
     def check_cache(self):
-        for i in os.listdir(CACHE_DIR):
-            cache_file = os.path.join(CACHE_DIR, i)
+        for i in os.listdir(ATARASHII_DIR):
+            cache_file = os.path.join(ATARASHII_DIR, i)
             
             if time.time() - os.stat(cache_file).st_atime > CACHE_TIMEOUT:
                 if cache_file[-4:].lower() in ('.jpg', '.png', 'gif'):
