@@ -271,7 +271,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Refresh / Read / History Button ------------------------------------------
     # --------------------------------------------------------------------------
-    def set_refresh_update(self, mode, refresh_mode = None, status = True):
+    def set_refresh_update(self, mode, refresh_mode = None, status = True,
+                           no_read = False):
         
         # History mode ---------------------------------------------------------
         if self.mode == MODE_MESSAGES and self.message.history_loaded:
@@ -295,10 +296,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         
         # Toggle to read mode --------------------------------------------------
-        if self.mode == MODE_MESSAGES:
+        if self.mode == MODE_MESSAGES and not no_read:
             read_mode = self.message.last_id > self.message.init_id
             
-        elif self.mode == MODE_TWEETS:
+        elif self.mode == MODE_TWEETS and not no_read:
             read_mode = self.html.last_id > self.html.init_id
         
         else:

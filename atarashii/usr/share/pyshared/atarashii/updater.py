@@ -340,6 +340,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             # Update GUI
             self.finish = True
         
+        gobject.idle_add(self.gui.set_refresh_update, False, no_read = True)
         gobject.idle_add(update_views, updates, messages)
         return True
     
