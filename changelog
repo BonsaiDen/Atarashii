@@ -1,3 +1,12 @@
+atarashii (0.99.15c-1) all;
+
+  * Fixed bugs with the notification sounds.
+  * Fixed deletion of cached *.jpeg avatars.
+  * Bugfixes for freezes caused by inter thread calling.
+  * Bugfix for network errors on login.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 22 Mar 2010 16:24:00 +0100
+
 atarashii (0.99.15b-1) all;
 
   * New "edit" Tweet feature! This basically performs a delete/send in one row
