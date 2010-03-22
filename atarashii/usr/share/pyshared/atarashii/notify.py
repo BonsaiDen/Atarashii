@@ -27,24 +27,30 @@ class Sound(threading.Thread):
         self.parent = parent
     
     def run(self):
-        try:
-            # Check for Zombieeeeeees!
+        tries = 0
+        code = -1
+        while code != 0 and tries < 3:
             try:
-                if self.parent.player != None:
-                    self.parent.player.kill()
-                    print "Zombieeeees!"
+                # Check for Zombieeeeeees!
+                try:
+                    if self.parent.player != None:
+                        self.parent.player.kill()
+                        print "Zombieeeees!"
+                
+                except OSError:
+                    pass
+                
+                self.parent.player = subprocess.Popen(["mplayer", "-really-quiet",
+                                                       "-nolirc", self.snd_file])
+                
+                code = self.parent.player.wait()
+                if code != 0:
+                    print "sound failed!"
             
-            except OSError:
-                pass
-            
-            self.parent.player = subprocess.Popen(["mplayer", "-really-quiet",
-                                                   "-nolirc", self.snd_file])
-            
-            self.parent.player.wait()
+            except OSError, error:
+                print "Failed to play sound", error
         
-        except OSError, error:
-            print "Failed to play sound", error
-        
+            tries += 1
 
 class Notifier:
     def __init__(self, main):
