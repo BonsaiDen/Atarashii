@@ -154,7 +154,7 @@ class TrayIcon(gtk.StatusIcon):
     def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
         if self.tooltip_changed:
             if self.tooltip_icon != None:
-                self.tooltip_img.set_from_stock(icon, 6)
+                self.tooltip_img.set_from_stock(self.tooltip_icon, 6)
             
             elif self.tooltip_buf != None:
                 self.tooltip_img.set_from_pixbuf(self.tooltip_buf)
