@@ -16,13 +16,67 @@
 
 # Debug Mode Started -----------------------------------------------------------
 # ------------------------------------------------------------------------------
-import sys, os
-sys.path.insert(0, os.path.join(sys.path[0], "atarashii/usr/share/pyshared"))
+import sys
+import os
+
+PATH = os.path.join(sys.path[0], "atarashii/usr/share/pyshared")
+
+
+# Import Atarashii -------------------------------------------------------------
+sys.path.insert(0, PATH)
 try:
     import atarashii
+    
+except:
+    if sys.path[0] == PATH: 
+        sys.path.pop(0)
+        
+    sys.exit(os.EX_TEMPFAIL)
 
-finally:
-    sys.path.pop(0)
+# Check what we should start ----------------------------------------------------
+sys.path.pop(0)
+arg = ""
+if len(sys.argv) == 2:
+    arg = sys.argv[1]
+
+# Application
+if arg == "main":
+    atarashii.debug(sys.path[0])
+
+# Crash Wrapper
+else:
+    if arg == "auto":
+        import time
+        time.sleep(3)
     
+    # Wrap arround crazy random GDK and XOrg Erros ^.^"
+    import subprocess
+    restart_max = 2
+    restart_count = 0
+    while True:
+        print "Starting Atarashii..."
+        error = subprocess.call(["python", "debug.py", "main"])
+        if error == os.EX_UNAVAILABLE:
+            print "Atarashii is already running"
+            break
+        
+        elif error == os.EX_TEMPFAIL:
+            print "Importing Atarashii failed"
+            break
+        
+        # 1 = ??, -9/-11 for kill and quit
+        elif error in (os.EX_OK, 1, -9, -11): 
+            print "Atarashii has been closed with status %d" % error
+            break
+        
+        else:
+            atarashii.crash(error)
+            if restart_count >= restart_max:
+                break
+            
+            restart_count += 1
+            print "Atarashii crashed with %d! Restart #%d/%d" \
+                   % (error, restart_count, restart_max) 
     
-atarashii.debug(sys.path[0])
+    exit(error)
+
