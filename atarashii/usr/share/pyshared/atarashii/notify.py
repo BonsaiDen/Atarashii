@@ -20,6 +20,9 @@ import pynotify
 import subprocess
 import threading
 
+
+# Wacka! This thing is one more mess, sometimes it goes zombie and on other
+# ocasions it just failes. So the kittens just throw some try/except onto it!
 class Sound(threading.Thread):
     def __init__(self, parent, snd_file):
         threading.Thread.__init__(self)
@@ -46,7 +49,7 @@ class Sound(threading.Thread):
                 
                 code = self.parent.player.wait()
                 if code != 0:
-                    print 'sound failed!'
+                    print 'sound failed!', code
             
             except OSError, error:
                 print 'Failed to play sound', error
