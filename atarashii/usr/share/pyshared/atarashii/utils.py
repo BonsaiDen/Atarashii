@@ -39,6 +39,9 @@ ENTITIES = {
     '<': '&lt;'
 }
 
+import re
+STRIP = re.compile("<(.|\n)*?>")
+
 def escape(text):
     return ''.join(ENTITIES.get(c, c) for c in text)
 
@@ -47,6 +50,9 @@ def unescape(text):
         text = text.replace(value, key)
     
     return text
+
+def strip_tags(text):
+    return STRIP.sub("", text)
 
 def compare(item_x, item_y):
     if item_x.id > item_y.id:
