@@ -282,11 +282,12 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # Tweets
         updates = []
         if not self.refresh_messages:
-            try:
+            try:         
                 updates = self.try_get_updates(self.html.last_id)
             
             # Something went wrong...
             except (IOError, TweepError), error:
+                self.main.unset_status(ST_UPDATE)
                 gobject.idle_add(self.html.render)
                 gobject.idle_add(self.main.handle_error, error)
                 self.main.refresh_timeout = 60
@@ -306,8 +307,11 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             
             # Something went wrong...
             except (IOError, TweepError), error:
+                self.main.unset_status(ST_UPDATE)
                 gobject.idle_add(self.message.render)
                 gobject.idle_add(self.main.handle_error, error)
+                self.main.refresh_timeout = 60
+                self.main.refresh_time = calendar.timegm(time.gmtime()) 
                 return False
             
             if len(messages) > 0:

@@ -235,7 +235,7 @@ LANG = {
             'Verbinde automatisch neu in %d Minute(n).',
         
         # Error Button stuff
-        'error_button_twitter' : 'Twitter-Serverfehler',
+        'error_button_twitter' : 'Twitter Serverfehler',
         'error_twitter' :
             'Der Twitter Server hat keine Antwort gesendet.',
         
@@ -310,13 +310,14 @@ LANG = {
         'tray_tweets' : '<b>%d</b> neue Tweets',
         'tray_messages' : '<b>%d</b> neue Nachrichten' ,
         
+        # These are shown in the notifications, tags get removed
         'tray_error_login' : 'Anmeldung als <b>%s</b> fehlgeschlagen.',
         'tray_error_rate' : 'Requestlimit überschritten.',
         'tray_warning_network' : '<b>Netzwerkfehler.</b>',
-        
-        'notify_error_login' : 'Anmeldung als %s fehlgeschlagen.',
-        'notify_error_rate' : 'Requestlimit überschritten.',
-        'notify_warning_network' : 'Netzwerkfehler.',
+        'tray_warning_twitter' : '<b>Twitter ist überlastet</b>',
+        'tray_error_twitter' : 'Twitter Serverfehler.',
+        'tray_error_down' : 'Twitter ist derzeit offline.',
+        'tray_error_rate_limit' : 'Requestlimit überschritten.',
         
         # Context Menu
         'context_browser' : 'Im Browser öffnen',
@@ -564,7 +565,7 @@ LANG = {
             'Twitter has lowered the rate limit to %d requests per '
             'hour, the update interval has been adjusted accordingly.',
         
-        'warning_button_overload' : 'Twitter over capacity',
+        'warning_button_overload' : 'Twitter is over capacity',
         'warning_overload' :
             'Atarashii couldn\'t connect to Twitter, in most cases '
             'this is just a temporary issue due to Twitter being too '
@@ -614,13 +615,14 @@ LANG = {
         'tray_tweets' : '<b>%d</b> new Tweets',
         'tray_messages' : '<b>%d</b> new Messages',
         
+        # These are shown in the notifications, tags get removed
         'tray_error_login' : 'Login as <b>%s</b> failed.',
         'tray_error_rate' : 'Request limit exceeded.',
         'tray_warning_network' : '<b>Network error.</b>',
-        
-        'notify_error_login' : 'Login as %s failed.',
-        'notify_error_rate' : 'Request limit exceeded.',
-        'notify_warning_network' : 'Network error.',
+        'tray_warning_twitter' : '<b>Twitter is over capacity.</b>',
+        'tray_error_twitter' : 'Twitter server error.',
+        'tray_error_down' : 'Twitter is offline.',
+        'tray_error_rate_limit' : 'Ratelimit exceeded.',
         
         # Context Menu
         'context_browser' : 'Open in Browser',

@@ -31,9 +31,11 @@ import tray
 import text
 import dialog
 
+from utils import strip_tags
 from language import LANG as lang
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
-                      ST_DELETE, ST_UPDATE, ST_SEND, ST_RECONNECT, ST_HISTORY
+                      ST_DELETE, ST_UPDATE, ST_SEND, ST_RECONNECT, ST_HISTORY, \
+                      ST_LOGIN_COMPLETE
 
 from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       MESSAGE_WARNING, MESSAGE_QUESTION, MESSAGE_INFO, \
@@ -503,72 +505,13 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     # Show Error Dialog --------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_error(self, code, error_code, error_errno, rate_error):
-        if code in (-9, -5, 503):
-            if code == 503:# overload warning
-                info = lang.warning_overload
-                button = lang.warning_button_overload
-                
-            else: # twitter/network lost
-                info = lang.warning_network_timeout if code == -9 \
-                       else lang.warning_network
-                
-                button = lang.warning_button_network
-                self.tray.set_tooltip_error(
-                            (lang.tray_logged_in  % self.main.username) \
-                            + '\n' + lang.tray_warning_network,
-                            gtk.STOCK_DIALOG_WARNING)
-            
-            self.warning_button.show(button, info)
+        # Is Atarashii visible?
+        is_visible = self.is_shown and self.tray.on_screen()
         
-        # Show Error Button
-        elif code in (500, 502, -6):
-            if code != -6:
-                if code == 500: # internal twitter error
-                    button = lang.error_button_twitter
-                    info = lang.error_twitter
-                
-                else: # Twitter down
-                    button = lang.error_button_down
-                    info = lang.error_down
-            
-            # Rate limit exceeded
-            else:
-                info = rate_error
-                button = lang.error_button_rate_limit
-                
-            self.error_button.show(button, info)
+        if self.show_box(code, rate_error, is_visible):
+            return
         
-        # Show Error Dialog ----------------------------------------------------
         else:
-            # Is Atarashii visible?
-            show_message = self.is_shown and self.tray.on_screen()
-        
-            # Update Tray Icon
-            if code in (-4, -7, 401, 404):
-                msg = {
-                    -4 : lang.tray_warning_network,
-                    -7 : lang.tray_error_rate,
-                    404 : lang.tray_error_login % self.main.username,
-                    401 : lang.tray_error_login % self.main.username
-                }[code]
-            
-                self.tray.set_tooltip_error(
-                        msg, gtk.STOCK_DIALOG_ERROR \
-                        if code != -4 else gtk.STOCK_DIALOG_WARNING)
-            
-                if not show_message:
-                    msg = {
-                        -4 : lang.notify_warning_network,
-                        -7 : lang.notify_error_rate,
-                        404 : lang.notify_error_login % self.main.username,
-                        401 : lang.notify_error_login % self.main.username
-                    }[code]        
-                    self.main.notifier.items.append(("Atarashii", msg,
-                        "dialog-error" if code != -4 else "dialog-warning"))
-                    
-                    # Don't show dialog
-                    return
-            
             # Clear already deleted tweets
             if self.main.delete_tweet_id != UNSET_ID_NUM:
                 gobject.idle_add(self.html.remove, self.main.delete_tweet_id)
@@ -579,7 +522,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             self.main.delete_tweet_id = UNSET_ID_NUM
             self.main.delete_message_id = UNSET_ID_NUM
-                        
+            
             description = {
                 -13 : lang.error_message_not_found,
                 -12 : lang.error_tweet_not_found,
@@ -592,9 +535,85 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 401 : lang.error_login % self.main.username,
                 404 : lang.error_login % self.main.username
             }[code]
-            dialog.MessageDialog(self, MESSAGE_ERROR if code != -4 \
-                                 else MESSAGE_WARNING, description,
+            dialog.MessageDialog(self, MESSAGE_WARNING if code == -4 \
+                                 else MESSAGE_ERROR, description,
                                  lang.error_title)
         
         self.update_status()
+
+
+    # Show Error/Warning Boxes -------------------------------------------------
+    def show_box(self, code, rate_error, is_visible):
+        if code in (-4, -7, 404, 401):
+            msg = {
+                -4 : (lang.tray_error_login % self.main.username) + "\n" \
+                     + lang.tray_warning_network,
+                
+                -7 : lang.tray_error_rate,
+                404 : lang.tray_error_login % self.main.username,
+                401 : lang.tray_error_login % self.main.username
+            }[code]
+            
+            self.tray.set_tooltip_error(
+                    msg, gtk.STOCK_DIALOG_ERROR \
+                    if code != -4 else gtk.STOCK_DIALOG_WARNING)
+        
+        # Don't show error dialogs when not on screen
+        if code in (-4, -7, 404, 401) and not is_visible:
+            self.notifcation(MESSAGE_WARNING if code == -4 \
+                             else MESSAGE_ERROR, msg)
+            
+            return True
+        
+        elif code in (-9, -5, 503):
+            msg = lang.tray_logged_in % self.main.username + '\n'
+            if code == 503:# overload warning
+                info = lang.warning_overload
+                button = lang.warning_button_overload
+                simple = tray.warning_overload
+            
+            else: # twitter/network lost/network failed
+                if code == -9:
+                    info = lang.warning_network_timeout
+                
+                elif code == -5:
+                    info = lang.warning_network
+                
+                simple = lang.tray_warning_network
+                button = lang.warning_button_network
+            
+            self.notifcation(MESSAGE_WARNING, simple)
+            self.warning_button.show(button, info)
+            return True
+        
+        # Show Error Button
+        elif code in (500, 502, -6):
+            msg = lang.tray_logged_in % self.main.username + '\n'
+            if code != -6:
+                if code == 500: # internal twitter error
+                    button = lang.error_button_twitter
+                    info = lang.error_twitter
+                    simple = lang.tray_error_twitter
+                
+                else: # Twitter down
+                    button = lang.error_button_down
+                    info = lang.error_down
+                    simple = lang.tray_error_down
+            
+            # Rate limit exceeded
+            else:
+                info = rate_error
+                button = lang.error_button_rate_limit
+                simple = lang.tray_error_rate_limit
+            
+            self.error_button.show(button, info)
+            self.notifcation(MESSAGE_ERROR, simple)
+            return True
+
+
+    # Error / Warning Notification ---------------------------------------------
+    # --------------------------------------------------------------------------
+    def notifcation(self, ntype, msg):
+        self.main.notifier.items.append(("Atarashii", strip_tags(msg),
+            "dialog-error" if ntype == MESSAGE_ERROR else "dialog-warning"))
 
