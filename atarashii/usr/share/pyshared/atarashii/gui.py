@@ -34,8 +34,7 @@ import dialog
 from utils import strip_tags
 from language import LANG as lang
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
-                      ST_DELETE, ST_UPDATE, ST_SEND, ST_RECONNECT, ST_HISTORY, \
-                      ST_LOGIN_COMPLETE
+                      ST_DELETE, ST_UPDATE, ST_SEND, ST_RECONNECT, ST_HISTORY
 
 from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       MESSAGE_WARNING, MESSAGE_QUESTION, MESSAGE_INFO, \

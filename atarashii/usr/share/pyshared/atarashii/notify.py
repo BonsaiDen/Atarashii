@@ -45,7 +45,7 @@ class Notifier(threading.Thread):
             time.sleep(0.1)
     
     
-    # Show a notification ------------------------------------------------------ 
+    # Show a notification ------------------------------------------------------
     def show_notify(self, item):
         tries = 0
         code = -1

@@ -16,7 +16,8 @@
 # TODO notification sound is sometimes not played
 # TODO clean up text.py
 # TODO enable the preferences button but disable the userlist while logging in
-# TODO save position when atarashii has been moved, and stopped for at least 0.5 seconds
+# TODO save position when atarashii has been moved, and stopped for at least 0.5
+# seconds
 
 
 # DBUS Integration -------------------------------------------------------------
