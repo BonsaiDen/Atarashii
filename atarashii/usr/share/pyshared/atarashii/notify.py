@@ -19,6 +19,7 @@
 import subprocess
 import threading
 import time
+from utils import escape
 
 # Wacka! This thing is one more mess, sometimes it goes zombie and on other
 # ocasions it just failes. So the kittens just throw some try/except onto it!
@@ -61,8 +62,9 @@ class Notifier(threading.Thread):
                 
                 self.notify = subprocess.Popen(
                                          ['notify-send', '-i',
-                                          '%s' % item[2], '%s' % item[0],
-                                          '%s' % item[1]])
+                                          '%s' % item[2],
+                                          '%s' % escape(item[0]),
+                                          '%s' % escape(item[1])])
                 
                 code = self.notify.wait()
                 if code != 0:
