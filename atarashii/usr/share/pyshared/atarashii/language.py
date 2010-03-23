@@ -314,6 +314,10 @@ LANG = {
         'tray_error_rate' : 'Requestlimit überschritten.',
         'tray_warning_network' : '<b>Netzwerkfehler.</b>',
         
+        'notify_error_login' : 'Anmeldung als %s fehlgeschlagen.',
+        'notify_error_rate' : 'Requestlimit überschritten.',
+        'notify_warning_network' : 'Netzwerkfehler.',
+        
         # Context Menu
         'context_browser' : 'Im Browser öffnen',
         'context_copy' : 'Link kopieren',
@@ -613,6 +617,10 @@ LANG = {
         'tray_error_login' : 'Login as <b>%s</b> failed.',
         'tray_error_rate' : 'Request limit exceeded.',
         'tray_warning_network' : '<b>Network error.</b>',
+        
+        'notify_error_login' : 'Login as %s failed.',
+        'notify_error_rate' : 'Request limit exceeded.',
+        'notify_warning_network' : 'Network error.',
         
         # Context Menu
         'context_browser' : 'Open in Browser',

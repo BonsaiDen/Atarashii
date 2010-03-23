@@ -540,15 +540,34 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Show Error Dialog ----------------------------------------------------
         else:
+            # Is Atarashii visible?
+            show_message = self.is_shown and self.tray.on_screen()
+        
             # Update Tray Icon
             if code in (-4, -7, 401, 404):
-                self.tray.set_tooltip_error({
+                msg = {
                     -4 : lang.tray_warning_network,
                     -7 : lang.tray_error_rate,
                     404 : lang.tray_error_login % self.main.username,
-                    401 : lang.tray_error_login % self.main.username,
-                }[code], gtk.STOCK_DIALOG_ERROR if code != -4 \
-                         else gtk.STOCK_DIALOG_WARNING)
+                    401 : lang.tray_error_login % self.main.username
+                }[code]
+            
+                self.tray.set_tooltip_error(
+                        msg, gtk.STOCK_DIALOG_ERROR \
+                        if code != -4 else gtk.STOCK_DIALOG_WARNING)
+            
+                if not show_message:
+                    msg = {
+                        -4 : lang.notify_warning_network,
+                        -7 : lang.notify_error_rate,
+                        404 : lang.notify_error_login % self.main.username,
+                        401 : lang.notify_error_login % self.main.username
+                    }[code]        
+                    self.main.notifier.items.append(("Atarashii", msg,
+                        "dialog-error" if code != -4 else "dialog-warning"))
+                    
+                    # Don't show dialog
+                    return
             
             # Clear already deleted tweets
             if self.main.delete_tweet_id != UNSET_ID_NUM:
@@ -560,10 +579,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             self.main.delete_tweet_id = UNSET_ID_NUM
             self.main.delete_message_id = UNSET_ID_NUM
-            
-            # Show GUI if minimized to tray
-            gobject.idle_add(self.force_show)
-            
+                        
             description = {
                 -13 : lang.error_message_not_found,
                 -12 : lang.error_tweet_not_found,
