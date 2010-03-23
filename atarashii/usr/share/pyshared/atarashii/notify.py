@@ -16,70 +16,97 @@
 
 # Notifications ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
-import pynotify
 import subprocess
 import threading
-
+import time
 
 # Wacka! This thing is one more mess, sometimes it goes zombie and on other
 # ocasions it just failes. So the kittens just throw some try/except onto it!
-class Sound(threading.Thread):
-    def __init__(self, parent, snd_file):
+class Notifier(threading.Thread):
+    def __init__(self, main):
         threading.Thread.__init__(self)
-        self.snd_file = snd_file
-        self.parent = parent
+        self.main = main
+        self.items = []
+        self.player = None
+        self.notify = None
     
     def run(self):
+        while True:
+            sound = False
+            while len(self.items) > 0:
+                sound = True
+                item = self.items.pop(0)
+                self.show_notify(item)
+                
+            if sound and self.get_sound():
+                self.play_sound()
+            
+            time.sleep(0.1)
+    
+    
+    # Show a notification ------------------------------------------------------ 
+    def show_notify(self, item):
         tries = 0
         code = -1
         while code != 0 and tries < 3:
             try:
                 # Check for Zombieeeeeees!
                 try:
-                    if self.parent.player != None:
-                        self.parent.player.kill()
-                        print 'Zombieeeees!'
+                    if self.notify != None:
+                        self.notify.kill()
+                        print 'Notify Zombieeeees!'
                 
                 except OSError:
                     pass
                 
-                self.parent.player = subprocess.Popen(
-                                                ['mplayer', '-really-quiet',
-                                                 '-nolirc', self.snd_file])
+                self.notify = subprocess.Popen(
+                                         ['notify-send', '-i',
+                                          '%s' % item[2], '%s' % item[0],
+                                          '%s' % item[1]])
                 
-                code = self.parent.player.wait()
+                code = self.notify.wait()
+                if code != 0:
+                    print ' notification failed!', code
+            
+            except OSError, error:
+                print 'Failed to show notification', error
+            
+            tries += 1  
+    
+    
+    # Play the sound using mplayer ---------------------------------------------
+    def play_sound(self):
+        tries = 0
+        code = -1
+        while code != 0 and tries < 3:
+            try:
+                # Check for Zombieeeeeees!
+                try:
+                    if self.player != None:
+                        self.player.kill()
+                        print 'Sound Zombieeeees!'
+                
+                except OSError:
+                    pass
+                
+                self.player = subprocess.Popen(
+                                         ['mplayer', '-really-quiet',
+                                          '-nolirc', self.get_sound()])
+                
+                code = self.player.wait()
                 if code != 0:
                     print 'sound failed!', code
             
             except OSError, error:
                 print 'Failed to play sound', error
-        
+            
             tries += 1
-
-class Notifier:
-    def __init__(self, main):
-        self.main = main
-        self.player = None
-        
-    def show(self, objs):
-        if len(objs) > 0 and self.main.settings.is_true('sound') \
+    
+    def get_sound(self):
+        if self.main.settings.is_true('sound') \
            and self.main.settings['soundfile'] != 'None':
-            snd = Sound(self, self.main.settings['soundfile'])
-            snd.setDaemon(True)
-            snd.start()
+            return self.main.settings['soundfile']
         
-        # Shot notification
-        for obj in objs:
-            try:
-                pynotify.Notification(obj[0], obj[1], obj[2]).show()
-                            
-            except Exception, error:
-                print 'Notify error', error
-
-
-def init():
-    pynotify.init('Atarashii')
-
-def uninit():
-    pynotify.uninit()
+        else:
+            return None
 

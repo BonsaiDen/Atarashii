@@ -15,6 +15,8 @@
 
 # TODO notification sound is sometimes not played
 # TODO clean up text.py
+# TODO enable the preferences button but disable the userlist while logging in
+# TODO save position when atarashii has been moved, and stopped for at least 0.5 seconds
 
 
 # DBUS Integration -------------------------------------------------------------
@@ -120,6 +122,8 @@ class Atarashii(AtarashiiActions):
                 
         # Notifier
         self.notifier = notify.Notifier(self)
+        self.notifier.setDaemon(True)
+        self.notifier.start()
         
         # Updater
         self.updater = updater.Updater(self)
@@ -135,7 +139,6 @@ class Atarashii(AtarashiiActions):
     # Login & Logout -----------------------------------------------------------
     # --------------------------------------------------------------------------
     def on_init(self):
-        notify.init()
         self.login()
     
     def login(self, change_user = None):
@@ -259,10 +262,10 @@ class Atarashii(AtarashiiActions):
                else lang.notification_login_message) % self.gui.message.count)
         
         # Create notification
-        info = [(lang.notification_login % self.username,
-                '\n'.join(info_text), self.get_user_picture())]
+        info = (lang.notification_login % self.username,
+                '\n'.join(info_text), self.get_user_picture())
         
-        self.notifier.show(info)
+        self.notifier.items.append(info)
     
     def set_user_picture(self, img):
         self.settings['picture_' + self.username] = img

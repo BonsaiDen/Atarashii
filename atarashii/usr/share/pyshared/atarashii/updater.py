@@ -340,7 +340,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             # Update GUI
             self.finish = True
         
-        gobject.idle_add(self.gui.set_refresh_update, False, no_read = True)
+        gobject.idle_add(self.gui.set_refresh_update, False, None, True, True)
         gobject.idle_add(update_views, updates, messages)
         return True
     
@@ -388,7 +388,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                     tweet_list[num][0] = lang.notification_index \
                                          % (tweet_list[num][0], num+1, count)
             
-            self.notifier.show(tweet_list)
+            for i in tweet_list:
+                self.notifier.items.append(i)
     
     
     # Helpers ------------------------------------------------------------------
