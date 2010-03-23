@@ -21,9 +21,8 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-import re
-
 from language import LANG as lang
+from utils import REPLY_REGEX, MESSAGE_REGEX
 
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL
 from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, MODE_TWEETS
@@ -41,24 +40,14 @@ class TextInput(gtk.TextView):
         
         # Variables
         self.initiated = False
-        self.typing = False
         self.has_focus = False
-        self.is_typing = False
         self.has_typed = False
+        self.is_typing = False
         self.is_changing = False
         self.change_contents = False
-        self.reply_regex = re.compile(ur'^[@\uFF20]([a-z0-9_]{1,20})\s.*',
-                                         re.UNICODE | re.IGNORECASE)
-         
-        self.message_regex = re.compile('d ([a-z0-9_]{1,20})\s.*',
-                                         re.UNICODE | re.IGNORECASE)
-        
         self.message_len = 0
         self.message_to_send = None
         self.tweet_to_send = None
-        
-        self.contents_change = False
-        self.no_set = False
         
         # Colors
         self.default_bg = self.get_style().base[gtk.STATE_NORMAL]
@@ -204,7 +193,7 @@ class TextInput(gtk.TextView):
                 text = UNSET_TEXT
             
             # check for "d user"
-            msg = self.message_regex.match(text)
+            msg = MESSAGE_REGEX.match(text)
             self.message_len = 0
             if msg != None:
                 self.message_len = len('d %s ' % msg.group(1))
@@ -233,7 +222,7 @@ class TextInput(gtk.TextView):
                 self.main.message_user = UNSET_TEXT
             
             # check for "d user" and switch to messaging
-            at_user = self.reply_regex.match(text)
+            at_user = REPLY_REGEX.match(text)
             if at_user != None:
                 if self.gui.load_state():
                     self.switch(self.get_text(), MODE_TWEETS)
@@ -262,7 +251,7 @@ class TextInput(gtk.TextView):
                 self.unset('reply', 'retweet', 'edit')
             
             # check for @ Reply
-            at_user = self.reply_regex.match(text)
+            at_user = REPLY_REGEX.match(text)
             if at_user != None:
                 at_len = len('@%s ' % at_user.group(1))
             
@@ -289,7 +278,7 @@ class TextInput(gtk.TextView):
                 self.main.reply_user = UNSET_TEXT
             
             # check for "d user" and switch to messaging
-            msg = self.message_regex.match(text)
+            msg = MESSAGE_REGEX.match(text)
             if msg != None:
                 if self.gui.load_state():
                     self.switch(self.get_text(), MODE_MESSAGES)
@@ -367,7 +356,7 @@ class TextInput(gtk.TextView):
     # Message
     def message(self):
         text = self.init_change()
-        msg = self.message_regex.match(text)
+        msg = MESSAGE_REGEX.match(text)
         if msg != None:
             space = 2 + len(msg.group(1))
             text = ('d %s ' % self.main.message_user) + text[space + 1:]
@@ -414,7 +403,6 @@ class TextInput(gtk.TextView):
     def reset(self):
         self.set_text('')
         self.has_focus = False
-        self.contents_change = False
         self.loose_focus()
         self.unfocus()
     

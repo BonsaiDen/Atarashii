@@ -16,14 +16,16 @@
 
 # GUI / Events -----------------------------------------------------------------
 # ------------------------------------------------------------------------------
-from utils import escape
+from utils import escape, strip_tags
 from language import LANG as lang
+
+
 
 from constants import ST_SEND, ST_CONNECT, ST_LOGIN_SUCCESSFUL, \
                       ST_LOGIN_COMPLETE, ST_UPDATE
 
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADED, UNSET_TEXT, \
-                      UNSET_LABEL
+                      UNSET_LABEL, MESSAGE_ERROR
 
 class GUIHelpers:
     def __init__(self):

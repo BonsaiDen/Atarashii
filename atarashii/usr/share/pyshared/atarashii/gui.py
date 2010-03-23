@@ -31,7 +31,6 @@ import tray
 import text
 import dialog
 
-from utils import strip_tags
 from language import LANG as lang
 from gui_events import GUIEventHandler
 from gui_helpers import GUIHelpers

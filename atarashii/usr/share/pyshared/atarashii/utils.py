@@ -41,6 +41,11 @@ ENTITIES = {
     '<': '&lt;'
 }
 
+REPLY_REGEX = re.compile(ur'^[@\uFF20]([a-z0-9_]{1,20})\s.*',
+                            re.UNICODE | re.IGNORECASE)
+ 
+MESSAGE_REGEX = re.compile('d ([a-z0-9_]{1,20})\s.*',
+                            re.UNICODE | re.IGNORECASE)
 
 def escape(text):
     return ''.join(ENTITIES.get(c, c) for c in text)
