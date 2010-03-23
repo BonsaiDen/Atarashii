@@ -85,7 +85,9 @@ class AtarashiiActions:
         
         self.gui.html.save_first()
         self.gui.message.save_first()
-        self.settings['position'] = str(self.gui.get_position())
+        if self.gui.tray.on_screen(): # Don't save off screen positions
+            self.settings['position'] = str(self.gui.get_position())
+        
         size = self.gui.get_allocation()
         self.settings['size'] = str((size[2], size[3]))
         self.settings['username'] = self.username
