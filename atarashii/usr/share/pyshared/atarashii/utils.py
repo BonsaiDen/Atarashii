@@ -14,8 +14,6 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
-
-
 # Tweepy Wrapper ---------------------------------------------------------------
 # ------------------------------------------------------------------------------
 try:
@@ -31,6 +29,10 @@ finally:
 
 # Utility stuff ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
+import re
+
+STRIP = re.compile("<(.|\n)*?>")
+SPACES = re.compile('\s+')
 ENTITIES = {
     '&': '&amp;',
     '"': '&quot;',
@@ -39,8 +41,6 @@ ENTITIES = {
     '<': '&lt;'
 }
 
-import re
-STRIP = re.compile("<(.|\n)*?>")
 
 def escape(text):
     return ''.join(ENTITIES.get(c, c) for c in text)

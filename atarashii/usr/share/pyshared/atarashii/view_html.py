@@ -16,9 +16,7 @@
 
 # HTML View / HTML -------------------------------------------------------------
 # ------------------------------------------------------------------------------
-from utils import compare_sub
-import re
-SPACES = re.compile('\s+')
+from utils import compare_sub, SPACES
 
 from language import LANG as lang
 from constants import HTML_UNSET_ID, ST_LOGIN_SUCCESSFUL

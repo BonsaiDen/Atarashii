@@ -16,24 +16,24 @@
 
 # Basic HTML View --------------------------------------------------------------
 # ------------------------------------------------------------------------------
-import gobject
-import webkit
+import pygtk
+pygtk.require('2.0')
 import gtk
+import gobject
 
+import webkit
 import webbrowser
 
 import formatter
+
 from utils import unescape
-
-from constants import ST_HISTORY
-
-from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \
-                      UNSET_ID_NUM
-
-
 from view_menu import ViewMenu
 from view_helpers import ViewHelpers
 from view_html import ViewHTML
+
+from constants import ST_HISTORY
+from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \
+                      UNSET_ID_NUM
 
 
 # Watch out! This is one giant "Is this OK mommy?" hackery by the kittens!

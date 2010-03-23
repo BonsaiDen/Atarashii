@@ -33,6 +33,9 @@ import dialog
 
 from utils import strip_tags
 from language import LANG as lang
+from gui_events import GUIEventHandler
+from gui_helpers import GUIHelpers
+
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_DELETE, ST_UPDATE, ST_SEND, ST_RECONNECT, ST_HISTORY
 
@@ -43,8 +46,7 @@ from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       BUTTON_HISTORY
 
 
-from gui_events import GUIEventHandler
-from gui_helpers import GUIHelpers
+
 
 
 class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
@@ -353,10 +355,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Check for message/tweet switch
         if self.is_ready():
-            if self.text.go_send_message != None:
+            if self.text.message_to_send != None:
                 self.set_mode(MODE_MESSAGES)
             
-            elif self.text.go_send_tweet != None:
+            elif self.text.tweet_to_send != None:
                 self.set_mode(MODE_TWEETS)
             
             if status:
@@ -608,11 +610,4 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.error_button.show(button, info)
             self.notifcation(MESSAGE_ERROR, simple)
             return True
-
-
-    # Error / Warning Notification ---------------------------------------------
-    # --------------------------------------------------------------------------
-    def notifcation(self, ntype, msg):
-        self.main.notifier.items.append(("Atarashii", strip_tags(msg),
-            "dialog-error" if ntype == MESSAGE_ERROR else "dialog-warning"))
 

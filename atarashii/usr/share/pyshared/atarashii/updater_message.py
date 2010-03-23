@@ -18,10 +18,10 @@
 # ------------------------------------------------------------------------------
 import gobject
 
+from utils import TweepError
+
 from constants import ST_HISTORY, ST_NETWORK_FAILED
 from constants import HTML_UNSET_ID, HTML_LOADED
-
-from utils import TweepError
 
 
 class UpdaterMessage:

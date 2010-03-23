@@ -16,11 +16,7 @@
 
 # GUI / Events -----------------------------------------------------------------
 # ------------------------------------------------------------------------------
-import pygtk
-pygtk.require('2.0')
-
 from utils import escape
-
 from language import LANG as lang
 
 from constants import ST_SEND, ST_CONNECT, ST_LOGIN_SUCCESSFUL, \
@@ -138,7 +134,7 @@ class GUIHelpers:
         
         else:
             self.tray.set_tooltip(lang.tray_logged_out)
-        
+    
     def set_mode(self, mode):
         if mode == self.mode:
             return
@@ -177,4 +173,9 @@ class GUIHelpers:
         
         else: # TODO implement search
             pass
+    
+    # Show a popup notification
+    def notifcation(self, ntype, msg):
+        self.main.notifier.items.append(("Atarashii", strip_tags(msg),
+            "dialog-error" if ntype == MESSAGE_ERROR else "dialog-warning"))
 

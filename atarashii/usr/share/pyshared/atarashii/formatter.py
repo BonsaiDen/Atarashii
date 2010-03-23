@@ -18,6 +18,9 @@
 # ------------------------------------------------------------------------------
 import re
 import urllib
+                 
+from utils import escape
+from language import LANG as lang
                       
 # Some of this code has been translated from the twitter-text-java library:
 # <http://github.com/mzsanford/twitter-text-java>
@@ -43,10 +46,6 @@ URL_REGEX = re.compile('((' + PRE_CHARS + ')((https?://|www\\.)(' \
                        + DOMAIN_CHARS + ')(/' + PATH_CHARS + '*' \
                        + PATH_ENDING_CHARS + '?)?(\\?' + QUERY_CHARS + '*' \
                        + QUERY_ENDING_CHARS + ')?))', re.UNICODE |re.IGNORECASE)
-
-from utils import escape
-
-from language import LANG as lang
 
 
 class Formatter:

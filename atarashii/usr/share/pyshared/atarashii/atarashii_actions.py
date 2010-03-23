@@ -16,6 +16,8 @@
 
 # Atarashii / Actions ----------------------------------------------------------
 # ------------------------------------------------------------------------------
+import pygtk
+pygtk.require('2.0')
 import gtk
 import gobject
 
@@ -28,12 +30,12 @@ import socket
 import send
 
 from language import LANG as lang
+from constants import UNSET_ID_NUM, UNSET_TEXT
+
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
                       ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_COMPLETE, \
                       ST_NETWORK_FAILED
-
-from constants import UNSET_ID_NUM, UNSET_TEXT
 
 
 class AtarashiiActions:

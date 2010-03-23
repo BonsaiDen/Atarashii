@@ -16,14 +16,17 @@
 
 # HTML View / Helpers ----------------------------------------------------------
 # ------------------------------------------------------------------------------
-import gobject
+import pygtk
+pygtk.require('2.0')
 import gtk
+import gobject
 
 import calendar
 import time
 import math
 
 from language import LANG as lang
+
 
 class ViewHelpers:
     def __init__(self):

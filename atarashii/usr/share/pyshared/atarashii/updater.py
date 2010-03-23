@@ -24,16 +24,15 @@ import gobject
 import calendar
 
 from language import LANG as lang
+from utils import tweepy, TweepError, compare
+from updater_message import UpdaterMessage
+from updater_tweet import UpdaterTweet
+
 from constants import ST_WARNING_RATE, ST_UPDATE, ST_LOGIN_COMPLETE, \
                       ST_NETWORK_FAILED
 
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_UNSET_ID, \
                       UNSET_TIMEOUT, HTML_RESET, HTML_LOADING
-
-from utils import tweepy, TweepError, compare
-
-from updater_message import UpdaterMessage
-from updater_tweet import UpdaterTweet
 
 
 class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
