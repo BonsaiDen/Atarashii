@@ -24,6 +24,7 @@ import gobject
 import re
 
 from language import LANG as lang
+
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL
 from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, MODE_TWEETS
 
@@ -47,14 +48,14 @@ class TextInput(gtk.TextView):
         self.is_changing = False
         self.change_contents = False
         self.reply_regex = re.compile(ur'^[@\uFF20]([a-z0-9_]{1,20})\s.*',
-                                     re.UNICODE | re.IGNORECASE)
+                                         re.UNICODE | re.IGNORECASE)
          
         self.message_regex = re.compile('d ([a-z0-9_]{1,20})\s.*',
-                                       re.UNICODE | re.IGNORECASE)
+                                         re.UNICODE | re.IGNORECASE)
         
         self.message_len = 0
-        self.go_send_message = None
-        self.go_send_tweet = None
+        self.message_to_send = None
+        self.tweet_to_send = None
         
         self.contents_change = False
         self.no_set = False
@@ -99,13 +100,13 @@ class TextInput(gtk.TextView):
             self.resize()
             
             # Check if we need to toggle to message/tweet mode
-            if self.go_send_message != None:
-                self.switch(self.go_send_message, MODE_MESSAGES)
-                self.go_send_message = None
+            if self.message_to_send != None:
+                self.switch(self.message_to_send, MODE_MESSAGES)
+                self.message_to_send = None
             
-            elif self.go_send_tweet != None:
-                self.switch(self.go_send_tweet, MODE_TWEETS)
-                self.go_send_tweet = None
+            elif self.tweet_to_send != None:
+                self.switch(self.tweet_to_send, MODE_TWEETS)
+                self.tweet_to_send = None
             
             elif not self.has_typed:
                 self.modify_text(gtk.STATE_NORMAL,
@@ -143,13 +144,6 @@ class TextInput(gtk.TextView):
         
         elif self.gui.mode == MODE_MESSAGES:
             self.gui.message.focus_me()
-    
-    def reset(self):
-        self.set_text('')
-        self.has_focus = False
-        self.contents_change = False
-        self.loose_focus()
-        self.unfocus()
     
     
     # Events -------------------------------------------------------------------
@@ -194,25 +188,15 @@ class TextInput(gtk.TextView):
             
             else: # TODO implement search field submit
                 pass
-    
-    def clear_text(self, text, pos = 0):
-        self.is_changing = True
-        self.set_text(text)
-        self.is_changing = False
-        self.get_buffer().place_cursor(
-                          self.get_buffer().get_iter_at_offset(pos))
-            
-    
+        
     def changed(self, *args):
         text = self.get_text().lstrip()
         
         # Message mode ---------------------------------------------------------
         if self.gui.mode == MODE_MESSAGES:
-            # Cancel reply mode
+            # Cancel message mode
             if len(text) == 0 and not self.is_changing:
-                self.main.message_user = UNSET_TEXT
-                self.main.message_id = UNSET_ID_NUM
-                self.main.message_text = UNSET_TEXT
+                self.unset('message')
             
             # Remove spaces only
             if text.strip() == UNSET_TEXT:
@@ -255,7 +239,7 @@ class TextInput(gtk.TextView):
                     self.switch(self.get_text(), MODE_TWEETS)
                 
                 else:
-                    self.go_send_tweet = self.get_text()
+                    self.tweet_to_send = self.get_text()
         
         
         # Tweet Mode -----------------------------------------------------------
@@ -266,9 +250,7 @@ class TextInput(gtk.TextView):
             if not text.strip()[0:1] in u'@\uFF20' \
                and not self.is_changing:
                
-                self.main.reply_text = UNSET_TEXT
-                self.main.reply_user = UNSET_TEXT
-                self.main.reply_id = UNSET_ID_NUM
+                self.unset('reply')
             
             # Remove spaces only
             if text.strip() == UNSET_TEXT:
@@ -277,15 +259,7 @@ class TextInput(gtk.TextView):
             
             # Cancel all modes
             if len(text) == 0 and not self.is_changing:
-                self.main.reply_text = UNSET_TEXT
-                self.main.reply_user = UNSET_TEXT
-                self.main.reply_id = UNSET_ID_NUM
-                self.main.reweetText = UNSET_TEXT
-                self.main.retweet_user = UNSET_TEXT
-                self.main.edit_id = UNSET_ID_NUM
-                self.main.edit_text = UNSET_TEXT
-                self.main.edit_reply_user = UNSET_TEXT
-                self.main.edit_reply_id = UNSET_ID_NUM
+                self.unset('reply', 'retweet', 'edit')
             
             # check for @ Reply
             at_user = self.reply_regex.match(text)
@@ -321,7 +295,7 @@ class TextInput(gtk.TextView):
                     self.switch(self.get_text(), MODE_MESSAGES)
                 
                 else:
-                    self.go_send_message = self.get_text()
+                    self.message_to_send = self.get_text()
         
         # Strip left
         if self.get_text()[0:1] == ' ':
@@ -348,63 +322,20 @@ class TextInput(gtk.TextView):
         
         self.check_color(len(text))
     
-    def check_length(self):
-        text = self.get_text().lstrip()
-        max_length = 140 + self.message_len
-        if len(text) <= max_length:
-            self.gui.set_status(lang.status_left % (max_length - len(text)))
         
-        else:
-            self.gui.set_status(lang.status_more % (len(text) - max_length))
-    
-    def check_color(self, count):
-        if count > 140 + self.message_len:
-            self.modify_base(gtk.STATE_NORMAL,
-                             gtk.gdk.Color(255 * 255, 200 * 255, 200 * 255))
-        
-        else:
-            self.modify_base(gtk.STATE_NORMAL, self.default_bg)
-    
-    def check_mode(self):
-        self.has_focus = False
-        self.main.reply_text = UNSET_TEXT
-        self.main.reply_user = UNSET_TEXT
-        self.main.reply_id = UNSET_ID_NUM
-        self.main.retweet_text = UNSET_TEXT
-        self.main.retweet_user = UNSET_TEXT
-        self.main.edit_id = UNSET_ID_NUM
-        self.main.edit_text = UNSET_TEXT
-        self.main.edit_reply_id = UNSET_ID_NUM
-        self.main.edit_reply_user = UNSET_TEXT
-        self.main.message_user = UNSET_TEXT
-        self.main.message_id = UNSET_ID_NUM
-        self.main.message_text = UNSET_TEXT
-        self.set_text(UNSET_TEXT)
-    
-    
-    # Reply / Retweet / Message ------------------------------------------------
+    # Reply / Retweet / Message / Edit -----------------------------------------
     # --------------------------------------------------------------------------
     def reply(self):
-        self.change_contents = True
-        self.is_changing = True
-        self.grab_focus()
-        self.has_focus = True
-        text = self.get_text()
-        if not self.has_typed:
-            text = ''
+        text = self.init_change()
         
         # Cancel Retweet
         if self.main.retweet_text != UNSET_TEXT:
-            self.main.retweet_text = UNSET_TEXT
-            self.main.retweet_user = UNSET_TEXT
+            self.unset('retweet')
             text = UNSET_TEXT
         
         # Cancel Edit
         elif self.main.edit_text != UNSET_TEXT:
-            self.main.edit_id = UNSET_ID_NUM
-            self.main.edit_text = UNSET_TEXT
-            self.main.edit_reply_id = UNSET_ID_NUM
-            self.main.edit_reply_user = UNSET_TEXT
+            self.unset('edit')
             text = UNSET_TEXT
         
         # Check for already existing reply
@@ -418,78 +349,24 @@ class TextInput(gtk.TextView):
         else:
             text = ('@%s ' % self.main.reply_user) + text
         
-        self.set_text(text)
-        self.is_changing = False
-        self.check_color(len(text))
-        self.changed()
-        self.modify_text(gtk.STATE_NORMAL, self.default_fg)
-        self.resize()
+        self.end_change(text)
     
+    # Edit
     def edit(self):
-        self.change_contents = True
-        self.is_changing = True
-        self.grab_focus()
-        self.has_focus = True
-        text = self.get_text()
-        if not self.has_typed:
-            text = ''
-        
-        # Cancel Retweet
-        if self.main.retweet_text != UNSET_TEXT:
-            self.main.retweet_text = UNSET_TEXT
-            self.main.retweet_user = UNSET_TEXT
-            text = UNSET_TEXT
-        
-        # Cancel reply
-        self.main.reply_user = UNSET_TEXT
-        self.main.reply_id = UNSET_ID_NUM
-        
-        # Check for already existing reply
-        text = self.main.edit_text
-        self.set_text(text)
-        self.is_changing = False
-        self.check_color(len(text))
-        self.changed()
-        self.modify_text(gtk.STATE_NORMAL, self.default_fg)
-        self.resize()
+        self.init_change()
+        self.unset('retweet', 'reply')
+        self.end_change(self.main.edit_text)
     
-    
+    # Retweet
     def retweet(self):
-        self.change_contents = True
-        self.is_changing = True
-        self.grab_focus()
-        self.has_focus = True
-        
-        # Cancel reply
-        self.main.reply_user = UNSET_TEXT
-        self.main.reply_id = UNSET_ID_NUM
-        
-        # Cancel edit
-        self.main.edit_id = UNSET_ID_NUM
-        self.main.edit_text = UNSET_TEXT
-        self.main.edit_reply_id = UNSET_ID_NUM
-        self.main.edit_reply_user = UNSET_TEXT
-
-        # Set text        
-        text = 'RT @%s: %s' % (self.main.retweet_user, self.main.retweet_text)
-        self.set_text(text)
-        
-        self.is_changing = False
-        self.check_color(len(text))
-        self.changed()
-        self.modify_text(gtk.STATE_NORMAL, self.default_fg)
-        self.resize()
+        self.init_change()
+        self.unset('reply', 'edit')
+        self.end_change('RT @%s: %s' % (self.main.retweet_user,
+                                        self.main.retweet_text))
     
+    # Message
     def message(self):
-        self.change_contents = True
-        self.is_changing = True
-        self.grab_focus()
-        self.has_focus = True
-        text = self.get_text()
-        if not self.has_typed:
-            text = ''
-        
-        # Check for already existing message
+        text = self.init_change()
         msg = self.message_regex.match(text)
         if msg != None:
             space = 2 + len(msg.group(1))
@@ -498,24 +375,11 @@ class TextInput(gtk.TextView):
         else:
             text = ('d %s ' % self.main.message_user) + text
         
-        self.set_text(text)
-        self.is_changing = False
-        self.check_color(len(text))
-        self.changed()
-        self.modify_text(gtk.STATE_NORMAL, self.default_fg)
-        self.resize()
-    
-    def switch(self, text, mode):
-        self.change_contents = True
-        self.gui.set_mode(mode)
-        self.change_contents = True
-        self.is_changing = True
-        self.grab_focus()
-        self.set_text(text.lstrip())
-        self.is_changing = False
+        self.end_change(text)
     
     
     # Acceleratores ------------------------------------------------------------
+    # --------------------------------------------------------------------------
     def start_tweet(self, *args):
         if not self.has_typed:
             self.is_changing = True
@@ -540,7 +404,99 @@ class TextInput(gtk.TextView):
     def set_text(self, text):
         self.get_buffer().set_text(text)
     
+    def clear_text(self, text, pos = 0):
+        self.is_changing = True
+        self.set_text(text)
+        self.is_changing = False
+        self.get_buffer().place_cursor(
+                          self.get_buffer().get_iter_at_offset(pos))
     
+    def reset(self):
+        self.set_text('')
+        self.has_focus = False
+        self.contents_change = False
+        self.loose_focus()
+        self.unfocus()
+    
+    
+    # Checks -------------------------------------------------------------------
+    def check_length(self):
+        text = self.get_text().lstrip()
+        max_length = 140 + self.message_len
+        if len(text) <= max_length:
+            self.gui.set_status(lang.status_left % (max_length - len(text)))
+        
+        else:
+            self.gui.set_status(lang.status_more % (len(text) - max_length))
+    
+    def check_color(self, count):
+        if count > 140 + self.message_len:
+            self.modify_base(gtk.STATE_NORMAL,
+                             gtk.gdk.Color(255 * 255, 200 * 255, 200 * 255))
+        
+        else:
+            self.modify_base(gtk.STATE_NORMAL, self.default_bg)
+    
+    def check_mode(self):
+        self.has_focus = False
+        self.unset('reply', 'retweet', 'edit', 'message')
+        self.set_text(UNSET_TEXT)
+    
+    
+    # Content switching --------------------------------------------------------
+    def init_change(self):
+        self.change_contents = True
+        self.is_changing = True
+        self.grab_focus()
+        self.has_focus = True
+        text = self.get_text()
+        if not self.has_typed:
+            text = ''
+        
+        return text
+    
+    def end_change(self, text):
+        self.set_text(text)
+        self.is_changing = False
+        self.check_color(len(text))
+        self.changed()
+        self.modify_text(gtk.STATE_NORMAL, self.default_fg)
+        self.resize()
+    
+    
+    # Modes --------------------------------------------------------------------
+    def switch(self, text, mode):
+        self.change_contents = True
+        self.gui.set_mode(mode)
+        self.change_contents = True
+        self.is_changing = True
+        self.grab_focus()
+        self.set_text(text.lstrip())
+        self.is_changing = False
+    
+    def unset(self, *args):
+        for key in args:
+            if key == "reply":
+                self.main.reply_text = UNSET_TEXT
+                self.main.reply_user = UNSET_TEXT
+                self.main.reply_id = UNSET_ID_NUM
+            
+            elif key == "retweet":
+                self.main.retweet_text = UNSET_TEXT
+                self.main.retweet_user = UNSET_TEXT
+            
+            elif key == "edit":
+                self.main.edit_id = UNSET_ID_NUM
+                self.main.edit_text = UNSET_TEXT
+                self.main.edit_reply_id = UNSET_ID_NUM
+                self.main.edit_reply_user = UNSET_TEXT
+            
+            elif key == "message":
+                self.main.message_user = UNSET_TEXT
+                self.main.message_id = UNSET_ID_NUM
+                self.main.message_text = UNSET_TEXT
+    
+    # Other stuff --------------------------------------------------------------
     def resize(self, line_count = 5):
         # Set Label Text
         self.gui.set_label()
