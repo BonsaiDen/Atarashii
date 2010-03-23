@@ -47,7 +47,7 @@ do
         exit 0
     
     elif [ $CODE -eq 70 ]; then
-        echo "70" >~/.atarashii/crash.log
+        echo "70" >~/.atarashii/crashed
         echo "Atarashii crashed due to an internal error!"
         echo "Restarting..."
     
