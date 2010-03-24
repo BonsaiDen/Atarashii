@@ -107,7 +107,6 @@ class Shortener(threading.Thread):
             # Expand a URL
             if self.expand != '':
                 url = self.expand_url(self.expand)
-                print url
                 gobject.idle_add(self.expand_callback, self.expand, url)
                 self.expand = ''
             
