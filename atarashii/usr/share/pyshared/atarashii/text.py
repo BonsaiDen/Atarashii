@@ -209,7 +209,7 @@ class TextInput(gtk.TextView):
         if self.gui.mode == MODE_MESSAGES:
             # Cancel message mode
             if len(text) == 0 and not self.is_changing:
-                self.unset('message')
+                self.main.unset('message')
             
             # Remove spaces only
             if text.strip() == UNSET_TEXT:
@@ -263,7 +263,7 @@ class TextInput(gtk.TextView):
             if not text.strip()[0:1] in u'@\uFF20' \
                and not self.is_changing:
                
-                self.unset('reply')
+                self.main.unset('reply')
             
             # Remove spaces only
             if text.strip() == UNSET_TEXT:
@@ -272,7 +272,7 @@ class TextInput(gtk.TextView):
             
             # Cancel all modes
             if len(text) == 0 and not self.is_changing:
-                self.unset('reply', 'retweet', 'edit')
+                self.main.unset('reply', 'retweet', 'edit')
             
             # check for @ Reply
             at_user = REPLY_REGEX.match(text)
@@ -344,12 +344,12 @@ class TextInput(gtk.TextView):
         
         # Cancel Retweet
         if self.main.retweet_text != UNSET_TEXT:
-            self.unset('retweet')
+            self.main.unset('retweet')
             text = UNSET_TEXT
         
         # Cancel Edit
         elif self.main.edit_text != UNSET_TEXT:
-            self.unset('edit')
+            self.main.unset('edit')
             text = UNSET_TEXT
         
         # Check for already existing reply
@@ -368,13 +368,13 @@ class TextInput(gtk.TextView):
     # Edit
     def edit(self):
         self.init_change()
-        self.unset('retweet', 'reply')
+        self.main.unset('retweet', 'reply')
         self.end_change(self.main.edit_text)
     
     # Retweet
     def retweet(self):
         self.init_change()
-        self.unset('reply', 'edit')
+        self.main.unset('reply', 'edit')
         self.end_change('RT @%s: %s' % (self.main.retweet_user,
                                         self.main.retweet_text))
     
@@ -460,7 +460,7 @@ class TextInput(gtk.TextView):
     def check_mode(self):
         self.is_shortening = False
         self.has_focus = False
-        self.unset('reply', 'retweet', 'edit', 'message')
+        self.main.unset('reply', 'retweet', 'edit', 'message')
         self.set_text(UNSET_TEXT)
     
     
@@ -495,27 +495,6 @@ class TextInput(gtk.TextView):
         self.set_text(text.lstrip())
         self.is_changing = False
     
-    def unset(self, *args):
-        for key in args:
-            if key == "reply":
-                self.main.reply_text = UNSET_TEXT
-                self.main.reply_user = UNSET_TEXT
-                self.main.reply_id = UNSET_ID_NUM
-            
-            elif key == "retweet":
-                self.main.retweet_text = UNSET_TEXT
-                self.main.retweet_user = UNSET_TEXT
-            
-            elif key == "edit":
-                self.main.edit_id = UNSET_ID_NUM
-                self.main.edit_text = UNSET_TEXT
-                self.main.edit_reply_id = UNSET_ID_NUM
-                self.main.edit_reply_user = UNSET_TEXT
-            
-            elif key == "message":
-                self.main.message_user = UNSET_TEXT
-                self.main.message_id = UNSET_ID_NUM
-                self.main.message_text = UNSET_TEXT
     
     # Other stuff --------------------------------------------------------------
     def check_refocus(self):

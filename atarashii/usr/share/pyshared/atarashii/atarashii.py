@@ -78,22 +78,7 @@ class Atarashii(AtarashiiActions):
         self.api_temp_password = None
         
         # Variables
-        self.reply_user = UNSET_ID_NUM
-        self.reply_text = UNSET_TEXT
-        self.reply_id = UNSET_ID_NUM
-        
-        self.retweet_user = UNSET_TEXT
-        self.retweet_text = UNSET_TEXT
-        
-        self.message_user = UNSET_TEXT
-        self.message_id = UNSET_ID_NUM
-        self.message_text = UNSET_TEXT
-        
-        self.edit_id = UNSET_ID_NUM
-        self.edit_text = UNSET_TEXT
-        self.edit_reply_id = UNSET_ID_NUM
-        self.edit_reply_user = UNSET_TEXT
-        
+        self.unset('reply', 'retweet', 'message', 'edit')        
         self.delete_tweet_id = UNSET_ID_NUM
         self.delete_message_id = UNSET_ID_NUM
         
@@ -101,7 +86,6 @@ class Atarashii(AtarashiiActions):
         self.max_tweet_count = 200
         self.load_message_count = 20
         self.max_message_count = 200
-        
         
         # Timer
         self.refresh_time = UNSET_TIMEOUT
@@ -146,8 +130,8 @@ class Atarashii(AtarashiiActions):
             return
             
         # Wait until the last update/delete/send is complete
+        # FIXME does this thing every gets into action?
         while self.any_status(ST_UPDATE, ST_DELETE, ST_SEND, ST_CONNECT):
-            print "waiting"
             time.sleep(0.1)
         
         # Switch User
@@ -310,4 +294,27 @@ class Atarashii(AtarashiiActions):
     
     def unset_status(self, flag):
         self.current_status &= ~flag
-    
+        
+    # Attributes
+    def unset(self, *args):
+        for key in args:
+            if key == 'reply':
+                self.reply_text = UNSET_TEXT
+                self.reply_user = UNSET_TEXT
+                self.reply_id = UNSET_ID_NUM
+            
+            elif key == 'retweet':
+                self.retweet_text = UNSET_TEXT
+                self.retweet_user = UNSET_TEXT
+            
+            elif key == 'edit':
+                self.edit_id = UNSET_ID_NUM
+                self.edit_text = UNSET_TEXT
+                self.edit_reply_id = UNSET_ID_NUM
+                self.edit_reply_user = UNSET_TEXT
+            
+            elif key == 'message':
+                self.message_user = UNSET_TEXT
+                self.message_id = UNSET_ID_NUM
+                self.message_text = UNSET_TEXT
+

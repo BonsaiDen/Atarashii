@@ -50,10 +50,7 @@ class Edit(threading.Thread):
             self.send_tweet(self.text)
             
             # Reset
-            self.main.edit_id = UNSET_ID_NUM
-            self.main.edit_text = UNSET_TEXT
-            self.main.edit_reply_id = UNSET_ID_NUM
-            self.main.edit_reply_user = UNSET_TEXT
+            self.main.unset('edit')
             
             # Reset Input
             gobject.idle_add(self.gui.text.set_text, UNSET_TEXT)
@@ -157,19 +154,7 @@ class Send(threading.Thread):
     
     # Reset GUI ----------------------------------------------------------------
     def reset_gui(self):
-        # Reply
-        self.main.reply_user = UNSET_TEXT
-        self.main.reply_text = UNSET_TEXT
-        self.main.reply_id = UNSET_ID_NUM
-        
-        # Retweets
-        self.main.retweet_user = UNSET_TEXT
-        self.main.retweet_text = UNSET_TEXT
-        
-        # Message
-        self.main.message_user = UNSET_TEXT
-        self.main.message_id = UNSET_ID_NUM
-        self.main.message_text = UNSET_TEXT
+        self.main.unset('reply', 'retweet', 'edit', 'message')
         
         # Reset Input
         self.gui.text.set_text(UNSET_TEXT)
