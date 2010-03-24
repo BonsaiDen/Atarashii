@@ -24,6 +24,7 @@ import gobject
 import calendar
 
 from language import LANG as lang
+from settings import HOME_DIR
 from utils import tweepy, TweepError, compare
 from updater_message import UpdaterMessage
 from updater_tweet import UpdaterTweet
@@ -60,8 +61,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         self.ratelimit = 150
         self.message_counter = 0
         self.finish = False
-        
-        self.path = os.path.expanduser('~')
     
     
     # Init the Updater ---------------------------------------------------------
@@ -475,7 +474,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 name = item.user.screen_name
         
         image = url[url.rfind('/') + 1:]
-        imgdir = os.path.join(self.path, '.atarashii')
+        imgdir = os.path.join(HOME_DIR, '.atarashii')
         if not os.path.exists(imgdir):
             os.mkdir(imgdir)
         
