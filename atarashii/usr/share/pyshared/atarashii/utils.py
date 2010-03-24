@@ -78,4 +78,74 @@ def compare_sub(item_x, item_y):
     
     else:
         return 0
+        
+# URL Shortener ----------------------------------------------------------------
+# ------------------------------------------------------------------------------
+SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{45,})')
+SHORTS = {
+    'is.gd' : 'http://is.gd/api.php?longurl=%s',
+    'tr.im' : 'http://tr.im/api/trim_simple?url=%s',
+    'tinyurl.com' : 'http://tinyurl.com/api-create.php?url=%s'
+}
 
+import urllib2
+import threading
+import time
+import gobject
+
+
+class Shortener(threading.Thread):
+    def __init__(self, textbox):
+        threading.Thread.__init__(self)
+        self.textbox = textbox
+        self.reset()
+    
+    def reset(self):
+        self.text = ''
+        self.blacklist = []
+        self.url_list = {}
+    
+    def run(self):
+        while True:
+            if self.text != '':
+                find_urls = SHORT_REGEX.findall(self.text + " ")
+                
+                # Don't make multiple api calls for the same url
+                urls = []
+                for url in find_urls:
+                    if not url[0] in urls and not url[0] in self.blacklist:
+                        urls.append(url[0])
+                
+                # Replace them all
+                if len(urls) > 0:
+                    for u in urls:
+                        short = self.shorten_url(u, 'is.gd')
+                        self.text = self.text.replace(u, short)
+                    
+                    self.textbox.is_shortening = True
+                    
+                    # Wait a bit, this is better for the user experience!
+                    time.sleep(0.25)
+                    gobject.idle_add(self.textbox.shorten_text, self.text)
+                
+                self.text = ''
+            
+            # Fix a bug when the modules get unloaded, since we're set to Daemon
+            if time == None:
+                break
+            
+            time.sleep(0.1)
+    
+    def shorten_url(self, url, api):
+        if self.url_list.has_key(url):
+            return self.url_list[url]
+        
+        try:
+            short = urllib2.urlopen(SHORTS[api] % urllib2.quote(url)).read()
+            self.url_list[url] = short
+            return short
+        
+        except IOError:
+            self.blacklist.append(url)
+            return url
+    
