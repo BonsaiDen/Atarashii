@@ -19,8 +19,6 @@
 from utils import escape, strip_tags
 from language import LANG as lang
 
-
-
 from constants import ST_SEND, ST_CONNECT, ST_LOGIN_SUCCESSFUL, \
                       ST_LOGIN_COMPLETE, ST_UPDATE
 
@@ -32,7 +30,6 @@ class GUIHelpers:
         pass
     
     # Info Label ---------------------------------------------------------------
-    # --------------------------------------------------------------------------
     def set_label(self):
         if self.main.status(ST_SEND):
             return
@@ -90,8 +87,7 @@ class GUIHelpers:
         else:
             self.info_label.set_markup(info % escape(label_text))
     
-    # Helpers ------------------------------------------------------------------
-    # --------------------------------------------------------------------------
+    # App Title ----------------------------------------------------------------
     def set_app_title(self):
         if self.main.username == UNSET_TEXT \
            or (not self.main.status(ST_LOGIN_SUCCESSFUL) \
@@ -137,6 +133,9 @@ class GUIHelpers:
         else:
             self.tray.set_tooltip(lang.tray_logged_out)
     
+    
+    # Helpers ------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     def set_mode(self, mode):
         if mode == self.mode:
             return
@@ -163,7 +162,7 @@ class GUIHelpers:
     def show_in_taskbar(self, mode):
         self.main.settings['taskbar'] = mode
         self.set_property('skip-taskbar-hint', not mode)
-
+    
     # Fix tooltips that would stay on screen when switching workspaces
     # This doesn't work 100% of the time, but it's better than nothing
     def fix_tooltips(self, *args):
