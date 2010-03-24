@@ -61,7 +61,7 @@ class Notifier(threading.Thread):
                     pass
                 
                 self.notify = subprocess.Popen(
-                                         ['notify-send', '-i',
+                                         ['notify-send', '-u', 'critical', '-i', 
                                           '%s' % item[2],
                                           '%s' % item[0],
                                           '%s' % item[1]])
