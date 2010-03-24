@@ -121,17 +121,17 @@ class Shortener(threading.Thread):
                 
                 # Replace them all
                 if len(urls) > 0:
+                    # Wait a bit, this is better for the user experience!
+                    time.sleep(0.25)
+                    box_text = self.textbox.get_text()
                     for url in urls:
                         short = self.shorten_url(url,
                                         self.textbox.main.settings['shortener'])
                         
-                        self.text = self.text.replace(url, short)
+                        box_text = box_text.replace(url, short)
                     
                     self.textbox.is_shortening = True
-                    
-                    # Wait a bit, this is better for the user experience!
-                    time.sleep(0.25)
-                    gobject.idle_add(self.textbox.shorten_text, self.text)
+                    gobject.idle_add(self.textbox.shorten_text, box_text)
                 
                 self.text = ''
             

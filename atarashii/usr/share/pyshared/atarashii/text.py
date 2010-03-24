@@ -55,6 +55,7 @@ class TextInput(gtk.TextView):
         self.is_typing = False
         self.is_changing = False
         self.is_shortening = False
+        self.is_pasting = False
         self.change_contents = False
         self.message_len = 0
         self.message_to_send = None
@@ -78,9 +79,11 @@ class TextInput(gtk.TextView):
         
         # Events
         self.connect('submit', self.submit)
-        self.get_buffer().connect('changed', self.changed)
         self.connect('focus-in-event', self.focus)
         self.connect('key-press-event', self.check_keys)
+        self.connect('paste-clipboard', self.paste)
+        self.get_buffer().connect('changed', self.changed)
+        self.get_buffer().connect('insert-text', self.insert)
     
     
     # Focus Events -------------------------------------------------------------
@@ -188,7 +191,17 @@ class TextInput(gtk.TextView):
             
             else: # TODO implement search field submit
                 pass
-        
+    
+    def paste(self, view):
+        self.is_pasting = True
+    
+    def insert(self, buf, itr, text, length):
+        if self.is_pasting:
+            if text.find('http') != -1 or text.find('www') != -1:
+                self.shorter.text = text
+            
+            self.is_pasting = False
+    
     def changed(self, *args):
         text = self.get_text().lstrip()
         
@@ -302,14 +315,6 @@ class TextInput(gtk.TextView):
         if self.get_text()[0:1] == ' ':
             ctext = self.get_text().lstrip()
             gobject.idle_add(self.clear_text, ctext)
-        
-        # Check for URLS to shorten
-        elif not self.is_shortening:
-            utext = self.get_text()
-            if len(utext) >= 45 \
-               and (utext.find('http') != -1 or utext.find('www') != -1):
-                
-                self.shorter.text = utext
         
         # Resize
         self.resize()
