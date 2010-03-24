@@ -55,7 +55,7 @@ If you want to hack on **Atarashii** you can just clone the repo and then run
     **Atarashii** has been installed with one of the above methods.
 
 
-.. _Debian-Package: http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.16-1_all.deb
+.. _Debian-Package: http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.16a-1_all.deb
 
 
 TODO
