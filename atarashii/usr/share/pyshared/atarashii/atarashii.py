@@ -15,6 +15,7 @@
 
 # TODO enable the preferences button but disable the userlist while logging in
 # TODO add multireply via shift/ctrl, replyid is from the first selected tweet
+# TODO allow multiple values in atarashii.status()
 
 
 # DBUS Integration -------------------------------------------------------------
@@ -147,9 +148,7 @@ class Atarashii(AtarashiiActions):
             return
             
         # Wait until the last update/delete/send is complete
-        while self.status(ST_UPDATE) or self.status(ST_DELETE) \
-              or self.status(ST_SEND):
-            
+        while self.any_status(ST_UPDATE, ST_DELETE, ST_SEND):
             time.sleep(0.1)
         
         # Switch User
@@ -182,7 +181,6 @@ class Atarashii(AtarashiiActions):
         if self.gui.mode == MODE_MESSAGES:
             self.gui.html.start()
         
-        self.gui.settings_button.set_sensitive(False)
         self.gui.tray.settings_menu.set_sensitive(False)
         self.gui.message.init(True)
         if self.gui.mode == MODE_TWEETS:
@@ -196,7 +194,9 @@ class Atarashii(AtarashiiActions):
                           ST_DELETE)
         
         self.set_status(ST_LOGIN_SUCCESSFUL)
-        self.gui.settings_button.set_sensitive(True)
+        if self.gui.settings_dialog != None:
+            self.gui.settings_dialog.activate(True)
+        
         self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_title(lang.title_logged_in % self.username)
         self.gui.update_status()
@@ -210,7 +210,9 @@ class Atarashii(AtarashiiActions):
         if error != None:
             self.set_status(ST_LOGIN_ERROR)
         
-        self.gui.settings_button.set_sensitive(True)
+        if self.gui.settings_dialog != None:
+            self.gui.settings_dialog.activate(True)
+        
         self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_app_title()
         self.gui.hide_all()
@@ -229,10 +231,12 @@ class Atarashii(AtarashiiActions):
         self.refresh_timeout = UNSET_TIMEOUT
         self.gui.set_mode(MODE_TWEETS)
         self.unset_status(ST_ALL)
-        self.gui.settings_button.set_sensitive(True)
         self.gui.update_status()
         self.gui.set_app_title()
         self.gui.hide_all()
+        
+        if self.gui.settings_dialog != None:
+            self.gui.settings_dialog.activate(True)
         
         gobject.idle_add(self.gui.message.init, True)
         gobject.idle_add(self.gui.html.init, True)
@@ -270,8 +274,7 @@ class Atarashii(AtarashiiActions):
     
     def get_user_picture(self):
         img = self.settings['picture_' + self.username]
-        if not self.status(ST_LOGIN_SUCCESSFUL) \
-           and not self.status(ST_CONNECT):
+        if not self.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
             img = None
         
         if img == None or not os.path.exists(img):
@@ -299,6 +302,12 @@ class Atarashii(AtarashiiActions):
     # Statuses
     def status(self, flag):
         return self.current_status & flag == flag
+    
+    def any_status(self, *flags):
+        return len([i for i in flags if self.status(i)]) > 0
+    
+    def all_status(self, *flags):
+        return len([i for i in flags if self.status(i)]) == len(flags)
     
     def set_status(self, flag):
         self.current_status |= flag
