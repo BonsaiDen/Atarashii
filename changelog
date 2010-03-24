@@ -1,3 +1,16 @@
+atarashii (0.99.15d-1) all;
+
+  * Read button now gets disabled just before new tweets are loaded, this is to
+    prevent the user from accidently marking all tweets as read.
+  * Removed unneeded spacer in the direct message context menu.
+  * Reworked the notification code, notifications should now always show up.
+  * Fix a bug where invalid screen position would been saved, causing a reset of
+    the position on program start.
+  * Fixed scrolling issues on refreshes when huge amounts of tweets are loaded.
+  * Some internal cleanup and other small bug fixes.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 24 Mar 2010 05:38:00 +0100
+
 atarashii (0.99.15c-1) all;
 
   * Fixed bugs with the notification sounds.
