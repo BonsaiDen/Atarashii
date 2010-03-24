@@ -13,9 +13,7 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-# TODO enable the preferences button but disable the userlist while logging in
 # TODO add multireply via shift/ctrl, replyid is from the first selected tweet
-# TODO allow multiple values in atarashii.status()
 
 
 # DBUS Integration -------------------------------------------------------------
@@ -186,6 +184,7 @@ class Atarashii(AtarashiiActions):
         if self.gui.mode == MODE_TWEETS:
             self.gui.message.start()
         
+        self.gui.text.reset()
         self.gui.set_app_title()
         self.updater.do_init = True
     
