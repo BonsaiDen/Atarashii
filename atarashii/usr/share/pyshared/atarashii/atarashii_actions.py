@@ -74,7 +74,7 @@ class AtarashiiActions:
             sys.exit(70) # os.EX_SOFTWARE
     
     def quit(self):
-        self.save_settings()
+        self.save_settings(True)
         gtk.main_quit()        
         self.updater.running = False
         self.settings.check_cache()
@@ -103,7 +103,7 @@ class AtarashiiActions:
     # Sending ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def send(self, text):
-        if self.status(ST_SEND) or self.status(ST_DELETE):
+        if self.any_status(ST_SEND, ST_DELETE):
             return
         
         # Send
@@ -155,7 +155,7 @@ class AtarashiiActions:
     # New style Retweet
     def retweet(self, name, tweet_id, new_style = False):
         # Abort if pending
-        if self.status(ST_SEND) or self.status(ST_DELETE):
+        if self.any_status(ST_SEND, ST_DELETE):
             return
         
         if new_style:
@@ -177,7 +177,7 @@ class AtarashiiActions:
     # Delete
     def delete(self, tweet_id = UNSET_ID_NUM, message_id = UNSET_ID_NUM):
         # Abort if pending
-        if self.status(ST_SEND) or self.status(ST_DELETE):
+        if self.any_status(ST_SEND, ST_DELETE):
             return
         
         # Setup
@@ -239,7 +239,7 @@ class AtarashiiActions:
     # Handle Errors and Warnings -----------------------------------------------
     # --------------------------------------------------------------------------
     def handle_error(self, error):
-        if self.status(ST_WAS_SEND) or self.status(ST_WAS_DELETE):
+        if self.any_status(ST_WAS_SEND, ST_WAS_DELETE):
             self.gui.show_input()
             
             if not self.status(ST_WAS_RETWEET) \
@@ -255,8 +255,7 @@ class AtarashiiActions:
                     self.gui.text.grab_focus()
             
             if self.gui.text.has_typed \
-               and (self.status(ST_WAS_RETWEET_NEW) \
-               or self.status(ST_WAS_DELETE)):
+               and self.any_status(ST_WAS_RETWEET_NEW, ST_WAS_DELETE):
                 
                 self.gui.text.grab_focus()
         

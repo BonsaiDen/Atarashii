@@ -90,8 +90,7 @@ class GUIHelpers:
     # App Title ----------------------------------------------------------------
     def set_app_title(self):
         if self.main.username == UNSET_TEXT \
-           or (not self.main.status(ST_LOGIN_SUCCESSFUL) \
-           and not self.main.status(ST_CONNECT)):
+           or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
             self.set_title(lang.title)
         
         elif self.mode == MODE_MESSAGES:
@@ -115,8 +114,7 @@ class GUIHelpers:
            and self.main.status(ST_LOGIN_COMPLETE):
            
             if self.main.username == UNSET_TEXT \
-               or (not self.main.status(ST_LOGIN_SUCCESSFUL) \
-               and not self.main.status(ST_CONNECT)):
+               or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
                 self.tray.set_tooltip(lang.tray_logged_out)
             
             elif self.mode == MODE_MESSAGES:

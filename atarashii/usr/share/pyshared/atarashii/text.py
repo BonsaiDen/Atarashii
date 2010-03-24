@@ -508,8 +508,7 @@ class TextInput(gtk.TextView):
             self.initiated = True
             self.loose_focus()
         
-        if not self.main.status(ST_LOGIN_SUCCESSFUL) \
-           and not self.main.status(ST_CONNECT):
+        if not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT)
             self.gui.hide_all()
 
 
