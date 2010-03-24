@@ -45,9 +45,6 @@ from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       BUTTON_HISTORY
 
 
-
-
-
 class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     def __init__(self, main):
         # Setup
