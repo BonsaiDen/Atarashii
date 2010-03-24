@@ -8,7 +8,7 @@ atarashii (0.99.16a-1) all;
   * Fixed a bug that allowed someone to relog before the current login was 
     complete. Causing major confusion under the kittens!
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 24 Mar 2010 17:17:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 24 Mar 2010 20:28:00 +0100
 
 atarashii (0.99.16-1) all;
 
