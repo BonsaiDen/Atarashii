@@ -25,6 +25,7 @@ from constants import ST_SEND, ST_CONNECT, ST_LOGIN_SUCCESSFUL, \
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADED, UNSET_TEXT, \
                       UNSET_LABEL, MESSAGE_ERROR
 
+
 class GUIHelpers:
     
     # Info Label ---------------------------------------------------------------
@@ -89,6 +90,7 @@ class GUIHelpers:
     def set_app_title(self):
         if self.main.username == UNSET_TEXT \
            or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
+           
             self.set_title(lang.title)
         
         elif self.mode == MODE_MESSAGES:
@@ -182,7 +184,7 @@ class GUIHelpers:
     def fix_tooltips(self, *args):
         if self.mode == MODE_TWEETS:
             self.html.fake_move((-1.0, -1.0), True)
-         
+        
         elif self.mode == MODE_MESSAGES:
             self.message.fake_move((-1.0, -1.0), True)
         
