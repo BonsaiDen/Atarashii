@@ -239,26 +239,8 @@ class AtarashiiActions:
     # Handle Errors and Warnings -----------------------------------------------
     # --------------------------------------------------------------------------
     def handle_error(self, error):
-        if self.any_status(ST_WAS_SEND, ST_WAS_DELETE):
-            self.gui.show_input()
-            
-            if not self.status(ST_WAS_RETWEET) \
-               or (self.retweet_text != UNSET_TEXT \
-               or self.reply_user != UNSET_TEXT \
-               or self.reply_id != UNSET_ID_NUM):
-                
-                if self.status(ST_WAS_DELETE):
-                    if self.gui.text.has_typed:
-                        self.gui.text.grab_focus()
-                
-                elif not self.status(ST_WAS_RETWEET_NEW):
-                    self.gui.text.grab_focus()
-            
-            if self.gui.text.has_typed \
-               and self.any_status(ST_WAS_RETWEET_NEW, ST_WAS_DELETE):
-                
-                self.gui.text.grab_focus()
-        
+        # Do we need to give focus back to the textbox?
+        self.text.check_refocus()
         
         # Determine the kind of the error
         rate_error = ''
@@ -336,7 +318,7 @@ class AtarashiiActions:
         
         # Reset stuff
         self.unset_status(ST_WAS_SEND | ST_WAS_RETWEET | \
-                               ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
+                          ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
         
         # Leave it to GUI!
         self.gui.show_error(code, error_code, error_errno, rate_error)

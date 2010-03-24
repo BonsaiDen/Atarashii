@@ -24,7 +24,9 @@ import gobject
 from language import LANG as lang
 from utils import REPLY_REGEX, MESSAGE_REGEX
 
-from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL
+from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
+                      ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE
+
 from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, MODE_TWEETS
 
 
@@ -485,8 +487,28 @@ class TextInput(gtk.TextView):
                 self.main.message_text = UNSET_TEXT
     
     # Other stuff --------------------------------------------------------------
+    def check_refocus(self):
+        if self.any_status(ST_WAS_SEND, ST_WAS_DELETE):
+            self.gui.show_input()
+            
+            if not self.main.status(ST_WAS_RETWEET) \
+               or (self.main.retweet_text != UNSET_TEXT \
+               or self.main.reply_user != UNSET_TEXT \
+               or self.main.reply_id != UNSET_ID_NUM):
+                
+                if self.main.status(ST_WAS_DELETE):
+                    if self.has_typed:
+                        self.grab_focus()
+                
+                elif not self.main.status(ST_WAS_RETWEET_NEW):
+                    self.grab_focus()
+            
+            if self.has_typed \
+               and self.main.any_status(ST_WAS_RETWEET_NEW, ST_WAS_DELETE):
+                
+                self.grab_focus()
+    
     def resize(self, line_count = 5):
-        # Set Label Text
         self.gui.set_label()
         
         # Get Font Height
@@ -508,7 +530,7 @@ class TextInput(gtk.TextView):
             self.initiated = True
             self.loose_focus()
         
-        if not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT)
+        if not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
             self.gui.hide_all()
 
 
