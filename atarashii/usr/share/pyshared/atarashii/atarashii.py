@@ -13,11 +13,8 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-# TODO notification sound is sometimes not played
-# TODO clean up text.py
 # TODO enable the preferences button but disable the userlist while logging in
-# TODO save position when atarashii has been moved, and stopped for at least 0.5
-# seconds
+# TODO add multireply via shift/ctrl, replyid is from the first selected tweet
 
 
 # DBUS Integration -------------------------------------------------------------
