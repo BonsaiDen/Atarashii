@@ -381,7 +381,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             if count > 1:
                 for i in range(0, count):
                     notify_list[i][0] = lang.notification_index \
-                                        % (notify_list[i][0], num + 1, count)
+                                        % (notify_list[i][0], i + 1, count)
             
             for i in notify_list:
                 self.notifier.items.append(i)

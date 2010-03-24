@@ -52,7 +52,7 @@ class UpdaterMessage:
         
         messages.reverse()
         for i in messages:
-                self.message.update_list.append((i, self.get_image(i, True)))
+            self.message.update_list.append((i, self.get_image(i, True)))
         
         gobject.idle_add(self.do_render, self.message, init, last)
         return True
