@@ -60,7 +60,7 @@ class AtarashiiActions:
     
     def crash_exit(self):
         # Catch Python Errors
-        if not self.exited:            
+        if not self.exited:
             # Set date format to english
             import locale
             locale.setlocale(locale.LC_TIME, 'C')
