@@ -114,6 +114,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.items = []
         self.update_list = []
         self.history_list = []
+        self.expanded_links = {}
+        self.is_expanding = False
         self.position = 0
         self.offset_count = 0
         self.history_loaded = False

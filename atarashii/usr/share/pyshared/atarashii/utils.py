@@ -74,12 +74,12 @@ def compare_sub(item_x, item_y):
 SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{35,})')
 SHORTS = {
     'is.gd' : 'http://is.gd/api.php?longurl=%s',
-    'tr.im' : 'http://tr.im/api/trim_simple?url=%s',
     'tinyurl.com' : 'http://tinyurl.com/api-create.php?url=%s',
     'snipurl.com' : 'http://snipr.com/site/snip?r=simple&link=%s'
 }
 
-SHORTS_ORDER = ['is.gd', 'tr.im', 'tinyurl.com', 'snipurl.com']
+SHORTS_LIST = ['is.gd', 'tinyurl.com', 'snipurl.com']
+EXPAND_LIST = ['is.gd', 'tl.gd', 'tinyurl.com', 'snipurl.com', 'bit.ly']
 
 import urllib2
 import threading
@@ -87,6 +87,7 @@ import time
 import gobject
 
 
+# FIXME clean this up...
 class Shortener(threading.Thread):
     def __init__(self, textbox):
         threading.Thread.__init__(self)
@@ -97,9 +98,20 @@ class Shortener(threading.Thread):
         self.text = ''
         self.blacklist = []
         self.url_list = {}
+        
+        self.expand = ''
+        self.expand_callback = None
     
     def run(self):
         while True:
+            # Expand a URL
+            if self.expand != '':
+                url = self.expand_url(self.expand)
+                print url
+                gobject.idle_add(self.expand_callback, self.expand, url)
+                self.expand = ''
+            
+            # Shorten a URL
             if self.text != '':
                 find_urls = SHORT_REGEX.findall(self.text + " ")
                 
@@ -144,3 +156,10 @@ class Shortener(threading.Thread):
             self.blacklist.append(url)
             return url
     
+    def expand_url(self, url):
+        try:
+            return urllib2.urlopen(url).geturl()
+        
+        except IOError:
+            return url
+

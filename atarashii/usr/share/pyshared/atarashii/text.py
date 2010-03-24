@@ -22,8 +22,7 @@ import gtk
 import gobject
 
 from language import LANG as lang
-from utils import REPLY_REGEX, MESSAGE_REGEX, SHORTS
-from utils import Shortener
+from utils import REPLY_REGEX, MESSAGE_REGEX
 
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE
@@ -40,13 +39,6 @@ class TextInput(gtk.TextView):
         gtk.TextView.__init__(self)
         self.gui = gui
         self.main = gui.main
-        
-        # Shortener
-        self.shorter = Shortener(self)
-        self.shorter.setDaemon(True)
-        self.shorter.start()
-        if not self.main.settings['shortener'] in SHORTS:
-            self.main.settings['shortener'] = SHORTS.keys()[0]
         
         # Variables
         self.initiated = False
@@ -198,7 +190,7 @@ class TextInput(gtk.TextView):
     def insert(self, buf, itr, text, length):
         if self.is_pasting:
             if text.find('http') != -1 or text.find('www') != -1:
-                self.shorter.text = text
+                self.main.shorter.text = text
             
             self.is_pasting = False
     

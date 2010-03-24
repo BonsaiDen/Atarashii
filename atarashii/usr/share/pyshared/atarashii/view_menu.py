@@ -22,6 +22,7 @@ import gtk
 import gobject
 
 from language import LANG as lang
+from utils import EXPAND_LIST
 
 
 # This is the hacked part of Atarashii, getting this menu to work is quite a
@@ -32,23 +33,43 @@ class ViewMenu:
     def on_link_hover(self, view, title, url):
         self.last_hovered_link = url # url might be none!
     
+    def expand_link(self, url, expanded):
+        self.expanded_links[url] = expanded
+        self.is_expanding = False
+    
     def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
-        if self.last_hovered_link != None \
-           and self.last_hovered_link.startswith('avatar:'):
-            uri = self.last_hovered_link[7:]
-            num = int(uri[:uri.find(':')])
-            user = self.get_user(num)
-            img = self.get_image(num)
+        link = self.last_hovered_link
+        if link != None:
+            if link.startswith('avatar:'):
+                uri = link[7:]
+                num = int(uri[:uri.find(':')])
+                user = self.get_user(num)
+                img = self.get_image(num)
+                
+                # Set only if something has changed
+                if user != self.tooltip_user \
+                   or img != self.tooltip_img_file:
+                    self.set_tooltip(user, img)
+                    self.tooltip_user = user
+                
+                self.tooltip_window = tip
+                tip.set_custom(self.tooltip)
+                return True
             
-            # Set only if something has changed
-            if user != self.tooltip_user \
-               or img != self.tooltip_img_file:
-                self.set_tooltip(user, img)
-                self.tooltip_user = user
-            
-            self.tooltip_window = tip
-            tip.set_custom(self.tooltip)
-            return True
+            # Try to expand links
+            elif link.startswith('http://'):
+                check = link[7:]
+                check = check[:check.find('/')] # get the service
+                if check in EXPAND_LIST:
+                    if self.expanded_links.has_key(link):
+                        tip.set_markup(lang.html_expanded_tooltip
+                                       % (link, self.expanded_links[link]))
+                        
+                        return True
+                    
+                    elif not self.is_expanding:
+                        self.main.shorter.expand = link
+                        self.main.shorter.expand_callback = self.expand_link
     
     def set_tooltip(self, user, img):
         self.tooltip_label.set_markup(lang.html_avatar_tooltip \

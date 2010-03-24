@@ -14,6 +14,7 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 # TODO add multireply via shift/ctrl, replyid is from the first selected tweet
+# TODO expand shortened URLS on hover
 
 
 # DBUS Integration -------------------------------------------------------------
@@ -49,6 +50,8 @@ import settings
 import updater
 
 from language import LANG as lang
+from utils import SHORTS
+from utils import Shortener
 from atarashii_actions import AtarashiiActions
 
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
@@ -100,7 +103,7 @@ class Atarashii(AtarashiiActions):
         
         # Current Username
         self.username = self.settings['username'] or UNSET_TEXT
-                
+        
         # Notifier
         self.notifier = notify.Notifier(self)
         self.notifier.setDaemon(True)
@@ -112,6 +115,14 @@ class Atarashii(AtarashiiActions):
         
         # GUI
         self.gui = gui.GUI(self)
+        
+        # Shortener
+        self.shorter = Shortener(self.gui.text)
+        self.shorter.setDaemon(True)
+        self.shorter.start()
+        if not self.settings['shortener'] in SHORTS:
+            self.settings['shortener'] = SHORTS.keys()[0]
+        
         
         # Start
         self.updater.start()

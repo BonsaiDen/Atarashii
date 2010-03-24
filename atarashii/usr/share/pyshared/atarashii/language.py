@@ -43,6 +43,8 @@ LANG = {
             '<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n'
             '<b>%d</b> Follower\nFollowing <b>%d</b>',
         
+        'html_expanded_tooltip' : '<b>%s</b> verweist auf:\n%s',
+        
         'html_profile' : '%s auf Twitter.com',
         'html_at' : '%s auf Twitter.com',
         'html_reply' : '%s antworten',
@@ -360,6 +362,8 @@ LANG = {
         'html_avatar_tooltip' :
             '<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n'
             '<b>%d</b> Follower\nFollowing <b>%d</b>',
+        
+        'html_expanded_tooltip' : '<b>%s</b> translates to:\n%s',
         
         'html_profile' : '%s at Twitter.com',
         'html_at' : '%s at Twitter.com',

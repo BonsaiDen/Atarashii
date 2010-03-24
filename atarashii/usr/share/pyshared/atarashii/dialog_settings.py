@@ -23,7 +23,7 @@ import gobject
 
 from language import LANG as lang
 from dialog import Dialog, MessageDialog
-from utils import SHORTS_ORDER
+from utils import SHORTS_LIST
 
 from constants import ST_LOGIN_SUCCESSFUL, ST_LOGIN_COMPLETE, ST_CONNECT
 from constants import MESSAGE_QUESTION
@@ -199,7 +199,7 @@ class SettingsDialog(Dialog):
         shorts.pack_start(cell, True)
         shorts.add_attribute(cell, 'text', 0)
         shorts.set_model(shorts_list)
-        for i, k in enumerate(SHORTS_ORDER):
+        for i, k in enumerate(SHORTS_LIST):
             shorts_list.append((k,))
             if k == self.settings['shortener']:
                 shorts.set_active(i)
@@ -216,7 +216,7 @@ class SettingsDialog(Dialog):
             self.settings['sound'] = sound.get_active()
             self.settings['tray'] = tray.get_active()
             old_short = self.settings['shortener']
-            self.settings['shortener'] = SHORTS_ORDER[shorts.get_active()]
+            self.settings['shortener'] = SHORTS_LIST[shorts.get_active()]
             if old_short != self.settings['shortener']:
                 self.gui.text.shorter.reset()            
             
