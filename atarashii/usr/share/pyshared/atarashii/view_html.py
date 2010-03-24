@@ -19,7 +19,7 @@
 from utils import compare_sub, SPACES
 
 from language import LANG as lang
-from constants import HTML_UNSET_ID, ST_LOGIN_SUCCESSFUL
+from constants import HTML_UNSET_ID, ST_LOGIN_SUCCESSFUL, HTML_UNSET_TEXT
 
 
 class ViewHTML:
@@ -30,6 +30,8 @@ class ViewHTML:
     # --------------------------------------------------------------------------
     def init_render(self):
         self.position = self.scroll.get_vscrollbar().get_value()
+        self.current_scroll = self.position
+        self.is_loading = True
         self.items.sort(compare_sub)
         self.count = 0
         
@@ -42,8 +44,8 @@ class ViewHTML:
     
     def render(self):
         self.init_render()
-        self.last_name = ''
-        self.last_recipient = ''
+        self.last_name = HTML_UNSET_TEXT
+        self.last_recipient = HTML_UNSET_TEXT
         self.last_highlight = False
         self.last_mentioned = False
         
@@ -158,7 +160,7 @@ class ViewHTML:
                         spacer = '1' #Dark Gray
                     
                     elif next and self.last_mentioned:
-                        spacer = '1' # Normal Gray
+                        spacer = '1' # Dark Gray
                     
                     elif self.last_highlight:
                         spacer = '10' # Middle Dark Gray
@@ -188,7 +190,7 @@ class ViewHTML:
                 # More mentions
                 elif mentioned:
                     if not self.last_mentioned:
-                        spacer = '' # Dark Gray
+                        spacer = '' # Normal Gray
                     
                     else:
                         spacer = '8' # Yellow
@@ -199,7 +201,7 @@ class ViewHTML:
                         spacer = '' # Normal Gray
                     
                     elif next and self.last_mentioned:
-                        spacer = '1' # Normal Gray
+                        spacer = '1' # Dark Gray
                     
                     elif self.last_highlight:
                         spacer = '11' # Middle Normal Gray

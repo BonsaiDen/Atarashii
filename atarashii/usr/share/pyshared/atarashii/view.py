@@ -33,7 +33,7 @@ from view_html import ViewHTML
 
 from constants import ST_HISTORY
 from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \
-                      UNSET_ID_NUM
+                      UNSET_ID_NUM, HTML_UNSET_TEXT
 
 
 # Watch out! This is one giant "Is this OK mommy?" hackery by the kittens!
@@ -63,7 +63,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.connect('key-release-event', self.on_key)
         
         # Better link tooltips
-        self.last_hovered_link = ''
+        self.last_hovered_link = HTML_UNSET_TEXT
         self.connect('hovering-over-link', self.on_link_hover)
         self.connect('query-tooltip', self.on_tooltip)
         
@@ -82,14 +82,17 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         # Other Stuff
         self.give_text_focus = False
         self.scroll = scroll
+        self.is_loading = False
+        self.position = 0
+        self.current_scroll = 0
         self.set_maintains_back_forward_list(False)
         self.count = 0
         self.formatter = formatter.Formatter()
         self.item_count = 20
                 
-        self.lang_loading = ''
-        self.lang_load = ''
-        self.lang_empty = ''
+        self.lang_loading = HTML_UNSET_TEXT
+        self.lang_load = HTML_UNSET_TEXT
+        self.lang_empty = HTML_UNSET_TEXT
         
         self.scroll_to = -1
         self.init(True)
