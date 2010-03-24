@@ -8,6 +8,7 @@ atarashii (0.99.15d-1) all;
     the position on program start.
   * Fixed scrolling issues on refreshes when huge amounts of tweets are loaded.
   * Some internal cleanup and other small bug fixes.
+  * Fix broken resetting of the loaded message history.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 24 Mar 2010 05:38:00 +0100
 
