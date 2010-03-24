@@ -220,6 +220,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # Force Title Update
         self.main.set_status(ST_LOGIN_COMPLETE)
         gobject.idle_add(self.gui.set_app_title)
+        if self.gui.settings_dialog != None:
+            gobject.idle_add(self.gui.settings_dialog.activate, True)
         
         # Init Timer
         gobject.idle_add(self.main.save_settings, True)

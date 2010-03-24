@@ -146,7 +146,8 @@ class Atarashii(AtarashiiActions):
             return
             
         # Wait until the last update/delete/send is complete
-        while self.any_status(ST_UPDATE, ST_DELETE, ST_SEND):
+        while self.any_status(ST_UPDATE, ST_DELETE, ST_SEND, ST_CONNECT):
+            print "waiting"
             time.sleep(0.1)
         
         # Switch User
@@ -189,12 +190,8 @@ class Atarashii(AtarashiiActions):
         self.updater.do_init = True
     
     def on_login(self):
-        self.unset_status(ST_LOGIN_COMPLETE | ST_LOGIN_ERROR | ST_CONNECT | \
-                          ST_DELETE)
-        
+        self.unset_status(ST_LOGIN_ERROR | ST_CONNECT | ST_DELETE)
         self.set_status(ST_LOGIN_SUCCESSFUL)
-        if self.gui.settings_dialog != None:
-            self.gui.settings_dialog.activate(True)
         
         self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_title(lang.title_logged_in % self.username)
