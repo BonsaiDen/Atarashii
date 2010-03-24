@@ -81,7 +81,7 @@ def compare_sub(item_x, item_y):
         
 # URL Shortener ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
-SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{45,})')
+SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{35,})')
 SHORTS = {
     'is.gd' : 'http://is.gd/api.php?longurl=%s',
     'tr.im' : 'http://tr.im/api/trim_simple?url=%s',
