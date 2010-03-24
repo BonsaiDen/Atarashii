@@ -235,24 +235,29 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.set_refresh_update(True)
         self.message_button.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL))
     
-    def show_progress(self):
-        def progress_activity():
-            self.progress.pulse()
-            return self.main.status(ST_SEND) \
-                   or self.main.status(ST_DELETE) \
-                   or self.main.status(ST_CONNECT) \
-                   or self.main.status(ST_HISTORY) \
-                   or (self.mode == MODE_MESSAGES \
-                   and self.message.load_state == HTML_LOADING) \
-                   or (self.mode == MODE_TWEETS \
-                   and self.html.load_state == HTML_LOADING)
+    def progress_activity(self):
+        self.progress.pulse()
+        if self.main.any_status(ST_SEND, ST_DELETE, ST_CONNECT, ST_HISTORY):
+            return True
+        
+        elif self.mode == MODE_MESSAGES \
+             and self.message.load_state == HTML_LOADING:
             
+            return True
+        
+        elif self.mode == MODE_TWEETS and self.html.load_state == HTML_LOADING:
+            return True
+        
+        else:
+            return False
+    
+    def show_progress(self):            
         self.progress.set_fraction(0.0)
         self.progress.show()
         self.info_label.hide()
         self.text_scroll.hide()
         if not self.progress_visible:
-            gobject.timeout_add(100, progress_activity)
+            gobject.timeout_add(100, self.progress_activity)
         
         self.progress_visible = True
     
