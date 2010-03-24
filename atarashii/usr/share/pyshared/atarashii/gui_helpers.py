@@ -155,9 +155,27 @@ class GUIHelpers:
         return self.message.load_state == HTML_LOADED \
                and self.html.load_state == HTML_LOADED
     
-    def show_in_taskbar(self, mode):
-        self.main.settings['taskbar'] = mode
-        self.set_property('skip-taskbar-hint', not mode)
+    def force_focus(self):
+        self.grab_focus()
+        self.present()
+        return not self.is_active()
+    
+    def get_normalized_position(self):
+        screen = self.get_screen()
+        pos = self.get_position()
+        return (pos[0] % screen.get_width(), pos[1] % screen.get_height())
+    
+    def on_screen(self):
+        screen = self.get_screen()
+        size = self.size_request()
+        position = self.get_position()
+        if position[0] < 0 - size[0] or position[0] > screen.get_width() \
+           or position[1] < 0 - size[1] or position[1] > screen.get_height():
+           
+            return False
+            
+        else:
+            return True
     
     # Fix tooltips that would stay on screen when switching workspaces
     # This doesn't work 100% of the time, but it's better than nothing
@@ -170,6 +188,11 @@ class GUIHelpers:
         
         else: # TODO implement search
             pass
+    
+    # Toggle visibility of taskbar entry
+    def show_in_taskbar(self, mode):
+        self.main.settings['taskbar'] = mode
+        self.set_property('skip-taskbar-hint', not mode)
     
     # Show a popup notification
     def notifcation(self, ntype, msg):

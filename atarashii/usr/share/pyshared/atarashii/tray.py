@@ -195,46 +195,14 @@ class TrayIcon(gtk.StatusIcon):
         
         # Hide or move to other screen
         else:
-            screen = self.gui.get_screen()
-            pos = self.gui.get_position()
-            pos = [pos[0], pos[1]]
-            while pos[0] < 0:
-                pos[0] += screen.get_width()
-            
-            while pos[0] > screen.get_width():
-                pos[0] -= screen.get_width()
-            
-            while pos[1] < 0:
-                pos[1] += screen.get_height()
-            
-            while pos[1] > screen.get_height():
-                pos[1] -= screen.get_height()
-            
+            pos = self.gui.get_normalized_position()
             self.gui.main.settings['position'] = str(pos)
             self.gui.window_position = pos
-            
-            if self.on_screen() and not iconified:
+            if self.gui.on_screen() and not iconified:
                 self.gui.hide()
             
             else:
                 pos = self.gui.window_position
                 self.gui.move(pos[0], pos[1])
-                gobject.timeout_add(10, self.force_focus)
-    
-    def force_focus(self):
-        self.gui.grab_focus()
-        self.gui.present()
-        return not self.gui.is_active()
-    
-    def on_screen(self):
-        screen = self.gui.get_screen()
-        size = self.gui.size_request()
-        position = self.gui.get_position()
-        if position[0] < 0 - size[0] or position[0] > screen.get_width() \
-           or position[1] < 0 - size[1] or position[1] > screen.get_height():
-           
-            return False
-            
-        else:
-            return True
+                gobject.timeout_add(10, self.gui.force_focus)
 
