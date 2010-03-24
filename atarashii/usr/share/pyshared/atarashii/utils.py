@@ -119,7 +119,9 @@ class Shortener(threading.Thread):
                 # Replace them all
                 if len(urls) > 0:
                     for u in urls:
-                        short = self.shorten_url(u, 'is.gd')
+                        short = self.shorten_url(u,
+                                        self.textbox.main.settings['shortener'])
+                        
                         self.text = self.text.replace(u, short)
                     
                     self.textbox.is_shortening = True

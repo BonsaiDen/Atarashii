@@ -22,7 +22,8 @@ import gtk
 import gobject
 
 from language import LANG as lang
-from utils import REPLY_REGEX, MESSAGE_REGEX
+from utils import REPLY_REGEX, MESSAGE_REGEX, SHORTS
+from utils import Shortener
 
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE
@@ -40,12 +41,20 @@ class TextInput(gtk.TextView):
         self.gui = gui
         self.main = gui.main
         
+        # Shortener
+        self.shorter = Shortener(self)
+        self.shorter.setDaemon(True)
+        self.shorter.start()
+        if not self.main.settings['shortener'] in SHORTS:
+            self.main.settings['shortener'] = SHORTS.keys()[0]
+        
         # Variables
         self.initiated = False
         self.has_focus = False
         self.has_typed = False
         self.is_typing = False
         self.is_changing = False
+        self.is_shortening = False
         self.change_contents = False
         self.message_len = 0
         self.message_to_send = None
@@ -288,10 +297,19 @@ class TextInput(gtk.TextView):
                 else:
                     self.message_to_send = self.get_text()
         
+        
         # Strip left
         if self.get_text()[0:1] == ' ':
             ctext = self.get_text().lstrip()
             gobject.idle_add(self.clear_text, ctext)
+        
+        # Check for URLS to shorten
+        elif not self.is_shortening:
+            utext = self.get_text()
+            if len(utext) >= 45 \
+               and (utext.find('http') != -1 or utext.find('www') != -1):
+                
+                self.shorter.text = utext
         
         # Resize
         self.resize()
@@ -396,14 +414,21 @@ class TextInput(gtk.TextView):
         self.get_buffer().set_text(text)
     
     def clear_text(self, text, pos = 0):
+        self.is_shortening = False
         self.is_changing = True
         self.set_text(text)
         self.is_changing = False
         self.get_buffer().place_cursor(
                           self.get_buffer().get_iter_at_offset(pos))
     
+    def shorten_text(self, text):
+        if self.is_shortening:
+            self.is_shortening = False
+            self.set_text(text)
+    
     def reset(self):
         self.set_text('')
+        self.is_shortening = False
         self.has_focus = False
         self.loose_focus()
         self.unfocus()
@@ -428,6 +453,7 @@ class TextInput(gtk.TextView):
             self.modify_base(gtk.STATE_NORMAL, self.default_bg)
     
     def check_mode(self):
+        self.is_shortening = False
         self.has_focus = False
         self.unset('reply', 'retweet', 'edit', 'message')
         self.set_text(UNSET_TEXT)
