@@ -26,8 +26,6 @@ from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADED, UNSET_TEXT, \
                       UNSET_LABEL, MESSAGE_ERROR
 
 class GUIHelpers:
-    def __init__(self):
-        pass
     
     # Info Label ---------------------------------------------------------------
     def set_label(self):

@@ -29,11 +29,8 @@ from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADING, HTML_LOADED, \
 
 
 class GUIEventHandler:
-    def __init__(self):
-        pass
     
     # Events -------------------------------------------------------------------
-    # --------------------------------------------------------------------------
     def delete_event(self, widget, event, data=None):
         self.window_position = self.get_position()
         self.main.settings['position'] = str(self.window_position)

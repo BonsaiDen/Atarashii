@@ -25,9 +25,6 @@ from constants import HTML_UNSET_ID
 
 
 class UpdaterTweet:
-    def __init__(self):
-        pass
-    
     # Set lastest Tweet
     def set_last_tweet(self, item_id):
         self.html.last_id = item_id

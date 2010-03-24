@@ -23,11 +23,8 @@ from constants import HTML_UNSET_ID, ST_LOGIN_SUCCESSFUL, HTML_UNSET_TEXT
 
 
 class ViewHTML:
-    def __init__(self):
-        pass
     
     # Render the actual HTML ---------------------------------------------------
-    # --------------------------------------------------------------------------
     def init_render(self):
         self.position = self.scroll.get_vscrollbar().get_value()
         self.current_scroll = self.position

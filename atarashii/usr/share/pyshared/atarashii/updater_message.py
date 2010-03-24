@@ -25,9 +25,6 @@ from constants import HTML_UNSET_ID
 
 
 class UpdaterMessage:
-    def __init__(self):
-        pass
-    
     # Set lastest Message
     def set_last_message(self, item_id):
         self.message.last_id = item_id

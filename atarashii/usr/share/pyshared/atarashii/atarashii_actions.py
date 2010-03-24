@@ -39,11 +39,8 @@ from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
 
 
 class AtarashiiActions:
-    def __init__(self):
-        pass
     
     # Start & Quit -------------------------------------------------------------
-    # --------------------------------------------------------------------------
     def start(self):
         gtk.main()
     

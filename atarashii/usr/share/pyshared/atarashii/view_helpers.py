@@ -29,11 +29,8 @@ from language import LANG as lang
 
 
 class ViewHelpers:
-    def __init__(self):
-        pass
     
     # Copy stuff to clipboard --------------------------------------------------
-    # --------------------------------------------------------------------------
     def copy_data(self, data):
         display = gtk.gdk.display_manager_get().get_default_display()
         clipboard = gtk.Clipboard(display, 'CLIPBOARD')

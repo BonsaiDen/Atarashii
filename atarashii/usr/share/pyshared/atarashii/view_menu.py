@@ -27,8 +27,6 @@ from language import LANG as lang
 # This is the hacked part of Atarashii, getting this menu to work is quite a
 # pain. The kittens spend some real time developing this...
 class ViewMenu:
-    def __init__(self):
-        pass
     
     # Tooltip Building ---------------------------------------------------------
     def on_link_hover(self, view, title, url):
