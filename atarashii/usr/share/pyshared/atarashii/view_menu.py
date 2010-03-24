@@ -22,7 +22,7 @@ import gtk
 import gobject
 
 from language import LANG as lang
-from utils import EXPAND_LIST
+from utils import EXPAND_LIST, Expander, escape
 
 
 # This is the hacked part of Atarashii, getting this menu to work is quite a
@@ -58,18 +58,18 @@ class ViewMenu:
             
             # Try to expand links
             elif link.startswith('http://'):
-                check = link[7:]
-                check = check[:check.find('/')] # get the service
-                if check in EXPAND_LIST:
+                service = link[7:]
+                service = service[:service.find('/')] # get the service
+                if service in EXPAND_LIST:
                     if self.expanded_links.has_key(link):
                         tip.set_markup(lang.html_expanded_tooltip
-                                       % (link, self.expanded_links[link]))
+                                       % (escape(link),
+                                          escape(self.expanded_links[link])))
                         
                         return True
                     
                     elif not self.is_expanding:
-                        self.main.shorter.expand = link
-                        self.main.shorter.expand_callback = self.expand_link
+                        Expander(link, service, self.expand_link)
     
     def set_tooltip(self, user, img):
         self.tooltip_label.set_markup(lang.html_avatar_tooltip \

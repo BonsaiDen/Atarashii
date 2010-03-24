@@ -69,8 +69,14 @@ def compare_sub(item_x, item_y):
     else:
         return 0
         
-# URL Shortener ----------------------------------------------------------------
+# URL Shortener / Expander------------------------------------------------------
 # ------------------------------------------------------------------------------
+import urllib2
+import httplib
+import threading
+import time
+import gobject
+
 SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{35,})')
 SHORTS = {
     'is.gd' : 'http://is.gd/api.php?longurl=%s',
@@ -81,84 +87,88 @@ SHORTS = {
 SHORTS_LIST = ['is.gd', 'tinyurl.com', 'snipurl.com']
 EXPAND_LIST = ['is.gd', 'tl.gd', 'tinyurl.com', 'snipurl.com', 'bit.ly']
 
-import urllib2
-import threading
-import time
-import gobject
 
-
-# FIXME clean this up...
 class Shortener(threading.Thread):
-    def __init__(self, textbox):
+    url_list = {}
+    black_list = []
+    
+    def __init__(self, text, text_box):
         threading.Thread.__init__(self)
-        self.textbox = textbox
-        self.reset()
-    
-    def reset(self):
-        self.text = ''
-        self.blacklist = []
-        self.url_list = {}
-        
-        self.expand = ''
-        self.expand_callback = None
-    
+        self.text = text
+        self.text_box = text_box
+        self.setDaemon(True)
+        self.start()
+
     def run(self):
-        while True:
-            # Expand a URL
-            if self.expand != '':
-                url = self.expand_url(self.expand)
-                gobject.idle_add(self.expand_callback, self.expand, url)
-                self.expand = ''
-            
-            # Shorten a URL
-            if self.text != '':
-                find_urls = SHORT_REGEX.findall(self.text + " ")
+        # Don't make multiple api calls for the same url
+        find_urls = SHORT_REGEX.findall(self.text + " ")
+        urls = []
+        for url in find_urls:
+            if not url[0] in urls and not url[0] in self.__class__.black_list:
+                urls.append(url[0])
+        
+        # Replace them all
+        if len(urls) > 0:
+            # Wait a bit, this is better for the user experience!
+            time.sleep(0.25)
+            short_text = self.text_box.get_text()
+            for url in urls:
+                short = self.shorten_url(url,
+                                self.text_box.main.settings['shortener'])
                 
-                # Don't make multiple api calls for the same url
-                urls = []
-                for url in find_urls:
-                    if not url[0] in urls and not url[0] in self.blacklist:
-                        urls.append(url[0])
-                
-                # Replace them all
-                if len(urls) > 0:
-                    # Wait a bit, this is better for the user experience!
-                    time.sleep(0.25)
-                    box_text = self.textbox.get_text()
-                    for url in urls:
-                        short = self.shorten_url(url,
-                                        self.textbox.main.settings['shortener'])
-                        
-                        box_text = box_text.replace(url, short)
-                    
-                    self.textbox.is_shortening = True
-                    gobject.idle_add(self.textbox.shorten_text, box_text)
-                
-                self.text = ''
+                short_text = short_text.replace(url, short)
             
-            # Fix a bug when the modules get unloaded, since we're set to Daemon
-            if time == None:
-                break
-            
-            time.sleep(0.1)
+            self.text_box.is_shortening = True
+            gobject.idle_add(self.text_box.shorten_text, short_text)
     
     def shorten_url(self, url, api):
-        if self.url_list.has_key(url):
-            return self.url_list[url]
+        if self.__class__.url_list.has_key(url):
+            return self.__class__.url_list[url]
         
         try:
             short = urllib2.urlopen(SHORTS[api] % urllib2.quote(url)).read()
-            self.url_list[url] = short
+            self.__class__.url_list[url] = short
             return short
         
         except IOError:
-            self.blacklist.append(url)
+            self.__class__.black_list.append(url)
             return url
-    
-    def expand_url(self, url):
-        try:
-            return urllib2.urlopen(url).geturl()
+
+
+class Expander(threading.Thread):
+    url_list = {}
+    black_list = []
+
+    def __init__(self, url, service, callback):
+        threading.Thread.__init__(self)
+        self.url = url
+        self.service = service
+        self.callback = callback
+        self.setDaemon(True)
+        self.start()
+
+    def run(self):
+        if self.__class__.url_list.has_key(self.url):
+            url = self.__class__.url_list[self.url]
         
-        except IOError:
-            return url
+        elif self.url in self.__class__.black_list:
+            url = self.url
+        
+        else:
+            try:
+                path = self.url[7 + len(self.service):]
+                conn = httplib.HTTPConnection('bit.ly', 80)
+                conn.request('HEAD', path)
+                response = conn.getresponse()
+                if not response.status == 301:
+                    raise IOError
+                
+                else:
+                    url = response.getheader('location', self.url)
+            
+            except IOError:
+                self.__class__.black_list.append(self.url)
+                url = self.url
+        
+        gobject.idle_add(self.callback, self.url, url)
 
