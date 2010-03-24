@@ -60,10 +60,10 @@ class HTML(view.HTMLView):
          
     
     def set_item_count(self, count):
-        self.max_message_count = count
+        self.main.max_message_count = count
     
     def get_item_count(self):
-        return self.max_message_count
+        return self.main.max_message_count
     
     
     # Render the Timeline ------------------------------------------------------
