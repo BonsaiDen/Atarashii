@@ -1,4 +1,4 @@
-atarashii (0.99.15d-1) all;
+atarashii (0.99.16-1) all;
 
   * Read button now gets disabled just before new tweets are loaded, this is to
     prevent the user from accidently marking all tweets as read.
@@ -10,7 +10,7 @@ atarashii (0.99.15d-1) all;
   * Some internal cleanup and other small bug fixes.
   * Fix broken resetting of the loaded message history.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 24 Mar 2010 05:38:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 24 Mar 2010 08:30:00 +0100
 
 atarashii (0.99.15c-1) all;
 

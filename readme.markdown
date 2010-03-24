@@ -16,7 +16,7 @@ There are currently three ways for you to get **Atarashii**.
 
 **#1: Use the pre build Package - The way of the user...**  
 This is most likely the simpelst one is to install the pre build Debian-Package from the Downloads section:  
-[Click here to download the lastest version](http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.15c-1_all.deb).
+[Click here to download the lastest version](http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.16-1_all.deb).
 
 > The package will automatically setup the repo config and install the public key,  
 > so you don't have to check for updates on GitHub, instead just use your systems update manager.
