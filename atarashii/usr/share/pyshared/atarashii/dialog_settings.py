@@ -23,8 +23,9 @@ import gobject
 
 from language import LANG as lang
 from dialog import Dialog, MessageDialog
+from utils import SHORTS
 
-from constants import ST_LOGIN_SUCCESSFUL, ST_CONNECT
+from constants import ST_LOGIN_SUCCESSFUL, ST_LOGIN_COMPLETE
 from constants import MESSAGE_QUESTION
 
 
@@ -191,6 +192,20 @@ class SettingsDialog(Dialog):
         sound.connect('toggled', lambda *a: toggle2())
         
         
+        # Shortener ------------------------------------------------------------
+        shorts = self.get('shorts')
+        shorts_list = gtk.ListStore(str)
+        cell = gtk.CellRendererText()
+        shorts.pack_start(cell, True)
+        shorts.add_attribute(cell, 'text', 0)
+        shorts.set_model(shorts_list)
+        for i, k in enumerate(SHORTS.keys()):
+            shorts_list.append((k,))
+            if k == self.settings['shortener']:
+                shorts.set_active(i)
+        
+        self.get('shortener').set_label(lang.settings_shortener)
+        
         # Save -----------------------------------------------------------------
         oldusername = self.main.username
         def save(*args):
@@ -200,6 +215,7 @@ class SettingsDialog(Dialog):
             self.settings['notify'] = notify.get_active()
             self.settings['sound'] = sound.get_active()
             self.settings['tray'] = tray.get_active()
+            self.settings['shortener'] = SHORTS.keys()[shorts.get_active()]
             
             self.settings.set_autostart(autostart.get_active())
             self.gui.show_in_taskbar(taskbar.get_active())
@@ -222,7 +238,7 @@ class SettingsDialog(Dialog):
                 self.main.logout()
             
             elif username != oldusername \
-                or not self.main.status(ST_LOGIN_SUCCESSFUL):
+                 or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
                 
                 self.activate(False)
                 self.main.login(username)
@@ -230,7 +246,7 @@ class SettingsDialog(Dialog):
             self.on_close()
         
         
-        self.activate(not self.main.status(ST_CONNECT))
+        self.activate(self.main.status(ST_LOGIN_COMPLETE))
         self.close_button.connect('clicked', save)
         cancel_button.connect('clicked', self.on_close)
         gobject.idle_add(self.drop.grab_focus)
