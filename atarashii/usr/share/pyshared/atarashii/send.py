@@ -76,6 +76,7 @@ class Edit(threading.Thread):
             # Send Tweet
             update = self.main.api.update_status(text,
                                 in_reply_to_status_id = self.main.edit_reply_id)
+            
             self.main.updater.set_last_tweet(update.id)
             
             # Remove old tweet
