@@ -25,7 +25,7 @@ import calendar
 
 from language import LANG as lang
 from settings import HOME_DIR
-from utils import tweepy, TweepError, compare
+from utils import tweepy, TweepError
 from updater_message import UpdaterMessage
 from updater_tweet import UpdaterTweet
 

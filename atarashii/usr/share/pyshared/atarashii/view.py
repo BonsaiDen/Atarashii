@@ -181,10 +181,10 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     def add(self, item, append = False):
         # Replace mentions by replies, sometimes the timeline might lag behind
         found = False
-        for n, i in enumerate(self.items):
+        for e, i in enumerate(self.items):
             if i[0].id == item[0].id:
                 if hasattr(i[0], "is_mentioned") and i[0].is_mentioned:
-                    self.items.pop(n)
+                    self.items.pop(e)
                     break
                 
                 else:
