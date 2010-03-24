@@ -217,7 +217,7 @@ class Settings:
         self['crashed'] = os.path.exists(CRASH_FILE)
         if self['crashed']:
             cfp = open(CRASH_FILE, 'rb')
-            self['crash_reason'] = cfp.read()
+            self['crash_reason'] = cfp.read().strip()
             cfp.close()
             print 'ERROR: Atarashii crashed!'
     
