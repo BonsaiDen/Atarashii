@@ -31,7 +31,6 @@ class HTML(view.HTMLView):
         view.HTMLView.__init__(self, main, gui,
                                self.gui.html_scroll, MODE_TWEETS)
         
-
         self.item_count = self.main.load_tweet_count
         
         self.lang_loading = lang.html_loading
@@ -43,7 +42,6 @@ class HTML(view.HTMLView):
         self.last_mentioned = UNSET_TEXT
         
         self.first_setting = 'firsttweet_'
-    
     
     def get_latest(self):
         if self.main.settings.isset('lasttweet_' + self.main.username):
