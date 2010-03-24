@@ -32,7 +32,7 @@ class ViewMenu:
     
     # Tooltip Building ---------------------------------------------------------
     def on_link_hover(self, view, title, url):
-        self.last_hovered_link = url
+        self.last_hovered_link = url # url might be none!
     
     def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
         if self.last_hovered_link != None \
