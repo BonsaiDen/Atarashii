@@ -76,18 +76,26 @@ class ViewHelpers:
     def loaded(self, *args):
         # HACK! The value of the constant might change, but currently it's not
         # exposed to pygtk webkit and since the "load-finished" signal is
-        # deprecated, it's a 50/50 chance that one of those will evantually
+        # deprecated, it's a 50/50 chance that one of those will eventually
         # break the whole thing.. so do you want to be eaten by the tiger
         # or the lion?
         # Note from Ivo: Actually, the Lion won't eat me since I'm one too ;D
         if self.get_property('load-status') != 2:
             return
         
+        else:
+            self.is_loading = False
+        
+        # Offset
         if len(self.items) > 0 and self.has_newitems and not self.load_history:
             offset = self.get_offset()
         
         else:
             offset = 0
+        
+        # Fix for wrong offset when lots of tweets are loading and the user
+        # has scrolled since the rendering was started
+        self.position += self.current_scroll - self.position
         
         # Re-scroll
         if not self.first_load and self.position > 0:
@@ -132,6 +140,7 @@ class ViewHelpers:
     
     def on_scroll(self, view, event):
         # FIXME sometimes this still doesn't remove the menu
+        self.current_scroll = self.scroll.get_vscrollbar().get_value()
         gobject.timeout_add(10, self.fake_move, self.mouse_position)
 
     def fix_scroll(self):
