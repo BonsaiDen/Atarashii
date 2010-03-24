@@ -23,7 +23,7 @@ import gobject
 
 from language import LANG as lang
 from dialog import Dialog, MessageDialog
-from utils import SHORTS, SHORTS_ORDER
+from utils import SHORTS_ORDER
 
 from constants import ST_LOGIN_SUCCESSFUL, ST_LOGIN_COMPLETE, ST_CONNECT
 from constants import MESSAGE_QUESTION
