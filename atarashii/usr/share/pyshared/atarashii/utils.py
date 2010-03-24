@@ -85,8 +85,11 @@ SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{45,})')
 SHORTS = {
     'is.gd' : 'http://is.gd/api.php?longurl=%s',
     'tr.im' : 'http://tr.im/api/trim_simple?url=%s',
-    'tinyurl.com' : 'http://tinyurl.com/api-create.php?url=%s'
+    'tinyurl.com' : 'http://tinyurl.com/api-create.php?url=%s',
+    'snipurl.com' : 'http://snipr.com/site/snip?r=simple&link=%s'
 }
+
+SHORTS_ORDER = ['is.gd', 'tr.im', 'tinyurl.com', 'snipurl.com']
 
 import urllib2
 import threading
