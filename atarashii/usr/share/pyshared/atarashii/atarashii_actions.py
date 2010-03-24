@@ -237,7 +237,7 @@ class AtarashiiActions:
     # --------------------------------------------------------------------------
     def handle_error(self, error):
         # Do we need to give focus back to the textbox?
-        self.text.check_refocus()
+        self.gui.text.check_refocus()
         
         # Determine the kind of the error
         rate_error = ''

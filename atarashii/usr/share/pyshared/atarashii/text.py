@@ -488,7 +488,7 @@ class TextInput(gtk.TextView):
     
     # Other stuff --------------------------------------------------------------
     def check_refocus(self):
-        if self.any_status(ST_WAS_SEND, ST_WAS_DELETE):
+        if self.main.any_status(ST_WAS_SEND, ST_WAS_DELETE):
             self.gui.show_input()
             
             if not self.main.status(ST_WAS_RETWEET) \
