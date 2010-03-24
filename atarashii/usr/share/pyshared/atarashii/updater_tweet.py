@@ -40,7 +40,8 @@ class UpdaterTweet:
     def get_init_tweets(self, last = False, init = False):
         updates = []
         try:
-            updates = self.try_get_updates(self.html.get_first())
+            updates = self.try_get_items(self.get_updates,
+                                         self.html.get_first())
         
         except (IOError, TweepError), error:
             gobject.idle_add(self.main.on_login_failed, error)
@@ -59,29 +60,6 @@ class UpdaterTweet:
     
     
     # Main Function that fetches the updates -----------------------------------
-    def try_get_updates(self, since_id = 0, max_id = None, max_count = 200):
-        count = 0
-        while True:
-            count += 1
-            try:
-                # Try to get the updates and then break
-                return self.get_updates(since_id = since_id, max_id = max_id,
-                                max_count = max_count)
-            
-            # Stop immediately on network error
-            except IOError, error:
-                raise error
-            
-            # Something went wrong, either try it again or break with the error
-            except TweepError, error:
-                if count == 2:
-                    raise error
-            
-            # Failsafe
-            except:
-                return []
-    
-    # Tweets
     def get_updates(self, since_id = 0, max_id = None, max_count = 200):
         gobject.idle_add(self.gui.update_status, True)
         updates = []

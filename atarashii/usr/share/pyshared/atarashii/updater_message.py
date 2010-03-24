@@ -41,7 +41,8 @@ class UpdaterMessage:
     def get_init_messages(self, last = False, init = False):
         messages = []
         try:
-            messages = self.try_get_messages(self.message.get_first())
+            messages = self.try_get_items(self.get_messages,
+                                          self.message.get_first())
         
         except (IOError, TweepError), error:
             gobject.idle_add(self.main.on_login_failed, error)
@@ -59,29 +60,6 @@ class UpdaterMessage:
     
     
     # Main Function that fetches the messages ----------------------------------
-    def try_get_messages(self, since_id = 0, max_id = None, max_count = 200):
-        count = 0
-        while True:
-            count += 1
-            try:
-                # Try to get the updates and then break
-                return self.get_messages(since_id = since_id, max_id = max_id,
-                                max_count = max_count)
-            
-            # Stop immediately on network error
-            except IOError, error:
-                raise error
-            
-            # Something went wrong, either try it again or break with the error
-            except TweepError, error:
-                if count == 2:
-                    raise error
-            
-            # Failsafe
-            except:
-                return []
-    
-    # Messages
     def get_messages(self, since_id = 0, max_id = None, max_count = 200):
         messages = []
         if since_id != HTML_UNSET_ID:

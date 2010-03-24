@@ -347,6 +347,32 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         return True
     
     
+    # Retrieve Tweets / Messages -----------------------------------------------
+    def try_get_items(self, method, since_id = 0,
+                      max_id = None,max_count = 200):
+        
+        count = 0
+        while True:
+            count += 1
+            try:
+                # Try to get the updates and then break
+                return method(since_id = since_id, max_id = max_id,
+                              max_count = max_count)
+            
+            # Stop immediately on network error
+            except IOError, error:
+                raise error
+            
+            # Something went wrong, either try it again or break with the error
+            except TweepError, error:
+                if count == 2:
+                    raise error
+            
+            # Failsafe
+            except:
+                return []
+    
+    
     # Notifications ------------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_notifications(self, updates, messages):
