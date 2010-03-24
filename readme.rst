@@ -27,9 +27,9 @@ There are currently three ways for you to get **Atarashii**.
 This is most likely the simpelst one is to install the pre build Debian-Package_ 
 from the Downloads section.
 
-    The package will automatically setup the repo config and install the public 
-    key, so you don't have to check for updates on GitHub, instead just use your
-    systems update manager.
+The package will automatically setup the repo config and install the public 
+key, so you don't have to check for updates on GitHub, instead just use your
+systems update manager.
 
 **#2: GIT lovers choice - Installation from the repository**  
 
@@ -40,7 +40,7 @@ Open a shell and issue the following commands::
 
 After that just install the created Debian-Package.
 
-    You may need to install `fakeroot` in order to be able to build the 
+    You may need to install ``fakeroot`` in order to be able to build the 
     package.
     Also there is a rare bug where dpkg-deb fails to open/find the control file.
     If you encounter this please send me a mail with more details.
@@ -49,7 +49,7 @@ After that just install the created Debian-Package.
 **#3: For the real Coding Kittens - Running the debug version**
 
 If you want to hack on **Atarashii** you can just clone the repo and then run 
-`./debug` to start Atarashii.
+``./debug`` to start Atarashii.
 
     Due to hardlinks in the CSS file the favorite/reply icons won't work until 
     **Atarashii** has been installed with one of the above methods.
