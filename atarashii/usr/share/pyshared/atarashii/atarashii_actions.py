@@ -20,7 +20,9 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
+import gnome.ui
 
+import os
 import sys
 import calendar
 import time
@@ -30,8 +32,9 @@ import socket
 import send
 
 from language import LANG as lang
-from constants import UNSET_ID_NUM, UNSET_TEXT
+from settings import LOGOUT_FILE
 
+from constants import UNSET_ID_NUM, UNSET_TEXT
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
                       ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_COMPLETE, \
@@ -42,6 +45,17 @@ class AtarashiiActions:
     
     # Start & Quit -------------------------------------------------------------
     def start(self):
+        # Remove old logout indicator
+        self.on_logout_cancel()
+        
+        # Connect to gnome session in order to be notified on shutdown
+        gnome.program_init('Atarashii', self.version)
+        client = gnome.ui.master_client()
+        client.connect('save-yourself', self.on_logout)
+        client.connect('shutdown-cancelled', self.on_logout_cancel)
+        client.connect('die', self.on_logout)
+        
+        # Start GTK
         gtk.main()
     
     def crash_exit(self):
@@ -57,7 +71,7 @@ class AtarashiiActions:
             crash_file = open(CRASH_LOG_FILE, 'wb')
             trace = traceback.extract_tb(sys.last_traceback)
             crash_file.write(
-                 """Atarashii %s\nStarted at %s\nCrashed at %s"\nTraceback:\n"""
+                 '''Atarashii %s\nStarted at %s\nCrashed at %s"\nTraceback:\n'''
                  % (self.version,
                  time.strftime('%a %b %d %H:%M:%S +0000 %Y',
                  time.gmtime(time.time())),
@@ -69,6 +83,16 @@ class AtarashiiActions:
             
             # Exit with specific error
             sys.exit(70) # os.EX_SOFTWARE
+    
+    # Add / Delete indicator file
+    def on_logout(self, *args):
+        self.save_settings(True)
+        i = open(LOGOUT_FILE, 'wb')
+        i.close()
+    
+    def on_logout_cancel(self, *args):
+        if os.path.exists(LOGOUT_FILE):
+            os.unlink(LOGOUT_FILE)
     
     def quit(self):
         self.save_settings(True)
