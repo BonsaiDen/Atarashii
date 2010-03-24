@@ -1,3 +1,9 @@
+atarashii (0.99.16b-1) all;
+
+  * Normalize the window position on exit and save it.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 24 Mar 2010 20:54:00 +0100
+
 atarashii (0.99.16a-1) all;
 
   * Notifications now always show up.
