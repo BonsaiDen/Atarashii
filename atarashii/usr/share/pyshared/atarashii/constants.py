@@ -22,8 +22,8 @@ RETWEET_OLD = 2          # Can be anything
 
 # General Stuff
 UNSET_ID_NUM = -1        # Must be lower than 0
-UNSET_TEXT = ''          # Must be ""
-UNSET_LABEL = ''         # Should be ""
+UNSET_TEXT = ''          # Must be ''
+UNSET_LABEL = ''         # Should be ''
 UNSET_TIMEOUT = -1       # Don't know if this is needed anymore at all...
 
 # Modes
@@ -33,6 +33,7 @@ MODE_SEARCH = 2          # Can be anything, currently unused
 
 # HTML
 HTML_UNSET_ID = -1       # Must be lower than 0
+HTML_UNSET_TEXT = ''     # Should be ''
 HTML_RESET = -1          # Can be anything
 HTML_LOADING = 0         # Can be anything
 HTML_LOADED = 1          # Can be anything
