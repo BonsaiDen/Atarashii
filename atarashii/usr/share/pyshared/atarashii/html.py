@@ -143,6 +143,9 @@ class HTML(view.HTMLView):
         # Source ---------------------------------------------------------------
         if tweet.source != "web":
             if hasattr(tweet, "source_url") and tweet.source_url != "":
+                if tweet.source_url == "/devices":
+                    tweet.source_url = "http://twitter.com/devices"
+                
                 by_user = lang.html_by \
                           % ('<a href="source:%s" title="%s">%s</a>' \
                           % (tweet.source_url, tweet.source_url, tweet.source))
