@@ -350,47 +350,40 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     # Notifications ------------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_notifications(self, updates, messages):
-        tweet_list = []
-        tweet_ids = []
-        message_ids = []
+        notify_list = []
         for i in messages:
-            imgfile = self.get_image(i, True)
+            img_file = self.get_image(i, True)
             if i.sender.screen_name.lower() != self.main.username.lower():
-                if not i.id in message_ids:
-                    message_ids.append(i.id)
-                    tweet_list.append([
-                        lang.notification_message % i.sender.screen_name,
-                        i.text, imgfile])
+                notify_list.append([lang.notification_message % \
+                                    i.sender.screen_name, i.text, img_file])
             
-            self.message.update_list.append((i, imgfile))
+            self.message.update_list.append((i, img_file))
         
         for i in updates:
-            imgfile = self.get_image(i)
+            img_file = self.get_image(i)
             if i.user.screen_name.lower() != self.main.username.lower():
-                # Don't add mentions twice
-                if not i.id in tweet_ids:
-                    tweet_ids.append(i.id)
-                    if hasattr(i, 'retweeted_status'):
-                        name = 'RT %s' % i.retweeted_status.user.screen_name
-                        text = i.retweeted_status.text
-                    else:
-                        name = i.user.screen_name
-                        text = i.text
-                    
-                    tweet_list.append([name, text, imgfile])
+                if hasattr(i, 'retweeted_status'):
+                    name = 'RT %s' % i.retweeted_status.user.screen_name
+                    text = i.retweeted_status.text
+                
+                else:
+                    name = i.user.screen_name
+                    text = i.text
+                
+                notify_list.append([name, text, img_file])
             
-            self.html.update_list.append((i, imgfile))
+            self.html.update_list.append((i, img_file))
         
         # Show Notifications
-        count = len(tweet_list)
+        count = len(notify_list)
         if count > 0 and self.settings.is_true('notify'):
-            tweet_list.reverse()
+            notify_list.reverse()
             if count > 1:
-                for num, i in enumerate(tweet_list):
-                    tweet_list[num][0] = lang.notification_index \
-                                         % (tweet_list[num][0], num+1, count)
+                for i in range(0, count):
+                    notify_list[i][0] = lang.notification_index \
+                                        % (notify_list[i][0], num + 1, count)
             
-            for i in tweet_list:
+            for i in notify_list:
                 self.notifier.items.append(i)
     
     
@@ -400,16 +393,13 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         view.push_updates()
         view.load_state = HTML_LOADED
         
-        # Finish the login
-        if init:
+        if init: # Finish the login
             self.started = True
             gobject.idle_add(self.main.on_login)
             gobject.idle_add(self.gui.set_refresh_update, True)
         
-        # Show login message
-        if last:
+        if last: # Show login notification
             gobject.idle_add(self.main.show_start_notifications)
-    
     
     def process_updates(self, updates): # Remove doubled mentions
         ids = []
@@ -448,7 +438,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         if count < 350:
             if not self.main.status(ST_WARNING_RATE):
                 self.main.set_status(ST_WARNING_RATE)
-                
                 gobject.idle_add(self.gui.warning_button.show,
                                  lang.warning_button_rate_limit,
                                  lang.warning_rate_limit % count)
@@ -459,32 +448,32 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     def get_image(self, item, message = False):
         if message:
             url = item.sender.profile_image_url
-            userid = item.sender.id
+            user_id = item.sender.id
             name = item.sender.screen_name
         
         else:
             if hasattr(item, 'retweeted_status'):
                 url = item.retweeted_status.user.profile_image_url
-                userid = item.retweeted_status.user.id
+                user_id = item.retweeted_status.user.id
                 name = item.retweeted_status.user.screen_name
             
             else:
                 url = item.user.profile_image_url
-                userid = item.user.id
+                user_id = item.user.id
                 name = item.user.screen_name
         
         image = url[url.rfind('/') + 1:]
-        imgdir = os.path.join(HOME_DIR, '.atarashii')
-        if not os.path.exists(imgdir):
-            os.mkdir(imgdir)
+        img_dir = os.path.join(HOME_DIR, '.atarashii')
+        if not os.path.exists(img_dir):
+            os.mkdir(img_dir)
         
-        imgfile = os.path.join(imgdir, str(userid) + '_' + image)
-        if not os.path.exists(imgfile):
-            urllib.urlretrieve(url, imgfile)
+        img_file = os.path.join(img_dir, str(user_id) + '_' + image)
+        if not os.path.exists(img_file):
+            urllib.urlretrieve(url, img_file)
         
         # Check for user picture!
         if name.lower() == self.main.username.lower():
-            self.main.set_user_picture(imgfile)
+            self.main.set_user_picture(img_file)
         
-        return imgfile
+        return img_file
 
