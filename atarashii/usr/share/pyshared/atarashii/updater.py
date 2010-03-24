@@ -32,7 +32,7 @@ from constants import ST_WARNING_RATE, ST_UPDATE, ST_LOGIN_COMPLETE, \
                       ST_NETWORK_FAILED
 
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_UNSET_ID, \
-                      UNSET_TIMEOUT, HTML_RESET, HTML_LOADING
+                      UNSET_TIMEOUT, HTML_RESET, HTML_LOADING, HTML_LOADED
 
 
 class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
@@ -397,6 +397,21 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
+    def do_render(self, view, init, last):
+        view.push_updates()
+        view.load_state = HTML_LOADED
+        
+        # Finish the login
+        if init:
+            self.started = True
+            gobject.idle_add(self.main.on_login)
+            gobject.idle_add(self.gui.set_refresh_update, True)
+        
+        # Show login message
+        if last:
+            gobject.idle_add(self.main.show_start_notifications)
+    
+    
     def process_updates(self, updates): # Remove doubled mentions
         ids = []
         def unique(i):

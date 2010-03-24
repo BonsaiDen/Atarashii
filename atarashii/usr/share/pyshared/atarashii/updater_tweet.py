@@ -21,7 +21,7 @@ import gobject
 from utils import TweepError
 
 from constants import ST_HISTORY, ST_NETWORK_FAILED
-from constants import HTML_UNSET_ID, HTML_LOADED
+from constants import HTML_UNSET_ID
 
 
 class UpdaterTweet:
@@ -52,28 +52,13 @@ class UpdaterTweet:
         updates.reverse()
         for i in updates:
             if i != None:
-                imgfile = self.get_image(i)
-                self.html.update_list.append((i, imgfile))
+                self.html.update_list.append((i, self.get_image(i)))
         
-        def render():
-            self.html.push_updates()
-            self.html.load_state = HTML_LOADED
-            
-            # Finish the login
-            if init:
-                self.started = True
-                gobject.idle_add(self.main.on_login)
-                gobject.idle_add(self.gui.set_refresh_update, True)
-            
-            # Show login message
-            if last:
-                gobject.idle_add(self.main.show_start_notifications)
-        
-        gobject.idle_add(render)
+        gobject.idle_add(self.do_render, self.html, init, last)
         return True
     
+    
     # Main Function that fetches the updates -----------------------------------
-    # --------------------------------------------------------------------------
     def try_get_updates(self, since_id = 0, max_id = None, max_count = 200):
         count = 0
         while True:

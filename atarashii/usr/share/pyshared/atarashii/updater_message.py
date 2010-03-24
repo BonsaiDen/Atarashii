@@ -21,13 +21,13 @@ import gobject
 from utils import TweepError
 
 from constants import ST_HISTORY, ST_NETWORK_FAILED
-from constants import HTML_UNSET_ID, HTML_LOADED
+from constants import HTML_UNSET_ID
 
 
 class UpdaterMessage:
     def __init__(self):
         pass
-        
+    
     # Set lastest Message
     def set_last_message(self, item_id):
         self.message.last_id = item_id
@@ -35,7 +35,7 @@ class UpdaterMessage:
         if len(self.message.items) > 0:
             self.message.newest_id = self.message.items[
                                      len(self.message.items) - 1][0].id
-
+    
     
     # Load initial messages ----------------------------------------------------
     def get_init_messages(self, last = False, init = False):
@@ -52,30 +52,13 @@ class UpdaterMessage:
         
         messages.reverse()
         for i in messages:
-            if i != None:
-                imgfile = self.get_image(i, True)
-                self.message.update_list.append((i, imgfile))
+                self.message.update_list.append((i, self.get_image(i, True)))
         
-        def render():
-            self.message.push_updates()
-            self.message.load_state = HTML_LOADED
-            
-            # Finish the login
-            if init:
-                self.started = True
-                gobject.idle_add(self.main.on_login)
-                gobject.idle_add(self.gui.set_refresh_update, True)
-            
-            # Show login message
-            if last:
-                gobject.idle_add(self.main.show_start_notifications)
-        
-        gobject.idle_add(render)
+        gobject.idle_add(self.do_render, self.message, init, last)
         return True
     
     
     # Main Function that fetches the messages ----------------------------------
-    # --------------------------------------------------------------------------
     def try_get_messages(self, since_id = 0, max_id = None, max_count = 200):
         count = 0
         while True:
