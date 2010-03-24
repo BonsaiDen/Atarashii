@@ -215,7 +215,10 @@ class SettingsDialog(Dialog):
             self.settings['notify'] = notify.get_active()
             self.settings['sound'] = sound.get_active()
             self.settings['tray'] = tray.get_active()
+            old_short = self.settings['shortener']
             self.settings['shortener'] = SHORTS_ORDER[shorts.get_active()]
+            if old_short != self.settings['shortener']:
+                self.gui.text.shorter.reset()            
             
             self.settings.set_autostart(autostart.get_active())
             self.gui.show_in_taskbar(taskbar.get_active())
