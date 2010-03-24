@@ -37,8 +37,14 @@ do
     let CODE=$?
     let RESTART=RESTART+1
     
+    
+    # Logout check
+    if [ -e ~/.atarashii/logout ]; then
+        rm ~/.atarashii/logout
+        exit 0
+    
     # Checks
-    if [ $CODE -eq 0 -o  $CODE -eq 1 ]; then # dont care about xwindow stuff
+    elif [ $CODE -eq 0 ]; then # dont care about xwindow stuff
         echo "Atarashii has exited normally."
         exit 0
     
