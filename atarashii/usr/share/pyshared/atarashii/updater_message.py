@@ -83,7 +83,7 @@ class UpdaterMessage:
         
         self.refresh_messages = False
         self.update_limit()
-        return self.process_updates(messages)
+        return messages
     
     # Message History
     def load_history_message(self):

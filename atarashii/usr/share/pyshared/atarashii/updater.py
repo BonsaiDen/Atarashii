@@ -381,26 +381,32 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     # --------------------------------------------------------------------------
     def show_notifications(self, updates, messages):
         notify_list = []
+        message_ids = []
         for i in messages:
             img_file = self.get_image(i, True)
-            if i.sender.screen_name.lower() != self.main.username.lower():
-                notify_list.append([lang.notification_message % \
-                                    i.sender.screen_name, i.text, img_file])
+            if not i.id in message_ids:
+                message_ids.append(i.id)
+                if i.sender.screen_name.lower() != self.main.username.lower():
+                    notify_list.append([lang.notification_message % \
+                                        i.sender.screen_name, i.text, img_file])
             
             self.message.update_list.append((i, img_file))
         
+        updates_ids = []
         for i in updates:
             img_file = self.get_image(i)
-            if i.user.screen_name.lower() != self.main.username.lower():
-                if hasattr(i, 'retweeted_status'):
-                    name = 'RT %s' % i.retweeted_status.user.screen_name
-                    text = i.retweeted_status.text
-                
-                else:
-                    name = i.user.screen_name
-                    text = i.text
-                
-                notify_list.append([name, text, img_file])
+            if not i.id in updates_ids:
+                updates_ids.append(i.id)
+                if i.user.screen_name.lower() != self.main.username.lower():
+                    if hasattr(i, 'retweeted_status'):
+                        name = 'RT %s' % i.retweeted_status.user.screen_name
+                        text = i.retweeted_status.text
+                    
+                    else:
+                        name = i.user.screen_name
+                        text = i.text
+                    
+                    notify_list.append([name, text, img_file])
             
             self.html.update_list.append((i, img_file))
         
@@ -430,21 +436,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         if last: # Show login notification
             gobject.idle_add(self.main.show_start_notifications)
-    
-    def process_updates(self, updates): # Remove doubled mentions
-        ids = []
-        def unique(i):
-            # Check if this item is already in the list
-            if i.id in ids:
-                return False
-            
-            else:
-                ids.append(i.id)
-                return True
-        
-        updates = [i for i in updates if unique(i)]
-        updates.sort(compare)
-        return updates
     
     # Calculate refresh interval based on rate limit information
     def update_limit(self):

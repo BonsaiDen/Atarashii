@@ -92,11 +92,7 @@ class UpdaterTweet:
         self.refresh_now = False
         self.update_limit()
         updates = updates + mentions
-        if len(mentions) > 0:
-            return self.process_updates(updates)
-        
-        else:
-            return updates
+        return updates
     
     # Tweet History
     def load_history(self):
