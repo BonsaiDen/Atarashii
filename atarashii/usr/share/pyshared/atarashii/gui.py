@@ -508,7 +508,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     # --------------------------------------------------------------------------
     def show_error(self, code, error_code, error_errno, rate_error):
         # Is Atarashii visible?
-        is_visible = self.is_shown and self.tray.on_screen()
+        is_visible = self.is_shown and self.on_screen()
         
         if self.show_box(code, rate_error, is_visible):
             return
