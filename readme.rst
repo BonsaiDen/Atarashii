@@ -7,8 +7,6 @@ It uses *GTK+* and *Webkit* to archive a slim and functional design.
 The code itself is written in *Python* and uses the corresponding *Python*  
 bindings for the *GTK+* libraries.
 
-*And **Kittens** like it!*
-
 
 Disclaimer
 ----------
@@ -42,7 +40,7 @@ Open a shell and issue the following commands::
 
 After that just install the created Debian-Package.
 
-    You may need to install ``fakeroot`` in order to be able to build the 
+    You may need to install `fakeroot` in order to be able to build the 
     package.
     Also there is a rare bug where dpkg-deb fails to open/find the control file.
     If you encounter this please send me a mail with more details.
@@ -51,7 +49,7 @@ After that just install the created Debian-Package.
 **#3: For the real Coding Kittens - Running the debug version**
 
 If you want to hack on **Atarashii** you can just clone the repo and then run 
-``./debug`` to start Atarashii.
+`./debug` to start Atarashii.
 
     Due to hardlinks in the CSS file the favorite/reply icons won't work until 
     **Atarashii** has been installed with one of the above methods.
