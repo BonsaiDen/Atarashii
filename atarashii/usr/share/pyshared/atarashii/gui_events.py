@@ -22,6 +22,7 @@ import gtk
 import gobject
 
 import dialog
+import dialog_settings
 
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADING, HTML_LOADED, \
                       BUTTON_REFRESH, BUTTON_HISTORY
@@ -136,12 +137,11 @@ class GUIEventHandler:
         if not self.settings_toggle:
             self.settings_toggle = True
             if self.settings_button.get_active() and not self.settings_dialog:
-                self.settings_dialog = dialog.SettingsDialog(self)
+                self.settings_dialog = dialog_settings.SettingsDialog(self)
             
             elif menu and not self.settings_dialog:
-                self.settings_dialog = dialog.SettingsDialog(self)
+                self.settings_dialog = dialog_settings.SettingsDialog(self)
                 self.settings_button.set_active(True)
-            
             
             elif menu and self.settings_dialog:
                 self.settings_dialog.on_close()
