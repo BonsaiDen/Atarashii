@@ -92,7 +92,8 @@ class UpdaterMessage:
     def load_history_message(self):
         messages = []
         try:
-            messages = self.try_get_messages(
+            messages = self.try_get_items(
+                            self.get_messages,
                             max_id = self.message.load_history_id,
                             max_count = self.main.load_message_count)
         

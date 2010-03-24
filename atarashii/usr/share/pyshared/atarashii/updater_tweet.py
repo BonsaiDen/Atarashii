@@ -105,8 +105,10 @@ class UpdaterTweet:
     def load_history(self):
         updates = []
         try:
-            updates = self.try_get_updates(max_id = self.html.load_history_id,
-                                        max_count = self.main.load_tweet_count)
+            updates = self.try_get_items(
+                           self.get_updates,
+                           max_id = self.html.load_history_id,
+                           max_count = self.main.load_tweet_count)
         
         except (IOError, TweepError), error:
             self.html.load_history_id = HTML_UNSET_ID
