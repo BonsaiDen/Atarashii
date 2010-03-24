@@ -281,7 +281,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         updates = []
         if not self.refresh_messages:
             try:         
-                updates = self.try_get_updates(self.html.last_id)
+                updates = self.try_get_items(self.get_updates,
+                                             self.html.last_id)
             
             # Something went wrong...
             except (IOError, TweepError), error:
@@ -301,7 +302,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
            and not self.refresh_now:
             
             try:
-                messages = self.try_get_messages(self.message.last_id)
+                messages = self.try_get_items(self.get_messages,
+                                              self.message.last_id)
             
             # Something went wrong...
             except (IOError, TweepError), error:
