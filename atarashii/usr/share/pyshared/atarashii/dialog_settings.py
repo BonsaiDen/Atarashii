@@ -179,17 +179,17 @@ class SettingsDialog(Dialog):
         sound.set_active(self.settings.is_true('sound'))
         notify.set_sensitive(True)
         
-        def toggle2():
+        def toggle2(*args):
             file_widget.set_sensitive(sound.get_active())
         
-        def toggle():
+        def toggle(*args):
             sound.set_sensitive(notify.get_active())
             file_widget.set_sensitive(
                         notify.get_active() and sound.get_active())
         
         toggle()
-        notify.connect('toggled', lambda *a: toggle())
-        sound.connect('toggled', lambda *a: toggle2())
+        notify.connect('toggled', toggle)
+        sound.connect('toggled', toggle2)
         
         
         # Shortener ------------------------------------------------------------
