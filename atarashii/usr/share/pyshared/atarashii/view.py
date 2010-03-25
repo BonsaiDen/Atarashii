@@ -350,7 +350,11 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Regular links
         else:
-            webbrowser.open(self.get_link_type(uri)[1])
+            link = self.get_link_type(uri)[1]
+            if self.expanded_links.has_key(link):
+                link = self.expanded_links[link]
+            
+            webbrowser.open(link)
         
         # Don't close the textbox
         if self.give_text_focus:

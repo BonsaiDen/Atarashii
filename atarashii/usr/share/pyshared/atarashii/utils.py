@@ -148,15 +148,22 @@ class Expander(threading.Thread):
         self.start()
 
     def run(self):
+        path = self.url[7 + len(self.service):]
+        
+        # Check for already resolved / failed urls
         if self.__class__.url_list.has_key(self.url):
             url = self.__class__.url_list[self.url]
         
         elif self.url in self.__class__.black_list:
             url = self.url
         
+        # tl.gd urls get just prepended since there a bugs with wrong urls 
+        # coming back somehow...
+        elif self.service == 'tl.gd':
+            url = 'http://www.twitlonger.com/show' + path
+        
         else:
             try:
-                path = self.url[7 + len(self.service):]
                 conn = httplib.HTTPConnection('bit.ly', 80)
                 conn.request('HEAD', path)
                 response = conn.getresponse()

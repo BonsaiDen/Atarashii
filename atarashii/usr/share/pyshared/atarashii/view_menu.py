@@ -69,6 +69,7 @@ class ViewMenu:
                         return True
                     
                     elif not self.is_expanding:
+                        self.is_expanding = True
                         Expander(link, service, self.expand_link)
     
     def set_tooltip(self, user, img):
