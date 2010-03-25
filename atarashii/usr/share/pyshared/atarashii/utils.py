@@ -141,7 +141,8 @@ class URLShorter(threading.Thread):
 
 
 # Expander ---------------------------------------------------------------------
-EXPAND_LIST = ['is.gd', 'tl.gd', 'tinyurl.com', 'snipurl.com', 'bit.ly']
+EXPAND_LIST = ['is.gd', 'tl.gd', 'tinyurl.com', 'snipurl.com', 'bit.ly',
+               'youtu.be']
 
 
 class URLExpander(threading.Thread):
@@ -166,26 +167,20 @@ class URLExpander(threading.Thread):
         elif self.url in self.__class__.black_list:
             url = self.url
         
-        # tl.gd urls get just prepended since there a bugs with wrong urls 
-        # coming back somehow...
-        elif self.service == 'tl.gd':
-            url = 'http://www.twitlonger.com/show' + path
-        
-        else:
-            try:
-                conn = httplib.HTTPConnection('bit.ly', 80)
-                conn.request('HEAD', path)
-                response = conn.getresponse()
-                if not response.status == 301:
-                    raise IOError
-                
-                else:
-                    url = response.getheader('location', self.url)
+        try:
+            conn = httplib.HTTPConnection(self.service, 80)
+            conn.request('HEAD', path)
+            response = conn.getresponse()
+            if not response.status in (301, 302):
+                raise IOError
             
-            except IOError:
-                self.__class__.black_list.append(self.url)
-                url = self.url
+            else:
+                url = response.getheader('location', self.url)
         
+        except IOError:
+            self.__class__.black_list.append(self.url)
+            url = self.url
+    
         gobject.idle_add(self.callback, self.url, url)
     
     @classmethod
