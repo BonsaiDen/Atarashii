@@ -32,7 +32,32 @@ def getFileMD5(file):
     f.close()
     return md5.hexdigest()
 
-# Gather Information about the project
+
+# Get latest commit number -----------------------------------------------------
+print 'Saving commit count...'
+proc = subprocess.Popen('git shortlog -s -n', shell = True, stdout = subprocess.PIPE)
+stdout_value = proc.communicate()[0]
+commit_count = 0
+lines = stdout_value.split('\n')
+for i in lines:
+    e = i.split('\t')[0].strip()
+    if e != '':
+        commit_count += int(e)
+
+
+init_file = os.path.join(sys.path[0], "atarashii/usr/share/pyshared/atarashii/__init__.py")
+import re
+countRegex = re.compile('__commits__ = \'([0-9]+)\'''')
+f = open(init_file, 'rb')
+init_data = f.read()
+f.close()
+init_data = countRegex.sub("__commits__ = '%s'" % commit_count, init_data)
+
+f = open(init_file, 'wb')
+f.write(init_data)
+f.close()
+
+# Gather Information about the project -----------------------------------------
 sys.path.insert(0, os.path.join(sys.path[0], "atarashii/usr/share/pyshared"))
 try:
     import atarashii
@@ -40,7 +65,8 @@ try:
 finally:
     sys.path.pop(0)
 
-# Create DEBIAN directory
+
+# Create DEBIAN directory ------------------------------------------------------
 debDir = os.path.join(sys.path[0], "atarashii/DEBIAN")
 if not os.path.exists(debDir):
     os.mkdir(debDir)
@@ -81,7 +107,8 @@ subprocess.call(["gzip", "--best", log2])
 subprocess.call(["gzip", "--best", man1])
 subprocess.call(["gzip", "--best", man2])
 
-# Check all files
+
+# Check all files --------------------------------------------------------------
 print "\n---- Cleaning up ----"
 print "Checking files..."
 m = open(os.path.join(sys.path[0], "atarashii/DEBIAN/md5sums"), "w")
@@ -119,13 +146,14 @@ for i in dirs:
 
 m.close()
 print "\n---- Stats ----"
-print "Current Version is %s" % atarashii.__version__
+print "Current Version is %s-%s" % (atarashii.__version__, commit_count)
 print "Complete size is %d KB" % (size / 1024)
 
-# Pack changelog
+
 print "\n---- Packaging ----"
 
-# Write control file
+
+# Write control file -----------------------------------------------------------
 print "Creating control file..."
 try:
     os.remove(os.path.join(sys.path[0], "atarashii/DEBIAN/postinst~"))

@@ -20,7 +20,7 @@ __version__ = '0.99.16b'
 __author__ = 'Ivo Wetzel <ivo.wetzel@googlemail.com>'
 __copyright__ = 'Copyright (c) 2010 Ivo Wetzel'
 __license__ = 'GPL 3'
-
+__commits__ = '809'
 
 import sys
 if sys.path[0] == '/usr/share/pyshared':
@@ -32,7 +32,7 @@ def start():
 
 def debug(path):
     from atarashii import Atarashii
-    Atarashii(__version__, path).start()
+    Atarashii(__version__ + '-' + __commits__, path).start()
 
 def crash(error):
     from settings import crash_file
