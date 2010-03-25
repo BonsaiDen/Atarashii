@@ -2,6 +2,8 @@ atarashii (0.99.16b-1) all;
 
   * Normalize the window position on exit and save it.
   * Preview expanded shortened links on mouseover.
+  * When Twitter lags and mentions arrive before replies, replace them 
+    afterwards when the replies come in.
   * Improved the shortening of links.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 25 Mar 2010 01:08:00 +0100
