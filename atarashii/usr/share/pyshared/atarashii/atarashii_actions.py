@@ -57,6 +57,7 @@ class AtarashiiActions:
         
         # Start GTK
         gtk.main()
+        gtk.gdk.threads_leave()
     
     def crash_exit(self):
         # Catch Python Errors
@@ -68,13 +69,14 @@ class AtarashiiActions:
             # Save the crashlog
             import traceback
             from settings import CRASH_LOG_FILE
-            crash_file = open(CRASH_LOG_FILE, 'wb')
+            crash_file = open(CRASH_LOG_FILE, 'ab')
             trace = traceback.extract_tb(sys.last_traceback)
             crash_file.write(
                  '''Atarashii %s\nStarted at %s\nCrashed at %s"\nTraceback:\n'''
                  % (self.version,
                  time.strftime('%a %b %d %H:%M:%S +0000 %Y',
-                 time.gmtime(time.time())),
+                                time.gmtime(time.time())),
+                 
                  time.strftime('%a %b %d %H:%M:%S +0000 %Y', time.gmtime())
                  ))
         
@@ -96,8 +98,9 @@ class AtarashiiActions:
     
     def quit(self):
         self.save_settings(True)
-        gtk.main_quit()        
         self.updater.running = False
+        gtk.main_quit()
+        gtk.gdk.threads_leave()
         self.settings.check_cache()
         self.exited = True
         sys.exit(0) # os.EX_OK
