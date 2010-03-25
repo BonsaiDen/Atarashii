@@ -33,8 +33,23 @@ def getFileMD5(file):
     return md5.hexdigest()
 
 
+def update_init_file(commits, sha):
+    init_file = os.path.join(sys.path[0], "atarashii/usr/share/pyshared/atarashii/__init__.py")
+    import re
+    f = open(init_file, 'rb')
+    init_data = f.read()
+    f.close()
+    countRegex = re.compile('__commits__ = \'([0-9]+)\'''')
+    init_data = countRegex.sub("__commits__ = '%s'" % commits, init_data)
+    shaRegex = re.compile('__hash__ = \'([0-9a-zA-Z]+)\'''')
+    init_data = shaRegex.sub("__hash__ = '%s'" % sha, init_data)
+    f = open(init_file, 'wb')
+    f.write(init_data)
+    f.close()
+
+
 # Get latest commit number -----------------------------------------------------
-print 'Saving commit count...'
+print '---- Retrieving repo information ----'
 proc = subprocess.Popen('git shortlog -s -n', shell = True, stdout = subprocess.PIPE)
 stdout_value = proc.communicate()[0]
 commit_count = 0
@@ -44,18 +59,12 @@ for i in lines:
     if e != '':
         commit_count += int(e)
 
+proc = subprocess.Popen('git log --shortstat -n 1', shell = True, stdout = subprocess.PIPE)
+stdout_value = proc.communicate()[0]
+commit_sha = stdout_value[7:14]
 
-init_file = os.path.join(sys.path[0], "atarashii/usr/share/pyshared/atarashii/__init__.py")
-import re
-countRegex = re.compile('__commits__ = \'([0-9]+)\'''')
-f = open(init_file, 'rb')
-init_data = f.read()
-f.close()
-init_data = countRegex.sub("__commits__ = '%s'" % commit_count, init_data)
-
-f = open(init_file, 'wb')
-f.write(init_data)
-f.close()
+update_init_file(commit_count, commit_sha)
+print ">> Done!"
 
 # Gather Information about the project -----------------------------------------
 sys.path.insert(0, os.path.join(sys.path[0], "atarashii/usr/share/pyshared"))
@@ -106,6 +115,7 @@ subprocess.call(["gzip", "--best", log1])
 subprocess.call(["gzip", "--best", log2])
 subprocess.call(["gzip", "--best", man1])
 subprocess.call(["gzip", "--best", man2])
+print ">> Done!"
 
 
 # Check all files --------------------------------------------------------------
@@ -143,15 +153,10 @@ for i in dirs:
             cf = file[len(cur)-3:]
             m.write("%s  %s\n" % (getFileMD5(file), cf))
 
-
 m.close()
-print "\n---- Stats ----"
-print "Current Version is %s-%s" % (atarashii.__version__, commit_count)
-print "Complete size is %d KB" % (size / 1024)
-
+print ">> Done!"
 
 print "\n---- Packaging ----"
-
 
 # Write control file -----------------------------------------------------------
 print "Creating control file..."
@@ -203,8 +208,6 @@ try:
     shutil.move(os.path.join(sys.path[0], "atarashii.deb"), debfile)
     deb_size = os.stat(debfile).st_size / 1024
 
-
-
 except OSError, error:
     if not dpkg:
         print """ERROR: Could not build Atarashii package due to missing 'fakeroot'.\n       Please install 'fakeroot' via the package manager and try again."""
@@ -217,14 +220,21 @@ except OSError, error:
     for file, to in tempFiles:
         shutil.move(to, file)
     
+    update_init_file(0, "0000000")
     exit()
 
 print ">> Build complete!"
-print ">> Compressed size %d KB" % deb_size
+
+print "\n---- Stats ----"
+print "Current Version is %s-%s" % (atarashii.__version__, commit_count)
+print "Complete size is %d KB" % (size / 1024)
+print "Compressed size %d KB" % deb_size
 
 # Move all those temp files back
 for file, to in tempFiles:
     shutil.move(to, file)
+
+update_init_file(0, "0000000")
 
 # Check for errors
 try:
