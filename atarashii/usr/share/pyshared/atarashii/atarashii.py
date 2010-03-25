@@ -14,7 +14,6 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 # TODO add multireply via shift/ctrl, replyid is from the first selected tweet
-# TODO url expander should only do HEAD requests
 
 
 # DBUS Integration -------------------------------------------------------------
@@ -50,7 +49,7 @@ import settings
 import updater
 
 from language import LANG as lang
-from utils import SHORTS
+from utils import SHORTS_LIST
 from atarashii_actions import AtarashiiActions
 
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
@@ -116,8 +115,8 @@ class Atarashii(AtarashiiActions):
         self.gui = gui.GUI(self)
         
         # Check Shortener
-        if not self.settings['shortener'] in SHORTS:
-            self.settings['shortener'] = SHORTS.keys()[0]
+        if not self.settings['shortener'] in SHORTS_LIST:
+            self.settings['shortener'] = SHORTS_LIST[0]
         
         # Start
         self.updater.start()
@@ -300,7 +299,7 @@ class Atarashii(AtarashiiActions):
     
     def unset_status(self, flag):
         self.current_status &= ~flag
-        
+    
     # Attributes
     def unset(self, *args):
         for key in args:
@@ -323,4 +322,3 @@ class Atarashii(AtarashiiActions):
                 self.message_user = UNSET_TEXT
                 self.message_id = UNSET_ID_NUM
                 self.message_text = UNSET_TEXT
-
