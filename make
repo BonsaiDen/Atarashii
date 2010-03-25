@@ -199,9 +199,11 @@ try:
     else:
         raise OSError, "DPKG failed"
     
-    shutil.move(os.path.join(sys.path[0], "atarashii.deb"), 
-                os.path.join(sys.path[0], 
-                "atarashii_%s-1_all.deb" % atarashii.__version__))
+    debfile = os.path.join(sys.path[0], "atarashii_%s-1_all.deb" % atarashii.__version__)
+    shutil.move(os.path.join(sys.path[0], "atarashii.deb"), debfile)
+    deb_size = os.stat(debfile).st_size / 1024
+
+
 
 except OSError, error:
     if not dpkg:
@@ -218,6 +220,7 @@ except OSError, error:
     exit()
 
 print ">> Build complete!"
+print ">> Compressed size %d KB" % deb_size
 
 # Move all those temp files back
 for file, to in tempFiles:
