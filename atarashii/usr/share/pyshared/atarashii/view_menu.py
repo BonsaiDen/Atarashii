@@ -22,7 +22,7 @@ import gtk
 import gobject
 
 from language import LANG as lang
-from utils import EXPAND_LIST, Expander, escape
+from utils import EXPAND_LIST, URLExpander, escape
 
 
 # This is the hacked part of Atarashii, getting this menu to work is quite a
@@ -70,7 +70,7 @@ class ViewMenu:
                     
                     elif not self.is_expanding:
                         self.is_expanding = True
-                        Expander(link, service, self.expand_link)
+                        URLExpander(link, service, self.expand_link)
     
     def set_tooltip(self, user, img):
         self.tooltip_label.set_markup(lang.html_avatar_tooltip \

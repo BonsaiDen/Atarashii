@@ -77,6 +77,7 @@ import threading
 import time
 import gobject
 
+# Shorter ----------------------------------------------------------------------
 SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{35,})')
 SHORTS = {
     'is.gd' : 'http://is.gd/api.php?longurl=%s',
@@ -85,18 +86,17 @@ SHORTS = {
 }
 
 SHORTS_LIST = ['is.gd', 'tinyurl.com', 'snipurl.com']
-EXPAND_LIST = ['is.gd', 'tl.gd', 'tinyurl.com', 'snipurl.com', 'bit.ly']
 
 
-class Shortener(threading.Thread):
+class URLShorter(threading.Thread):
     url_list = {}
     black_list = []
-    
+        
     def __init__(self, text, text_box):
         threading.Thread.__init__(self)
         self.text = text
         self.text_box = text_box
-        self.setDaemon(True)
+        self.daemon = True
         self.start()
 
     def run(self):
@@ -133,18 +133,27 @@ class Shortener(threading.Thread):
         except IOError:
             self.__class__.black_list.append(url)
             return url
+    
+    @classmethod
+    def reset(cls):
+        cls.url_list ={}
+        cls.black_list = []
 
 
-class Expander(threading.Thread):
+# Expander ---------------------------------------------------------------------
+EXPAND_LIST = ['is.gd', 'tl.gd', 'tinyurl.com', 'snipurl.com', 'bit.ly']
+
+
+class URLExpander(threading.Thread):
     url_list = {}
     black_list = []
-
+    
     def __init__(self, url, service, callback):
         threading.Thread.__init__(self)
         self.url = url
         self.service = service
         self.callback = callback
-        self.setDaemon(True)
+        self.daemon = True
         self.start()
 
     def run(self):
@@ -178,4 +187,8 @@ class Expander(threading.Thread):
                 url = self.url
         
         gobject.idle_add(self.callback, self.url, url)
-
+    
+    @classmethod
+    def reset(cls):
+        cls.url_list ={}
+        cls.black_list = []

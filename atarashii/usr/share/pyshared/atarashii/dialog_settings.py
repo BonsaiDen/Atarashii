@@ -23,7 +23,7 @@ import gobject
 
 from language import LANG as lang
 from dialog import Dialog, MessageDialog
-from utils import SHORTS_LIST
+from utils import SHORTS_LIST, URLShorter, URLExpander
 
 from constants import ST_LOGIN_SUCCESSFUL, ST_LOGIN_COMPLETE, ST_CONNECT
 from constants import MESSAGE_QUESTION
@@ -218,7 +218,8 @@ class SettingsDialog(Dialog):
             old_short = self.settings['shortener']
             self.settings['shortener'] = SHORTS_LIST[shorts.get_active()]
             if old_short != self.settings['shortener']:
-                self.gui.text.shorter.reset()            
+                URLShorter.reset()
+                URLExpander.reset()
             
             self.settings.set_autostart(autostart.get_active())
             self.gui.show_in_taskbar(taskbar.get_active())

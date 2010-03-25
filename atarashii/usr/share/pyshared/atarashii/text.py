@@ -22,7 +22,7 @@ import gtk
 import gobject
 
 from language import LANG as lang
-from utils import REPLY_REGEX, MESSAGE_REGEX, Shortener
+from utils import REPLY_REGEX, MESSAGE_REGEX, URLShorter
 
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE
@@ -190,7 +190,7 @@ class TextInput(gtk.TextView):
     def insert(self, buf, itr, text, length):
         if self.is_pasting:
             if text.find('http') != -1 or text.find('www') != -1:
-                Shortener(text, self)
+                URLShorter(text, self)
             
             self.is_pasting = False
     
