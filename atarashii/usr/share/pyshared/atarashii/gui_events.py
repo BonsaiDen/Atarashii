@@ -51,13 +51,17 @@ class GUIEventHandler:
     
     # Handlers -----------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def on_refresh(self, *args):
+    def on_refresh(self, button, menu = None):
         self.set_refresh_update(False, status = False)
         if self.mode == MODE_MESSAGES:
-            self.main.updater.refresh_messages = True
+            self.main.updater.unwait(messages = True)
         
         else:
-            self.main.updater.refresh_now = True
+            self.main.updater.unwait(tweets = True)
+    
+    def on_refresh_all(self, button, menu = None):
+        self.set_refresh_update(False, status = False)
+        self.main.updater.unwait(tweets = True, messages = True)
     
     def on_refresh_update(self, *args):
         if self.multi_state == BUTTON_REFRESH:

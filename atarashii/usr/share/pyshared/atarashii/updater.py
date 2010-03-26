@@ -63,6 +63,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         self.finish = False
         
         self.daemon = True
+        self.wait = threading.Event()
     
     
     # Init the Updater ---------------------------------------------------------
@@ -252,8 +253,21 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 elif self.main.refresh_timeout != UNSET_TIMEOUT:
                     self.check_for_update()
             
-            time.sleep(0.025)
+            self.wait.clear()
+            gobject.timeout_add(1000, self.unwait)
+            self.wait.wait()
     
+    def unwait(self, init = False, tweets = False, messages = False):
+        if init:
+            self.do_init = True
+        
+        if tweets:
+            self.refresh_now = True
+            
+        if messages:
+            self.refresh_messages = True
+        
+        self.wait.set()
     
     def check_for_update(self):
         if self.main.refresh_time == UNSET_TIMEOUT:

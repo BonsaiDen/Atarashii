@@ -80,7 +80,7 @@ class TrayIcon(gtk.StatusIcon):
         
         # Refresh
         self.refresh_menu = self.add_menu(lang.menu_update, gtk.STOCK_REFRESH,
-                                          self.gui.on_refresh)
+                                          self.gui.on_refresh_all)
             
         # Readall
         self.read_menu = self.add_menu(lang.menu_read, gtk.STOCK_OK,

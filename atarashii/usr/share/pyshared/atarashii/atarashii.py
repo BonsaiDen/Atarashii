@@ -172,7 +172,7 @@ class Atarashii(AtarashiiActions):
         
         self.gui.text.reset()
         self.gui.set_app_title()
-        self.updater.do_init = True
+        self.updater.unwait(init = True)
     
     def on_login(self):
         self.unset_status(ST_LOGIN_ERROR | ST_CONNECT | ST_DELETE)
