@@ -58,12 +58,12 @@ a {
 ------------------------------------------------------------------------------*/
 .loading {
 	font-size: 14px;
-	margin-top: 16px;
+	margin-top: 10px;
 	color: #5b5b5b;
 }
 
 .loadingtext {
-    line-height: 40px;
+    line-height: 32px;
     padding-top: 8px;
 }
 
