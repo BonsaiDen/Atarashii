@@ -157,7 +157,7 @@ LANG = {
             
         'about_kittens' : 
             'Diese Version wurde von <b>%s</b> Kätzchen\n'
-            'verpackt. Ihre Glückszahl ist <b>%s</b>!',
+            'verpackt, ihre Glückszahl ist <b>%s</b>!',
         
         # Account Dialog
         'account_edit' : 'Benutzer bearbeiten',
