@@ -46,7 +46,7 @@ class ViewHTML:
         self.last_highlight = False
         self.last_mentioned = False
         
-        # Reset tooltip user
+        # Reset user tooltip
         self.tooltip_user = None
         
         # Do the rendering!
@@ -57,8 +57,8 @@ class ViewHTML:
             html = self.render_item(num, item, img)
             
             # Close Newest Container
-            # <= beacause the ""firsttweet"" might get deleted
-            # causing everything to be considered as new
+            # <= because the ""firsttweet"" might get deleted
+            # causing everything fter it to be aconsidered as new
             if item.id <= self.newest_id:
                 html = '</div>' + html
             
