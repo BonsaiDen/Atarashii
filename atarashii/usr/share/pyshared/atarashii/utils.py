@@ -180,7 +180,7 @@ class URLExpander(threading.Thread):
         except IOError:
             self.__class__.black_list.append(self.url)
             url = self.url
-    
+        
         gobject.idle_add(self.callback, self.url, url)
     
     @classmethod
