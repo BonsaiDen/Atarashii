@@ -274,12 +274,12 @@ class Atarashii(AtarashiiActions):
             return img
     
     def get_image(self):
+        icon = '/usr/share/icons/atarashii.png'
         if self.debug_path == None:
-            return '/usr/share/icons/atarashii.png'
+            return icon
         
         else:
-            return os.path.join(self.debug_path,
-                                'atarashii/usr/share/icons/atarashii.png')
+            return os.path.join(self.debug_path, 'atarashii'+ icon)
     
     def get_resource(self, res):
         if self.debug_path == None:
