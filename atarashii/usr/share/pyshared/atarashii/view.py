@@ -206,24 +206,23 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     
     def remove(self, item_id):
         remove_item_id = UNSET_ID_NUM
-        for i in range(len(self.items)):
-            if self.get_id(self.items[i][0]) == item_id:
-                remove_item_id = i
-                break
+        for e, i in enumerate(self.items):
+            if self.get_id(i[0]) == item_id:
+                remove_item_id = e
         
         if remove_item_id != UNSET_ID_NUM:
             self.items.pop(remove_item_id)
             self.render()
     
     def favorite(self, item_id, mode):
-        for i in range(len(self.items)):
-            item = self.items[i][0]
+        for e, i in enumerate(self.items):
+            item = i[0]
             if self.get_id(item) == item_id:
                 if hasattr(item, 'retweeted_status'):
-                    self.items[i][0].retweeted_status.favorited = mode
+                    item.retweeted_status.favorited = mode
                 
                 else:
-                    self.items[i][0].favorited = mode
+                    item.favorited = mode
                 
                 self.render()
                 break
