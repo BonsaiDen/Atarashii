@@ -40,6 +40,7 @@ Atarashii. If not, see &lt;http://www.gnu.org/licenses/&gt;.</property>
                     <child>
                       <object class="GtkImage" id="image">
                         <property name="width_request">128</property>
+                        <property name="height_request">128</property>
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
                         <property name="yalign">0</property>
