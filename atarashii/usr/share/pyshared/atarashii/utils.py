@@ -80,9 +80,9 @@ import gobject
 # Shorter ----------------------------------------------------------------------
 SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{35,})')
 SHORTS = {
-    'is.gd' : 'http://is.gd/api.php?longurl=%s',
-    'tinyurl.com' : 'http://tinyurl.com/api-create.php?url=%s',
-    'snipurl.com' : 'http://snipr.com/site/snip?r=simple&link=%s'
+    'is.gd': 'http://is.gd/api.php?longurl=%s',
+    'tinyurl.com': 'http://tinyurl.com/api-create.php?url=%s',
+    'snipurl.com': 'http://snipr.com/site/snip?r=simple&link=%s'
 }
 
 SHORTS_LIST = ['is.gd', 'tinyurl.com', 'snipurl.com']

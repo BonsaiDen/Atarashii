@@ -53,7 +53,7 @@ class Notifier(threading.Thread):
                 sound = True
                 item = self.items.pop(0)
                 self.notify.Notify('Atarashii', 0, item[2], item[0], item[1],
-                                   (),{'urgency' : dbus.Byte(2) }, -1)
+                                   (),{'urgency': dbus.Byte(2) }, -1)
             
             if sound and self.get_sound():
                 self.play_sound()
