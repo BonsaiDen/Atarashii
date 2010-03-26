@@ -14,6 +14,8 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 # TODO add multireply via shift/ctrl, replyid is from the first selected tweet
+# TODO make longer replies easier, either split them and add @user to each of 
+#      them, or use ctrl+enter to send and start a new reply to the same tweet
 
 
 # Make sure there is only one instance of Atarashii ----------------------------
@@ -101,12 +103,9 @@ class Atarashii(AtarashiiActions):
         
         # Notifier
         self.notifier = notify.Notifier(self)
-        self.notifier.setDaemon(True)
-        self.notifier.start()
         
         # Updater
         self.updater = updater.Updater(self)
-        self.updater.setDaemon(True)
         
         # GUI
         self.gui = gui.GUI(self)

@@ -39,6 +39,9 @@ class Notifier(threading.Thread):
         
         except dbus.exceptions.DBusException:
             self.notify = None
+            
+        self.daemon = True
+        self.start()
     
     def run(self):
         if not self.notify:

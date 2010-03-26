@@ -61,6 +61,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         self.ratelimit = 150
         self.message_counter = 0
         self.finish = False
+        
+        self.daemon = True
     
     
     # Init the Updater ---------------------------------------------------------
