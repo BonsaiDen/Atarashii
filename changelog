@@ -2,9 +2,11 @@ atarashii (0.99.16c-1) all;
 
   * Try to expand all links, and display the redirect info when they can be
     expanded.
-  * New -d option to show build info in the about dialog.
+  * Also try to resolve multiple redirects, but only 5 levels deep.
+  * Send notifications directly over the dbus.
+  * Some more information in the about dialog.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 26 Mar 2010 05:18:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 26 Mar 2010 10:30:00 +0100
 
 atarashii (0.99.16b-1) all;
 
