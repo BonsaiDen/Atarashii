@@ -153,10 +153,6 @@ class URLExpander(threading.Thread):
         self.start()
 
     def run(self):
-        host = self.url[7:]
-        host = host[:host.find('/')]
-        path = self.url[7 + len(host):]
-        
         # Check for already resolved / failed urls
         if self.__class__.url_list.has_key(self.url):
             url = self.__class__.url_list[self.url]
@@ -164,21 +160,34 @@ class URLExpander(threading.Thread):
         elif self.url in self.__class__.black_list:
             url = self.url
         
-        try:
-            conn = httplib.HTTPConnection(host, 80)
-            conn.request('HEAD', path)
-            response = conn.getresponse()
-            if not response.status in (301, 302):
-                raise IOError
+        else:
+            current_url = self.url
+            try:
+                hops = 0
+                while hops < 5:
+                    host, path = self.get_url_parts(current_url)
+                    conn = httplib.HTTPConnection(host, 80)
+                    conn.request('HEAD', path)
+                    response = conn.getresponse()
+                    if not response.status in (301, 302):
+                        raise IOError
+                    
+                    else:
+                        current_url = response.getheader('location', self.url)
+                        hops += 1
             
-            else:
-                url = response.getheader('location', self.url)
-        
-        except IOError:
-            self.__class__.black_list.append(self.url)
-            url = self.url
+            except IOError:
+                self.__class__.black_list.append(current_url)
+                url = current_url
         
         gobject.idle_add(self.callback, self.url, url)
+    
+    def get_url_parts(self, url):
+        p = 7 if url.lower().startswith('http://') else 8
+        host = url[p:]
+        host = host[:host.find('/')]
+        path = url[p + len(host):]
+        return host, path
     
     @classmethod
     def reset(cls):
