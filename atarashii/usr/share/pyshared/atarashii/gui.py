@@ -420,10 +420,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             wait = self.main.refresh_timeout - \
                 (calendar.timegm(time.gmtime()) - self.main.refresh_time)
             
+            if wait < 0:
+                wait = 0
+            
             if wait == 0:
                 self.set_refresh_update(False, None, False)
                 self.set_status(lang.status_update)
-                self.main.updater.unwait()
             
             elif wait == 1:
                 self.set_status(lang.status_one_second)
