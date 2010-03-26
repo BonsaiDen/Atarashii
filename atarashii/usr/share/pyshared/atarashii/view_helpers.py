@@ -277,7 +277,7 @@ class ViewHelpers:
     
     def get_user(self, item):
         user = self.get_attr(item, 'user')
-        return user if user != None else self.get_attr(item, 'sender')
+        return user if user is not None else self.get_attr(item, 'sender')
     
     def get_text(self, item):
         return self.get_attr(item, 'text')

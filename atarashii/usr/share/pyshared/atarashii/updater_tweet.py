@@ -49,7 +49,7 @@ class UpdaterTweet:
         
         updates.reverse()
         for i in updates:
-            if i != None:
+            if i is not None:
                 self.html.update_list.append((i, self.get_image(i)))
         
         gobject.idle_add(self.do_render, self.html, init, last)
@@ -62,7 +62,7 @@ class UpdaterTweet:
         updates = []
         mentions = []
         if since_id != HTML_UNSET_ID:
-            if max_id == None:
+            if max_id is None:
                 mentions = self.api.mentions(since_id = since_id,
                                              count = max_count)
                 

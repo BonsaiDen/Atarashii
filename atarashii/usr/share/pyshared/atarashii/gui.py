@@ -288,7 +288,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         else:
             info = None
             
-        if info != None:
+        if info is not None:
             self.multi_state = BUTTON_HISTORY
             self.multi_button.set_tooltip_text(info)
             self.multi_button.set_stock_id(gtk.STOCK_GOTO_TOP)
@@ -314,7 +314,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.tray.read_menu.set_sensitive(read_mode)
         
         # Set icon and mode
-        if info == None and read_mode:
+        if info is None and read_mode:
             
             self.multi_state = BUTTON_READ
             self.multi_button.set_stock_id(gtk.STOCK_OK)
@@ -333,7 +333,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             return
         
         # Toggle to refresh mode -----------------------------------------------
-        if refresh_mode != None:
+        if refresh_mode is not None:
             mode = refresh_mode
     
         if not self.is_ready():
@@ -356,10 +356,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Check for message/tweet switch
         if self.is_ready():
-            if self.text.message_to_send != None:
+            if self.text.message_to_send is not None:
                 self.set_mode(MODE_MESSAGES)
             
-            elif self.text.tweet_to_send != None:
+            elif self.text.tweet_to_send is not None:
                 self.set_mode(MODE_TWEETS)
             
             if status:

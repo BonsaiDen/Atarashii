@@ -167,7 +167,7 @@ def bind_api(**config):
 
             # Save rate limit to the api instance in order to speed up access to
             # the information
-            if resp.getheader('x-ratelimit-class') != None:
+            if resp.getheader('x-ratelimit-class') is not None:
                 reset = long(resp.getheader('x-ratelimit-reset'))
                 self.api.last_rate_limit_status = {
                     'hourly_limit' : int(resp.getheader('x-ratelimit-limit')),

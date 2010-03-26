@@ -134,7 +134,7 @@ class Formatter:
             ttype, data = self.text_parts[pos]
             if ttype == 0:
                 match = regex.search(data)
-                if match != None:
+                if match is not None:
                     self.text_parts.pop(pos)
                     self.text_parts.insert(pos,
                                     (0, data[:match.start()]))

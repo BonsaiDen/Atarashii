@@ -236,7 +236,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     
     def open_link(self, view, frame, req, uri = None, extra = None):
         # Get URI
-        if uri == None:
+        if uri is None:
             uri = req.get_uri()
         
         # Local links
@@ -257,7 +257,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         elif uri.startswith('reply:') or uri.startswith('qreply:'):
             self.main.reply_user, self.main.reply_id, num = uri.split(':')[1:]
             num = int(num)
-            if extra != None:
+            if extra is not None:
                 self.main.reply_text = unescape(self.get_text(extra))
             
             elif num != -1:
@@ -275,7 +275,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             self.main.message_id, num = uri.split(':')[1:]
             
             num = int(num)
-            if extra != None:
+            if extra is not None:
                 self.main.message_text = unescape(self.get_text(extra))
             
             elif num != -1:
@@ -363,7 +363,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         return True
     
     def get_link_type(self, uri):
-        if uri == None:
+        if uri is None:
             return None, None, None
         
         # Link types

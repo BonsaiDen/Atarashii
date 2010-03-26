@@ -95,11 +95,11 @@ class TextInput(gtk.TextView):
             self.resize()
             
             # Check if we need to toggle to message/tweet mode
-            if self.message_to_send != None:
+            if self.message_to_send is not None:
                 self.switch(self.message_to_send, MODE_MESSAGES)
                 self.message_to_send = None
             
-            elif self.tweet_to_send != None:
+            elif self.tweet_to_send is not None:
                 self.switch(self.tweet_to_send, MODE_TWEETS)
                 self.tweet_to_send = None
             
@@ -211,7 +211,7 @@ class TextInput(gtk.TextView):
             # check for "d user"
             msg = MESSAGE_REGEX.match(text)
             self.message_len = 0
-            if msg != None:
+            if msg is not None:
                 self.message_len = len('d %s ' % msg.group(1))
                 
                 if self.main.message_id == UNSET_ID_NUM:
@@ -239,7 +239,7 @@ class TextInput(gtk.TextView):
             
             # check for "d user" and switch to messaging
             at_user = REPLY_REGEX.match(text)
-            if at_user != None:
+            if at_user is not None:
                 if self.gui.load_state():
                     self.switch(self.get_text(), MODE_TWEETS)
                 
@@ -268,7 +268,7 @@ class TextInput(gtk.TextView):
             
             # check for @ Reply
             at_user = REPLY_REGEX.match(text)
-            if at_user != None:
+            if at_user is not None:
                 at_len = len('@%s ' % at_user.group(1))
             
                 if self.main.reply_id == UNSET_ID_NUM:
@@ -295,7 +295,7 @@ class TextInput(gtk.TextView):
             
             # check for "d user" and switch to messaging
             msg = MESSAGE_REGEX.match(text)
-            if msg != None:
+            if msg is not None:
                 if self.gui.load_state():
                     self.switch(self.get_text(), MODE_MESSAGES)
                 
@@ -374,7 +374,7 @@ class TextInput(gtk.TextView):
     def message(self):
         text = self.init_change()
         msg = MESSAGE_REGEX.match(text)
-        if msg != None:
+        if msg is not None:
             space = 2 + len(msg.group(1))
             text = ('d %s ' % self.main.message_user) + text[space + 1:]
         

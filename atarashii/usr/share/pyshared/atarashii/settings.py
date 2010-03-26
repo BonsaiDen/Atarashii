@@ -140,7 +140,7 @@ class Settings:
             del self.values[key]
     
     def isset(self, key):
-        if self[key] != None:
+        if self[key] is not None:
             if type(self[key]) == long or type(self[key]) == int:
                 return self[key] != -1
             
@@ -148,7 +148,7 @@ class Settings:
                 return self[key].strip() != ''
     
     def is_true(self, key, default = True):
-        if self[key] == None:
+        if self[key] is None:
             return default
         
         else:

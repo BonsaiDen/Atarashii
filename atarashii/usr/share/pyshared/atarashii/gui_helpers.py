@@ -138,7 +138,7 @@ class GUIHelpers:
         if mode == self.mode:
             return
         
-        if mode == None:
+        if mode is None:
             self.mode = MODE_TWEETS
         
         else:

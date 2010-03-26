@@ -235,7 +235,7 @@ class AtarashiiActions:
     # --------------------------------------------------------------------------
     def reconnect(self):
         ratelimit = self.api.oauth_rate_limit_status()
-        if ratelimit != None:
+        if ratelimit is not None:
             minutes = math.ceil((ratelimit['reset_time_in_seconds'] \
                                  - calendar.timegm(time.gmtime())) / 60.0)
         

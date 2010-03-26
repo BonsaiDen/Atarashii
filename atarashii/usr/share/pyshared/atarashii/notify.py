@@ -68,7 +68,7 @@ class Notifier(threading.Thread):
             try:
                 # Check for Zombieeeeeees!
                 try:
-                    if self.player != None:
+                    if self.player is not None:
                         self.player.kill()
                         print 'Sound Zombieeeees!'
                 

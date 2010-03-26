@@ -141,7 +141,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 gobject.idle_add(self.gui.enter_password)
                 
                 # Wait for password entry
-                while self.main.api_temp_password == None:
+                while self.main.api_temp_password is None:
                     time.sleep(0.1)
                 
                 # Try to login with the new password
@@ -223,7 +223,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # Force Title Update
         self.main.set_status(ST_LOGIN_COMPLETE)
         gobject.idle_add(self.gui.set_app_title)
-        if self.gui.settings_dialog != None:
+        if self.gui.settings_dialog is not None:
             gobject.idle_add(self.gui.settings_dialog.activate, True)
         
         # Init Timer
@@ -456,7 +456,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     # Calculate refresh interval based on rate limit information
     def update_limit(self):
         ratelimit = self.api.rate_limit_status()
-        if ratelimit == None:
+        if ratelimit is None:
             self.main.refresh_timeout = 60
             return
         

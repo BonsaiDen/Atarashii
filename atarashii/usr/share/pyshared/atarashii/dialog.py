@@ -38,7 +38,7 @@ class Dialog:
         self.main = gui.main
         self.settings = gui.main.settings
         
-        if self.__class__.instance == None:
+        if self.__class__.instance is None:
             self.gtb = gtk.Builder()
             self.gtb.add_from_file(
                  gui.main.get_resource(self.__class__.resource))
@@ -200,16 +200,16 @@ class MessageDialog(gtk.MessageDialog):
     
     def on_close(self, dialog, response):
         self.destroy()
-        if response == gtk.RESPONSE_OK and self.ok_callback != None:
+        if response == gtk.RESPONSE_OK and self.ok_callback is not None:
             self.ok_callback()
         
-        elif response == gtk.RESPONSE_YES and self.yes_callback != None:
+        elif response == gtk.RESPONSE_YES and self.yes_callback is not None:
             self.yes_callback()
         
-        elif response == gtk.RESPONSE_NO and self.no_callback != None:
+        elif response == gtk.RESPONSE_NO and self.no_callback is not None:
             self.no_callback()
 
-        if self.close_callback != None:
+        if self.close_callback is not None:
             self.close_callback()
         
 
@@ -234,7 +234,7 @@ class ButtonDialog:
         self.template = template
     
     def hide(self):
-        if self.dialog != None:
+        if self.dialog is not None:
             self.dialog.destroy()
             self.dialog = None
         
@@ -242,7 +242,7 @@ class ButtonDialog:
     
     def show(self, button, info):
         self.information = info
-        if self.dialog != None:
+        if self.dialog is not None:
             self.dialog.destroy()
             self.dialog = None
         
@@ -255,7 +255,7 @@ class ButtonDialog:
             gobject.idle_add(self.gui.show_gui)
     
     def show_dialog(self, *args):
-        if self.dialog != None:
+        if self.dialog is not None:
             self.dialog.destroy()
             self.dialog = None
         

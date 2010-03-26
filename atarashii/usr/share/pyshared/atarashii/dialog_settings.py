@@ -34,7 +34,7 @@ class SettingsDialog(Dialog):
     instance = None
     
     def activate(self, mode):
-        if self.drop != None:
+        if self.drop is not None:
             self.drop.set_sensitive(mode)
             self.add.set_sensitive(mode)
             self.edit.set_sensitive(mode)
@@ -168,7 +168,7 @@ class SettingsDialog(Dialog):
         
         # Fix bug with the file filter no beeing selected
         def select_file(chooser):
-            if file_chooser.get_filter() == None:
+            if file_chooser.get_filter() is None:
                 file_chooser.set_filter(file_filter)
         
         file_chooser.connect('selection-changed', select_file)
@@ -271,7 +271,7 @@ class SettingsDialog(Dialog):
     # Generate Account List ----------------------------------------------------
     def get_drop_active(self):
         i = self.drop.get_selection().get_selected_rows()[1]
-        if i == None or len(i) == 0:
+        if i is None or len(i) == 0:
             return -1
         
         return i[0][0]
@@ -289,7 +289,7 @@ class SettingsDialog(Dialog):
             if user == name:
                 selected = num
             
-            elif name == None and user == self.main.username:
+            elif name is None and user == self.main.username:
                 selected = num
         
         self.drop.set_model(self.accounts_list)

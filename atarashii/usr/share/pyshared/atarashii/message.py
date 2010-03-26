@@ -182,7 +182,7 @@ class HTML(view.HTMLView):
     
     def create_menu(self, menu, item, item_id, link, full, user):
         # User Options
-        if user != None:
+        if user is not None:
             if link in ('profile', 'avatar') \
                and user.lower() != self.main.username.lower():
                

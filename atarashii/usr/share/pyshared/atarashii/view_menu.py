@@ -40,7 +40,7 @@ class ViewMenu:
     
     def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
         link = self.last_hovered_link
-        if link != None:
+        if link is not None:
             if link.startswith('avatar:'):
                 uri = link[7:]
                 num = int(uri[:uri.find(':')])
@@ -140,7 +140,7 @@ class ViewMenu:
     def create_base_menu(self, menu, item, link):
         link_data = self.get_link_type(link)
         link, full = link_data[0], link_data[2]
-        item_id = self.get_id(item) if item != None else -1
+        item_id = self.get_id(item) if item is not None else -1
         if self.ok_menu(link):
             if self.create_link_menu(menu, link, full): # Link options
                 return True
@@ -186,7 +186,7 @@ class ViewMenu:
     
     # Get a Tweet based on a button press --------------------------------------
     def get_clicked_item(self, items, event):
-        if items == None:
+        if items is None:
             return -1
         
         # Get Positions and Link

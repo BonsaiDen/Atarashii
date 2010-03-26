@@ -264,7 +264,7 @@ class API(object):
 
     """ account/rate_limit_status """
     def rate_limit_status(self, force_request = False):
-    	if self.last_rate_limit_status == None or force_request:
+    	if self.last_rate_limit_status is None or force_request:
             try:
         		self.last_rate_limit_status = bind_api(
                     path = '/account/rate_limit_status.json',

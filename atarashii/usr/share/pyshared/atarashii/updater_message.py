@@ -60,7 +60,7 @@ class UpdaterMessage:
     def get_messages(self, since_id = 0, max_id = None, max_count = 200):
         messages = []
         if since_id != HTML_UNSET_ID:
-            if max_id == None:
+            if max_id is None:
                 messages = self.api.direct_messages(since_id = since_id,
                                                     count = max_count)
                 

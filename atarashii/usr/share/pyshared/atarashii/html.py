@@ -226,7 +226,7 @@ class HTML(view.HTMLView):
     
     def create_menu(self, menu, item, item_id, link, full, user):
         # User Options
-        if user != None:
+        if user is not None:
             if link in ("profile", "avatar"):
                 reply = "reply:%s:%d:-1" % (user, item_id)
                 self.add_menu_link(menu, lang.context_reply % user,

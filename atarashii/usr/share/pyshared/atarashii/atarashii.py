@@ -126,7 +126,7 @@ class Atarashii(AtarashiiActions):
     def login(self, change_user = None):
         # We need a username!
         if self.username == UNSET_TEXT \
-           and (change_user == None or change_user == UNSET_TEXT):
+           and (change_user is None or change_user == UNSET_TEXT):
             self.gui.set_app_title()
             return
             
@@ -136,7 +136,7 @@ class Atarashii(AtarashiiActions):
             time.sleep(0.1)
         
         # Switch User
-        if change_user != None:
+        if change_user is not None:
             self.gui.text.reset()
             self.username = change_user
             self.settings['username'] = change_user
@@ -149,7 +149,7 @@ class Atarashii(AtarashiiActions):
         self.gui.show_progress()
         
         # Connect
-        if self.reconnect_timeout != None:
+        if self.reconnect_timeout is not None:
             gobject.source_remove(self.reconnect_timeout)
         
         # Status
@@ -188,10 +188,10 @@ class Atarashii(AtarashiiActions):
         self.refresh_timeout = UNSET_TIMEOUT
         self.gui.set_mode(MODE_TWEETS)
         self.unset_status(ST_ALL)
-        if error != None:
+        if error is not None:
             self.set_status(ST_LOGIN_ERROR)
         
-        if self.gui.settings_dialog != None:
+        if self.gui.settings_dialog is not None:
             self.gui.settings_dialog.activate(True)
         
         self.gui.tray.settings_menu.set_sensitive(True)
@@ -216,7 +216,7 @@ class Atarashii(AtarashiiActions):
         self.gui.set_app_title()
         self.gui.hide_all()
         
-        if self.gui.settings_dialog != None:
+        if self.gui.settings_dialog is not None:
             self.gui.settings_dialog.activate(True)
         
         gobject.idle_add(self.gui.message.init, True)
@@ -258,7 +258,7 @@ class Atarashii(AtarashiiActions):
         if not self.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
             img = None
         
-        if img == None or not os.path.exists(img):
+        if img is None or not os.path.exists(img):
             return self.get_image()
         
         else:
@@ -266,14 +266,14 @@ class Atarashii(AtarashiiActions):
     
     def get_image(self):
         icon = '/usr/share/icons/atarashii.png'
-        if self.debug_path == None:
+        if self.debug_path is None:
             return icon
         
         else:
             return os.path.join(self.debug_path, 'atarashii'+ icon)
     
     def get_resource(self, res):
-        if self.debug_path == None:
+        if self.debug_path is None:
             return os.path.join('/usr/share/atarashii', res)
         
         else:
