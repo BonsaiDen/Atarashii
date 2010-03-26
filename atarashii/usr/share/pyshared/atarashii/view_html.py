@@ -51,18 +51,22 @@ class ViewHTML:
         
         # Do the rendering!
         self.renderitems = []
+        newest_closed = False
         for num, obj in enumerate(self.items):
             item, img = obj
-            self.is_new_timeline(item)
-            html = self.render_item(num, item, img)
             
             # Close Newest Container
-            # <= because the ""firsttweet"" might get deleted
-            # causing everything fter it to be aconsidered as new
-            if item.id <= self.newest_id:
-                html = '</div>' + html
+            # >= because the ""firsttweet"" might get deleted
+            # causing everything after it to be aconsidered as new
+            if item.id >= self.newest_id and not newest_closed:
+                newest_closed = True
+                html = '</div>'
             
-            self.renderitems.insert(0, html)
+            else:
+                html = ''
+            
+            self.is_new_timeline(item)
+            self.renderitems.insert(0, html + self.render_item(num, item, img))
         
         # Render
         self.set_html(self.renderitems)
