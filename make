@@ -39,10 +39,10 @@ def update_init_file(commits, sha):
     f = open(init_file, 'rb')
     init_data = f.read()
     f.close()
-    countRegex = re.compile('__commits__ = \'([0-9]+)\'''')
-    init_data = countRegex.sub("__commits__ = '%s'" % commits, init_data)
-    shaRegex = re.compile('__hash__ = \'([0-9a-zA-Z]+)\'''')
-    init_data = shaRegex.sub("__hash__ = '%s'" % sha, init_data)
+    countRegex = re.compile('__kittens__ = \'([0-9]+)\'''')
+    init_data = countRegex.sub("__kittens__ = '%s'" % commits, init_data)
+    shaRegex = re.compile('__secret__ = \'([0-9a-zA-Z]+)\'''')
+    init_data = shaRegex.sub("__secret__ = '%s'" % sha, init_data)
     f = open(init_file, 'wb')
     f.write(init_data)
     f.close()
@@ -193,7 +193,7 @@ print ">> Created!"
 time.sleep(0.1) # make sure dpkg-deb finds the control file!
 print ""
 # Create package
-print "The kittens are building your package..."
+print "%s kittens are building your package..." % commit_count
 dpkg = False
 try:
     code = subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"], 
