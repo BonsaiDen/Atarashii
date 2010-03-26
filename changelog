@@ -1,9 +1,10 @@
-atarashii (0.99.16c-1) all;
+atarashii (0.99.17-1) all;
 
   * Try to expand all links, and display the redirect info when they can be
     expanded.
   * Also try to resolve multiple redirects, but only 5 levels deep.
   * Send notifications directly over the dbus.
+  * Switch to sox for notification sounds, instead of mplayer.
   * Some more information in the about dialog.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 26 Mar 2010 10:30:00 +0100
