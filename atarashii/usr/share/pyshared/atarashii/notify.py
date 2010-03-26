@@ -72,9 +72,7 @@ class Notifier(threading.Thread):
                 except OSError:
                     pass
                 
-                self.player = subprocess.Popen(
-                                         ['mplayer', '-really-quiet',
-                                          '-nolirc', self.get_sound()])
+                self.player = subprocess.Popen(['play', '-q', self.get_sound()])
                 
                 code = self.player.wait()
                 if code != 0:

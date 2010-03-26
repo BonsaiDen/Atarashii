@@ -159,7 +159,7 @@ class SettingsDialog(Dialog):
         # File Filter
         file_filter = gtk.FileFilter()
         file_filter.set_name(lang.settings_file_filter)
-        file_filter.add_pattern('*.mp3')
+        file_filter.add_pattern('*.flac')
         file_filter.add_pattern('*.wav')
         file_filter.add_pattern('*.ogg')
         file_chooser.add_filter(file_filter)  
