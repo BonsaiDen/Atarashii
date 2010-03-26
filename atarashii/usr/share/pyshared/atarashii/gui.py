@@ -423,6 +423,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             if wait == 0:
                 self.set_refresh_update(False, None, False)
                 self.set_status(lang.status_update)
+                self.main.updater.unwait()
             
             elif wait == 1:
                 self.set_status(lang.status_one_second)
