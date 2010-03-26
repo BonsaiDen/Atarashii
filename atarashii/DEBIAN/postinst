@@ -81,3 +81,11 @@ KEYDATA
     echo "Done!"
 fi
 
+# Install icon
+ICON_FILE="/usr/share/icons/atarashii.png"
+ICON="`which xdg-icon-resource 2> /dev/null`"
+if [ -x "$ICON" ]; then
+    "$ICON" install --size "128" "$ICON_FILE" "bonsaiden-atarashii"
+    echo "Installed icon!"
+fi
+

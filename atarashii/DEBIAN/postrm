@@ -17,7 +17,16 @@
 # Exit on error!
 set -e
 
-# Add repository ---------------------------------------------------------------
+
+# Remove icon
+ICON_FILE="/usr/share/icons/atarashii.png"
+ICON="`which xdg-icon-resource 2> /dev/null`"
+if [ -x "$ICON" ]; then
+    "$ICON" uninstall --size "128" "$ICON_FILE" "bonsaiden-atarashii"
+    echo "Removed icon!"
+fi
+
+# Remove repository ------------------------------------------------------------
 # ------------------------------------------------------------------------------
 REPO_FILE=/etc/apt/sources.list.d/atarashii.list
 
@@ -36,6 +45,6 @@ if [ -e $REPO_FILE ]; then
     rm $REPO_FILE
     echo "Done!"
 else
-    echo "File not"
+    echo "File not found doing nothing."
 fi
 
