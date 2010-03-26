@@ -19,6 +19,7 @@
 import subprocess
 import threading
 import time
+import dbus
 
 
 # Wacka! This thing is one more mess, sometimes it goes zombie and on other
@@ -29,52 +30,32 @@ class Notifier(threading.Thread):
         self.main = main
         self.items = []
         self.player = None
-        self.notify = None
+        try:
+            bus = dbus.SessionBus()
+            self.notify = dbus.Interface(
+                               bus.get_object('org.freedesktop.Notifications',
+                                              '/org/freedesktop/Notifications'),
+                                              'org.freedesktop.Notifications')  
+        
+        except dbus.exceptions.DBusException:
+            self.notify = None
     
     def run(self):
+        if not self.notify:
+            return
+        
         while True:
             sound = False
             while len(self.items) > 0:
                 sound = True
                 item = self.items.pop(0)
-                self.show_notify(item)
-                
+                self.notify.Notify('Atarashii', 0, item[2], item[0], item[1],
+                                   (),{'urgency' : dbus.Byte(2) }, -1)
+            
             if sound and self.get_sound():
                 self.play_sound()
             
             time.sleep(0.1)
-    
-    
-    # Show a notification ------------------------------------------------------
-    def show_notify(self, item):
-        tries = 0
-        code = -1
-        while code != 0 and tries < 3:
-            try:
-                # Check for Zombieeeeeees!
-                try:
-                    if self.notify != None:
-                        self.notify.kill()
-                        print 'Notify Zombieeeees!'
-                
-                except OSError:
-                    pass
-                
-                self.notify = subprocess.Popen(
-                                         ['notify-send', '-u', 'critical', '-i',
-                                          '%s' % item[2],
-                                          '%s' % item[0],
-                                          '%s' % item[1]])
-                
-                code = self.notify.wait()
-                if code != 0:
-                    print ' notification failed!', code
-            
-            except OSError, error:
-                print 'Failed to show notification', error
-            
-            tries += 1  
-    
     
     # Play the sound using mplayer ---------------------------------------------
     def play_sound(self):
