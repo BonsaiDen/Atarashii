@@ -363,7 +363,7 @@ LANG = {
             '<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n'
             '<b>%d</b> Follower\nFollowing <b>%d</b>',
         
-        'html_expanded_tooltip' : '<b>%s</b> translates to:\n%s',
+        'html_expanded_tooltip' : '<b>%s</b> redirects to:\n%s',
         
         'html_profile' : '%s at Twitter.com',
         'html_at' : '%s at Twitter.com',
@@ -650,6 +650,7 @@ LANG = {
     }
 }
 
+
 class Language:
     def __init__(self, code):
         if LANG.has_key(code):
@@ -664,4 +665,3 @@ class Language:
 
 # Select Language
 LANG = Language(locale.getdefaultlocale()[0])
-
