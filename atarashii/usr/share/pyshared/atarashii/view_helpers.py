@@ -117,7 +117,7 @@ class ViewHelpers:
     # Fakeman! Roger Buster!
     # This fixes an issue where the reply/favorite links wouldn't disapear if
     # the mouse left the view
-    def fake_move(self, pos, latest = False):
+    def fake_move(self, pos):
         self.fake_mouse = True
         event = gtk.gdk.Event(gtk.gdk.MOTION_NOTIFY)
         event.window = self.get_window()

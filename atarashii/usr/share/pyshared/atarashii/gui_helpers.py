@@ -183,10 +183,10 @@ class GUIHelpers:
     # This doesn't work 100% of the time, but it's better than nothing
     def fix_tooltips(self, *args):
         if self.mode == MODE_TWEETS:
-            self.html.fake_move((-1.0, -1.0), True)
+            self.html.fake_move((-1.0, -1.0))
         
         elif self.mode == MODE_MESSAGES:
-            self.message.fake_move((-1.0, -1.0), True)
+            self.message.fake_move((-1.0, -1.0))
         
         else: # TODO implement search
             pass
