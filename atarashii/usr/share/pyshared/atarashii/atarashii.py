@@ -16,19 +16,9 @@
 # TODO add multireply via shift/ctrl, replyid is from the first selected tweet
 
 
-# DBUS Integration -------------------------------------------------------------
-# ------------------------------------------------------------------------------
-import dbus
-import dbus.service
-import sys
-import os
-if 'org.Atarashii' in dbus.Interface(dbus.SessionBus().get_object(
-   'org.freedesktop.DBus', '/org/freedesktop/DBus'),
-   'org.freedesktop.DBus').ListNames():
-    sys.exit(69) # os.EX_UNAVAILABLE
-
-DBUS = dbus.SessionBus()
-DBUSNAME = dbus.service.BusName('org.Atarashii', bus = DBUS)
+# Make sure there is only one instance of Atarashii ----------------------------
+import bus
+DBUS_INSTANCE = bus.get_instance()
 
 
 # Atarashii --------------------------------------------------------------------
@@ -39,6 +29,8 @@ import gtk
 import gobject
 
 import time
+import os
+import sys
 
 gtk.gdk.threads_init()
 gtk.gdk.threads_enter()
@@ -140,7 +132,7 @@ class Atarashii(AtarashiiActions):
             return
             
         # Wait until the last update/delete/send is complete
-        # FIXME does this thing every gets into action?
+        # FIXME does this thing ever gets into action?
         while self.any_status(ST_UPDATE, ST_DELETE, ST_SEND, ST_CONNECT):
             time.sleep(0.1)
         

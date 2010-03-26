@@ -182,10 +182,10 @@ class URLExpander(threading.Thread):
         gobject.idle_add(self.callback, self.url, current_url)
     
     def get_url_parts(self, url):
-        p = 7 if url.lower().startswith('http://') else 8
-        host = url[p:]
+        pos = 7 if url.lower().startswith('http://') else 8
+        host = url[pos:]
         host = host[:host.find('/')]
-        path = url[p + len(host):]
+        path = url[pos + len(host):]
         return host, path
     
     @classmethod
