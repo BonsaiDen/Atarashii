@@ -135,7 +135,7 @@ class ViewHTML:
                 if highlight and self.last_highlight:
                     spacer = '13' # Middle Dark Blue
                 
-                elif highlight:
+                elif highlight or self.last_highlight:
                     spacer = '10' # Middle Dark Gray
                 
                 else:
@@ -179,7 +179,7 @@ class ViewHTML:
                 if highlight and self.last_highlight:
                     spacer = '12' # Middle Normal Blue
                 
-                elif highlight:
+                elif highlight or self.last_highlight:
                     spacer = '11' # Middle Normal Gray
                 
                 else:
