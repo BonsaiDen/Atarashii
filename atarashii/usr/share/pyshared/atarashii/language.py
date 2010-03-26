@@ -157,7 +157,7 @@ LANG = {
             
         'about_kittens' : 
             'Diese Version wurde von <b>%s</b> Kätzchen\n'
-            'verpackt. Ihr Geheimnis lautet <b>#%s</b>.',
+            'verpackt. Ihre Glückszahl ist <b>%s</b>!',
         
         # Account Dialog
         'account_edit' : 'Benutzer bearbeiten',
@@ -480,8 +480,8 @@ LANG = {
             'A simple Twitter Client for the GNOME Desktop.',
         
         'about_kittens' : 
-            'This Version has been build by <b>%s</b> Kittens.\n'
-            'Their secret is <b>#%s</b>.',
+            'This Version has been build by <b>%s</b> kittens.\n'
+            'Their lucky number is <b>%s</b>!',
         
         # Account Dialog
         'account_edit' : 'Edit user',
