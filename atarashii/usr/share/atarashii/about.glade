@@ -71,7 +71,7 @@ Atarashii. If not, see &lt;http://www.gnu.org/licenses/&gt;.</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="about">
+                          <object class="GtkLabel" id="description">
                             <property name="width_request">180</property>
                             <property name="visible">True</property>
                             <property name="xalign">0</property>

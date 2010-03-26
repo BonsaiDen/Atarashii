@@ -151,6 +151,7 @@ class AboutDialog(Dialog):
                           % self.main.version)
         
         
+        self.get('description').set_markup(lang.about_description)
         self.get('kittens').set_markup(lang.about_kittens
                                        % (self.main.kittens, self.main.secret))
         
