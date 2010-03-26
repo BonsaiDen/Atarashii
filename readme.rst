@@ -8,16 +8,6 @@ The code itself is written in *Python* and uses the corresponding *Python*
 bindings for the *GTK+* libraries.
 
 
-Disclaimer
-----------
-
-This project is still under heavy development, addition average is about ~1100  
-lines per day. Bugs getting squished every minute or so... which explains the  
-crazy version numbering. But besides that it's already pretty stable, most times  
-it's best to fetch from the repo instead of using the pre build Debian-Package_ 
-in the downloads section.
-
-
 Installation
 ------------
 There are currently three ways for you to get **Atarashii**.
@@ -54,6 +44,8 @@ If you want to hack on **Atarashii** you can just clone the repo and then run
     Due to hardlinks in the CSS file the favorite/reply icons won't work until 
     **Atarashii** has been installed with one of the above methods.
 
+    Watch out if you clone the ``next`` branch, sometimes changes that get 
+    pushed up their can break stuff.
 
 .. _Debian-Package: http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.17-1_all.deb
 
