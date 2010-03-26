@@ -72,7 +72,7 @@ class AtarashiiActions:
             crash_file = open(CRASH_LOG_FILE, 'ab')
             trace = traceback.extract_tb(sys.last_traceback)
             crash_file.write(
-                 '''Atarashii %s\nStarted at %s\nCrashed at %s"\nTraceback:\n'''
+                 '''Atarashii %s\nStarted at %s\nCrashed at %s\nTraceback:\n'''
                  % (self.version,
                  time.strftime('%a %b %d %H:%M:%S +0000 %Y',
                                 time.gmtime(time.time())),
