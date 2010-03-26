@@ -29,8 +29,5 @@ def get_instance():
         sys.exit(69) # os.EX_UNAVAILABLE
     
     else:
-        # Needs to be global, if the variable gets gc'ed the dbus instance is
-        # automatically removed
-        
         return dbus.service.BusName('org.bonsaiden.Atarashii', bus = session)
 
