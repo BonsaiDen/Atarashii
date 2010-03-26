@@ -5,6 +5,7 @@ atarashii (0.99.17-1) all;
   * Also try to resolve multiple redirects, but only 5 levels deep.
   * Send notifications directly over the dbus.
   * Switch to sox for notification sounds, instead of mplayer.
+  * Removed mp3 support for notifications sounds and added flac instead.
   * Some more information in the about dialog.
   * A bit of internal cleanup.
 
