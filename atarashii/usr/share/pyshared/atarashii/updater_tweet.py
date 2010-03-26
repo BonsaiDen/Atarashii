@@ -34,7 +34,7 @@ class UpdaterTweet:
                                   len(self.html.items) - 1][0].id
     
     # Load initial tweets ------------------------------------------------------
-    def get_init_tweets(self, last = False, init = False):
+    def get_init_tweets(self, last=False, init=False):
         updates = []
         try:
             updates = self.try_get_items(self.get_updates,
@@ -57,7 +57,7 @@ class UpdaterTweet:
     
     
     # Main Function that fetches the updates -----------------------------------
-    def get_updates(self, since_id = 0, max_id = None, max_count = 200):
+    def get_updates(self, since_id=0, max_id=None, max_count=200):
         gobject.idle_add(self.gui.update_status, True)
         updates = []
         mentions = []

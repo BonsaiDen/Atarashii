@@ -35,7 +35,7 @@ class UpdaterMessage:
     
     
     # Load initial messages ----------------------------------------------------
-    def get_init_messages(self, last = False, init = False):
+    def get_init_messages(self, last=False, init=False):
         messages = []
         try:
             messages = self.try_get_items(self.get_messages,
@@ -57,7 +57,7 @@ class UpdaterMessage:
     
     
     # Main Function that fetches the messages ----------------------------------
-    def get_messages(self, since_id = 0, max_id = None, max_count = 200):
+    def get_messages(self, since_id=0, max_id=None, max_count=200):
         messages = []
         if since_id != HTML_UNSET_ID:
             if max_id is None:

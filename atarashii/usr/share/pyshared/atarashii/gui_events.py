@@ -59,7 +59,7 @@ class GUIEventHandler:
         else:
             self.main.updater.unwait(tweets = True)
     
-    def on_refresh_all(self, button, menu = None):
+    def on_refresh_all(self, button, menu=None):
         self.set_refresh_update(False, status = False)
         self.main.updater.unwait(tweets = True, messages = True)
     
@@ -172,7 +172,7 @@ class GUIEventHandler:
             
             self.about_toggle = False
     
-    def on_quit(self, widget = None, data = None):
+    def on_quit(self, widget=None, data=None):
         if data:
             data.set_visible(False)
         

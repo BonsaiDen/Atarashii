@@ -110,7 +110,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     
     # Initiate a empty timeline ------------------------------------------------
     # --------------------------------------------------------------------------
-    def init(self, splash = False):
+    def init(self, splash=False):
         self.items = []
         self.update_list = []
         self.history_list = []
@@ -180,7 +180,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         self.render()
     
-    def add(self, item, append = False):
+    def add(self, item, append=False):
         # Replace mentions by replies, sometimes the timeline might lag behind
         found = False
         for e, i in enumerate(self.items):
@@ -215,7 +215,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             self.render()
     
     def favorite(self, item_id, mode):
-        for e, i in enumerate(self.items):
+        for i in self.items:
             item = i[0]
             if self.get_id(item) == item_id:
                 if hasattr(item, 'retweeted_status'):
@@ -230,10 +230,10 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     
     # Handle the opening of Links ----------------------------------------------
     # --------------------------------------------------------------------------
-    def context_link(self, menu, uri, extra = None):
+    def context_link(self, menu, uri, extra=None):
         self.open_link(None, None, None, uri, extra)
     
-    def open_link(self, view, frame, req, uri = None, extra = None):
+    def open_link(self, view, frame, req, uri=None, extra=None):
         # Get URI
         if uri is None:
             uri = req.get_uri()

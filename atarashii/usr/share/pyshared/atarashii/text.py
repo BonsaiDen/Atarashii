@@ -410,7 +410,7 @@ class TextInput(gtk.TextView):
     def set_text(self, text):
         self.get_buffer().set_text(text)
     
-    def clear_text(self, text, pos = 0):
+    def clear_text(self, text, pos=0):
         self.is_shortening = False
         self.is_changing = True
         self.set_text(text)
@@ -510,7 +510,7 @@ class TextInput(gtk.TextView):
                 
                 self.grab_focus()
     
-    def resize(self, line_count = 5):
+    def resize(self, line_count=5):
         self.gui.set_label()
         
         # Get Font Height

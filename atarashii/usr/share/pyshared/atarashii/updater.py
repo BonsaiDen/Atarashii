@@ -257,7 +257,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             gobject.timeout_add(1000, self.unwait)
             self.wait.wait()
     
-    def unwait(self, init = False, tweets = False, messages = False):
+    def unwait(self, init=False, tweets=False, messages=False):
         if init:
             self.do_init = True
         
@@ -368,9 +368,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     
     
     # Retrieve Tweets / Messages -----------------------------------------------
-    def try_get_items(self, method, since_id = 0,
-                      max_id = None,max_count = 200):
-        
+    def try_get_items(self, method, since_id=0, max_id=None, max_count=200):
         count = 0
         while True:
             count += 1
@@ -482,7 +480,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         else:
             self.main.unset_status(ST_WARNING_RATE)
     
-    def get_image(self, item, message = False):
+    def get_image(self, item, message=False):
         if message:
             url = item.sender.profile_image_url
             user_id = item.sender.id

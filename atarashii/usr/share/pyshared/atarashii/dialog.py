@@ -33,7 +33,7 @@ class Dialog:
     resource = ''
     instance = None
     
-    def __init__(self, gui, close = True, init = True):
+    def __init__(self, gui, close=True, init=True):
         self.gui = gui
         self.main = gui.main
         self.settings = gui.main.settings
@@ -166,8 +166,8 @@ class AboutDialog(Dialog):
 # Message Dialog ---------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class MessageDialog(gtk.MessageDialog):
-    def __init__(self, parent, msg_type, message, title, ok_callback = None,
-                yes_callback = None, no_callback = None, close_callback = None):
+    def __init__(self, parent, msg_type, message, title, ok_callback=None,
+                yes_callback=None, no_callback=None, close_callback=None):
         
         buttons = gtk.BUTTONS_OK
         if msg_type == MESSAGE_ERROR:

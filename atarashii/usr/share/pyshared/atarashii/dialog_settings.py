@@ -280,7 +280,7 @@ class SettingsDialog(Dialog):
         self.drop.get_selection().select_path((num,))
         self.drop_changed()
 
-    def create_drop_list(self, name = None):
+    def create_drop_list(self, name=None):
         self.user_accounts = self.main.settings.get_accounts()
         self.accounts_list = gtk.ListStore(str)
         selected = -1

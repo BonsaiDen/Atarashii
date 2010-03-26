@@ -56,7 +56,7 @@ from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
 
 class Atarashii(AtarashiiActions):
     def __init__(self, version, secret, kittens,
-                 debug = False, debug_path = None):
+                 debug=False, debug_path=None):
         
         # Setup
         self.version = version
@@ -123,7 +123,7 @@ class Atarashii(AtarashiiActions):
     def on_init(self):
         self.login()
     
-    def login(self, change_user = None):
+    def login(self, change_user=None):
         # We need a username!
         if self.username == UNSET_TEXT \
            and (change_user is None or change_user == UNSET_TEXT):
@@ -183,7 +183,7 @@ class Atarashii(AtarashiiActions):
         self.gui.update_status()
         self.gui.show_input()
     
-    def on_login_failed(self, error = None):
+    def on_login_failed(self, error=None):
         self.refresh_time = UNSET_TIMEOUT
         self.refresh_timeout = UNSET_TIMEOUT
         self.gui.set_mode(MODE_TWEETS)

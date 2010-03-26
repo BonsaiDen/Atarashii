@@ -221,7 +221,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # GUI Switchers ------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def show_input(self, resize = True):
+    def show_input(self, resize=True):
         self.progress.hide()
         self.progress_visible = False
         self.text_scroll.show()
@@ -261,7 +261,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         self.progress_visible = True
     
-    def hide_all(self, progress = True):
+    def hide_all(self, progress=True):
         if progress:
             self.progress.hide()
             self.progress_visible = False
@@ -275,8 +275,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Refresh / Read / History Button ------------------------------------------
     # --------------------------------------------------------------------------
-    def set_refresh_update(self, mode, refresh_mode = None, status = True,
-                           no_read = False):
+    def set_refresh_update(self, mode, refresh_mode=None, status=True,
+                           no_read=False):
         
         # History mode ---------------------------------------------------------
         if self.mode == MODE_MESSAGES and self.message.history_loaded:
@@ -368,7 +368,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Statusbar ----------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def update_status(self, once = False):
+    def update_status(self, once=False):
         if self.text.has_typed:
             pass
         

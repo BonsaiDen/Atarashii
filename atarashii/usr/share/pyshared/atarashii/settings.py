@@ -147,7 +147,7 @@ class Settings:
             else:
                 return self[key].strip() != ''
     
-    def is_true(self, key, default = True):
+    def is_true(self, key, default=True):
         if self[key] is None:
             return default
         
@@ -241,7 +241,7 @@ class Settings:
 
 # Create Crashfile -------------------------------------------------------------
 # ------------------------------------------------------------------------------
-def crash_file(mode, data = None):
+def crash_file(mode, data=None):
     try:
         if mode:
             cfp = open(CRASH_FILE, 'wb')

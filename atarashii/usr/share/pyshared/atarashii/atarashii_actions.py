@@ -105,7 +105,7 @@ class AtarashiiActions:
         self.exited = True
         sys.exit(0) # os.EX_OK
     
-    def save_settings(self, mode = False):
+    def save_settings(self, mode=False):
         if mode:
             self.save_mode()
         
@@ -176,7 +176,7 @@ class AtarashiiActions:
     
     
     # New style Retweet
-    def retweet(self, name, tweet_id, new_style = False):
+    def retweet(self, name, tweet_id, new_style=False):
         # Abort if pending
         if self.any_status(ST_SEND, ST_DELETE):
             return
@@ -198,7 +198,7 @@ class AtarashiiActions:
     
     
     # Delete
-    def delete(self, tweet_id = UNSET_ID_NUM, message_id = UNSET_ID_NUM):
+    def delete(self, tweet_id=UNSET_ID_NUM, message_id=UNSET_ID_NUM):
         # Abort if pending
         if self.any_status(ST_SEND, ST_DELETE):
             return

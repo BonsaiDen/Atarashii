@@ -77,7 +77,7 @@ class GUIHelpers:
             self.set_label_text(lang.label_message, self.main.message_user)
             self.info_label.show()
     
-    def set_label_text(self, info, label_text, label_extra = None):
+    def set_label_text(self, info, label_text, label_extra=None):
         if label_extra:
             self.info_label.set_markup(info \
                                        % (escape(label_text),

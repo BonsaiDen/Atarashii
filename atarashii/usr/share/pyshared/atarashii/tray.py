@@ -121,7 +121,7 @@ class TrayIcon(gtk.StatusIcon):
     
     # Tooltip ------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def set_tooltip(self, status, twt = 0, msg = 0):
+    def set_tooltip(self, status, twt=0, msg=0):
         text = []
         if twt > 0:
             text.append((lang.tray_tweets if twt > 1 \
@@ -166,7 +166,7 @@ class TrayIcon(gtk.StatusIcon):
         tip.set_custom(self.tooltip)
         return True
     
-    def on_popup(self, widget, button, time, data = None):
+    def on_popup(self, widget, button, time, data=None):
         if button == 3:
             if data:
                 data.show_all()
