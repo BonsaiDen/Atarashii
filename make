@@ -226,7 +226,7 @@ except OSError, error:
 print ">> Build complete!"
 
 print "\n---- Stats ----"
-print "Current Version is %s-%s" % (atarashii.__version__, commit_count)
+print "Current Version is %s-%s#%s" % (atarashii.__version__, commit_sha, commit_count)
 print "Complete size is %d KB" % (size / 1024)
 print "Compressed size %d KB" % deb_size
 

@@ -383,4 +383,3 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         else:
             return 'link', uri, uri
-
