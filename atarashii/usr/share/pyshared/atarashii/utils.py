@@ -155,10 +155,10 @@ class URLExpander(threading.Thread):
     def run(self):
         # Check for already resolved / failed urls
         if self.__class__.url_list.has_key(self.url):
-            url = self.__class__.url_list[self.url]
+            current_url = self.__class__.url_list[self.url]
         
         elif self.url in self.__class__.black_list:
-            url = self.url
+            current_url = self.url
         
         else:
             current_url = self.url
@@ -178,9 +178,8 @@ class URLExpander(threading.Thread):
             
             except IOError:
                 self.__class__.black_list.append(current_url)
-                url = current_url
         
-        gobject.idle_add(self.callback, self.url, url)
+        gobject.idle_add(self.callback, self.url, current_url)
     
     def get_url_parts(self, url):
         p = 7 if url.lower().startswith('http://') else 8
