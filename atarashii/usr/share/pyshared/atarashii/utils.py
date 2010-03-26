@@ -68,7 +68,7 @@ def compare_sub(item_x, item_y):
     
     else:
         return 0
-        
+
 # URL Shortener / Expander------------------------------------------------------
 # ------------------------------------------------------------------------------
 import urllib2
@@ -136,29 +136,26 @@ class URLShorter(threading.Thread):
     
     @classmethod
     def reset(cls):
-        cls.url_list ={}
+        cls.url_list = {}
         cls.black_list = []
 
 
 # Expander ---------------------------------------------------------------------
-EXPAND_LIST = ['is.gd', 'tl.gd', 'tinyurl.com', 'snipurl.com', 'bit.ly',
-               'youtu.be']
-
-
 class URLExpander(threading.Thread):
     url_list = {}
     black_list = []
     
-    def __init__(self, url, service, callback):
+    def __init__(self, url, callback):
         threading.Thread.__init__(self)
         self.url = url
-        self.service = service
         self.callback = callback
         self.daemon = True
         self.start()
 
     def run(self):
-        path = self.url[7 + len(self.service):]
+        host = self.url[7:]
+        host = host[:host.find('/')]
+        path = self.url[7 + len(host):]
         
         # Check for already resolved / failed urls
         if self.__class__.url_list.has_key(self.url):
@@ -168,7 +165,7 @@ class URLExpander(threading.Thread):
             url = self.url
         
         try:
-            conn = httplib.HTTPConnection(self.service, 80)
+            conn = httplib.HTTPConnection(host, 80)
             conn.request('HEAD', path)
             response = conn.getresponse()
             if not response.status in (301, 302):
@@ -185,5 +182,6 @@ class URLExpander(threading.Thread):
     
     @classmethod
     def reset(cls):
-        cls.url_list ={}
+        cls.url_list = {}
         cls.black_list = []
+
