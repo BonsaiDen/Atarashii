@@ -61,10 +61,11 @@ from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
 
 
 class Atarashii(AtarashiiActions):
-    def __init__(self, version, debug = None):
+    def __init__(self, version, debug = False, debug_path = None):
         # Setup
         self.version = version
         self.debug = debug
+        self.debug_path = debug_path
         self.exited = False
         self.start_time = time.time()
         
@@ -269,19 +270,19 @@ class Atarashii(AtarashiiActions):
             return img
     
     def get_image(self):
-        if self.debug == None:
+        if self.debug_path == None:
             return '/usr/share/icons/atarashii.png'
         
         else:
-            return os.path.join(self.debug,
+            return os.path.join(self.debug_path,
                                 'atarashii/usr/share/icons/atarashii.png')
     
     def get_resource(self, res):
-        if self.debug == None:
+        if self.debug_path == None:
             return os.path.join('/usr/share/atarashii', res)
         
         else:
-            return os.path.join(self.debug,
+            return os.path.join(self.debug_path,
                                 'atarashii/usr/share/atarashii', res)
     
     # Statuses

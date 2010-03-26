@@ -146,7 +146,7 @@ class AboutDialog(Dialog):
     def on_init(self):
         self.dlg.set_title(lang.about_title)
         self.close_button.set_label(lang.about_okbutton)
-        if self.main.debug != None:
+        if self.main.debug:
             title = '<span size="x-large"><b>%s</b></span>'
         
         else:

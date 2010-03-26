@@ -31,7 +31,7 @@ echo "Starting Atarashii..."
 while [ $RESTART -lt 3 ]
 do
     # Start
-    atarashiigui
+    atarashiigui $1
     
     # Varas
     let CODE=$?

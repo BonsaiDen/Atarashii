@@ -31,12 +31,11 @@ echo "Starting Atarashii..."
 while [ $RESTART -lt 3 ]
 do
     # Start
-    ./debug.py
+    ./debug.py $1
     
     # Varas
     let CODE=$?
     let RESTART=RESTART+1
-    
     
     # Logout check
     if [ -e ~/.atarashii/logout ]; then
