@@ -37,11 +37,6 @@ except:
     exit(75)
     
 # Start Atarashii
-if '-m' in sys.argv:
-    atarashii.start()
-
-else:
-    atarashii.debug(sys.path[0])
-
+atarashii.debug(sys.path[0])
 exit(0)
 

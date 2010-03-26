@@ -61,9 +61,13 @@ from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
 
 
 class Atarashii(AtarashiiActions):
-    def __init__(self, version, debug = False, debug_path = None):
+    def __init__(self, version, secret, kittens,
+                 debug = False, debug_path = None):
+        
         # Setup
         self.version = version
+        self.secret = secret
+        self.kittens = kittens
         self.debug = debug
         self.debug_path = debug_path
         self.exited = False

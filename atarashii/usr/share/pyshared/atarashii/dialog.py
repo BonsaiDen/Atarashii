@@ -146,13 +146,14 @@ class AboutDialog(Dialog):
     def on_init(self):
         self.dlg.set_title(lang.about_title)
         self.close_button.set_label(lang.about_okbutton)
-        if self.main.debug:
-            title = '<span size="x-large"><b>%s</b></span>'
+        self.get('title').set_markup(
+                          '<span size="x-large"><b>Atarashii %s</b></span>'
+                          % self.main.version)
         
-        else:
-            title = '<span size="x-large"><b>Atarashii %s</b></span>'
         
-        self.get('title').set_markup(title % self.main.version)
+        self.get('kittens').set_markup(lang.about_kittens
+                                       % (self.main.kittens, self.main.secret))
+        
         self.get('image').set_from_file(self.main.get_image())
     
     def on_close(self, *args):

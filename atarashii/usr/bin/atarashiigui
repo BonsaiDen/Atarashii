@@ -34,11 +34,6 @@ except:
     exit(75)
     
 # Start Atarashii
-if '-d' in sys.argv:
-    atarashii.debug()
-
-else:
-    atarashii.start()
-
+atarashii.start()
 exit(0)
 

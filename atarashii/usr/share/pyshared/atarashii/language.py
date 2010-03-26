@@ -154,6 +154,10 @@ LANG = {
         'about_okbutton' : 'OK',
         'about_description' :
             'Ein simpler Twitter Client für den GNOME Desktop.',
+            
+        'about_kittens' : 
+            'Diese Version wurde von <b>%s</b> Kätzchen\n'
+            'verpackt. Ihr Geheimnis lautet <b>#%s</b>.',
         
         # Account Dialog
         'account_edit' : 'Benutzer bearbeiten',
@@ -474,6 +478,10 @@ LANG = {
         'about_okbutton' : 'OK',
         'about_description' :
             'A simple Twitter Client for the GNOME Desktop.',
+        
+        'about_kittens' : 
+            'This Version has been build by <b>%s</b> Kittens.\n'
+            'Their secret is <b>#%s</b>.',
         
         # Account Dialog
         'account_edit' : 'Edit user',
