@@ -36,6 +36,7 @@ class ViewMenu:
     def expand_link(self, url, expanded):
         self.expanded_links[url] = expanded
         self.is_expanding = False
+        self.fake_move(self.mouse_position)
     
     def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
         link = self.last_hovered_link
