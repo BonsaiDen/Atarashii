@@ -128,7 +128,10 @@ class ViewHTML:
         if item.id > self.init_id:
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
-                if self.last_highlight or highlight:
+                if highlight and self.last_highlight:
+                    spacer = '13' # Middle Dark Blue
+                
+                elif highlight:
                     spacer = '10' # Middle Dark Gray
                 
                 else:
@@ -169,7 +172,10 @@ class ViewHTML:
         else:
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
-                if self.last_highlight or highlight:
+                if highlight and self.last_highlight:
+                    spacer = '12' # Middle Normal Blue
+                
+                elif highlight:
                     spacer = '11' # Middle Normal Gray
                 
                 else:

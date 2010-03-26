@@ -304,5 +304,11 @@ a:active, a:hover, a, .protected {
     border-bottom: 2px solid #dbdddf;
 }
 
+.spacer12 {
+    border-bottom: 2px solid #c7d3df;
+}
 
+.spacer13 {
+    border-bottom: 2px solid #b7cbdf;
+}
 
