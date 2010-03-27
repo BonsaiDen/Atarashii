@@ -1,0 +1,6 @@
+atarashii (0.99.17a-1) all;
+ 
+  * Fix for the settings dialog not getting enable in certain cases when the
+    password entry was aborted or had failed.
+ 
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com> Sat, 27 Mar 2010 06:49:00 +0100
