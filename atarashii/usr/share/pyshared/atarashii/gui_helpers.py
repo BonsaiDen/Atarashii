@@ -199,5 +199,6 @@ class GUIHelpers:
     # Show a popup notification
     def notifcation(self, ntype, msg):
         self.main.notifier.items.append(("Atarashii", strip_tags(msg),
-            "dialog-error" if ntype == MESSAGE_ERROR else "dialog-warning"))
+            'dialog-error' if ntype == MESSAGE_ERROR else 'dialog-warning'),
+            'info')
 
