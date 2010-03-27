@@ -21,6 +21,8 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
+import os
+
 from language import LANG as lang
 from dialog import Dialog, MessageDialog
 from utils import SHORTS_LIST, URLShorter, URLExpander
@@ -106,7 +108,6 @@ class SettingsDialog(Dialog):
         delete.connect('clicked', delete_dialog)
         
         # Notifications
-        self.get('notifications').set_text(lang.settings_notifications)
         notify = self.get('notify')
         sound = self.get('sound')
         notify.set_label(lang.settings_notify)
@@ -127,53 +128,45 @@ class SettingsDialog(Dialog):
         tray.set_active(self.settings.is_true('tray', False))
         
         
-        # Sound File Chooser, create it here to fix some bugs ------------------
-        # ----------------------------------------------------------------------
-        file_chooser = gtk.FileChooserDialog(None, self.dlg,
-                                         action = gtk.FILE_CHOOSER_ACTION_OPEN,
-                                         buttons = (lang.settings_file_cancel,
-                                         gtk.RESPONSE_CANCEL,
-                                         lang.settings_file_ok,
-                                         gtk.RESPONSE_OK))
+        # Soundfiles -----------------------------------------------------------
+        self.get('snd_tweets').set_label(lang.settings_file_tweets)
+        self.get('snd_reply').set_label(lang.settings_file_replies)
+        self.get('snd_messages').set_label(lang.settings_file_messages)
+        self.get('snd_info').set_label(lang.settings_file_info)
+
+        self.sounds = ['tweets', 'reply', 'messages', 'info']
         
-        
-        # Fix a bug were the button would be empty if the dialog is canceled
-        # for the first time
-        self.tmp_file = str(self.settings['soundfile'])
-        def choosen(chooser, code):
-            if code != gtk.RESPONSE_OK:
-                file_chooser.set_filename(str(self.settings['soundfile']))
+        def get_sound(key):
+            if self.settings.isset('sound_' + key):
+                snd = str(self.settings['sound_' + key]).strip()
+                return None if snd in ('', 'None') else snd
             
             else:
-                self.tmp_file = str(file_chooser.get_filename())
+                return None
         
-        file_widget = gtk.FileChooserButton(file_chooser)
-        self.get('notifybox').pack_end(file_widget)
-        file_widget.show()
-        file_chooser.connect('response', choosen)
-        file_chooser.set_title(lang.settings_file)
-        if str(self.settings['soundfile']) in ('', 'None'):
-            file_chooser.set_current_folder('/usr/share/sounds')
+        soundfiles = {
+            'tweets': self.settings['sound_tweets'] or '',
+            'reply': self.settings['sound_reply'] or '',
+            'messages': self.settings['sound_messages'] or '',
+            'info': self.settings['sound_info'] or ''
+        }
         
-        else:
-            file_chooser.set_filename(str(self.settings['soundfile']))  
+        def set_sound(snd, snd_file):
+            self.get('file_' + snd).set_label(os.path.basename(snd_file))
+            soundfiles[snd] = snd_file
         
-        # File Filter
-        file_filter = gtk.FileFilter()
-        file_filter.set_name(lang.settings_file_filter)
-        file_filter.add_pattern('*.flac')
-        file_filter.add_pattern('*.wav')
-        file_filter.add_pattern('*.ogg')
-        file_chooser.add_filter(file_filter)  
-        file_chooser.set_filter(file_filter)
-        self.file_chooser = file_chooser
+        self.file_chooser = None
+        def select_file(button, snd):
+            self.file_chooser = SoundChooser(self.dlg)
+            self.file_chooser.open_file(get_sound(snd), snd, set_sound)
         
-        # Fix bug with the file filter no beeing selected
-        def select_file(chooser):
-            if file_chooser.get_filter() is None:
-                file_chooser.set_filter(file_filter)
-        
-        file_chooser.connect('selection-changed', select_file)
+        for snd in self.sounds:
+            self.get('button_' + snd).connect('clicked', select_file, snd)
+            snd_file = get_sound(snd)
+            snd_file = os.path.basename(snd_file) if snd_file != None \
+                       else lang.settings_file_none
+            
+            self.get('file_' + snd).set_label(snd_file)
         
         
         # Notification Setting -------------------------------------------------
@@ -182,11 +175,11 @@ class SettingsDialog(Dialog):
         notify.set_sensitive(True)
         
         def toggle2(*args):
-            file_widget.set_sensitive(sound.get_active())
+            self.get('soundfiles').set_sensitive(sound.get_active())
         
         def toggle(*args):
             sound.set_sensitive(notify.get_active())
-            file_widget.set_sensitive(
+            self.get('soundfiles').set_sensitive(
                         notify.get_active() and sound.get_active())
         
         toggle()
@@ -212,8 +205,10 @@ class SettingsDialog(Dialog):
         oldusername = self.main.username
         def save(*args):
             self.saved = True
-            self.settings['soundfile'] = self.tmp_file
             
+            for k, v in soundfiles.iteritems():
+                self.settings['sound_' + k] = v
+                        
             self.settings['notify'] = notify.get_active()
             self.settings['sound'] = sound.get_active()
             self.settings['tray'] = tray.get_active()
@@ -269,7 +264,9 @@ class SettingsDialog(Dialog):
         gobject.idle_add(self.drop.grab_focus)
     
     def on_close(self, *args):
-        self.file_chooser.hide()
+        if self.file_chooser is not None:
+            self.file_chooser.close()
+        
         if not self.saved:
             if self.get_drop_active() == -1:
                 self.main.username = ''
@@ -377,6 +374,58 @@ class SettingsDialog(Dialog):
             self.main.username = self.main.settings['username'] = ''
         
         self.create_drop_list()
+
+
+# Sound File Chooser -----------------------------------------------------------
+# ------------------------------------------------------------------------------
+class SoundChooser:
+    def __init__(self, dlg):
+        self.chooser = gtk.FileChooserDialog(None, dlg,
+                           action = gtk.FILE_CHOOSER_ACTION_OPEN,
+                           buttons = (lang.settings_file_cancel,
+                           gtk.RESPONSE_CANCEL,
+                           lang.settings_file_ok,
+                           gtk.RESPONSE_OK))
+        
+        self.chooser.set_modal(True)
+        self.chooser.connect('response', self.choosen)
+        self.chooser.set_title(lang.settings_file)
+        self.chooser.connect('selection-changed', self.select_file)
+        
+        # File Filter
+        self.filter = gtk.FileFilter()
+        self.filter.set_name(lang.settings_file_filter)
+        self.filter.add_pattern('*.flac')
+        self.filter.add_pattern('*.wav')
+        self.filter.add_pattern('*.ogg')
+        self.chooser.add_filter(self.filter)  
+        self.chooser.set_filter(self.filter)
+    
+    def close(self):
+        self.chooser.destroy()
+    
+    def choosen(self, chooser, code):
+        if code == gtk.RESPONSE_OK:
+            gobject.idle_add(self.select_callback, self.select_snd,
+                             str(self.chooser.get_filename()))
+        
+        self.close()
+    
+    def open_file(self, current_file, select_snd, select_callback):
+        self.select_snd = select_snd
+        self.select_callback = select_callback
+        if current_file is None:
+            self.chooser.set_current_folder('/usr/share/sounds')
+        
+        else:
+            self.chooser.set_filename(current_file)  
+    
+        self.chooser.show()
+    
+    # Fix bug with the file filter no beeing selected
+    def select_file(self, chooser):
+        if self.chooser.get_filter() is None:
+            self.chooser.set_filter(self.filter)
 
 
 # Account Dialog ---------------------------------------------------------------
