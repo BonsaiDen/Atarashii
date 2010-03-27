@@ -164,7 +164,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             self.main.api_temp_password = None
             gobject.idle_add(self.main.on_network_failed, error)
             return False
-            
+        
         return auth
     
     
@@ -395,15 +395,17 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     # Notifications ------------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_notifications(self, updates, messages):
+        username = self.main.username.lower()
         notify_list = []
         message_ids = []
         for i in messages:
             img_file = self.get_image(i, True)
             if not i.id in message_ids:
                 message_ids.append(i.id)
-                if i.sender.screen_name.lower() != self.main.username.lower():
+                if i.sender.screen_name.lower() != username:
                     notify_list.append([lang.notification_message % \
-                                        i.sender.screen_name, i.text, img_file])
+                                        i.sender.screen_name, i.text, img_file,
+                                        'messages'])
             
             self.message.update_list.append((i, img_file))
         
@@ -412,7 +414,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             img_file = self.get_image(i)
             if not i.id in updates_ids:
                 updates_ids.append(i.id)
-                if i.user.screen_name.lower() != self.main.username.lower():
+                if i.user.screen_name.lower() != username:
                     if hasattr(i, 'retweeted_status'):
                         name = 'RT %s' % i.retweeted_status.user.screen_name
                         text = i.retweeted_status.text
@@ -421,7 +423,12 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                         name = i.user.screen_name
                         text = i.text
                     
-                    notify_list.append([name, text, img_file])
+                    e = 'tweets'
+                    if i.in_reply_to_screen_name is not None:
+                        if i.in_reply_to_screen_name.lower() == username:
+                            e = 'reply'
+                    
+                    notify_list.append([name, text, img_file, e])
             
             self.html.update_list.append((i, img_file))
         
