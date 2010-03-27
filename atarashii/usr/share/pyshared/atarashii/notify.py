@@ -23,19 +23,23 @@ import dbus
 
 
 # Wacka! This thing is one more mess, sometimes it goes zombie and on other
-# ocasions it just failes. So the kittens just throw some try/except onto it!
+# ocasions it just fails. So the kittens just throw some try/except onto it!
 class Notifier(threading.Thread):
     def __init__(self, main):
         threading.Thread.__init__(self)
         self.main = main
         self.items = []
         self.player = None
+        self.sound_ids = []
+        
         try:
             bus = dbus.SessionBus()
             self.notify = dbus.Interface(
                                bus.get_object('org.freedesktop.Notifications',
                                               '/org/freedesktop/Notifications'),
-                                              'org.freedesktop.Notifications')  
+                                              'org.freedesktop.Notifications')
+            
+            self.notify.connect_to_signal("NotificationClosed", self.play_sound)
         
         except dbus.exceptions.DBusException:
             self.notify = None
@@ -52,16 +56,35 @@ class Notifier(threading.Thread):
             while len(self.items) > 0:
                 sound = True
                 item = self.items.pop(0)
-                self.notify.Notify('Atarashii', 0, item[2], item[0], item[1],
-                                   (),{'urgency': dbus.Byte(2) }, -1)
+                snd_id = self.notify.Notify('Atarashii', 0, item[2], item[0],
+                                            item[1], (),
+                                            {'urgency': dbus.Byte(2) }, -1)
+                
+                self.sound_ids.append(snd_id)
             
             if sound and self.get_sound():
-                self.play_sound()
+                # remove the last so we don't play a sound after everything has
+                # been shown
+                self.sound_ids.pop(-1)
+                
+                # make sure we play a sound for the first notification
+                self.play_sound(-1)
             
             time.sleep(0.1)
     
     # Play the sound using mplayer ---------------------------------------------
-    def play_sound(self):
+    def play_sound(self, sid, *args):
+        
+        # Make sure we've created the notification we want a sound be played for
+        if sid in self.sound_ids:
+            self.sound_ids.remove(sid)
+        
+        elif sid == -1:
+            pass
+        
+        else:
+            return
+        
         tries = 0
         code = -1
         while code != 0 and tries < 3:
