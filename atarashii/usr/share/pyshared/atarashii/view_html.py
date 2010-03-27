@@ -46,7 +46,7 @@ class ViewHTML:
         self.last_highlight = False
         self.last_mentioned = False
         
-        # Reset user tooltip
+        # Reset the user object associated to the avatar tooltip
         self.tooltip_user = None
         
         # Do the rendering!
@@ -54,13 +54,15 @@ class ViewHTML:
         newest_closed = False
         for num, obj in enumerate(self.items):
             item, img = obj
-                        
             self.is_new_timeline(item)
             self.renderitems.insert(0, self.render_item(num, item, img))
             
-            # Close Newest Container
-            # >= because the ""firsttweet"" might get deleted
-            # causing everything after it to be aconsidered as new
+            # Close new container
+            # This thing is what calculates the scrolling offset when new tweets
+            # come in in order to make the view stay at the exact same tweet
+            # is was before 
+            # >= because the "firsttweet" might get deleted
+            # causing everything after it to be considered as new
             if item.id >= self.newest_id and not newest_closed:
                 newest_closed = True
                 self.renderitems.insert(0, '</div>')
@@ -104,7 +106,8 @@ class ViewHTML:
         
         # FIXME This memory leaks EXTREMLY hard!
         # Even removing the dom stuff per javascript doesn't help
-        # I guess it's a problem with the html data not been freed
+        # I guess it's a problem with the html data not beeing freed somewhere
+        # in the python c bindings
         self.load_string(SPACES.sub(' ', data),
                          'text/html', 'UTF-8', 'file:///')
     

@@ -3,7 +3,7 @@
 body {
 	font: 10px sans-serif;
 	overflow-x: hidden;
-	-webkit-user-select: none; /* Disable user selection of none tweet text */
+	-webkit-user-select: none; /* Disable user selection of EVERYTHING!!! */
 	cursor: default;
 }
 
