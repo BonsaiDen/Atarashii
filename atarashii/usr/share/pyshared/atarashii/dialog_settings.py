@@ -25,7 +25,9 @@ from language import LANG as lang
 from dialog import Dialog, MessageDialog
 from utils import SHORTS_LIST, URLShorter, URLExpander
 
-from constants import ST_LOGIN_SUCCESSFUL, ST_CONNECT, ST_UPDATE
+from constants import ST_LOGIN_SUCCESSFUL, ST_CONNECT, ST_UPDATE, \
+                      ST_LOGIN_COMPLETE
+
 from constants import MESSAGE_QUESTION
 
 
@@ -249,7 +251,18 @@ class SettingsDialog(Dialog):
             
             self.on_close()
         
-        self.activate(not self.main.any_status(ST_CONNECT, ST_UPDATE))
+        if self.main.status(ST_UPDATE) \
+           and not self.main.status(ST_LOGIN_COMPLETE):
+            
+            active = False
+        
+        elif self.main.status(ST_CONNECT):
+            active = False
+        
+        else:
+            active = True
+        
+        self.activate(active)
         
         self.close_button.connect('clicked', save)
         cancel_button.connect('clicked', self.on_close)

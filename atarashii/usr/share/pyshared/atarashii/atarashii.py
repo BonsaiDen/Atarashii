@@ -48,7 +48,7 @@ from atarashii_actions import AtarashiiActions
 
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_UPDATE,ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, \
-                      ST_NONE, ST_SEND, ST_DELETE
+                      ST_NONE, ST_SEND, ST_DELETE, ST_LOGIN_COMPLETE
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
                       MODE_TWEETS, MODE_MESSAGES
@@ -154,7 +154,8 @@ class Atarashii(AtarashiiActions):
         
         # Status
         self.unset_status(ST_LOGIN_SUCCESSFUL | ST_LOGIN_COMPLETE | ST_SEND | \
-                          ST_RECONNECT | ST_UPDATE | ST_LOGIN_ERROR)
+                          ST_RECONNECT | ST_UPDATE | ST_LOGIN_ERROR \
+                          | ST_LOGIN_COMPLETE)
         
         self.set_status(ST_CONNECT)
         self.reconnect_timeout = None
