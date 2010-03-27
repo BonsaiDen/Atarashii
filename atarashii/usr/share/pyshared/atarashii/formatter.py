@@ -44,8 +44,7 @@ QUERY_ENDING_CHARS = '[a-z0-9_&=#]'
 URL_REGEX = re.compile('((' + PRE_CHARS + ')((https?://|www\\.)(' \
                        + DOMAIN_CHARS + ')(/' + PATH_CHARS + '*' \
                        + PATH_ENDING_CHARS + '?)?(\\?' + QUERY_CHARS + '*' \
-                       + QUERY_ENDING_CHARS + ')?))', re.UNICODE |re.IGNORECASE)
-
+                       + QUERY_ENDING_CHARS + ')?))', re.IGNORECASE)
 
 # Part constants
 PART_TEXT = 0
@@ -191,9 +190,9 @@ class Formatter:
             return text
     
     def format_tag(self, tag, text):
-        return ('<a href="tag:http://search.twitter.com/search?%s"' \
+        return ('<a href="tag:http://search.twitter.com/search?q=%s"' \
                 + ' title="' + lang.html_search + '">%s%s</a>') \
-                % (urllib.urlencode({'q': '#' + text}), text, tag, text)
+                % (urllib.quote('#' + text.encode('utf-8')), text, tag, text)
     
     def format_username(self, at, user):
         return ('<a href="user:http://twitter.com/%s" title="' \
