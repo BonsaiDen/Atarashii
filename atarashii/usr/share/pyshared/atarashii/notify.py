@@ -22,8 +22,6 @@ import time
 import dbus
 
 
-# Wacka! This thing is one more mess, sometimes it goes zombie and on other
-# ocasions it just fails. So the kittens just throw some try/except onto it!
 class Notifier(threading.Thread):
     def __init__(self, main):
         threading.Thread.__init__(self)
@@ -87,6 +85,10 @@ class Notifier(threading.Thread):
         
         tries = 0
         code = -1
+        
+        # Wacka! This thing is a mess, sometimes it goes zombie and on other
+        # ocasions it just fails. So the kittens just threw some try/except 
+        # on it!
         while code != 0 and tries < 3:
             try:
                 # Check for Zombieeeeeees!
@@ -99,7 +101,6 @@ class Notifier(threading.Thread):
                     pass
                 
                 self.player = subprocess.Popen(['play', '-q', self.get_sound()])
-                
                 code = self.player.wait()
                 if code != 0:
                     print 'sound failed!', code
