@@ -57,12 +57,12 @@ class Notifier(threading.Thread):
             while len(self.items) > 0:
                 sound = True
                 item = self.items.pop(0)
-                snd_type = item[3]
-                self.sound_types[self.last_id] = snd_type
+                self.sound_types[self.last_id] = item[3]
                 self.pending += 1
-                self.last_id = self.notify.Notify('Atarashii', 0, item[2], item[0],
-                                            item[1], (),
-                                            {'urgency': dbus.Byte(2) }, -1)
+                self.last_id = self.notify.Notify('Atarashii', 0, item[2],
+                                                  item[0],  item[1], (),
+                                                  {'urgency': dbus.Byte(2) },
+                                                  -1)
             
             if sound and old_pending == 0:                
                 self.play_sound(-1)
