@@ -28,7 +28,9 @@ class Notifier(threading.Thread):
         self.main = main
         self.items = []
         self.player = None
-        self.sound_ids = []
+        self.sound_types = {}
+        self.last_id = -1
+        self.pending = 0
         
         try:
             bus = dbus.SessionBus()
@@ -51,34 +53,36 @@ class Notifier(threading.Thread):
         
         while True:
             sound = False
+            old_pending = self.pending
             while len(self.items) > 0:
                 sound = True
                 item = self.items.pop(0)
-                snd_id = self.notify.Notify('Atarashii', 0, item[2], item[0],
+                snd_type = item[3]
+                self.sound_types[self.last_id] = snd_type
+                self.pending += 1
+                self.last_id = self.notify.Notify('Atarashii', 0, item[2], item[0],
                                             item[1], (),
                                             {'urgency': dbus.Byte(2) }, -1)
-                
-                self.sound_ids.append(snd_id)
             
-            if sound and self.get_sound():
-                # remove the last so we don't play a sound after everything has
-                # been shown
-                self.sound_ids.pop(-1)
-                
-                # make sure we play a sound for the first notification
+            if sound and old_pending == 0:                
                 self.play_sound(-1)
             
             time.sleep(0.1)
     
     # Play the sound using mplayer ---------------------------------------------
     def play_sound(self, sid, *args):
-        
+                
         # Make sure we've created the notification we want a sound be played for
-        if sid in self.sound_ids:
-            self.sound_ids.remove(sid)
-        
-        elif sid == -1:
-            pass
+        if self.sound_types.has_key(sid):
+            self.pending -= 1
+            if self.pending == 0:
+                self.last_id = -1
+            
+            print "pending", self.pending
+            sound = self.get_sound(self.sound_types[sid])
+            del self.sound_types[sid]
+            if sound is None:
+                return
         
         else:
             return
@@ -100,7 +104,7 @@ class Notifier(threading.Thread):
                 except OSError:
                     pass
                 
-                self.player = subprocess.Popen(['play', '-q', self.get_sound()])
+                self.player = subprocess.Popen(['play', '-q', sound])
                 code = self.player.wait()
                 if code != 0:
                     print 'sound failed!', code
@@ -113,10 +117,10 @@ class Notifier(threading.Thread):
             
             tries += 1
     
-    def get_sound(self):
+    def get_sound(self, snd):
         if self.main.settings.is_true('sound') \
-           and self.main.settings['soundfile'] != 'None':
-            return self.main.settings['soundfile']
+           and self.main.settings['sound_' + snd] != 'None':
+            return self.main.settings['sound_' + snd]
         
         else:
             return None
