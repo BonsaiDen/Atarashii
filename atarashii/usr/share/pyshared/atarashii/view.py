@@ -80,13 +80,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.scrolled = True
                 
         # Other Stuff
-        self.give_text_focus = False
         self.scroll = scroll
-        self.is_loading = False
-        self.position = 0
-        self.current_scroll = 0
         self.set_maintains_back_forward_list(False)
-        self.count = 0
         self.formatter = formatter.Formatter()
         self.item_count = 20
                 
@@ -106,18 +101,26 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         settings = self.get_settings()
         for i in off:
             settings.set_property(i, False)
-    
-    
+        
     # Initiate a empty timeline ------------------------------------------------
     # --------------------------------------------------------------------------
     def init(self, splash=False):
+        # Links and items
         self.items = []
         self.update_list = []
         self.history_list = []
         self.expanded_links = {}
         self.is_expanding = False
+        
+        # Scrolling and stuff
+        self.give_text_focus = False        
+        self.is_loading = False
         self.position = 0
+        self.current_scroll = 0
+        self.count = 0 
         self.offset_count = 0
+        
+        # Item stuff
         self.history_loaded = False
         self.history_position = HTML_UNSET_ID
         self.history_count = 0
@@ -129,7 +132,6 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.load_state = HTML_UNSET_ID
         self.init_id = HTML_UNSET_ID
         self.last_id = HTML_UNSET_ID
-        self.count = 0
         
         if splash:
             self.splash()
