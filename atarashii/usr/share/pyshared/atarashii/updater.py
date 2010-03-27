@@ -64,6 +64,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         self.daemon = True
         self.wait = threading.Event()
+        self.password_wait = threading.Event()
     
     
     # Init the Updater ---------------------------------------------------------
@@ -141,8 +142,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 gobject.idle_add(self.gui.enter_password)
                 
                 # Wait for password entry
-                while self.main.api_temp_password is None:
-                    time.sleep(0.1)
+                self.password_wait.clear()
+                self.password_wait.wait()
                 
                 # Try to login with the new password
                 if self.main.api_temp_password != '':

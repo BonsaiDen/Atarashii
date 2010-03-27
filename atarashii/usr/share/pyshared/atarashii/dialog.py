@@ -118,7 +118,6 @@ class PasswordDialog(Dialog):
         
         
         def abort(*args):
-            self.main.api_temp_password = ''
             self.on_close()
         
         def key(widget, event, *args):
@@ -136,6 +135,13 @@ class PasswordDialog(Dialog):
         self.close_button.connect('clicked', save)
         self.cancel_button.connect('clicked', abort)
 
+    def on_close(self, *args):
+        if self.main.api_temp_password == None:
+            self.main.api_temp_password = ''
+        
+        self.main.updater.password_wait.set()
+        self.__class__.instance = None
+        self.dlg.hide()
 
 # About Dialog -----------------------------------------------------------------
 # ------------------------------------------------------------------------------
