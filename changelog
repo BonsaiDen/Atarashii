@@ -7,9 +7,10 @@ atarashii (0.99.17-1) all;
   * Switch to sox for notification sounds, instead of mplayer.
   * Removed mp3 support for notifications sounds and added flac instead.
   * Some more information in the about dialog.
+  * Fixes to the way scrolling in the views is handled.
   * A bit of internal cleanup.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 26 Mar 2010 15:01:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 27 Mar 2010 04:46:00 +0100
 
 atarashii (0.99.16b-1) all;
 
