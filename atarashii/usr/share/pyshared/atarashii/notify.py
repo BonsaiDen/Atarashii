@@ -103,6 +103,9 @@ class Notifier(threading.Thread):
                 code = self.player.wait()
                 if code != 0:
                     print 'sound failed!', code
+                
+                else:
+                    self.player = None
             
             except OSError, error:
                 print 'Failed to play sound', error
