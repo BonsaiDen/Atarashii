@@ -31,7 +31,7 @@ TAG_EXP = ur'(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+[%s]*)' % UTF_CHARS
 TAG_REGEX = re.compile(TAG_EXP, re.IGNORECASE)
 
 PRE_CHARS = ur'(?:[^/"\':!=]|^|\:)'
-DOMAIN_CHARS = ur'(?:[\.-]|[^\s])+\.[a-z]{2,}(?::[0-9]+)?'
+DOMAIN_CHARS = ur'([\.-]|[^\s_\!\.])+\.[a-z]{2,}(?::[0-9]+)?'
 PATH_CHARS = ur'(?:[\.,]?[%s!\*\'\(\);:=\+\$/%s#\[\]\-_,~@])' % (UTF_CHARS, '%')
 QUERY_CHARS = ur'[a-z0-9!\*\'\(\);:&=\+\$/%#\[\]\-_\.,~]'
 
@@ -49,12 +49,16 @@ URL_REGEX = re.compile('((' + PRE_CHARS + ')((https?://|www\\.)(' \
 
 class Formatter:
     def __init__(self):
+        self._urls = []
         self.urls = []
         self.users = []
         self.tags = []
         self.text_parts = []
     
+    
+    # Parsing ------------------------------------------------------------------
     def parse(self, text):
+        self._urls = []
         self.urls = []
         self.users = []
         self.tags = []
@@ -63,77 +67,19 @@ class Formatter:
         # Filter URLS
         self.text_parts = []
         last = 0
-        for i in self.urls:
-            self.text_parts.append((0, text[last:i.start()]))
-            self.text_parts.append((1, text[i.start():i.end()]))
-            last = i.end()
-        
+        for i in self._urls:
+            # Fix regex problems
+            domain = i.group(5)
+            if not domain[0] in '.-':
+                self.text_parts.append((0, text[last:i.start()]))
+                self.text_parts.append((1, text[i.start():i.end()]))
+                last = i.end()
+            
         self.text_parts.append((0, text[last:]))
         self.filter_by(AT_REGEX, 2) # Filter @
         self.filter_by(TAG_REGEX, 3) # Filter Hashtags
         return self.format()
     
-    def format(self):
-        result = []
-        for i in self.text_parts:
-            ttype, data = i
-            if ttype == 0:
-                result.append(data)
-            
-            # URL
-            elif ttype == 1:
-                # Fix a bug in the Regex
-                start = data.find('http')
-                if start == -1:
-                    start = data.find('www')
-                
-                pre = ''
-                if start != -1:
-                    pre = data[:start]
-                    data = data[start:]
-                
-                # Shorten URLS
-                if len(data) > 30:
-                    text = data[0:27] + '...'
-                
-                else:
-                    text = data
-
-                if data.startswith('www'):
-                    data = 'http://%s' % data
-
-                result.append(
-                    '%s<a href="%s" title="%s">%s</a>' %
-                    (pre, escape(data), escape(data), text))
-            
-            # @
-            elif ttype == 2:
-                at = data[0:1]
-                user = data[1:]
-                self.users.append(user)
-                result.append(('<a href="user:http://twitter.com/%s" title="' \
-                                + lang.html_at + '">%s%s</a>') \
-                                % (user, user, at, user))
-            
-            # tag
-            elif ttype == 3:
-                pos = data.rfind('#')
-                tag = '#'
-                if pos == -1:
-                    tag = u'\uff03'
-                    pos = data.rfind(tag)
-                
-                pre, text = data[:pos], data[pos + 1:]
-                self.tags.append(text)
-                result.append((
-                    '%s<a href="tag:http://search.twitter.com/search?%s"' \
-                    + ' title="' + lang.html_search + '">%s%s</a>') \
-                    % (pre, urllib.urlencode({'q': '#' + text}), text, tag,
-                    text))
-        
-        return ''.join(result)
-    
-    # Crazy filtering and splitting :O
     def filter_by(self, regex, stype):
         pos = 0
         while pos < len(self.text_parts):
@@ -155,5 +101,77 @@ class Formatter:
             pos += 1
     
     def url(self, match):
-        self.urls.append(match)
+        self._urls.append(match)
     
+    
+    # Formatting ---------------------------------------------------------------
+    def format(self):
+        result = []
+        for i in self.text_parts:
+            ttype, data = i
+            if ttype == 0:
+                result.append(data)
+            
+            # URL
+            elif ttype == 1:
+                # Fix a bug in the Regex
+                start = data.find('http')
+                if start == -1:
+                    start = data.lower().find('www')
+                
+                pre = ''
+                if start != -1:
+                    pre = data[:start]
+                    data = data[start:]
+                
+                self.urls.append(data)
+                text_data = data
+                if data.lower().startswith('www'):
+                    data = 'http://%s' % data
+                
+                result.append('%s%s' % (pre, self.format_url(data, text_data)))
+            
+            # username
+            elif ttype == 2:
+                at = data[0:1]
+                user = data[1:]
+                self.users.append(user)
+                result.append(self.format_username(at, user))
+            
+            # hashtag
+            elif ttype == 3:
+                pos = data.rfind('#')
+                tag = '#'
+                if pos == -1:
+                    tag = u'\uff03'
+                    pos = data.rfind(tag)
+                    
+                pre, text = data[:pos], data[pos + 1:]
+                self.tags.append(text)
+                result.append('%s%s' % (pre, self.format_tag(tag, text)))
+        
+        return ''.join(result)
+    
+    def format_tag(self, tag, text):
+        return ('<a href="tag:http://search.twitter.com/search?%s"' \
+                + ' title="' + lang.html_search + '">%s%s</a>') \
+                % (urllib.urlencode({'q': '#' + text}), text, tag, text)
+    
+    def format_username(self, at, user):
+        return ('<a href="user:http://twitter.com/%s" title="' \
+                 + lang.html_at + '">%s%s</a>') \
+                 % (user, user, at, user)
+    
+    def format_url(self, url, text):
+        if len(text) > 30:
+            text = text[0:27]
+            amp = text.rfind('&')
+            close = text.rfind(';')
+            if amp != -1 and (close == -1 or close < amp):
+                text = text[0:amp]
+        
+            text += '...'
+        
+        return '<a href="%s" title="%s">%s</a>' \
+                % (escape(url), escape(url), escape(text))
+
