@@ -24,12 +24,11 @@ from language import LANG as lang
                       
 # Some of this code has been translated from the twitter-text-java library:
 # <http://github.com/mzsanford/twitter-text-java>
-AT_REGEX = re.compile(ur'\B[@\uFF20]([a-z0-9_]{1,20})',
-                      re.UNICODE | re.IGNORECASE)
+AT_REGEX = re.compile(ur'\B[@\uff20]([a-z0-9_]{1,20})', re.IGNORECASE)
 
 UTF_CHARS = ur'a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff'
 TAG_EXP = ur'(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+[%s]*)' % UTF_CHARS
-TAG_REGEX = re.compile(TAG_EXP, re.UNICODE | re.IGNORECASE)
+TAG_REGEX = re.compile(TAG_EXP, re.IGNORECASE)
 
 PRE_CHARS = ur'(?:[^/"\':!=]|^|\:)'
 DOMAIN_CHARS = ur'(?:[\.-]|[^\s])+\.[a-z]{2,}(?::[0-9]+)?'
@@ -109,21 +108,28 @@ class Formatter:
             
             # @
             elif ttype == 2:
-                at_user = data[1:]
-                self.users.append(at_user)
+                at = data[0:1]
+                user = data[1:]
+                self.users.append(user)
                 result.append(('<a href="user:http://twitter.com/%s" title="' \
-                                + lang.html_at + '">@%s</a>') \
-                                % (at_user, at_user, at_user))
+                                + lang.html_at + '">%s%s</a>') \
+                                % (user, user, at, user))
             
             # tag
             elif ttype == 3:
                 pos = data.rfind('#')
-                pre, tag = data[:pos], data[pos + 1:]
-                self.tags.append(tag)
+                tag = '#'
+                if pos == -1:
+                    tag = u'\uff03'
+                    pos = data.rfind(tag)
+                
+                pre, text = data[:pos], data[pos + 1:]
+                self.tags.append(text)
                 result.append((
                     '%s<a href="tag:http://search.twitter.com/search?%s"' \
-                    + ' title="' + lang.html_search + '">#%s</a>') \
-                    % (pre, urllib.urlencode({'q': '#' + tag}), tag, tag))
+                    + ' title="' + lang.html_search + '">%s%s</a>') \
+                    % (pre, urllib.urlencode({'q': '#' + text}), text, tag,
+                    text))
         
         return ''.join(result)
     
