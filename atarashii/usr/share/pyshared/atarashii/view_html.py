@@ -65,6 +65,10 @@ class ViewHTML:
                 newest_closed = True
                 self.renderitems.insert(0, '</div>')
         
+        # make sure to close the new container
+        if not newest_closed:
+            self.renderitems.insert(0, '</div>')
+        
         # Render
         self.set_html(self.renderitems)
     
