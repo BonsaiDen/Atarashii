@@ -21,7 +21,7 @@ import dbus.service
 import sys
 
 from dbus.mainloop.glib import DBusGMainLoop
-DBusGMainLoop(set_as_default=True)
+DBusGMainLoop(set_as_default = True)
 
 def get_instance():
     session = dbus.SessionBus()
