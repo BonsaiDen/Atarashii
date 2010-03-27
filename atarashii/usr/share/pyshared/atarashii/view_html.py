@@ -54,19 +54,16 @@ class ViewHTML:
         newest_closed = False
         for num, obj in enumerate(self.items):
             item, img = obj
+                        
+            self.is_new_timeline(item)
+            self.renderitems.insert(0, self.render_item(num, item, img))
             
             # Close Newest Container
             # >= because the ""firsttweet"" might get deleted
             # causing everything after it to be aconsidered as new
             if item.id >= self.newest_id and not newest_closed:
                 newest_closed = True
-                html = '</div>'
-            
-            else:
-                html = ''
-            
-            self.is_new_timeline(item)
-            self.renderitems.insert(0, html + self.render_item(num, item, img))
+                self.renderitems.insert(0, '</div>')
         
         # Render
         self.set_html(self.renderitems)
@@ -132,7 +129,14 @@ class ViewHTML:
         if item.id > self.init_id:
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
-                if highlight and self.last_highlight:
+                if mentioned:
+                    if not self.last_mentioned:
+                        spacer = '1' # Dark Gray
+                    
+                    else:
+                        spacer = '5' # Yellow
+            
+                elif highlight and self.last_highlight:
                     spacer = '13' # Middle Dark Blue
                 
                 elif highlight or self.last_highlight:
@@ -176,7 +180,14 @@ class ViewHTML:
         else:
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
-                if highlight and self.last_highlight:
+                if mentioned:
+                    if not self.last_mentioned:
+                        spacer = '' # Normal Gray
+                    
+                    else:
+                        spacer = '8' # Yellow
+            
+                elif highlight and self.last_highlight:
                     spacer = '12' # Middle Normal Blue
                 
                 elif highlight or self.last_highlight:
