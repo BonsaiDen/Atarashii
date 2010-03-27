@@ -424,7 +424,7 @@ LANG = {
         'status_one_second': 'Refresh in one second.',
         'status_minute': 'Refresh in one minute.',
         'status_minutes': 'Refresh in %d minutes.',
-        'status_update': 'Sending Status...',
+        'status_update': 'Refreshing...',
         'status_reply': 'Replying to %s...',
         'status_retweet': 'Retweeting %s...',
         'status_message': 'Sending Message to %s...',
