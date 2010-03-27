@@ -247,7 +247,7 @@ class Atarashii(AtarashiiActions):
         
         # Create notification
         info = (lang.notification_login % self.username,
-                '\n'.join(info_text), self.get_user_picture())
+                '\n'.join(info_text), self.get_user_picture(), 'info')
         
         self.notifier.items.append(info)
     
