@@ -1,9 +1,10 @@
 atarashii (0.99.17b-1) all;
 
-  * Fix for the settings dialog not getting enable after hitting the rate limit.
+  * Fix for the settings dialog not getting enable after hitting the rate limit
+    or during an refresh.
   * A couple of fixes in the tweet parser.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 27 Mar 2010 10:00:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 27 Mar 2010 13:51:00 +0100
 
 atarashii (0.99.17a-1) all;
 
