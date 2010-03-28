@@ -156,7 +156,7 @@ class Atarashii(AtarashiiActions):
         # Status
         self.unset_status(ST_LOGIN_SUCCESSFUL | ST_LOGIN_COMPLETE | ST_SEND | \
                           ST_RECONNECT | ST_UPDATE | ST_LOGIN_ERROR \
-                          | ST_LOGIN_COMPLETE)
+                          | ST_LOGIN_COMPLETE | ST_LOGIN_ERROR)
         
         self.set_status(ST_CONNECT)
         self.reconnect_timeout = None
@@ -196,6 +196,7 @@ class Atarashii(AtarashiiActions):
         if self.gui.settings_dialog is not None:
             self.gui.settings_dialog.activate(True)
         
+        self.gui.set_refresh_update(False, None, False)
         self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_app_title()
         self.gui.hide_all()
