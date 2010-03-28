@@ -78,7 +78,6 @@ class Notifier(threading.Thread):
             if self.pending == 0:
                 self.last_id = -1
             
-            print "pending", self.pending
             sound = self.get_sound(self.sound_types[sid])
             del self.sound_types[sid]
             if sound is None:

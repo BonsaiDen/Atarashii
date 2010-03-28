@@ -60,9 +60,8 @@ class ViewHTML:
             # Close new container
             # This thing is what calculates the scrolling offset when new tweets
             # come in in order to make the view stay at the exact same tweet
-            # is was before 
-            # >= because the "firsttweet" might get deleted
-            # causing everything after it to be considered as new
+            # is was before
+            # coung gets increased in render_item!
             if self.count > 0 and not newest_closed:
                 newest_closed = True
                 self.renderitems.insert(2, '</div>')

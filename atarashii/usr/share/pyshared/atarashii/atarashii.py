@@ -16,6 +16,7 @@
 # TODO add multireply via shift/ctrl, replyid is from the first selected tweet
 # TODO make longer replies easier, either split them and add @user to each of 
 #      them, or use ctrl+enter to send and start a new reply to the same tweet
+# TODO cleanup notify and dialog_settings!
 
 
 # Make sure there is only one instance of Atarashii ----------------------------
