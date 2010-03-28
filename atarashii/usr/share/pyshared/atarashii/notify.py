@@ -73,7 +73,7 @@ class Notifier(threading.Thread):
                 
                 if sound and old_pending == 0:
                     self.first_shown = False
-                    self.play_sound(-1, sound = 'messages')
+                    self.play_sound(-1, sound = first_sound)
                 
             time.sleep(0.1)
     
@@ -101,36 +101,9 @@ class Notifier(threading.Thread):
         else:
             return
         
-        tries = 0
-        code = -1
+        # Play the sound
+        Sound(sound)
         
-        # Wacka! This thing is a mess, sometimes it goes zombie and on other
-        # ocasions it just fails. So the kittens just threw some try/except 
-        # on it!
-        while code != 0 and tries < 3:
-            try:
-                # Check for Zombieeeeeees!
-                try:
-                    if self.player is not None:
-                        self.player.kill()
-                        print 'Sound Zombieeeees!'
-                
-                except OSError:
-                    pass
-                
-                self.player = subprocess.Popen(['play', '-q', sound])
-                code = self.player.wait()
-                if code != 0:
-                    print 'sound failed!', code
-                
-                else:
-                    self.player = None
-            
-            except OSError, error:
-                print 'Failed to play sound', error
-            
-            tries += 1
-    
     def get_sound(self, snd):
         if self.main.settings.is_true('sound') \
            and self.main.settings['sound_' + snd] != 'None':
@@ -138,4 +111,42 @@ class Notifier(threading.Thread):
         
         else:
             return None
+
+
+
+class Sound(threading.Thread):
+    def __init__(self,sound):
+        threading.Thread.__init__(self)
+        self.daemon = True
+        self.sound = sound
+        self.start()
+    
+    def run(self):
+        tries = 0
+        code = -1
+        
+        # Wacka! This thing is a mess, sometimes it goes zombie and on other
+        # ocasions it just fails. So the kittens just threw some try/except 
+        # on it!
+        player = None
+        while code != 0 and tries < 3:
+            try:
+                # Check for Zombieeeeeees!
+                try:
+                    if player is not None:
+                        player.kill()
+                        print 'Sound Zombieeeees!'
+                
+                except OSError:
+                    pass
+                
+                player = subprocess.Popen(['play', '-q', self.sound])
+                code = player.wait()
+                if code != 0:
+                    print 'sound failed!', code
+            
+            except OSError, error:
+                print 'Failed to play sound', error
+            
+            tries += 1
 
