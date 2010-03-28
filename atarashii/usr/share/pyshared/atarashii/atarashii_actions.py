@@ -338,7 +338,6 @@ class AtarashiiActions:
                 elif self.status(ST_WAS_SEND) and code == 404:
                     code = -3
         
-        
         # Reset stuff
         self.unset_status(ST_WAS_SEND | ST_WAS_RETWEET | \
                           ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
