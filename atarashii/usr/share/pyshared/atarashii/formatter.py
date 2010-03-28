@@ -71,7 +71,7 @@ class Formatter:
         
         # Filter URLS first to make sure we get no problems with # and @ in them
         self._url_parts = []
-        URL_REGEX.sub(lambda url: self._url_parts.append(url), text)
+        URL_REGEX.sub(self._url_parts.append, text)
         self._parts = []
         last_position = 0
         for i in self._url_parts:
@@ -154,10 +154,9 @@ class Formatter:
             
             # Usernames
             elif part_type == PART_USER:
-                at = data[0:1]
                 user = data[1:]
                 self._users.append(user)
-                result.append(self.format_username(at, user))
+                result.append(self.format_username(data[0:1], user))
             
             # Hashtags 
             elif part_type == PART_TAG:
@@ -194,10 +193,10 @@ class Formatter:
                 + ' title="' + lang.html_search + '">%s%s</a>') \
                 % (urllib.quote('#' + text.encode('utf-8')), text, tag, text)
     
-    def format_username(self, at, user):
+    def format_username(self, at_char, user):
         return ('<a href="user:http://twitter.com/%s" title="' \
                  + lang.html_at + '">%s%s</a>') \
-                 % (user, user, at, user)
+                 % (user, user, at_char, user)
     
     def format_url(self, url, text):
         return '<a href="%s" title="%s">%s</a>' \
