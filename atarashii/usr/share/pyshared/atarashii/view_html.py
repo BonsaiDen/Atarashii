@@ -62,9 +62,15 @@ class ViewHTML:
             # come in in order to make the view stay at the exact same tweet
             # is was before
             # coung gets increased in render_item!
-            if self.count > 0 and not newest_closed:
-                newest_closed = True
-                self.renderitems.insert(2, '</div>')
+            if self.first_load:
+                if self.count > 0 and not newest_closed:
+                    newest_closed = True
+                    self.renderitems.insert(2, '</div>')
+            
+            else:
+                if item.id >= self.newest_id and not newest_closed:
+                    newest_closed = True
+                    self.renderitems.insert(0, '</div>')   
         
         # make sure to close the new container
         if not newest_closed:
