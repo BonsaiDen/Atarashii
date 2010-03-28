@@ -299,7 +299,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # Tweets
         updates = []
         if not self.refresh_messages:
-            try:         
+            try:
                 updates = self.try_get_items(self.get_updates,
                                              self.html.last_id)
             
