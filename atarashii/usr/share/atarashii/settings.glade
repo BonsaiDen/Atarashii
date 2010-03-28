@@ -266,16 +266,41 @@
                             <property name="visible">True</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkButton" id="button_tweets">
+                              <object class="GtkHBox" id="hbox3">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
                                 <child>
-                                  <object class="GtkLabel" id="file_tweets">
+                                  <object class="GtkButton" id="button_tweets">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes">label</property>
-                                    <property name="ellipsize">end</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <child>
+                                      <object class="GtkLabel" id="file_tweets">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">label</property>
+                                        <property name="ellipsize">end</property>
+                                      </object>
+                                    </child>
                                   </object>
+                                  <packing>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="button_tweets_del">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <child>
+                                      <object class="GtkImage" id="image1">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-close</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
                                 </child>
                               </object>
                               <packing>
@@ -283,16 +308,41 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="button_reply">
+                              <object class="GtkHBox" id="hbox4">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
                                 <child>
-                                  <object class="GtkLabel" id="file_reply">
+                                  <object class="GtkButton" id="button_reply">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes">label</property>
-                                    <property name="ellipsize">end</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <child>
+                                      <object class="GtkLabel" id="file_reply">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">label</property>
+                                        <property name="ellipsize">end</property>
+                                      </object>
+                                    </child>
                                   </object>
+                                  <packing>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="button_reply_del">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <child>
+                                      <object class="GtkImage" id="image2">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-close</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
                                 </child>
                               </object>
                               <packing>
@@ -300,16 +350,41 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="button_messages">
+                              <object class="GtkHBox" id="hbox5">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
                                 <child>
-                                  <object class="GtkLabel" id="file_messages">
+                                  <object class="GtkButton" id="button_messages">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes">label</property>
-                                    <property name="ellipsize">end</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <child>
+                                      <object class="GtkLabel" id="file_messages">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">label</property>
+                                        <property name="ellipsize">end</property>
+                                      </object>
+                                    </child>
                                   </object>
+                                  <packing>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="button_messages_del">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <child>
+                                      <object class="GtkImage" id="image3">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-close</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
                                 </child>
                               </object>
                               <packing>
@@ -317,16 +392,41 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkButton" id="button_info">
+                              <object class="GtkHBox" id="hbox6">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
                                 <child>
-                                  <object class="GtkLabel" id="file_info">
+                                  <object class="GtkButton" id="button_info">
                                     <property name="visible">True</property>
-                                    <property name="label" translatable="yes">label</property>
-                                    <property name="ellipsize">end</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <child>
+                                      <object class="GtkLabel" id="file_info">
+                                        <property name="visible">True</property>
+                                        <property name="label" translatable="yes">label</property>
+                                        <property name="ellipsize">end</property>
+                                      </object>
+                                    </child>
                                   </object>
+                                  <packing>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="button_info_del">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="receives_default">True</property>
+                                    <child>
+                                      <object class="GtkImage" id="image4">
+                                        <property name="visible">True</property>
+                                        <property name="stock">gtk-close</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="position">1</property>
+                                  </packing>
                                 </child>
                               </object>
                               <packing>

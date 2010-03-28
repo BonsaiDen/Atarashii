@@ -153,7 +153,13 @@ class SettingsDialog(Dialog):
         
         def set_sound(snd, snd_file):
             self.get('file_' + snd).set_label(os.path.basename(snd_file))
+            self.get('button_' + snd + '_del').set_sensitive(True)
             soundfiles[snd] = snd_file
+        
+        def del_sound(button, snd):
+            self.get('file_' + snd).set_label(lang.settings_file_none)
+            soundfiles[snd] = ''
+            button.set_sensitive(False)
         
         self.file_chooser = None
         def select_file(button, snd):
@@ -162,10 +168,13 @@ class SettingsDialog(Dialog):
         
         for snd in self.sounds:
             self.get('button_' + snd).connect('clicked', select_file, snd)
+            del_button = self.get('button_' + snd + '_del')
+            del_button.connect('clicked', del_sound, snd)
             snd_file = get_sound(snd)
             snd_file = os.path.basename(snd_file) if snd_file != None \
                        else lang.settings_file_none
             
+            del_button.set_sensitive(snd_file != lang.settings_file_none)
             self.get('file_' + snd).set_label(snd_file)
         
         
