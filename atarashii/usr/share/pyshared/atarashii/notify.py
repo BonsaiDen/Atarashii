@@ -28,8 +28,8 @@ class Notifier(threading.Thread):
         self.main = main
         self.items = []
         self.player = None
-        self.sound_types = {}
-        self.last_id = -1
+        self.sound_ids = {}
+        self.sounds = []
         self.pending = 0
         
         try:
@@ -55,32 +55,46 @@ class Notifier(threading.Thread):
             if self.main.settings.is_true('notify'):
                 sound = False
                 old_pending = self.pending
+                first_sound = None
                 while len(self.items) > 0:
                     sound = True
                     item = self.items.pop(0)
-                    self.sound_types[self.last_id] = item[3]
-                    self.pending += 1
-                    self.last_id = self.notify.Notify('Atarashii', 0, item[2],
+                    nid = self.notify.Notify('Atarashii', 0, item[2],
                                                       item[0],  item[1], (),
                                                       {'urgency': dbus.Byte(2)},
                                                       -1)
+                    
+                    self.sound_ids[nid] = True
+                    self.sounds.append(item[3])
+                    if first_sound is None:
+                        first_sound = item[3]
+                    
+                    self.pending += 1
                 
-                if sound and old_pending == 0:                
-                    self.play_sound(-1)
+                if sound and old_pending == 0:
+                    self.first_shown = False
+                    self.play_sound(-1, sound = 'messages')
                 
             time.sleep(0.1)
     
     # Play the sound using mplayer ---------------------------------------------
-    def play_sound(self, sid, *args):
-                
+    def play_sound(self, sid, sound=None):
+        # Fix for the initial notification
+        if sid == -1:
+            sound = self.get_sound(sound)
+            if sound is None:
+                return  
+        
         # Make sure we've created the notification we want a sound be played for
-        if self.sound_types.has_key(sid):
+        elif self.sound_ids.has_key(sid):
+            del self.sound_ids[sid]
+            
             self.pending -= 1
             if self.pending == 0:
                 self.last_id = -1
+                return
             
-            sound = self.get_sound(self.sound_types[sid])
-            del self.sound_types[sid]
+            sound = self.get_sound(self.sounds.pop(0))
             if sound is None:
                 return
         
