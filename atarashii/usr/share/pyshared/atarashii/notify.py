@@ -82,6 +82,7 @@ class Notifier(threading.Thread):
         # Fix for the initial notification
         if sid == -1:
             sound = self.get_sound(sound)
+            self.get_sound(self.sounds.pop(0))
             if sound is None:
                 return  
         
