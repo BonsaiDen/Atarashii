@@ -308,7 +308,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 self.main.unset_status(ST_UPDATE)
                 gobject.idle_add(self.html.render)
                 gobject.idle_add(self.main.handle_error, error)
-                self.main.refresh_timeout = 60
                 self.main.refresh_time = calendar.timegm(time.gmtime())
                 return False
             
@@ -329,7 +328,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 self.main.unset_status(ST_UPDATE)
                 gobject.idle_add(self.message.render)
                 gobject.idle_add(self.main.handle_error, error)
-                self.main.refresh_timeout = 60
                 self.main.refresh_time = calendar.timegm(time.gmtime()) 
                 return False
             
