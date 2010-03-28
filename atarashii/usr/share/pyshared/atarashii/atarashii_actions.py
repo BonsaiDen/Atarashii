@@ -300,7 +300,7 @@ class AtarashiiActions:
             
             if self.status(ST_LOGIN_COMPLETE):
                 code = -5
-                self.gui.set_refresh_update(False)
+                self.gui.set_refresh_update(True)
                 self.gui.tray.refresh_menu.set_sensitive(False)
         
         # Catch common Twitter errors
