@@ -52,21 +52,22 @@ class Notifier(threading.Thread):
             return
         
         while True:
-            sound = False
-            old_pending = self.pending
-            while len(self.items) > 0:
-                sound = True
-                item = self.items.pop(0)
-                self.sound_types[self.last_id] = item[3]
-                self.pending += 1
-                self.last_id = self.notify.Notify('Atarashii', 0, item[2],
-                                                  item[0],  item[1], (),
-                                                  {'urgency': dbus.Byte(2) },
-                                                  -1)
-            
-            if sound and old_pending == 0:                
-                self.play_sound(-1)
-            
+            if self.main.settings.is_true('notify'):
+                sound = False
+                old_pending = self.pending
+                while len(self.items) > 0:
+                    sound = True
+                    item = self.items.pop(0)
+                    self.sound_types[self.last_id] = item[3]
+                    self.pending += 1
+                    self.last_id = self.notify.Notify('Atarashii', 0, item[2],
+                                                      item[0],  item[1], (),
+                                                      {'urgency': dbus.Byte(2)},
+                                                      -1)
+                
+                if sound and old_pending == 0:                
+                    self.play_sound(-1)
+                
             time.sleep(0.1)
     
     # Play the sound using mplayer ---------------------------------------------
