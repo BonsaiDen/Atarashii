@@ -677,7 +677,7 @@ class Language:
         
         # set instance fields
         for key, value in stuff.iteritems():
-            self.__dict__[key] = value
+            setattr(self, key, value)
 
 # Select Language
 LANG = Language(locale.getdefaultlocale()[0])
