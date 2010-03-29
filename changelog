@@ -3,8 +3,9 @@ atarashii (0.99.18-1) all;
   * Revamped the notification sounds, now each popup has its own sound. Also
     tweets/replies/messages and infos can each have a different sound.
   * More fixes to the scrolling.
+  * Some small fixes to the UI.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 28 Mar 2010 14:14:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 29 Mar 2010 10:11:00 +0100
 
 atarashii (0.99.17b-1) all;
 
