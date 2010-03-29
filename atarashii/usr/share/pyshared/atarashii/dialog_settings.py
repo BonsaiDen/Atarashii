@@ -403,7 +403,9 @@ class SoundChooser:
         
         # File Filter
         self.filter = gtk.FileFilter()
-        self.filter.set_name(lang.settings_file_filter)
+        self.filter.set_name(lang.settings_file_filter \
+                             + '(*.wav, *.ogg, *.flac)')
+        
         self.filter.add_pattern('*.flac')
         self.filter.add_pattern('*.wav')
         self.filter.add_pattern('*.ogg')
