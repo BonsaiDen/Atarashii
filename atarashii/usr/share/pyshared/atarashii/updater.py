@@ -440,7 +440,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                                         % (notify_list[i][0], i + 1, count)
             
             for i in notify_list:
-                self.notifier.items.append(i)
+                self.notifier.add(i)
     
     
     # Helpers ------------------------------------------------------------------

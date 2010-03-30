@@ -399,7 +399,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         elif not self.main.status(ST_LOGIN_SUCCESSFUL):
             self.set_status(lang.status_logout)
         
-        elif self.main.status(ST_SEND) or self.main.status(ST_DELETE):
+        elif self.main.any_status(ST_SEND, ST_DELETE):
             pass
         
         elif self.main.status(ST_UPDATE):

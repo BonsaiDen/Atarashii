@@ -181,12 +181,15 @@ class GUIHelpers:
     
     # Fix tooltips that would stay on screen when switching workspaces
     # This doesn't work 100% of the time, but it's better than nothing
+    # FIXME this is broken...
     def fix_tooltips(self, *args):
         if self.mode == MODE_TWEETS:
-            self.html.fake_move((-1.0, -1.0))
+            x, y = self.html.mouse_position
+            self.html.fake_move((x + 16, y + 16))
         
         elif self.mode == MODE_MESSAGES:
-            self.message.fake_move((-1.0, -1.0))
+            x, y = self.message.mouse_position
+            self.message.fake_move((x + 16, y + 16))
         
         else: # TODO implement search
             pass
@@ -198,7 +201,7 @@ class GUIHelpers:
     
     # Show a popup notification
     def notifcation(self, ntype, msg):
-        self.main.notifier.items.append(("Atarashii", strip_tags(msg),
+        self.main.notifier.add((("Atarashii", strip_tags(msg),
             'dialog-error' if ntype == MESSAGE_ERROR else 'dialog-warning',
-            'info'))
+            'info'),))
 

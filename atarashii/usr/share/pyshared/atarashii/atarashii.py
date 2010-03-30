@@ -17,6 +17,9 @@
 # TODO make longer replies easier, either split them and add @user to each of 
 #      them, or use ctrl+enter to send and start a new reply to the same tweet
 # TODO cleanup notify and dialog_settings!
+# TODO fixup tooltips not getting removed when switching workspaces
+# TODO fix tooltip flickering during updating. maybe an focus issues
+# TODO set #/@ to use in the language files(use full width in japanese etc.)
 
 
 # Make sure there is only one instance of Atarashii ----------------------------
@@ -251,7 +254,7 @@ class Atarashii(AtarashiiActions):
         info = (lang.notification_login % self.username,
                 '\n'.join(info_text), self.get_user_picture(), 'info')
         
-        self.notifier.items.append(info)
+        self.notifier.add((info,))
     
     def set_user_picture(self, img):
         self.settings['picture_' + self.username] = img

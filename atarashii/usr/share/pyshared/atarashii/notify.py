@@ -26,8 +26,6 @@ class Notifier(threading.Thread):
     def __init__(self, main):
         threading.Thread.__init__(self)
         self.main = main
-        self.items = []
-        self.player = None
         self.sound_ids = {}
         self.sounds = []
         self.pending = 0
@@ -43,50 +41,42 @@ class Notifier(threading.Thread):
         
         except dbus.exceptions.DBusException:
             self.notify = None
-            
-        self.daemon = True
-        self.start()
-    
-    def run(self):
-        if not self.notify:
+        
+    def add(self, items):
+        if not self.notify or not self.main.settings.is_true('notify'):
             return
         
-        while True:
-            if self.main.settings.is_true('notify'):
-                sound = False
-                old_pending = self.pending
-                first_sound = None
-                while len(self.items) > 0:
-                    sound = True
-                    item = self.items.pop(0)
-                    nid = self.notify.Notify('Atarashii', 0, item[2],
-                                                      item[0],  item[1], (),
-                                                      {'urgency': dbus.Byte(2)},
-                                                      -1)
-                    
-                    self.sound_ids[nid] = True
-                    self.sounds.append(item[3])
-                    if first_sound is None:
-                        first_sound = item[3]
-                    
-                    self.pending += 1
-                
-                if sound and old_pending == 0:
-                    self.first_shown = False
-                    self.play_sound(-1, sound = first_sound)
-                
-            time.sleep(0.1)
+        if len(items) == 0:
+            return
+        
+        old_pending = self.pending
+        first_sound = None
+        for item in items:
+            nid = self.notify.Notify('Atarashii', 0, item[2],
+                                      item[0],  item[1], (),
+                                      {'urgency': dbus.Byte(2)},
+                                      -1)
+            
+            self.sound_ids[nid] = True
+            self.sounds.append(item[3])
+            if first_sound is None:
+                first_sound = item[3]
+            
+            self.pending += 1
+        
+        if old_pending == 0:
+            self.play_sound(-1, sound = first_sound)
     
-    # Play the sound using mplayer ---------------------------------------------
     def play_sound(self, sid, sound=None):
         # Fix for the initial notification
         if sid == -1:
             sound = self.get_sound(sound)
             self.get_sound(self.sounds.pop(0))
-            if sound is None:
-                return  
+            if sound is not None:
+                Sound(sound)
         
-        # Make sure we've created the notification we want a sound be played for
+        # Make sure we've created the notification we want a sound to be played
+        # for
         elif self.sound_ids.has_key(sid):
             del self.sound_ids[sid]
             
@@ -96,15 +86,9 @@ class Notifier(threading.Thread):
                 return
             
             sound = self.get_sound(self.sounds.pop(0))
-            if sound is None:
-                return
-        
-        else:
-            return
-        
-        # Play the sound
-        Sound(sound)
-        
+            if sound is not None:
+                Sound(sound)
+    
     def get_sound(self, snd):
         if self.main.settings.is_true('sound') \
            and self.main.settings['sound_' + snd] != 'None':
