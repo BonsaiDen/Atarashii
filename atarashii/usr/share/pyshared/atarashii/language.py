@@ -35,6 +35,10 @@ LANG = {
         
         # Username
         'name': lambda x: x + '\'' if x[-1:] in 'xs' else x + 's',
+        
+        # Tweets
+        'tweet_hash': '#',
+        'tweet_at': '@',
 
         # HTML
         'html_welcome': 'Willkommen bei Atarashii.',
@@ -363,6 +367,10 @@ LANG = {
         
         # Username
         'name': lambda x: x + '\'s' if x[-1:] in 'xs' else x + 's',
+        
+        # Tweets
+        'tweet_hash': '#',
+        'tweet_at': '@',
         
         # HTML
         'html_welcome': 'Welcome to Atarashii.',

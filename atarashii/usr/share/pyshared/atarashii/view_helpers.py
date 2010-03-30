@@ -46,12 +46,12 @@ class ViewHelpers:
     def copy_tweet(self, menu, uri, item):
         user = self.get_user(item)
         text = self.get_text(item)
-        self.copy_data('@%s\n%s' % (user.screen_name, text))
+        self.copy_data('%s%s\n%s' % (lang.tweet_at, user.screen_name, text))
 
     def copy_message(self, menu, uri, item):
         user = self.get_user(item)
         text = self.get_text(item)
-        self.copy_data('@%s\n%s' % (user.screen_name, text))
+        self.copy_data('%s%s\n%s' % (lang.tweet_at, user.screen_name, text))
     
     
     # Scrolling ----------------------------------------------------------------
@@ -64,7 +64,8 @@ class ViewHelpers:
         try:
             self.execute_script(
                 '''document.title=
-                    document.getElementById("newcontainer").offsetHeight;''')
+                   document.getElementById("newcontainer").offsetHeight;''')
+            
             return int(self.get_main_frame().get_title())
         
         except Exception:

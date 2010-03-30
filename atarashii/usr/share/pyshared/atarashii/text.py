@@ -269,7 +269,7 @@ class TextInput(gtk.TextView):
             # check for @ Reply
             at_user = REPLY_REGEX.match(text)
             if at_user is not None:
-                at_len = len('@%s ' % at_user.group(1))
+                at_len = len('%s%s ' % (lang.tweet_at, at_user.group(1)))
             
                 if self.main.reply_id == UNSET_ID_NUM:
                     self.main.reply_user = at_user.group(1)
@@ -345,15 +345,16 @@ class TextInput(gtk.TextView):
             text = UNSET_TEXT
         
         # Check for already existing reply
-        if text[0:1] == '@':
+        if text[0:1] in u'@\uFF20':
             space = text.find(' ')
             if space == -1:
                 space = len(text)
             
-            text = ('@%s ' % self.main.reply_user) + text[space + 1:]
+            text = ('%s%s ' % (lang.tweet_at,
+                               self.main.reply_user)) + text[space + 1:]
         
         else:
-            text = ('@%s ' % self.main.reply_user) + text
+            text = ('%s%s ' % (lang.tweet_at, self.main.reply_user)) + text
         
         self.end_change(text)
     
@@ -367,8 +368,8 @@ class TextInput(gtk.TextView):
     def retweet(self):
         self.init_change()
         self.main.unset('reply', 'edit')
-        self.end_change('RT @%s: %s' % (self.main.retweet_user,
-                                        self.main.retweet_text))
+        self.end_change('RT %s%s: %s' % (lang.tweet_at, self.main.retweet_user,
+                                         self.main.retweet_text))
     
     # Message
     def message(self):
