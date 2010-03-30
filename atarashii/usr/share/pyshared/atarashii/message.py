@@ -27,7 +27,7 @@ class HTML(view.HTMLView):
         self.main = main
         self.gui = gui
         view.HTMLView.__init__(self, main, gui,
-                              self.gui.message_scroll, MODE_MESSAGES)
+                               self.gui.message_scroll, MODE_MESSAGES)
         
         self.item_count = self.main.load_message_count
         
