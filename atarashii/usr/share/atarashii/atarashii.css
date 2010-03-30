@@ -152,7 +152,7 @@ a:active, a:hover, a, .protected {
 }
 
 .mentionedold {
-	background: #ffffcf;
+	background: #ffffc2;
 }
 
 .time, .time a, .time a:hover, .reply, .reply a, .reply a:hover {
@@ -293,7 +293,7 @@ a:active, a:hover, a, .protected {
 }
 
 .spacer8 {
-	border-bottom: 2px solid #ffffcf;
+	border-bottom: 2px solid #ffffc2;
 }
 
 .spacer10 {
