@@ -1,3 +1,10 @@
+atarashii (0.99.18a-1) all;
+
+  * Cleaned up the notification code.
+  * Small fix to a flickering issues with the read/refresh button.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 30 Mar 2010 16:38:00 +0200
+
 atarashii (0.99.18-1) all;
 
   * Revamped the notification sounds, now each popup has its own sound. Also
@@ -5,7 +12,7 @@ atarashii (0.99.18-1) all;
   * More fixes to the scrolling.
   * Some small fixes to the UI.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 29 Mar 2010 10:11:00 +0100
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 29 Mar 2010 10:11:00 +0200
 
 atarashii (0.99.17b-1) all;
 
