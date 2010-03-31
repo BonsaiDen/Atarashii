@@ -18,7 +18,6 @@
 # ------------------------------------------------------------------------------
 import subprocess
 import threading
-import time
 import dbus
 
 
@@ -69,12 +68,12 @@ class Notifier:
             if self.settings.is_true('sound'):
                 if self.settings['sound_' + item[3]] != 'None':
                     Sound(self.settings['sound_' + item[3]] )
-    
+
 
 # Sound Player Thread ----------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Sound(threading.Thread):
-    def __init__(self,sound):
+    def __init__(self, sound):
         threading.Thread.__init__(self)
         self.daemon = True
         self.sound = sound

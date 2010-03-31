@@ -187,7 +187,6 @@ class GUIHelpers:
             self.html.fake_move((-1.0, -1.0))
         
         elif self.mode == MODE_MESSAGES:
-            x, y = self.message.mouse_position
             self.message.fake_move((-1.0, -1.0))
         
         else: # TODO implement search
