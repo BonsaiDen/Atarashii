@@ -82,7 +82,7 @@ class Atarashii(AtarashiiActions):
         self.api_temp_password = None
         
         # Variables
-        self.unset('reply', 'retweet', 'message', 'edit')        
+        self.unset('reply', 'retweet', 'message', 'edit')
         self.delete_tweet_id = UNSET_ID_NUM
         self.delete_message_id = UNSET_ID_NUM
         
@@ -324,3 +324,4 @@ class Atarashii(AtarashiiActions):
                 self.message_user = UNSET_TEXT
                 self.message_id = UNSET_ID_NUM
                 self.message_text = UNSET_TEXT
+

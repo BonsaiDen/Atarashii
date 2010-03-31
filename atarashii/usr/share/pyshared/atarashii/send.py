@@ -334,6 +334,6 @@ class Favorite(threading.Thread):
         except (IOError, TweepError), error:
             print error
             gobject.idle_add(self.gui.show_favorite_error, self.name, self.mode)
-
+        
         del self.main.favorites_pending[self.tweet_id]
 

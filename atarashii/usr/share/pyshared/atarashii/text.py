@@ -328,7 +328,7 @@ class TextInput(gtk.TextView):
         
         self.check_color(len(text))
     
-        
+    
     # Reply / Retweet / Message / Edit -----------------------------------------
     # --------------------------------------------------------------------------
     def reply(self):

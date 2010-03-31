@@ -214,10 +214,10 @@ class MessageDialog(gtk.MessageDialog):
         
         elif response == gtk.RESPONSE_NO and self.no_callback is not None:
             self.no_callback()
-
+        
         if self.close_callback is not None:
             self.close_callback()
-        
+
 
 # Button Dialog ----------------------------------------------------------------
 # ------------------------------------------------------------------------------

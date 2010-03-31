@@ -162,8 +162,8 @@ class Settings:
         
         accounts.sort()
         return accounts
-
-
+    
+    
     # Manage Autostart ---------------------------------------------------------
     # --------------------------------------------------------------------------
     def set_autostart(self, mode):

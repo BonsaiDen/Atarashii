@@ -140,7 +140,7 @@ class ViewHelpers:
         # FIXME sometimes this still doesn't remove the menu
         self.current_scroll = self.scroll.get_vscrollbar().get_value()
         gobject.timeout_add(10, self.fake_move, self.mouse_position)
-
+    
     def fix_scroll(self):
         if self.scroll_to != -1 and self.main.gui.mode == self.mode_type:
             self.scroll.get_vscrollbar().set_value(self.scroll_to)
@@ -202,8 +202,8 @@ class ViewHelpers:
             return lang.html_day % math.ceil(delta / (60.0 * 60.0 * 24.0))
         
         else:
-            date = time.localtime(calendar.timegm(date.timetuple()))
-            return time.strftime(lang.html_exact, date)
+            return time.strftime(lang.html_exact,
+                        time.localtime(calendar.timegm(date.timetuple())))
     
     def absolute_time(self, date):
         delta = long(calendar.timegm(time.gmtime())) \

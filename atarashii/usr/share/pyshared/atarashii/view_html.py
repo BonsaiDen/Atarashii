@@ -135,7 +135,7 @@ class ViewHTML:
     # The big magic spacer inserted... trust me it's really magic that this
     # thin does work at all...
     def insert_spacer(self, item, user, highlight, mentioned,
-                    next_highlight = False, force = False):
+                      next_highlight=False, force=False):
         
         spacer = 'foo'
         if item.id > self.init_id:

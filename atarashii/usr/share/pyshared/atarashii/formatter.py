@@ -75,7 +75,7 @@ class Formatter:
         self._parts = []
         last_position = 0
         for i in self._url_parts:
-            # Fix regex problems with wrongly formatted domains 
+            # Fix regex problems with wrongly formatted domains
             # e.g. www...foo www.-foo
             if not i.group(5)[0] in '.-':
                 self._parts.append((PART_TEXT, text[last_position:i.start()]))

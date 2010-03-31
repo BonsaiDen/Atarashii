@@ -251,7 +251,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         else:
             return False
     
-    def show_progress(self):            
+    def show_progress(self):
         self.progress.set_fraction(0.0)
         self.progress.show()
         self.info_label.hide()
@@ -364,7 +364,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             if status:
                 self.update_status()
-
+    
     
     # Statusbar ----------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -545,8 +545,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                                  lang.error_title)
         
         self.update_status()
-
-
+    
+    
     # Show Error/Warning Boxes -------------------------------------------------
     def show_box(self, code, rate_error, is_visible):
         if code in (-4, -7, 404, 401):

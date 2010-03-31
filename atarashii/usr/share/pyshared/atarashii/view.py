@@ -112,7 +112,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.is_expanding = False
         
         # Scrolling and stuff
-        self.give_text_focus = False        
+        self.give_text_focus = False
         self.is_loading = False
         self.position = 0
         self.current_scroll = 0

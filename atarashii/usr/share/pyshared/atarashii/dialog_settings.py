@@ -409,7 +409,7 @@ class SoundChooser:
         self.filter.add_pattern('*.flac')
         self.filter.add_pattern('*.wav')
         self.filter.add_pattern('*.ogg')
-        self.chooser.add_filter(self.filter)  
+        self.chooser.add_filter(self.filter)
         self.chooser.set_filter(self.filter)
     
     def close(self):
@@ -429,7 +429,7 @@ class SoundChooser:
             self.chooser.set_current_folder('/usr/share/sounds')
         
         else:
-            self.chooser.set_filename(current_file)  
+            self.chooser.set_filename(current_file)
     
         self.chooser.show()
     

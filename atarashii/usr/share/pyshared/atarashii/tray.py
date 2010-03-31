@@ -81,7 +81,7 @@ class TrayIcon(gtk.StatusIcon):
         # Refresh
         self.refresh_menu = self.add_menu(lang.menu_update, gtk.STOCK_REFRESH,
                                           self.gui.on_refresh_all)
-            
+        
         # Readall
         self.read_menu = self.add_menu(lang.menu_read, gtk.STOCK_OK,
                                        self.gui.on_read_all)
@@ -91,7 +91,7 @@ class TrayIcon(gtk.StatusIcon):
                                            gtk.STOCK_PREFERENCES,
                                            lambda *args:
                                            self.gui.on_settings(None, True))
-    
+        
         # About
         self.add_menu(lang.menu_about, gtk.STOCK_ABOUT,
                       lambda *args: self.gui.on_about(None, True))
