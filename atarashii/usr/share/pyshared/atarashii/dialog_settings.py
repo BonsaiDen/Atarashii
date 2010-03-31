@@ -59,6 +59,13 @@ class SettingsDialog(Dialog):
         cancel_button = self.get('cancelbutton')
         cancel_button.set_label(lang.settings_buttonCancel)
         
+        
+        # Tabs
+        self.get('users').set_label(lang.settings_tab_users)
+        self.get('general').set_label(lang.settings_tab_general)
+        self.get('notifications').set_label(lang.settings_tab_notifications)
+        
+        
         # Accounts
         self.add = add = self.get('add')
         add.set_label(lang.settings_add)
@@ -72,7 +79,7 @@ class SettingsDialog(Dialog):
         self.accounts_list = None
         self.drop = drop = gtk.TreeView()
         drop.get_selection().set_mode(gtk.SELECTION_BROWSE)
-        column = gtk.TreeViewColumn(lang.settings_accounts)
+        column = gtk.TreeViewColumn(lang.settings_accounts_name)
         drop.append_column(column)
         cell = gtk.CellRendererText()
         column.pack_start(cell, True)
@@ -110,11 +117,10 @@ class SettingsDialog(Dialog):
         # Notifications
         notify = self.get('notify')
         sound = self.get('sound')
-        notify.set_label(lang.settings_notify)
-        sound.set_label(lang.settings_sound)
+        notify.set_label(lang.settings_notifications_enable)
+        sound.set_label(lang.settings_notifications_sound)
         
         # General
-        self.get('general').set_text(lang.settings_general)
         autostart = self.get('autostart')
         taskbar = self.get('taskbar')
         tray = self.get('tray')
