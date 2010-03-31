@@ -165,7 +165,7 @@ class ViewHelpers:
         offset = self.get_offset()
         height = self.get_height()
         if offset > height:
-            self.scroll.get_vscrollbar().set_value(offset - height)
+            self.check_scroll(offset - height)
     
     
     # Time ---------------------------------------------------------------------
@@ -270,11 +270,7 @@ class ViewHelpers:
         status = item.retweeted_status \
                  if hasattr(item, 'retweeted_status') else item
         
-        if status.__dict__.has_key(attr):
-            return status.__dict__[attr]
-        
-        else:
-            return None
+        return getattr(status, attr) if hasattr(status, attr) else None  
     
     def get_user(self, item):
         user = self.get_attr(item, 'user')
