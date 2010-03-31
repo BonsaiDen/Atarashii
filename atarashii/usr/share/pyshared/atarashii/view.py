@@ -76,7 +76,6 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.tooltip_img_file = None
         self.tooltip_user = None
         self.tooltip.show_all()
-        self.tooltip_window = None
         self.scrolled = True
                 
         # Other Stuff

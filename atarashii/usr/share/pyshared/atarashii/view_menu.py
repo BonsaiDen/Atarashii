@@ -53,7 +53,6 @@ class ViewMenu:
                     self.set_tooltip(user, img)
                     self.tooltip_user = user
                 
-                self.tooltip_window = tip
                 tip.set_custom(self.tooltip)
                 return True
             
