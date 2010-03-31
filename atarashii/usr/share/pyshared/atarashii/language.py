@@ -282,12 +282,12 @@ LANG = {
         'warning_button_network': 'Netzwerkfehler',
         'warning_network':
             'Atarashii hat die Verbindung zum <b>Internet</b> verloren,'
-            ' es wird alle 60 Sekunden versucht die Verbindung '
+            ' es wird alle %d Sekunden versucht die Verbindung '
             'wiederherzustellen.',
         
         'warning_network_timeout':
             'Atarashii hat die Verbindung zu <b>Twitter</b> verloren, '
-            'es wird alle 60 Sekunden versucht die Verbindung '
+            'es wird alle %d Sekunden versucht die Verbindung '
             'wiederherzustellen.',
         
         'warning_template': '<b>Warnung von %H:%M:%S Uhr</b>\n',
@@ -604,11 +604,11 @@ LANG = {
         'warning_button_network': 'Network error',
         'warning_network':
             'Atarashii has lost the conntection to the Internet. It '
-            'will automatically try to reconnect itself every 60 seconds.',
+            'will automatically try to reconnect itself every %d seconds.',
         
         'warning_network_timeout':
             'Atarashii has lost the conntection to Twitter. It '
-            'will automatically try to reconnect itself every 60 seconds.',
+            'will automatically try to reconnect itself every %d seconds.',
         
         'warning_template': '<b>Warning from %H:%M:%S</b>\n',
         

@@ -579,10 +579,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             else: # twitter/network lost/network failed
                 if code == -9:
-                    info = lang.warning_network_timeout
+                    info = lang.warning_network_timeout \
+                           % self.main.refresh_timeout
                 
                 elif code == -5:
-                    info = lang.warning_network
+                    info = lang.warning_network % self.main.refresh_timeout 
                 
                 simple = lang.tray_warning_network
                 button = lang.warning_button_network
