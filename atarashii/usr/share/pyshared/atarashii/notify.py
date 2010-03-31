@@ -22,13 +22,11 @@ import time
 import dbus
 
 
-class Notifier(threading.Thread):
+class Notifier:
     def __init__(self, main):
-        threading.Thread.__init__(self)
-        self.main = main
-        self.sound_ids = {}
-        self.sounds = []
-        self.pending = 0
+        self.settings = main.settings
+        self.last_id = -1
+        self.items = []
         
         try:
             bus = dbus.SessionBus()
@@ -37,68 +35,44 @@ class Notifier(threading.Thread):
                                               '/org/freedesktop/Notifications'),
                                               'org.freedesktop.Notifications')
             
-            self.notify.connect_to_signal("NotificationClosed", self.play_sound)
+            self.notify.connect_to_signal("NotificationClosed", self.show)
         
         except dbus.exceptions.DBusException:
             self.notify = None
-        
+    
+    
+    # Add new notifications to the queue ---------------------------------------
     def add(self, items):
-        if not self.notify or not self.main.settings.is_true('notify'):
-            return
-        
-        if len(items) == 0:
-            return
-        
-        old_pending = self.pending
-        first_sound = None
-        for item in items:
-            nid = self.notify.Notify('Atarashii', 0, item[2],
-                                      item[0],  item[1], (),
-                                      {'urgency': dbus.Byte(2)},
-                                      -1)
+        if self.notify and self.settings.is_true('notify') \
+           and len(items) > 0:
             
-            self.sound_ids[nid] = True
-            self.sounds.append(item[3])
-            if first_sound is None:
-                first_sound = item[3]
+            # Add items and save old count
+            pending = len(self.items)
+            self.items += items
             
-            self.pending += 1
-        
-        if old_pending == 0:
-            self.play_sound(-1, sound = first_sound)
-    
-    def play_sound(self, sid, sound=None):
-        # Fix for the initial notification
-        if sid == -1:
-            sound = self.get_sound(sound)
-            self.get_sound(self.sounds.pop(0))
-            if sound is not None:
-                Sound(sound)
-        
-        # Make sure we've created the notification we want a sound to be played
-        # for
-        elif self.sound_ids.has_key(sid):
-            del self.sound_ids[sid]
-            
-            self.pending -= 1
-            if self.pending == 0:
+            # If there were no pending items show the first new one
+            if pending == 0:
                 self.last_id = -1
-                return
-            
-            sound = self.get_sound(self.sounds.pop(0))
-            if sound is not None:
-                Sound(sound)
+                self.show(-1)
     
-    def get_sound(self, snd):
-        if self.main.settings.is_true('sound') \
-           and self.main.settings['sound_' + snd] != 'None':
-            return self.main.settings['sound_' + snd]
-        
-        else:
-            return None
+    
+    # Show a notification ------------------------------------------------------
+    def show(self, sid, *args):
+        if (sid == -1 or sid == self.last_id) and len(self.items) > 0:
+            item = self.items.pop(0)
+            self.last_id = self.notify.Notify('Atarashii', 0, item[2],
+                                              item[0],  item[1], (),
+                                              {'urgency': dbus.Byte(2)},
+                                              -1)
+            
+            # Play the sound
+            if self.settings.is_true('sound'):
+                if self.settings['sound_' + item[3]] != 'None':
+                    Sound(self.settings['sound_' + item[3]] )
+    
 
-
-
+# Sound Player Thread ----------------------------------------------------------
+# ------------------------------------------------------------------------------
 class Sound(threading.Thread):
     def __init__(self,sound):
         threading.Thread.__init__(self)
