@@ -376,9 +376,14 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 return method(since_id = since_id, max_id = max_id,
                               max_count = max_count)
             
-            # Stop immediately on network error
+            # Stop immediately on network error...
             except IOError, error:
-                raise error
+                # ...but not on timeouts!
+                if isinstance(error, socket.timeout) and count < 2:
+                    pass
+                
+                else:
+                    raise error
             
             # Something went wrong, either try it again or break with the error
             except TweepError, error:
