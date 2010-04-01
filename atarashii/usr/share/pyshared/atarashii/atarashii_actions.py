@@ -37,7 +37,7 @@ from settings import LOGOUT_FILE
 from constants import UNSET_ID_NUM, UNSET_TEXT
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
-                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_COMPLETE, \
+                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_SUCCESSFUL, \
                       ST_NETWORK_FAILED
 
 
@@ -297,8 +297,7 @@ class AtarashiiActions:
         if error_errno in (-2, -3):
             self.set_status(ST_NETWORK_FAILED)
             code = -4
-            
-            if self.status(ST_LOGIN_COMPLETE):
+            if self.status(ST_LOGIN_SUCCESSFUL):
                 code = -5
                 self.gui.set_refresh_update(True)
                 self.gui.tray.refresh_menu.set_sensitive(False)
