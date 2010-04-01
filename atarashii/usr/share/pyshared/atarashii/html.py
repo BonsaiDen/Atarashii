@@ -86,12 +86,12 @@ class HTML(view.HTMLView):
             tweet = item
         
         # Get User and Text
-        user, formatted = tweet.user, self.formatter.format(tweet.text)
+        user, formatted = tweet.user, self.parser.parse(tweet.text)
         
         
         # Spacers --------------------------------------------------------------
         highlight = self.main.username.lower() in \
-                    [i.lower() for i in formatted['users']]
+                    [i.lower() for i in formatted.users]
         
         mentioned = hasattr(tweet, "is_mentioned") and tweet.is_mentioned
         if num > 0:
@@ -207,7 +207,7 @@ class HTML(view.HTMLView):
                 user.screen_name,
                 user.name.strip(),
                 user.screen_name,
-                formatted['html'],
+                formatted.html,
                 
                 # Time
                 user.screen_name,

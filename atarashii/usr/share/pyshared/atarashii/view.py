@@ -24,7 +24,7 @@ import gobject
 import webkit
 import webbrowser
 
-import formatter
+import twp
 
 from utils import unescape
 from view_menu import ViewMenu
@@ -81,7 +81,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         # Other Stuff
         self.scroll = scroll
         self.set_maintains_back_forward_list(False)
-        self.formatter = formatter.Formatter()
+        self.parser = twp.Parser()
         self.item_count = 20
                 
         self.lang_loading = HTML_UNSET_TEXT

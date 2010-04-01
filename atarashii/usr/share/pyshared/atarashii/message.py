@@ -69,7 +69,7 @@ class HTML(view.HTMLView):
     # Render the Timeline ------------------------------------------------------
     # --------------------------------------------------------------------------
     def render_item(self, num, item, img):
-        user, formatted = item.sender, self.formatter.format(item.text)
+        user, formatted = item.sender, self.parser.parse(item.text)
         
         
         # Spacers --------------------------------------------------------------
@@ -164,7 +164,7 @@ class HTML(view.HTMLView):
                 username,
                 user_realname,
                 name,
-                formatted['html'],
+                formatted.html,
                 
                 # Time
                 user.screen_name,
