@@ -143,7 +143,7 @@ class ViewHTML:
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if mentioned:
                     if not self.last_mentioned:
-                        spacer = '1' # Dark Gray
+                        spacer = '10' # Middle Dark Gray
                     
                     else:
                         spacer = '5' # Yellow
@@ -194,7 +194,7 @@ class ViewHTML:
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if mentioned:
                     if not self.last_mentioned:
-                        spacer = '' # Normal Gray
+                        spacer = '11' # Middle Normal Gray
                     
                     else:
                         spacer = '8' # Yellow
