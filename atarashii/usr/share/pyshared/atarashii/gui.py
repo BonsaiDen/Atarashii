@@ -267,7 +267,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.progress_visible = False
         
         self.text_scroll.hide()
-        self.set_refresh_update(False)
+        self.set_refresh_update(False, None, False, True)
         self.message_button.set_sensitive(False)
         self.warning_button.hide()
         self.error_button.hide()
