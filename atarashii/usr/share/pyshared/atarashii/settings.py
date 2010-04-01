@@ -156,7 +156,7 @@ class Settings:
     
     def get_accounts(self):
         accounts = []
-        for i in self.values.keys():
+        for i in self.values:
             if i.startswith('account_'):
                 accounts.append(i[8:])
         
