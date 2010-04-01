@@ -119,12 +119,13 @@ class ViewHelpers:
     # This fixes an issue where the reply/favorite links wouldn't disapear if
     # the mouse left the view
     def fake_move(self, pos):
-        self.fake_mouse = True
-        event = gtk.gdk.Event(gtk.gdk.MOTION_NOTIFY)
-        event.window = self.get_window()
-        event.x = pos[0]
-        event.y = pos[1]
-        self.emit('motion_notify_event', event)
+        if not self.menu_no_fake_move:
+            self.fake_mouse = True
+            event = gtk.gdk.Event(gtk.gdk.MOTION_NOTIFY)
+            event.window = self.get_window()
+            event.x = pos[0]
+            event.y = pos[1]
+            self.emit('motion_notify_event', event)
     
     def on_leave(self, view, event, *args):
         self.mouse_position = (-1.0, -1.0)

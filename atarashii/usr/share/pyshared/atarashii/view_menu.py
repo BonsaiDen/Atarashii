@@ -92,6 +92,8 @@ class ViewMenu:
     def on_button(self, view, event, *args):
         self.give_text_focus = self.gui.text.has_focus
         if event.button == 3 and not self.popup_open:
+            self.menu_no_fake_move = True
+            
             # Calculate on which item the user clicked
             item_id, link = self.get_clicked_item(self.get_sizes(event), event)
             if item_id == -1:
@@ -131,6 +133,10 @@ class ViewMenu:
         menu.append(item)
     
     def on_popup_close(self, *args):
+        if self.menu_no_fake_move:
+            self.menu_no_fake_move = False
+            self.fake_move((-1.0, -1.0))
+        
         self.popup_open = False
         self.gui.text.html_focus()
     
