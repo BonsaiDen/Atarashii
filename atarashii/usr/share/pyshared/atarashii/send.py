@@ -217,7 +217,6 @@ class Send(threading.Thread):
         gobject.idle_add(self.gui.message.push_updates)
 
 
-
 # New style Retweets -----------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Retweet(threading.Thread):
