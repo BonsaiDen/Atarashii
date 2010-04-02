@@ -29,6 +29,7 @@ fi
 # Remove repository ------------------------------------------------------------
 # ------------------------------------------------------------------------------
 REPO_FILE=/etc/apt/sources.list.d/atarashii.list
+AUTOSTART_FILE=~/.config/autostart/atarashii.desktop
 
 action="$1"
 
@@ -36,6 +37,16 @@ action="$1"
 if [ "$action" != "purge" ] ; then
     echo "No --purge means no cleanup!"
     exit 0
+fi
+
+# Remove the autostart file
+echo "Removing autostart file..."
+if [ -e $AUTOSTART_FILE ]; then
+    echo "File found! Removing..."
+    rm $AUTOSTART_FILE
+    echo "Done!"
+else
+    echo "File not found doing nothing."
 fi
 
 # Remove repo file
