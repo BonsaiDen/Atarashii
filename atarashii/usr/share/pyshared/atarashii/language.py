@@ -160,14 +160,18 @@ LANG = {
         
         # About Dialog
         'about_title': 'Über Atarashii',
-        'about_license_button': 'Lizenz',
         'about_okbutton': 'OK',
+        'about_kitten_button': 'Krams',
+        'about_back_button': 'Zurück',        
         'about_description':
-            'Ein simpler Twitter Client für den GNOME Desktop.',
+            'Twitter Client für den GNOME Desktop.',
             
-        'about_kittens': 
-            'Diese Version wurde von <b>%s</b> Kätzchen\n'
-            'verpackt, ihre Glückszahl ist <b>%s</b>!',
+        'about_kittens1':
+            '<span size="small">Diese Version wurde von <b>%s</b> '
+            'Kätzchen verpackt.</span>',
+        
+        'about_kittens2':
+            '<span size="small">Ihre Glückszahl ist <b>%s</b>!</span>',
         
         # Account Dialog
         'account_edit': 'Benutzer bearbeiten',
@@ -492,14 +496,18 @@ LANG = {
         
         # About Dialog
         'about_title': 'About Atarashii',
-        'about_license_button': 'License',
         'about_okbutton': 'OK',
+        'about_kitten_button': 'Stuff',
+        'about_back_button': 'Back',        
         'about_description':
-            'A simple Twitter Client for the GNOME Desktop.',
+            'Twitter Client for the GNOME Desktop.',
+            
+        'about_kittens1':
+            '<span size="small">This Version has been build by <b>%s</b> '
+            'kittens.</span>',
         
-        'about_kittens': 
-            'This Version has been build by <b>%s</b> kittens.\n'
-            'Their lucky number is <b>%s</b>!',
+        'about_kittens2':
+            '<span size="small">Their lucky number is <b>%s</b>!</span>',
         
         # Account Dialog
         'account_edit': 'Edit user',

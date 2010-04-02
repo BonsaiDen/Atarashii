@@ -2,125 +2,125 @@
 <interface>
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
-  <object class="GtkTextBuffer" id="textbuffer1">
-    <property name="text" translatable="yes">Atarashii is free software: you can redistribute it and/or 
-modify it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Atarashii is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with
-Atarashii. If not, see &lt;http://www.gnu.org/licenses/&gt;.</property>
-  </object>
-  <object class="GtkWindow" id="dialog">
+  <object class="GtkDialog" id="dialog">
+    <property name="border_width">5</property>
     <property name="resizable">False</property>
-    <child>
-      <object class="GtkAlignment" id="alignment1">
+    <property name="window_position">center-on-parent</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="type_hint">dialog</property>
+    <property name="skip_taskbar_hint">True</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
-        <property name="top_padding">4</property>
-        <property name="left_padding">4</property>
-        <property name="right_padding">4</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
         <child>
-          <object class="GtkVBox" id="vbox1">
+          <object class="GtkVBox" id="maininfo">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkVBox" id="infobox">
+              <object class="GtkImage" id="image">
+                <property name="visible">True</property>
+                <property name="pixel_size">128</property>
+                <property name="icon_name">bonsaiden-atarashii</property>
+                <property name="icon-size">6</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkVBox" id="vbox2">
                 <property name="visible">True</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkHBox" id="hbox1">
+                  <object class="GtkLabel" id="title">
                     <property name="visible">True</property>
-                    <property name="spacing">8</property>
-                    <child>
-                      <object class="GtkImage" id="image">
-                        <property name="width_request">128</property>
-                        <property name="height_request">128</property>
-                        <property name="visible">True</property>
-                        <property name="xalign">0</property>
-                        <property name="yalign">0</property>
-                        <property name="pixel_size">128</property>
-                        <property name="icon_name">bonsaiden-atarashii</property>
-                        <property name="icon-size">6</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkVBox" id="vbox2">
-                        <property name="visible">True</property>
-                        <property name="orientation">vertical</property>
-                        <child>
-                          <object class="GtkLabel" id="title">
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Atarashii&lt;/b&gt;&lt;/span&gt;</property>
-                            <property name="use_markup">True</property>
-                            <property name="wrap">True</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="description">
-                            <property name="width_request">180</property>
-                            <property name="visible">True</property>
-                            <property name="xalign">0</property>
-                            <property name="yalign">0</property>
-                            <property name="label" translatable="yes">A simple Twitter Client for the GNOME Desktop.</property>
-                            <property name="wrap">True</property>
-                          </object>
-                          <packing>
-                            <property name="padding">4</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="copyright">
-                            <property name="width_request">180</property>
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="xalign">0</property>
-                            <property name="yalign">0</property>
-                            <property name="label" translatable="yes">&lt;a href="http://github.com/BonsaiDen/Atarashii"&gt;Atarashii@GitHub&lt;/a&gt;
-Copyright (c) 2010 by Ivo Wetzel
-</property>
-                            <property name="use_markup">True</property>
-                            <property name="wrap">True</property>
-                            <property name="track_visited_links">False</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
+                    <property name="label" translatable="yes">&lt;span size="xx-large"&gt;&lt;b&gt;Atarashii&lt;/b&gt;&lt;/span&gt;</property>
+                    <property name="use_markup">True</property>
                   </object>
                   <packing>
+                    <property name="expand">False</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
+                <child>
+                  <object class="GtkLabel" id="description">
+                    <property name="visible">True</property>
+                    <property name="wrap">True</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label3">
+                    <property name="visible">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label4">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Copyright (c) 2010 by Ivo Wetzel</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="label5">
+                    <property name="visible">True</property>
+                    <property name="ypad">3</property>
+                    <property name="label" translatable="yes">&lt;a href="http://github.com/BonsaiDen/Atarashii"&gt;Atarashii@GitHub&lt;/a&gt;</property>
+                    <property name="use_markup">True</property>
+                    <property name="track_visited_links">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkVBox" id="subinfo">
+            <property name="no_show_all">True</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkLabel" id="spacer_top">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Kitten Techstuff!&lt;/b&gt;&lt;/span&gt;</property>
+                <property name="use_markup">True</property>
               </object>
               <packing>
                 <property name="position">0</property>
               </packing>
             </child>
             <child>
-              <object class="GtkHSeparator" id="hseparator1">
+              <object class="GtkLabel" id="details">
                 <property name="visible">True</property>
+                <property name="yalign">0</property>
+                <property name="ypad">3</property>
+                <property name="label" translatable="yes">&lt;b&gt;Languages&lt;/b&gt;
+&lt;a href="http://www.python.org/"&gt;Python&lt;/a&gt;, JavaScript</property>
+                <property name="use_markup">True</property>
+                <property name="justify">center</property>
+                <property name="track_visited_links">False</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -128,42 +128,148 @@ Copyright (c) 2010 by Ivo Wetzel
               </packing>
             </child>
             <child>
-              <object class="GtkHBox" id="hbox2">
+              <object class="GtkLabel" id="details1">
                 <property name="visible">True</property>
-                <property name="spacing">8</property>
-                <child>
-                  <object class="GtkLabel" id="kittens">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="use_markup">True</property>
-                  </object>
-                  <packing>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="closebutton">
-                    <property name="label" translatable="yes">OK</property>
-                    <property name="width_request">75</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
+                <property name="yalign">0</property>
+                <property name="ypad">3</property>
+                <property name="label" translatable="yes">&lt;b&gt;Frameworks&lt;/b&gt;
+&lt;a href="http://www.pygtk.org/"&gt;PyGTK&lt;/a&gt;, &lt;a href="http://www.webkit.org/"&gt;WebKit&lt;/a&gt;</property>
+                <property name="use_markup">True</property>
+                <property name="justify">center</property>
+                <property name="track_visited_links">False</property>
               </object>
               <packing>
-                <property name="padding">4</property>
+                <property name="expand">False</property>
                 <property name="position">2</property>
               </packing>
             </child>
+            <child>
+              <object class="GtkLabel" id="details2">
+                <property name="visible">True</property>
+                <property name="yalign">0</property>
+                <property name="ypad">3</property>
+                <property name="label" translatable="yes">&lt;b&gt;Rendering&lt;/b&gt;
+&lt;a href="http://www.w3.org/html/"&gt;HTML&lt;/a&gt;, &lt;a href="http://www.w3.org/Style/CSS/"&gt;CSS&lt;/a&gt;</property>
+                <property name="use_markup">True</property>
+                <property name="justify">center</property>
+                <property name="track_visited_links">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="details3">
+                <property name="visible">True</property>
+                <property name="yalign">0</property>
+                <property name="ypad">3</property>
+                <property name="label" translatable="yes">&lt;b&gt;Twitter&lt;/b&gt;
+&lt;a href="http://github.com/joshthecoder/tweepy"&gt;Tweepy&lt;/a&gt;, &lt;a href="http://github.com/BonsaiDen/twp"&gt;twp&lt;/a&gt;</property>
+                <property name="use_markup">True</property>
+                <property name="justify">center</property>
+                <property name="track_visited_links">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">4</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="details4">
+                <property name="visible">True</property>
+                <property name="yalign">0</property>
+                <property name="ypad">3</property>
+                <property name="label" translatable="yes">&lt;b&gt;Data&lt;/b&gt;
+&lt;a href="http://json.org/"&gt;JSON&lt;/a&gt;, &lt;a href="http://www.w3.org/XML/"&gt;XML&lt;/a&gt;, Plain Text</property>
+                <property name="use_markup">True</property>
+                <property name="justify">center</property>
+                <property name="track_visited_links">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">5</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="sapcer">
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="position">6</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="kittens1">
+                <property name="visible">True</property>
+                <property name="justify">center</property>
+                <property name="wrap">True</property>
+                <property name="width_chars">35</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">7</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="kittens2">
+                <property name="visible">True</property>
+                <property name="justify">center</property>
+                <property name="wrap">True</property>
+                <property name="width_chars">35</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="position">8</property>
+              </packing>
+            </child>
           </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+            <property name="layout_style">edge</property>
+            <child>
+              <object class="GtkToggleButton" id="kittenbutton">
+                <property name="label" translatable="yes">Kittons!</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="closebutton">
+                <property name="label" translatable="yes">OK</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
         </child>
       </object>
     </child>
+    <action-widgets>
+      <action-widget response="0">kittenbutton</action-widget>
+      <action-widget response="0">closebutton</action-widget>
+    </action-widgets>
   </object>
 </interface>

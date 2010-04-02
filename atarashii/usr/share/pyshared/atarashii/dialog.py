@@ -152,15 +152,33 @@ class AboutDialog(Dialog):
     def on_init(self):
         self.dlg.set_title(lang.about_title)
         self.close_button.set_label(lang.about_okbutton)
+        self.kitten_button = self.get('kittenbutton')
+        self.kitten_button.set_label(lang.about_kitten_button)
         self.get('title').set_markup(
-                          '<span size="x-large"><b>Atarashii %s</b></span>'
+                          '<span size="xx-large"><b>Atarashii %s</b></span>'
                           % self.main.version)
         
         self.get('description').set_markup(lang.about_description)
-        self.get('kittens').set_markup(lang.about_kittens
-                                       % (self.main.kittens, self.main.secret))
-        
         self.get('image').set_from_file(self.main.get_image())
+        self.get('subinfo').hide()
+        
+        def toggle(button, *args):
+            if self.kitten_button.get_active():
+                size = self.dlg.get_allocation()
+                self.dlg.set_size_request(size[2], size[3])
+                self.kitten_button.set_label(lang.about_back_button)
+                self.get('maininfo').hide()
+                self.get('subinfo').show()
+            
+            else:
+                self.kitten_button.set_label(lang.about_kitten_button)
+                self.get('maininfo').show()
+                self.get('subinfo').hide()
+        
+        self.get('kittens1').set_markup(lang.about_kittens1 % self.main.kittens)
+        self.get('kittens2').set_markup(lang.about_kittens2 % self.main.secret)
+        
+        self.kitten_button.connect('toggled', toggle)
     
     def on_close(self, *args):
         self.__class__.instance = None

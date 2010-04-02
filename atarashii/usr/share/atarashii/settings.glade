@@ -6,8 +6,11 @@
     <property name="width_request">280</property>
     <property name="border_width">5</property>
     <property name="resizable">False</property>
+    <property name="window_position">center-on-parent</property>
     <property name="default_width">320</property>
-    <property name="type_hint">normal</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="type_hint">dialog</property>
+    <property name="skip_taskbar_hint">True</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
