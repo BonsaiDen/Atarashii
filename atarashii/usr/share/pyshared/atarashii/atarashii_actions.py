@@ -40,12 +40,17 @@ from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_SUCCESSFUL, \
                       ST_NETWORK_FAILED
 
-from constants import ERROR_TWEET_NOT_FOUND, ERROR_MESSAGE_NOT_FOUND, \
-                      ERROR_ALREADY_RETWEETED, ERROR_TWEET_DUPLICATED, \
-                      ERROR_USER_NOT_FOUND, ERROR_RATE_RECONNECT, \
-                      ERROR_RATE_LIMIT, ERROR_NETWORK_FAILED, \
-                      ERROR_NETWORK_TWITTER_FAILED, ERROR_URLLIB_FAILED, \
-                      ERROR_URLLIB_TIMEOUT
+from constants import ERR_TWEET_NOT_FOUND, ERR_MESSAGE_NOT_FOUND, \
+                      ERR_ALREADY_RETWEETED, ERR_TWEET_DUPLICATED, \
+                      ERR_USER_NOT_FOUND, ERR_RATE_RECONNECT, \
+                      ERR_RATE_LIMIT, ERR_NETWORK_FAILED, \
+                      ERR_NETWORK_TWITTER_FAILED, ERR_URLLIB_FAILED, \
+                      ERR_URLLIB_TIMEOUT
+
+from constants import HT_400_BAD_REQUEST, HT_401_UNAUTHORIZED, \
+                      HT_403_FORBIDDEN, HT_404_NOT_FOUND, \
+                      HT_500_INTERNAL_SERVER_ERROR, HT_502_BAD_GATEWAY, \
+                      HT_503_SERVICE_UNAVAILABLE
 
 
 class AtarashiiActions:
@@ -259,12 +264,12 @@ class AtarashiiActions:
                                      int(self.refresh_timeout * 1000),
                                      self.login)
             
-            return ERROR_RATE_RECONNECT, lang.error_ratelimit_reconnect \
+            return ERR_RATE_RECONNECT, lang.error_ratelimit_reconnect \
                                          % math.ceil(minutes)
         
         # Just display an error if we exiced the ratelimit while being logged in
         else:
-            return ERROR_RATE_LIMIT, lang.error_ratelimit % math.ceil(minutes)
+            return ERR_RATE_LIMIT, lang.error_ratelimit % math.ceil(minutes)
     
     
     # Handle Errors and Warnings -----------------------------------------------
@@ -275,12 +280,14 @@ class AtarashiiActions:
         
         # Determine the kind of the error
         rate_error = ''
-        if isinstance(error, socket.timeout): # Timeout error
+        
+        # Timeout errors
+        if isinstance(error, socket.timeout):
             msg = ''
             error_code = 0
-            error_errno = ERROR_URLLIB_TIMEOUT
+            error_errno = ERR_URLLIB_TIMEOUT
         
-        # IOErrors
+        # IO errors
         elif isinstance(error, IOError):
             if hasattr(error, 'read'):
                 msg = error.read()
@@ -294,6 +301,7 @@ class AtarashiiActions:
             error_errno = error.errno
             error_code = error.code
         
+        # Tweepy errors
         else:
             msg = error.reason
             error_code = error.response.status
@@ -301,53 +309,58 @@ class AtarashiiActions:
         
         
         # Catch errors due to missing network
-        if error_errno in (ERROR_URLLIB_FAILED, ERROR_URLLIB_TIMEOUT):
+        if error_errno in (ERR_URLLIB_FAILED, ERR_URLLIB_TIMEOUT):
             self.set_status(ST_NETWORK_FAILED)
-            code = ERROR_NETWORK_FAILED
+            code = ERR_NETWORK_FAILED
             if self.status(ST_LOGIN_SUCCESSFUL):
-                code = ERROR_NETWORK_TWITTER_FAILED
+                code = ERR_NETWORK_TWITTER_FAILED
                 self.gui.set_refresh_update(True)
                 self.gui.tray.refresh_menu.set_sensitive(False)
         
         # Catch common Twitter errors
-        elif error_code in (400, 401, 403, 404, 500, 502, 503):            
+        elif error_code in (HT_400_BAD_REQUEST, HT_401_UNAUTHORIZED,
+                            HT_403_FORBIDDEN, HT_404_NOT_FOUND,
+                            HT_500_INTERNAL_SERVER_ERROR, HT_502_BAD_GATEWAY,
+                            HT_503_SERVICE_UNAVAILABLE):            
+            
             if msg.lower().startswith('no status'):
-                code = ERROR_TWEET_NOT_FOUND
+                code = ERR_TWEET_NOT_FOUND
         
             elif msg.lower().startswith('no direct message'):
-                code = ERROR_MESSAGE_NOT_FOUND
+                code = ERR_MESSAGE_NOT_FOUND
         
             elif msg.lower().startswith('share sharing'):
-                code = ERROR_ALREADY_RETWEETED
+                code = ERR_ALREADY_RETWEETED
             
             elif msg.lower().startswith('status is a duplicate'):
-                code = ERROR_TWEET_DUPLICATED
+                code = ERR_TWEET_DUPLICATED
                 
             else:
                 code = error_code
                 
                 # Ratelimit errors
-                if code == 400 and not self.status(ST_WAS_SEND) \
-                   or code == 403 and self.status(ST_WAS_SEND):
+                if code == HT_400_BAD_REQUEST and not self.status(ST_WAS_SEND) \
+                   or code == HT_403_FORBIDDEN and self.status(ST_WAS_SEND):
                     
                     self.gui.set_refresh_update(False)
                     self.gui.tray.refresh_menu.set_sensitive(False)
                     code, rate_error = self.reconnect()
                 
-                # Just normal 400's and 403'
-                elif code == 400 and self.status(ST_WAS_SEND) \
-                     or code == 403 and not self.status(ST_WAS_SEND):
+                # Just normal HT_400_BAD_REQUEST's and HT_403_FORBIDDEN'
+                elif code == HT_400_BAD_REQUEST and self.status(ST_WAS_SEND) \
+                     or code == HT_403_FORBIDDEN \
+                     and not self.status(ST_WAS_SEND):
                     
-                    code = 500
+                    code = HT_500_INTERNAL_SERVER_ERROR
                 
-                # A real 404! This may be raised if a user wasn't found
-                elif self.status(ST_WAS_SEND) and code == 404:
-                    code = ERROR_USER_NOT_FOUND
+                # A real 404. This may be raised if a user wasn't found
+                elif self.status(ST_WAS_SEND) and code == HT_404_NOT_FOUND:
+                    code = ERR_USER_NOT_FOUND
         
         # Reset stuff
         self.unset_status(ST_WAS_SEND | ST_WAS_RETWEET | \
                           ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
         
-        # Leave it to GUI!
+        # Leave it to the GUI!
         self.gui.show_error(code, error_code, error_errno, rate_error)
 

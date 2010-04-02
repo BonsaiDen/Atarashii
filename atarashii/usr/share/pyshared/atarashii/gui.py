@@ -44,11 +44,15 @@ from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       MESSAGE_WARNING, BUTTON_REFRESH, BUTTON_READ, \
                       BUTTON_HISTORY
 
-from constants import ERROR_TWEET_NOT_FOUND, ERROR_MESSAGE_NOT_FOUND, \
-                      ERROR_ALREADY_RETWEETED, ERROR_TWEET_DUPLICATED, \
-                      ERROR_USER_NOT_FOUND, ERROR_RATE_RECONNECT, \
-                      ERROR_RATE_LIMIT, ERROR_NETWORK_FAILED, \
-                      ERROR_NETWORK_TWITTER_FAILED
+from constants import ERR_TWEET_NOT_FOUND, ERR_MESSAGE_NOT_FOUND, \
+                      ERR_ALREADY_RETWEETED, ERR_TWEET_DUPLICATED, \
+                      ERR_USER_NOT_FOUND, ERR_RATE_RECONNECT, \
+                      ERR_RATE_LIMIT, ERR_NETWORK_FAILED, \
+                      ERR_NETWORK_TWITTER_FAILED
+
+from constants import HT_400_BAD_REQUEST, HT_401_UNAUTHORIZED, \
+                      HT_404_NOT_FOUND, HT_500_INTERNAL_SERVER_ERROR, \
+                      HT_502_BAD_GATEWAY, HT_503_SERVICE_UNAVAILABLE
 
 
 class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
@@ -58,7 +62,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.main = main
         self.hide_on_delete()
         self.set_border_width(2)
-        self.set_size_request(280, 400)
+        self.set_size_request(280, HT_400_BAD_REQUEST)
         self.set_icon_from_file(main.get_image())
         
         # Hide in Taskbar?
@@ -146,7 +150,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.resize(int(size[0]), int(size[1]))
         
         else:
-            self.resize(280, 400)
+            self.resize(280, HT_400_BAD_REQUEST)
         
         # Tray
         self.tray = tray.TrayIcon(self)
@@ -535,21 +539,21 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.main.delete_message_id = UNSET_ID_NUM
             
             description = {
-                ERROR_MESSAGE_NOT_FOUND : lang.error_message_not_found,
-                ERROR_TWEET_NOT_FOUND : lang.error_tweet_not_found,
-                ERROR_TWEET_DUPLICATED : lang.error_duplicate,
-                ERROR_NETWORK_TWITTER_FAILED : lang.error_network_timeout,
-                ERROR_NETWORK_FAILED : lang.error_network,
-                ERROR_USER_NOT_FOUND : lang.error_user_not_found \
+                ERR_MESSAGE_NOT_FOUND : lang.error_message_not_found,
+                ERR_TWEET_NOT_FOUND : lang.error_tweet_not_found,
+                ERR_TWEET_DUPLICATED : lang.error_duplicate,
+                ERR_NETWORK_TWITTER_FAILED : lang.error_network_timeout,
+                ERR_NETWORK_FAILED : lang.error_network,
+                ERR_USER_NOT_FOUND : lang.error_user_not_found \
                                        % self.main.message_user,
                 
-                ERROR_ALREADY_RETWEETED : lang.error_already_retweeted,
-                ERROR_RATE_RECONNECT : rate_error,
-                401 : lang.error_login % self.main.username,
-                404 : lang.error_login % self.main.username
+                ERR_ALREADY_RETWEETED : lang.error_already_retweeted,
+                ERR_RATE_RECONNECT : rate_error,
+                HT_401_UNAUTHORIZED : lang.error_login % self.main.username,
+                HT_404_NOT_FOUND : lang.error_login % self.main.username
             }[code]
             dialog.MessageDialog(self, MESSAGE_WARNING \
-                                 if code == ERROR_NETWORK_FAILED \
+                                 if code == ERR_NETWORK_FAILED \
                                  else MESSAGE_ERROR, description,
                                  lang.error_title)
         
@@ -558,44 +562,51 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Show Error/Warning Boxes -------------------------------------------------
     def show_box(self, code, rate_error, is_visible):
-        if code in (ERROR_NETWORK_FAILED, ERROR_RATE_RECONNECT, 404, 401):
+        if code in (ERR_NETWORK_FAILED, ERR_RATE_RECONNECT, HT_404_NOT_FOUND,
+                    HT_401_UNAUTHORIZED):
+            
             msg = {
-                ERROR_NETWORK_FAILED : (lang.tray_error_login \
+                ERR_NETWORK_FAILED : (lang.tray_error_login \
                                         % self.main.username) + "\n" \
                                         + lang.tray_warning_network,
                 
-                ERROR_RATE_RECONNECT : lang.tray_error_rate,
-                404 : lang.tray_error_login % self.main.username,
-                401 : lang.tray_error_login % self.main.username
+                ERR_RATE_RECONNECT : lang.tray_error_rate,
+                HT_404_NOT_FOUND : lang.tray_error_login % self.main.username,
+                HT_401_UNAUTHORIZED : lang.tray_error_login % self.main.username
             }[code]
             
             self.tray.set_tooltip_error(
                     msg, gtk.STOCK_DIALOG_ERROR \
-                    if code != ERROR_NETWORK_FAILED \
+                    if code != ERR_NETWORK_FAILED \
                     else gtk.STOCK_DIALOG_WARNING)
         
         # Don't show error dialogs when not on screen
-        if code in (ERROR_NETWORK_FAILED, ERROR_RATE_RECONNECT, 404, 401) \
-           and not is_visible:
+        if code in (ERR_NETWORK_FAILED, ERR_RATE_RECONNECT, HT_404_NOT_FOUND,
+                    HT_401_UNAUTHORIZED) and not is_visible:
             
-            self.notifcation(MESSAGE_WARNING if code == ERROR_NETWORK_FAILED \
+            self.notifcation(MESSAGE_WARNING if code == ERR_NETWORK_FAILED \
                              else MESSAGE_ERROR, msg)
             
             return True
         
-        elif code in (ERROR_NETWORK_TWITTER_FAILED, ERROR_NETWORK_FAILED, 503):
+        elif code in (ERR_NETWORK_TWITTER_FAILED, ERR_NETWORK_FAILED,
+                      HT_503_SERVICE_UNAVAILABLE):
+            
             msg = lang.tray_logged_in % self.main.username + '\n'
-            if code == 503:# overload warning
+            
+            # overload warning
+            if code == HT_503_SERVICE_UNAVAILABLE:
                 info = lang.warning_overload
                 button = lang.warning_button_overload
                 simple = tray.warning_overload
             
-            else: # twitter/network lost/network failed
-                if code == ERROR_NETWORK_TWITTER_FAILED:
+            # twitter/network lost/network failed
+            else:
+                if code == ERR_NETWORK_TWITTER_FAILED:
                     info = lang.warning_network_timeout \
                            % self.main.refresh_timeout
                 
-                elif code == ERROR_NETWORK_FAILED:
+                elif code == ERR_NETWORK_FAILED:
                     info = lang.warning_network % self.main.refresh_timeout 
                 
                 simple = lang.tray_warning_network
@@ -606,15 +617,19 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             return True
         
         # Show Error Button
-        elif code in (500, 502, ERROR_RATE_LIMIT):
+        elif code in (HT_500_INTERNAL_SERVER_ERROR, HT_502_BAD_GATEWAY,
+                      ERR_RATE_LIMIT):
+            
             msg = lang.tray_logged_in % self.main.username + '\n'
-            if code != ERROR_RATE_LIMIT:
-                if code == 500: # internal twitter error
+            if code != ERR_RATE_LIMIT:
+                # internal twitter error
+                if code == HT_500_INTERNAL_SERVER_ERROR:
                     button = lang.error_button_twitter
                     info = lang.error_twitter
                     simple = lang.tray_error_twitter
                 
-                else: # Twitter down
+                # Twitter down
+                else:
                     button = lang.error_button_down
                     info = lang.error_down
                     simple = lang.tray_error_down

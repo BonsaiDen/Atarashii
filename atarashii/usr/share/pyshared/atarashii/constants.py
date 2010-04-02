@@ -24,7 +24,7 @@ RETWEET_OLD = 2          # Can be anything
 UNSET_ID_NUM = -1        # Must be lower than 0
 UNSET_TEXT = ''          # Must be ''
 UNSET_LABEL = ''         # Should be ''
-UNSET_TIMEOUT = -1       # Don't know if this is needed anymore at all...
+UNSET_TIMEOUT = -1       # Must be lower than 0
 
 # Modes
 MODE_TWEETS = 0          # Can be anything
@@ -42,32 +42,41 @@ HTML_STATE_START = 1     # Can be anything
 HTML_STATE_SPLASH = 2    # Can be anything
 HTML_STATE_RENDER = 3    # Can be anything
 
-# Message Dialogs
-MESSAGE_ERROR = 1        # Can be anything
-MESSAGE_WARNING = 2      # Can be anything
-MESSAGE_QUESTION = 3     # Can be anything
-MESSAGE_INFO = 4         # Can be anything
+# Message Dialogs, can be anything
+MESSAGE_ERROR = 1
+MESSAGE_WARNING = 2
+MESSAGE_QUESTION = 3
+MESSAGE_INFO = 4
 
-# Buttons
+# Buttons, can be anything
 BUTTON_REFRESH = 1
 BUTTON_READ = 2
 BUTTON_HISTORY = 3
 
-# Errors
-ERROR_TWEET_NOT_FOUND = -12
-ERROR_MESSAGE_NOT_FOUND = -13
-ERROR_ALREADY_RETWEETED = -2
-ERROR_TWEET_DUPLICATED = -11
-ERROR_USER_NOT_FOUND = -3
+# Errors, should be below 0
+ERR_TWEET_NOT_FOUND = -12
+ERR_MESSAGE_NOT_FOUND = -13
+ERR_ALREADY_RETWEETED = -2
+ERR_TWEET_DUPLICATED = -11
+ERR_USER_NOT_FOUND = -3
 
-ERROR_RATE_RECONNECT = -7
-ERROR_RATE_LIMIT = -6
+ERR_RATE_RECONNECT = -7
+ERR_RATE_LIMIT = -6
 
-ERROR_NETWORK_FAILED = -4
-ERROR_NETWORK_TWITTER_FAILED = -9
+ERR_NETWORK_FAILED = -4
+ERR_NETWORK_TWITTER_FAILED = -9
 
-ERROR_URLLIB_FAILED = -2
-ERROR_URLLIB_TIMEOUT = -3
+ERR_URLLIB_FAILED = -2
+ERR_URLLIB_TIMEOUT = -3
+
+# HTTP status codes, guess what they should be...
+HT_400_BAD_REQUEST = 400
+HT_401_UNAUTHORIZED = 401
+HT_403_FORBIDDEN = 403
+HT_404_NOT_FOUND = 404
+HT_500_INTERNAL_SERVER_ERROR = 500
+HT_502_BAD_GATEWAY = 502
+HT_503_SERVICE_UNAVAILABLE = 503
 
 
 # Status Flags -----------------------------------------------------------------
