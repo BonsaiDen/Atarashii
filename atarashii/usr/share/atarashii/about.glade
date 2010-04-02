@@ -9,8 +9,9 @@
     <child>
       <object class="GtkAlignment" id="alignment1">
         <property name="visible">True</property>
-        <property name="left_padding">4</property>
-        <property name="right_padding">4</property>
+        <property name="bottom_padding">4</property>
+        <property name="left_padding">8</property>
+        <property name="right_padding">8</property>
         <child>
           <object class="GtkVBox" id="vbox1">
             <property name="visible">True</property>
