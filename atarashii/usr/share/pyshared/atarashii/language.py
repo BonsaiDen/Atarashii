@@ -161,7 +161,7 @@ LANG = {
         # About Dialog
         'about_title': 'Über Atarashii',
         'about_okbutton': 'OK',
-        'about_kitten_button': 'Krams',
+        'about_kitten_button': 'Kätzchen',
         'about_back_button': 'Zurück',        
         'about_description':
             'Twitter Client für den GNOME Desktop.',
@@ -497,7 +497,7 @@ LANG = {
         # About Dialog
         'about_title': 'About Atarashii',
         'about_okbutton': 'OK',
-        'about_kitten_button': 'Stuff',
+        'about_kitten_button': 'Kittens',
         'about_back_button': 'Back',        
         'about_description':
             'Twitter Client for the GNOME Desktop.',
