@@ -1,14 +1,14 @@
 atarashii (0.99.18a-1) all;
 
   * Cleaned up the notification code.
-  * Reworked, much smaller now, preferences dialog.
-  * Better handlind of some network errors.
-  * Updated tweet parsers, now supports the linking of lists.
+  * Reworked, now much smaller, preferences dialog.
+  * Better handling of some network errors.
+  * Updated tweet parser, now supports the linking of lists.
   * Reworked about dialog.
   * Small fix to a flickering issues with the read/refresh button.
   * Minor changes here and there.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 2 Apr 2010 15:42:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 2 Apr 2010 18:17:00 +0200
 
 atarashii (0.99.18-1) all;
 
