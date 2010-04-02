@@ -1,3 +1,11 @@
+atarashii (0.99.18b-1) all;
+
+  * Fix a bug were direct messages would be considered as unread, even if they
+    had been already read.
+  * Add "Send message to..." to the context menu of users in the tweet view.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 2 Apr 2010 22:09:00 +0200
+
 atarashii (0.99.18a-1) all;
 
   * Cleaned up the notification code.
