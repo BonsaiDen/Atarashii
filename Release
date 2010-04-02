@@ -1,20 +1,20 @@
 Architectures: all
 Codename: karmic
 Components: contrib
-Date: Mon, 29 Mar 2010 08:16:42 UTC
+Date: Fri, 02 Apr 2010 16:22:57 UTC
 Description: The Atarashii Twitter Client
 Label: Atarashii
 Origin: Ivo Wetzel
 Suite: stable
 MD5Sum:
- 8f984fd0c3444b2fd6a6fb5f47419602            10151 Packages
- 00dbc755c962589d527daf5a3411de5b             2066 Packages.bz2
- 7f145ee0566532dd91c7da6cb6a5b8d6             1809 Packages.gz
+ b32744a5747b5563ab6b45f2f536c61f            10977 Packages
+ a156801e34904476ccc83201e40ae994             2176 Packages.bz2
+ 233f45bc1db29e79cb309f4cfa04d957             1914 Packages.gz
 SHA1:
- 786c858ca0607b4c93b50f4935905d0c0867ab8e            10151 Packages
- 7f809872775be9f916473f06e5a85ac2ef383715             2066 Packages.bz2
- a5e8e1e09b3ce9c604e30b765a5bd183ce3fcd34             1809 Packages.gz
+ 77131f1787ade9f537f984d820de8d9a0c1b181b            10977 Packages
+ 9c23fe0626a93fab1e17df86f524bd35a2885645             2176 Packages.bz2
+ 3cdb17ae6a5980d1894f238cb29c6d37f0a9a097             1914 Packages.gz
 SHA256:
- f6e4a8ffb5efee685d484c7d298da78defffd6ffcff2aac674a81bd1f2043d3b            10151 Packages
- 9b15854d810453a8068f4094c147f4f84d00810ee9e320aaebd5fc804135c1ed             2066 Packages.bz2
- 120c3389685de893f0adaf65502673b2df00f6b98da279f4ade1ced5d2242136             1809 Packages.gz
+ 0fb0e31bc839ecb8653b7f6c3a916a5ad99c60ae70dab93318147de2914c505a            10977 Packages
+ 5c9396a7ddeca207629f8dac47f79687f67f8a4d08d30cbde5c9ee7fdea0b4b3             2176 Packages.bz2
+ f880c54c9b74f99f7ee33aed9f8ee12f1bbf81fdaea61630053d51b10bce91b1             1914 Packages.gz
