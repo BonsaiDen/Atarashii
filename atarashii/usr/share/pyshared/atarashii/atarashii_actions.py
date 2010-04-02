@@ -69,7 +69,6 @@ class AtarashiiActions:
         
         # Start GTK
         gtk.main()
-        gtk.gdk.threads_leave()
     
     def crash_exit(self):
         # Catch Python Errors

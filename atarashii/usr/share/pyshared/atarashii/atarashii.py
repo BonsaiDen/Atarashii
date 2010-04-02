@@ -38,8 +38,7 @@ import time
 import os
 import sys
 
-gtk.gdk.threads_init()
-gtk.gdk.threads_enter()
+gobject.threads_init()
 
 import notify
 import gui
