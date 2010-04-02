@@ -39,7 +39,7 @@ LANG = {
         # Tweets
         'tweet_hash': '#',
         'tweet_at': '@',
-
+        
         # HTML
         'html_welcome': 'Willkommen bei Atarashii.',
         'html_loading': 'Tweets werden geladen...',
@@ -162,10 +162,10 @@ LANG = {
         'about_title': 'Über Atarashii',
         'about_okbutton': 'OK',
         'about_kitten_button': 'Kätzchen',
-        'about_back_button': 'Zurück',        
+        'about_back_button': 'Zurück',
         'about_description':
             'Twitter Client für den GNOME Desktop.',
-            
+        
         'about_kittens1':
             '<span size="small">Diese Version wurde von <b>%s</b> '
             'Kätzchen verpackt.</span>',
@@ -498,10 +498,10 @@ LANG = {
         'about_title': 'About Atarashii',
         'about_okbutton': 'OK',
         'about_kitten_button': 'Kittens',
-        'about_back_button': 'Back',        
+        'about_back_button': 'Back',
         'about_description':
             'Twitter Client for the GNOME Desktop.',
-            
+        
         'about_kittens1':
             '<span size="small">This Version has been build by <b>%s</b> '
             'kittens.</span>',
@@ -555,7 +555,7 @@ LANG = {
         'error_crashed__python_title': 'Snake? Snake? Snaaaaaaaaaaake!',
         'error_crashed_python': 
             'The error was an <b>internal</b> one, you\'ll find the log '
-            '<a href="file://%s">here</a>.',        
+            '<a href="file://%s">here</a>.',
         
         # User Errors
         'error_title': 'Atarashii - Error',
