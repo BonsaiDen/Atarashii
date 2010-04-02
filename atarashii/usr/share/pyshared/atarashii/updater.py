@@ -22,7 +22,7 @@ import urllib
 import os
 import gobject
 import calendar
-from socket import timeout as socket_timeout
+import socket
 
 from language import LANG as lang
 from settings import HOME_DIR
@@ -377,13 +377,13 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 return method(since_id = since_id, max_id = max_id,
                               max_count = max_count)
             
-            # Stop immediately on network error...
+            # Timeouts
+            except socket.timeout, error:
+                if count == 2:
+                    raise error     
+            
+            # Stop immediately on network error
             except IOError, error:
-                # ...but not on timeouts!
-                if isinstance(error, socket_timeout) and count < 2:
-                    pass
-                
-                else:
                     raise error
             
             # Something went wrong, either try it again or break with the error

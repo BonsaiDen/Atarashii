@@ -287,6 +287,12 @@ class AtarashiiActions:
             error_code = 0
             error_errno = ERR_URLLIB_TIMEOUT
         
+        # GAI errors
+        elif isinstance(error, socket.gaierror):
+            msg = ''
+            error_errno = ERR_URLLIB_FAILED
+            error_code = 0
+        
         # IO errors
         elif isinstance(error, IOError):
             if hasattr(error, 'read'):

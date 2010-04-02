@@ -607,7 +607,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                            % self.main.refresh_timeout
                 
                 elif code == ERR_NETWORK_FAILED:
-                    info = lang.warning_network % self.main.refresh_timeout 
+                    info = lang.warning_network
                 
                 simple = lang.tray_warning_network
                 button = lang.warning_button_network
