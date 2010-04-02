@@ -33,7 +33,8 @@ from view_html import ViewHTML
 
 from constants import ST_HISTORY
 from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \
-                      UNSET_ID_NUM, HTML_UNSET_TEXT, HTML_LOADED
+                      UNSET_ID_NUM, HTML_UNSET_TEXT, HTML_LOADED, \
+                      MODE_MESSAGES
 
 
 # Watch out! This is one giant "Is this OK mommy?" hackery by the kittens!
@@ -284,6 +285,12 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             
             else:
                 self.main.message_text = UNSET_TEXT
+            
+            # Fix for message menu entry in the timeline
+            if self.main.gui != MODE_MESSAGES:
+                user = self.main.message_user
+                self.main.gui.set_mode(MODE_MESSAGES)
+                self.main.message_user = user
             
             self.main.gui.text.message()
             self.main.gui.text.html_focus()

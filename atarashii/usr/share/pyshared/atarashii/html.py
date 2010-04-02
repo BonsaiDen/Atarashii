@@ -237,6 +237,11 @@ class HTML(view.HTMLView):
                 self.add_menu_link(menu, lang.context_tweet % user,
                                    self.context_link, reply)
         
+            self.add_menu_separator(menu)
+            message = 'message:%s:-1:-1' % user
+            self.add_menu_link(menu, lang.context_message % user,
+                               self.context_link, message)
+        
         # Source
         elif link == "source":
             source = self.get_source(item)
