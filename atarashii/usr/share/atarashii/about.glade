@@ -102,14 +102,7 @@
             <property name="no_show_all">True</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkLabel" id="spacer_top">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Kitten Techstuff!&lt;/b&gt;&lt;/span&gt;</property>
-                <property name="use_markup">True</property>
-              </object>
-              <packing>
-                <property name="position">0</property>
-              </packing>
+              <placeholder/>
             </child>
             <child>
               <object class="GtkLabel" id="details">
@@ -204,7 +197,7 @@
                 <property name="visible">True</property>
                 <property name="justify">center</property>
                 <property name="wrap">True</property>
-                <property name="width_chars">35</property>
+                <property name="width_chars">30</property>
               </object>
               <packing>
                 <property name="expand">False</property>
