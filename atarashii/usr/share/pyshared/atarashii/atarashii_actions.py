@@ -40,6 +40,13 @@ from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_SUCCESSFUL, \
                       ST_NETWORK_FAILED
 
+from constants import ERROR_TWEET_NOT_FOUND, ERROR_MESSAGE_NOT_FOUND, \
+                      ERROR_ALREADY_RETWEETED, ERROR_TWEET_DUPLICATED, \
+                      ERROR_USER_NOT_FOUND, ERROR_RATE_RECONNECT, \
+                      ERROR_RATE_LIMIT, ERROR_NETWORK_FAILED, \
+                      ERROR_NETWORK_TWITTER_FAILED, ERROR_URLLIB_FAILED, \
+                      ERROR_URLLIB_TIMEOUT
+
 
 class AtarashiiActions:
     
@@ -252,11 +259,12 @@ class AtarashiiActions:
                                      int(self.refresh_timeout * 1000),
                                      self.login)
             
-            return -7, lang.error_ratelimit_reconnect % math.ceil(minutes)
+            return ERROR_RATE_RECONNECT, lang.error_ratelimit_reconnect \
+                                         % math.ceil(minutes)
         
         # Just display an error if we exiced the ratelimit while being logged in
         else:
-            return -6, lang.error_ratelimit % math.ceil(minutes)
+            return ERROR_RATE_LIMIT, lang.error_ratelimit % math.ceil(minutes)
     
     
     # Handle Errors and Warnings -----------------------------------------------
@@ -270,8 +278,7 @@ class AtarashiiActions:
         if isinstance(error, socket.timeout): # Timeout error
             msg = ''
             error_code = 0
-            error_errno = -3
-            code = -9
+            error_errno = ERROR_URLLIB_TIMEOUT
         
         # IOErrors
         elif isinstance(error, IOError):
@@ -294,27 +301,27 @@ class AtarashiiActions:
         
         
         # Catch errors due to missing network
-        if error_errno in (-2, -3):
+        if error_errno in (ERROR_URLLIB_FAILED, ERROR_URLLIB_TIMEOUT):
             self.set_status(ST_NETWORK_FAILED)
-            code = -4
+            code = ERROR_NETWORK_FAILED
             if self.status(ST_LOGIN_SUCCESSFUL):
-                code = -5
+                code = ERROR_NETWORK_TWITTER_FAILED
                 self.gui.set_refresh_update(True)
                 self.gui.tray.refresh_menu.set_sensitive(False)
         
         # Catch common Twitter errors
-        elif error_code in (400, 401, 403, 404, 500, 502, 503):
+        elif error_code in (400, 401, 403, 404, 500, 502, 503):            
             if msg.lower().startswith('no status'):
-                code = -12
+                code = ERROR_TWEET_NOT_FOUND
         
             elif msg.lower().startswith('no direct message'):
-                code = -13
+                code = ERROR_MESSAGE_NOT_FOUND
         
             elif msg.lower().startswith('share sharing'):
-                code = -2
+                code = ERROR_ALREADY_RETWEETED
             
             elif msg.lower().startswith('status is a duplicate'):
-                code = -11
+                code = ERROR_TWEET_DUPLICATED
                 
             else:
                 code = error_code
@@ -335,7 +342,7 @@ class AtarashiiActions:
                 
                 # A real 404! This may be raised if a user wasn't found
                 elif self.status(ST_WAS_SEND) and code == 404:
-                    code = -3
+                    code = ERROR_USER_NOT_FOUND
         
         # Reset stuff
         self.unset_status(ST_WAS_SEND | ST_WAS_RETWEET | \
