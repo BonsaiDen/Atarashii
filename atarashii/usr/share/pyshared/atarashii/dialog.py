@@ -165,7 +165,7 @@ class AboutDialog(Dialog):
         def toggle(button, *args):
             if self.kitten_button.get_active():
                 size = self.dlg.get_allocation()
-                self.dlg.set_size_request(size[2], size[3])
+                self.dlg.set_size_request(size[2], -1)
                 self.kitten_button.set_label(lang.about_back_button)
                 self.get('maininfo').hide()
                 self.get('subinfo').show()
