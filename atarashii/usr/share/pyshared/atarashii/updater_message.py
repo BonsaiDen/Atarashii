@@ -113,7 +113,7 @@ class UpdaterMessage:
             self.message.load_history = True
             self.message.history_loaded = True
             self.message.history_count += len(messages)
-            
+        
         def update_view():
             self.message.push_updates()
             self.gui.show_input()
