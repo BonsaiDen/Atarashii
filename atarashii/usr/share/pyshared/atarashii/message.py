@@ -19,6 +19,7 @@
 import view
 
 from language import LANG as lang
+
 from constants import UNSET_TEXT, MODE_MESSAGES, HTML_UNSET_ID
 
 
