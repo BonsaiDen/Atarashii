@@ -27,11 +27,12 @@ from constants import HTML_UNSET_ID
 class UpdaterMessage:
     # Set lastest Message
     def set_last_message(self, item_id):
-        self.message.last_id = item_id
-        self.settings['lastmessage_' + self.main.username] = item_id
-        if len(self.message.items) > 0:
-            self.message.newest_id = self.message.items[
-                                     len(self.message.items) - 1][0].id
+        if item_id >= self.message.last_id:
+            self.message.last_id = item_id
+            self.settings['lastmessage_' + self.main.username] = item_id
+            if len(self.message.items) > 0:
+                self.message.newest_id = self.message.items[
+                                         len(self.message.items) - 1][0].id
     
     
     # Load initial messages ----------------------------------------------------

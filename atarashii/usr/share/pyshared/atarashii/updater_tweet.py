@@ -27,11 +27,13 @@ from constants import HTML_UNSET_ID
 class UpdaterTweet:
     # Set lastest Tweet
     def set_last_tweet(self, item_id):
-        self.html.last_id = item_id
-        self.settings['lasttweet_' + self.main.username] = item_id
-        if len(self.html.items) > 0:
-            self.html.newest_id = self.html.items[
-                                  len(self.html.items) - 1][0].id
+        if item_id >= self.html.last_id:
+            self.html.last_id = item_id
+            self.settings['lasttweet_' + self.main.username] = item_id
+            if len(self.html.items) > 0:
+                self.html.newest_id = self.html.items[
+                                      len(self.html.items) - 1][0].id
+    
     
     # Load initial tweets ------------------------------------------------------
     def get_init_tweets(self, last=False, init=False):
