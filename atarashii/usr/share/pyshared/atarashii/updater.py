@@ -22,6 +22,7 @@ import urllib
 import os
 import gobject
 import calendar
+from socket import timeout as socket_timeout
 
 from language import LANG as lang
 from settings import HOME_DIR
@@ -379,7 +380,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             # Stop immediately on network error...
             except IOError, error:
                 # ...but not on timeouts!
-                if isinstance(error, socket.timeout) and count < 2:
+                if isinstance(error, socket_timeout) and count < 2:
                     pass
                 
                 else:
