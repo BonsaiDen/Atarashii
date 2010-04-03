@@ -16,13 +16,17 @@
 
 # Notifications ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
+import gconf
+import dbus
+
 import subprocess
 import threading
-import dbus
+import os
 
 
 class Notifier:
     def __init__(self, main):
+        self.theme_sounds = get_sound_files()
         self.settings = main.settings
         self.last_id = -1
         self.items = []
@@ -42,6 +46,9 @@ class Notifier:
     
     # Add new notifications to the queue ---------------------------------------
     def add(self, items):
+        if isinstance(items, tuple):
+            items = [items]
+        
         if self.notify and self.settings.is_true('notify') \
            and len(items) > 0:
             
@@ -66,7 +73,12 @@ class Notifier:
             
             # Play the sound
             if self.settings.is_true('sound'):
-                if self.settings['sound_' + item[3]] != 'None':
+                if item[3].startswith('theme:'):
+                    sound = item[3].split(':')[1]
+                    if sound in self.theme_sounds:
+                        Sound(self.theme_sounds[sound])
+                
+                elif self.settings['sound_' + item[3]] != 'None':                
                     Sound(self.settings['sound_' + item[3]] )
 
 
@@ -108,3 +120,65 @@ class Sound(threading.Thread):
             
             tries += 1
 
+
+# Get files from the current sound theme ---------------------------------------
+# ------------------------------------------------------------------------------
+def get_sound_theme():
+    theme_name = gconf.client_get_default().get_string(
+                                            '/desktop/gnome/sound/theme_name')
+    
+    if 'XDG_DATA_DIRS' in os.environ:
+        dir_list = os.environ['XDG_DATA_DIRS'].split(':')
+    
+    else:
+        dir_list = []
+    
+    dir_list.append(os.environ['HOME'] + '/.local/share/')
+    
+    for i in dir_list:
+        i += "sounds/" + theme_name + "/"
+        if os.access(i, os.F_OK):
+            return i
+    
+    return None
+    
+def get_sound_theme_index(theme_dir):
+    index_file = os.path.join(theme_dir, 'index.theme')
+    parent = None
+    for line in open(index_file):
+        line = line.strip()
+        if line.startswith('Inherits='):
+            parent = line.split('=')[1]
+            
+        elif line.startswith('Directories='):
+            sound_dir = line.split('=')[1].split(',')[0]
+    
+    return parent, sound_dir
+
+def get_sound_dirs():
+    dirs = []
+
+    parent = get_sound_theme()
+    while parent:
+        p, theme_dir = get_sound_theme_index(parent)
+        dirs.append(os.path.join(parent, theme_dir))
+           
+        if p is not None:
+            parent = get_sound_theme(p)
+        
+        else:
+            break
+    
+    return dirs
+
+def get_sound_files():
+    sound_files = {}
+    for d in get_sound_dirs():
+        files = os.listdir(d)
+        for i in files:
+            name, ext = i.lower().split('.')
+            if not ext == 'disabled':
+                sound_files[name] = os.path.join(d, i)
+
+    return sound_files
+    

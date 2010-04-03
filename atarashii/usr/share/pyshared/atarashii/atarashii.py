@@ -263,9 +263,10 @@ class Atarashii(AtarashiiActions):
         
         # Create notification
         info = (lang.notification_login % self.username,
-                '\n'.join(info_text), self.get_user_picture(), 'info')
+                '\n'.join(info_text), self.get_user_picture(),
+                'theme:service-login')
         
-        self.notifier.add((info,))
+        self.notifier.add(info)
     
     def set_user_picture(self, img):
         self.settings['picture_' + self.username] = img

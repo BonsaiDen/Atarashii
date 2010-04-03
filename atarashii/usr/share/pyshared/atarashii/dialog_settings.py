@@ -138,9 +138,8 @@ class SettingsDialog(Dialog):
         self.get('snd_tweets').set_label(lang.settings_file_tweets)
         self.get('snd_reply').set_label(lang.settings_file_replies)
         self.get('snd_messages').set_label(lang.settings_file_messages)
-        self.get('snd_info').set_label(lang.settings_file_info)
 
-        self.sounds = ['tweets', 'reply', 'messages', 'info']
+        self.sounds = ['tweets', 'reply', 'messages']
         
         def get_sound(key):
             if self.settings.isset('sound_' + key):
@@ -153,8 +152,7 @@ class SettingsDialog(Dialog):
         soundfiles = {
             'tweets': self.settings['sound_tweets'] or '',
             'reply': self.settings['sound_reply'] or '',
-            'messages': self.settings['sound_messages'] or '',
-            'info': self.settings['sound_info'] or ''
+            'messages': self.settings['sound_messages'] or ''
         }
         
         def set_sound(snd, snd_file):

@@ -198,8 +198,8 @@ class GUIHelpers:
         self.set_property('skip-taskbar-hint', not mode)
     
     # Show a popup notification
-    def notifcation(self, ntype, msg):
-        self.main.notifier.add((("Atarashii", strip_tags(msg),
-            'dialog-error' if ntype == MESSAGE_ERROR else 'dialog-warning',
-            'info'),))
+    def notifcation(self, typ, msg):
+        typ = 'dialog-error' if typ == MESSAGE_ERROR else 'dialog-warning'
+        self.main.notifier.add(('Atarashii', strip_tags(msg),
+                                 typ, 'theme:' + typ))
 
