@@ -51,7 +51,7 @@
                         </child>
                         <child>
                           <object class="GtkVBox" id="vbox3">
-                            <property name="width_request">75</property>
+                            <property name="width_request">100</property>
                             <property name="visible">True</property>
                             <property name="orientation">vertical</property>
                             <child>
