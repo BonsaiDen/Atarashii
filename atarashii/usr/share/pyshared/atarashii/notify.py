@@ -84,10 +84,12 @@ class Notifier:
                 if item[3].startswith('theme:'):
                     sound = item[3].split(':')[1]
                     if sound in THEME_SOUNDS:
-                        Sound(THEME_SOUNDS[sound])
+                        snd = Sound(THEME_SOUNDS[sound])
+                        snd.start()
                 
-                elif self.settings['sound_' + item[3]] != 'None': 
-                    Sound(self.settings['sound_' + item[3]] )
+                elif self.settings['sound_' + item[3]] not in ('None', ''): 
+                    snd = Sound(self.settings['sound_' + item[3]])
+                    snd.start()
 
 
 # Sound Player Thread ----------------------------------------------------------
@@ -97,7 +99,6 @@ class Sound(threading.Thread):
         threading.Thread.__init__(self)
         self.daemon = True
         self.sound = sound
-        self.start()
     
     def run(self):
         tries = 0
