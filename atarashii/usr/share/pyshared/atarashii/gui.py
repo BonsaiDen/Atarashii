@@ -76,9 +76,16 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         gtb.get_object('content').set_border_width(2)
         
         # Multi Button
+        self.is_on_multi_button = False
         self.multi_image = gtb.get_object('multi_image')
         self.multi_button = gtb.get_object('multi')
-        self.multi_button.connect('button-press-event', self.on_refresh_update)
+        self.multi_button_background = \
+                          self.multi_button.get_style().bg[gtk.STATE_NORMAL]
+        
+        self.multi_button.connect('enter-notify-event', self.on_multi_enter)
+        self.multi_button.connect('leave-notify-event', self.on_multi_leave)
+        self.multi_button.connect('button-press-event', self.on_multi_press)
+        self.multi_button.connect('button-release-event', self.on_multi_release)
         self.multi_button.set_tooltip_text(lang.tool_refresh)
         self.multi_state = BUTTON_REFRESH
         
@@ -364,6 +371,27 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             if status:
                 self.update_status()
+    
+    def on_multi_enter(self, button, event, mouse=True):
+        if mouse:
+            self.is_on_multi_button = True
+        
+        self.multi_button.modify_bg(gtk.STATE_NORMAL,
+                          self.multi_button.get_style().bg[gtk.STATE_PRELIGHT])
+    
+    def on_multi_leave(self, button, event):
+        self.is_on_multi_button = False
+        self.multi_button.modify_bg(gtk.STATE_NORMAL,
+                                   self.multi_button_background)
+    
+    def on_multi_press(self, button, event):
+        self.multi_button.modify_bg(gtk.STATE_NORMAL,
+                          self.multi_button.get_style().bg[gtk.STATE_ACTIVE])
+    
+    def on_multi_release(self, button, event):
+        self.on_multi_enter(button, event, mouse=False)
+        if self.is_on_multi_button:
+            self.on_refresh_update()
     
     
     # Statusbar ----------------------------------------------------------------
