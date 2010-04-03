@@ -113,7 +113,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.tab_tweets = gtb.get_object('tab_tweets')
         self.tab_messages = gtb.get_object('tab_messages')
         self.tabs.connect('switch-page', self.on_tabs)
-                
+        self.tabs.set_property('can-focus', False)
+        self.tab_tweets.set_property('can-focus', False)
+        self.tab_messages.set_property('can-focus', False)
+          
         # Bars
         self.toolbar = gtb.get_object('toolbar')
         self.progress = gtb.get_object('progressbar')
@@ -190,10 +193,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Fix tabs
         tab_height = self.tab_tweets.get_allocation()[3]
-        self.tabs.set_size_request(-1, tab_height + 8)
-        
-        self.tab_tweets.set_size_request(-1, tab_height + 4)
-        self.tab_messages.set_size_request(-1, tab_height + 4)
+        self.tabs.set_size_request(-1, tab_height + 9)
         
         # Hide Warning/Error Buttons
         self.warning_button.hide()
