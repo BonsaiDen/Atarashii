@@ -87,27 +87,11 @@ class GUIHelpers:
             self.info_label.set_markup(info % escape(label_text))
     
     # App Title ----------------------------------------------------------------
-    def set_app_title(self):
+    def set_app_title(self):    
         if self.main.username == UNSET_TEXT \
            or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
            
-            self.set_title(lang.title)
-        
-        elif self.mode == MODE_MESSAGES:
-            if self.html.count > 0:
-                self.set_title((lang.title_tweets if self.html.count > 1 \
-                                else lang.title_tweet) % self.html.count)
-            
-            else:
-                self.set_title(lang.title_logged_in % self.main.username)
-        
-        elif self.mode == MODE_TWEETS:
-            if self.message.count > 0:
-                self.set_title((lang.title_messages if self.html.count > 1 \
-                                else lang.title_message) % self.message.count)
-            
-            else:
-                self.set_title(lang.title_logged_in % self.main.username)
+            self.set_title(lang.title)        
         
         # Tray Tooltip
         if not self.main.status(ST_CONNECT) \
@@ -131,7 +115,18 @@ class GUIHelpers:
         else:
             self.tray.set_tooltip(lang.tray_logged_out)
     
+        # Set Tabs
+        self.set_tabs()
     
+    
+    # Tabs ---------------------------------------------------------------------
+    def set_tabs(self):
+        label = lang.tabs_tweets_new % self.html.count if self.html.count > 0 else lang.tabs_tweets
+        self.tab_tweets.set_label('<b>%s</b>' % label if self.mode == MODE_TWEETS else label)
+
+        label = lang.tabs_messages_new % self.message.count if self.message.count > 0 else lang.tabs_messages
+        self.tab_messages.set_label('<b>%s</b>' % label if self.mode == MODE_MESSAGES else label)
+        
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def set_mode(self, mode):
@@ -145,10 +140,12 @@ class GUIHelpers:
             self.mode = mode
         
         if self.mode == MODE_MESSAGES:
-            self.message_button.set_active(True)
+            self.tabs.set_current_page(1)
+            self.on_mode()
         
         elif self.mode == MODE_TWEETS:
-            self.message_button.set_active(False)
+            self.tabs.set_current_page(0)
+            self.on_mode()
     
     def is_ready(self):
         return not self.main.status(ST_UPDATE) and self.load_state()

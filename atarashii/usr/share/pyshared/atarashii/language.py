@@ -28,10 +28,12 @@ LANG = {
         # Title
         'title': 'Atarashii',
         'title_logged_in': '%s - Atarashii',
-        'title_message': '%d neue Nachricht',
-        'title_messages': '%d neue Nachrichten',
-        'title_tweet': '%d neuer Tweet',
-        'title_tweets': '%d neue Tweets',
+        
+        # Tabs
+        'tabs_tweets': 'Tweets',
+        'tabs_tweets_new': 'Tweets <b>(%d)</b>',
+        'tabs_messages': 'Nachrichten',
+        'tabs_messages_new': 'Nachrichten <b>(%d)</b>',
         
         # Username
         'name': lambda x: x + '\'' if x[-1:] in 'xs' else x + 's',
@@ -364,10 +366,12 @@ LANG = {
         # Title
         'title': 'Atarashii',
         'title_logged_in': '%s - Atarashii',
-        'title_message': '%d new Message',
-        'title_messages': '%d new Messages',
-        'title_tweet': '%d new Tweet',
-        'title_tweets': '%d new Tweets',
+        
+        # Tabs
+        'tabs_tweets': 'Tweets',
+        'tabs_tweets_new': 'Tweets <b>(%d)</b>',
+        'tabs_messages': 'Messages',
+        'tabs_messages_new': 'Messages <b>(%d)</b>',
         
         # Username
         'name': lambda x: x + '\'s' if x[-1:] in 'xs' else x + 's',

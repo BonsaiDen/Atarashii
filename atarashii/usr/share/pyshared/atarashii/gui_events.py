@@ -91,14 +91,16 @@ class GUIEventHandler:
         gobject.idle_add(self.message.read)
         gobject.idle_add(self.html.read)
     
+    def on_tabs(self, tabs, page, page_num):
+        if page_num == 0 and self.mode != MODE_TWEETS:
+            self.set_mode(MODE_TWEETS)
+        
+        elif page_num == 1 and self.mode != MODE_MESSAGES:
+            self.set_mode(MODE_MESSAGES) 
+    
     def on_mode(self, *args):
-        if self.message_button.get_active():
-            self.mode = MODE_MESSAGES
-        
-        else: # TODO add case for searchbutton
-            self.mode = MODE_TWEETS
-        
         if self.mode == MODE_MESSAGES:
+            self.tabs.set_current_page(1)
             self.html_scroll.hide()
             self.message_scroll.show()
             self.message.focus_me()
@@ -112,6 +114,7 @@ class GUIEventHandler:
                 self.show_input()
         
         elif self.mode == MODE_TWEETS:
+            self.tabs.set_current_page(0)
             self.message_scroll.hide()
             self.html_scroll.show()
             self.html.focus_me()

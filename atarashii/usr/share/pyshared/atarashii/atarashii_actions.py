@@ -143,7 +143,7 @@ class AtarashiiActions:
         # Send
         self.set_status(ST_SEND)
         self.gui.text.set_sensitive(False)
-        self.gui.message_button.set_sensitive(False)
+        self.gui.tabs.set_sensitive(False)
         self.gui.show_progress()
         
         # Statusbar
@@ -198,7 +198,7 @@ class AtarashiiActions:
         # Setup
         self.set_status(ST_SEND)
         self.gui.text.set_sensitive(False)
-        self.gui.message_button.set_sensitive(False)
+        self.gui.tabs.set_sensitive(False)
         self.gui.show_progress()
         self.gui.set_status(lang.status_retweet % name)
         
@@ -219,7 +219,7 @@ class AtarashiiActions:
         self.delete_message_id = message_id
         self.set_status(ST_DELETE)
         self.gui.text.set_sensitive(False)
-        self.gui.message_button.set_sensitive(False)
+        self.gui.tabs.set_sensitive(False)
         self.gui.show_progress()
         self.gui.set_status(lang.status_deleting_tweet \
                             if tweet_id != UNSET_ID_NUM \

@@ -75,15 +75,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.add(frame)
         gtb.get_object('content').set_border_width(2)
         
-        # Link Components
+        # Multi Button
         self.multi_button = gtb.get_object('refresh')
         self.multi_button.connect('clicked', self.on_refresh_update)
         self.multi_button.set_tooltip_text(lang.tool_refresh)
         self.multi_state = BUTTON_REFRESH
-        
-        self.message_button = gtb.get_object('message')
-        self.message_button.connect('clicked', self.on_mode)
-        self.message_button.set_tooltip_text(lang.tool_mode)
         
         # Settings Button
         self.settings_button = gtb.get_object('settings')
@@ -125,6 +121,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.message_scroll.set_shadow_type(gtk.SHADOW_IN)
         self.message.splash()
         
+        # Tabs
+        self.tabs = gtb.get_object('pages')
+        self.tab_tweets = gtb.get_object('tab_tweets')
+        self.tab_messages = gtb.get_object('tab_messages')
+        self.tabs.connect('switch-page', self.on_tabs)
+                
         # Bars
         self.toolbar = gtb.get_object('toolbar')
         self.progress = gtb.get_object('progressbar')
@@ -199,6 +201,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     def show_gui(self):
         self.show_all()
         
+        # Fix tabs
+        tab_height = self.tabs.get_allocation()[3]
+        self.tabs.set_size_request(-1, tab_height - 2)
+        
         # Hide Warning/Error Buttons
         self.warning_button.hide()
         self.error_button.hide()
@@ -243,7 +249,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         self.text.set_sensitive(True)
         self.set_refresh_update(True)
-        self.message_button.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL))
+        self.tabs.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL))
     
     def progress_activity(self):
         self.progress.pulse()
@@ -278,7 +284,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         self.text_scroll.hide()
         self.set_refresh_update(False, None, False, True)
-        self.message_button.set_sensitive(False)
+        self.tabs.set_sensitive(False)
         self.warning_button.hide()
         self.error_button.hide()
     
