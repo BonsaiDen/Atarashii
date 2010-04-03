@@ -13,9 +13,9 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-"""
+'''
 Atarashii Twitter Client
-"""
+'''
 __version__ = '0.99.18b'
 __author__ = 'Ivo Wetzel <ivo.wetzel@googlemail.com>'
 __copyright__ = 'Copyright (c) 2010 Ivo Wetzel'

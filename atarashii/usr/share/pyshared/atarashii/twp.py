@@ -66,7 +66,7 @@ URL_REGEX = re.compile('((' + PRE_CHARS + ')((https?://|www\\.)(' \
 
 
 class ParseResult:
-    """A class containing the results of a parsed Tweet.
+    '''A class containing the results of a parsed Tweet.
     
     Attributes:
     - urls:
@@ -94,7 +94,7 @@ class ParseResult:
         To change the formatting sublcass twp.Parser and override the format_*
         methods.
     
-    """
+    '''
     
     def __init__(self, urls, users, reply, lists, tags, html):
         self.urls = urls
@@ -106,13 +106,13 @@ class ParseResult:
 
 
 class Parser:
-    """A Tweet Parser"""
+    '''A Tweet Parser'''
     
     def __init__(self, max_url_length=30):
         self._max_url_length = max_url_length
     
     def parse(self, text):
-        """Parse the text and return a ParseResult instance."""
+        '''Parse the text and return a ParseResult instance.'''
         
         # Reset
         self._urls = []
@@ -135,7 +135,7 @@ class Parser:
     
     # Internal parser stuff ----------------------------------------------------
     def _parse_urls(self, match):
-        """Parse URLs."""
+        '''Parse URLs.'''
         
         mat = match.group(0)
         
@@ -161,7 +161,7 @@ class Parser:
                                               self._shorten_url(escape(url))))
     
     def _parse_users(self, match):
-        """Parse usernames."""
+        '''Parse usernames.'''
         
         # Don't parse lists here
         if match.group(2) is not None:
@@ -172,7 +172,7 @@ class Parser:
         return self.format_username(mat[0:1], mat[1:])
     
     def _parse_lists(self, match):
-        """Parse lists."""
+        '''Parse lists.'''
         
         # Don't parse lists here
         if match.group(4) is None:
@@ -184,7 +184,7 @@ class Parser:
         return '%s%s' % (pre, self.format_list(at_char, user, list_name))
     
     def _parse_tags(self, match):
-        """Parse hashtags."""
+        '''Parse hashtags.'''
         
         mat = match.group(0)
         
@@ -201,7 +201,7 @@ class Parser:
         return '%s%s' % (pre, self.format_tag(tag, text))
     
     def _shorten_url(self, text):
-        """Shorten a URL and make sure to not cut of html entities."""
+        '''Shorten a URL and make sure to not cut of html entities.'''
         
         if len(text) > self._max_url_length:
             text = text[0:self._max_url_length - 3]
@@ -228,7 +228,7 @@ class Parser:
                  % (user, user, at_char, user)
     
     def format_list(self, at_char, user, list_name):
-        """Return formatted HTML for a list."""
+        '''Return formatted HTML for a list.'''
         return '<a href="http://twitter.com/%s/%s">%s%s/%s</a>' \
                % (user, list_name, at_char, user, list_name)
     

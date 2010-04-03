@@ -84,30 +84,30 @@ class ViewHTML:
     def start(self):
         self.scroll.get_vscrollbar().set_value(0)
         self.offset_count = 0
-        self.render_html("""
+        self.render_html('''
             <body class="unloaded" ondragstart="return false">
                 <div class="loading"><img src="file://%s" /><br/>
                 <b class="loadingtext">%s</b></div>
-            </body>""" % (self.main.get_image(), self.lang_loading))
+            </body>''' % (self.main.get_image(), self.lang_loading))
     
     def splash(self):
         self.scroll.get_vscrollbar().set_value(0)
         self.offset_count = 0
-        self.render_html("""
+        self.render_html('''
             <body class="unloaded" ondragstart="return false">
                 <div class="loading"><img src="file://%s" /><br/>
                 <b class="loadingtext">%s</b></div>
-            </body>""" % (self.main.get_image(), lang.html_welcome))
+            </body>''' % (self.main.get_image(), lang.html_welcome))
     
     def render_html(self, html):
-        data = """
+        data = '''
         <html>
         <head>
         <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
         <link rel="stylesheet" type="text/css" media="screen" href="file://%s"/>
         </head>
         %s
-        </html>""" % (self.main.get_resource('atarashii.css'), html)
+        </html>''' % (self.main.get_resource('atarashii.css'), html)
         
         # FIXME This memory leaks EXTREMLY hard!
         # Even removing the dom stuff per javascript doesn't help
@@ -119,18 +119,18 @@ class ViewHTML:
     def set_html(self, renderitems):
         self.gui.set_app_title()
         if len(self.items) > 0:
-            self.render_html("""
+            self.render_html('''
                 <body ondragstart="return false">
                     <div><div id="newcontainer">%s</div>
                     <div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
-                </body>""" % (''.join(renderitems),
+                </body>''' % (''.join(renderitems),
                                 self.items[0][0].id, self.lang_load))
         
         elif self.main.status(ST_LOGIN_SUCCESSFUL):
-            self.render_html("""
+            self.render_html('''
                 <body class="unloaded" ondragstart="return false">
                     <div class="loading"><b>%s</b></div>
-                </body>""" % self.lang_empty)
+                </body>''' % self.lang_empty)
     
     # The big magic spacer inserted... trust me it's really magic that this
     # thin does work at all...

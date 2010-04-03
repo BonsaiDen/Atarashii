@@ -57,7 +57,7 @@ def unescape(text):
     return text
 
 def strip_tags(text):
-    return STRIP.sub("", text)
+    return STRIP.sub('', text)
 
 def compare(item_x, item_y):
     if item_x.id < item_y.id:

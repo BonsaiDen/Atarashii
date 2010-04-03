@@ -111,7 +111,7 @@ class HTML(view.HTMLView):
                         tweet.in_reply_to_screen_name)
         
         else:
-            reply = ""
+            reply = ''
         
         
         # Avatar ---------------------------------------------------------------
@@ -124,12 +124,12 @@ class HTML(view.HTMLView):
             avatar = self.avatar_html(user, num, img)
         
         else:
-            avatar = ""
+            avatar = ''
         
         
         # Background -----------------------------------------------------------
         if mentioned:
-            clas = "mentionedold" if item.id <= self.init_id else "mentioned"
+            clas = 'mentionedold' if item.id <= self.init_id else 'mentioned'
         
         elif item.id <= self.init_id:
             clas = 'highlightold' if highlight else 'oldtweet'
@@ -139,8 +139,8 @@ class HTML(view.HTMLView):
         
         
         # Source ---------------------------------------------------------------
-        if tweet.source != "web":
-            if hasattr(tweet, "source_url") and tweet.source_url != "":
+        if tweet.source != 'web':
+            if hasattr(tweet, 'source_url') and tweet.source_url != '':
                 if tweet.source_url == "/devices":
                     tweet.source_url = "http://twitter.com/devices"
                 
@@ -152,7 +152,7 @@ class HTML(view.HTMLView):
                 by_user =  lang.html_by % tweet.source
         
         else:
-            by_user = ""
+            by_user = ''
         
         
         # Favorite -------------------------------------------------------------
@@ -178,7 +178,7 @@ class HTML(view.HTMLView):
         </div>
         <div class="inner-text">
             <div><span class="name">''' + \
-                ("<b>RT</b> " if retweeted else "") + \
+                ('<b>RT</b> ' if retweeted else '') + \
                 '''<b><a href="profile:http://twitter.com/%s" title="''' + \
                 lang.html_profile + '''">%s</a></b></span>''' + \
                 self.is_protected(user) + '''%s</div>
