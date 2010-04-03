@@ -35,6 +35,11 @@ CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
 CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')
 LOGOUT_FILE = os.path.join(ATARASHII_DIR, 'logout')
 
+# Theme sounds
+from sounds import get_sound_files, get_sound_dirs
+THEME_SOUNDS = get_sound_files()
+THEME_DIR = get_sound_dirs()[0]
+
 
 class Settings:
     def __init__(self):
@@ -126,6 +131,7 @@ class Settings:
     def __getitem__(self, key):
         if self.values.has_key(key):
             return self.values[key]
+        
         else:
             return None
     
@@ -139,13 +145,19 @@ class Settings:
             self.has_changed = True
             del self.values[key]
     
-    def isset(self, key):
+    def isset(self, key, allow_empty = False):
         if self[key] is not None:
             if type(self[key]) == long or type(self[key]) == int:
                 return self[key] != -1
             
+            elif allow_empty:
+                return True
+            
             else:
                 return self[key].strip() != ''
+    
+    def get(self, key, default):
+        return self.values.get(key, default)
     
     def is_true(self, key, default=True):
         if self[key] is None:

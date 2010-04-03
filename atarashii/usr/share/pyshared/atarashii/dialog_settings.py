@@ -26,6 +26,7 @@ import os
 from language import LANG as lang
 from dialog import Dialog, MessageDialog
 from utils import SHORTS_LIST, URLShorter, URLExpander
+from settings import THEME_SOUNDS, THEME_DIR
 
 from constants import ST_LOGIN_SUCCESSFUL, ST_CONNECT, ST_UPDATE, \
                       ST_LOGIN_COMPLETE
@@ -140,19 +141,20 @@ class SettingsDialog(Dialog):
         self.get('snd_messages').set_label(lang.settings_file_messages)
 
         self.sounds = ['tweets', 'reply', 'messages']
+        default_sound = THEME_SOUNDS.get('message-new-instant', '')
         
         def get_sound(key):
-            if self.settings.isset('sound_' + key):
+            if self.settings.isset('sound_' + key, True):
                 snd = str(self.settings['sound_' + key]).strip()
                 return None if snd in ('', 'None') else snd
             
             else:
-                return None
+                return default_sound
         
         soundfiles = {
-            'tweets': self.settings['sound_tweets'] or '',
-            'reply': self.settings['sound_reply'] or '',
-            'messages': self.settings['sound_messages'] or ''
+            'tweets': self.settings.get('sound_tweets', default_sound),
+            'reply': self.settings.get('sound_reply', default_sound),
+            'messages': self.settings.get('sound_messages', default_sound)
         }
         
         def set_sound(snd, snd_file):
@@ -430,7 +432,7 @@ class SoundChooser:
         self.select_snd = select_snd
         self.select_callback = select_callback
         if current_file is None:
-            self.chooser.set_current_folder('/usr/share/sounds')
+            self.chooser.set_current_folder(THEME_DIR)
         
         else:
             self.chooser.set_filename(current_file)
