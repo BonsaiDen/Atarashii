@@ -31,7 +31,6 @@ DBUS_INSTANCE = bus.get_instance()
 # ------------------------------------------------------------------------------
 import pygtk
 pygtk.require('2.0')
-import gtk
 import gobject
 
 import time

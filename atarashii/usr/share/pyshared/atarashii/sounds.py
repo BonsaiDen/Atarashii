@@ -19,8 +19,9 @@
 import gconf
 import os
 
-def get_sound_theme():
-    theme_name = gconf.client_get_default().get_string(
+def get_sound_theme(theme_name=None):
+    if theme_name is None:
+        theme_name = gconf.client_get_default().get_string(
                                             '/desktop/gnome/sound/theme_name')
     
     if 'XDG_DATA_DIRS' in os.environ:
@@ -55,12 +56,14 @@ def get_sound_dirs():
     dirs = []
 
     parent = get_sound_theme()
+    count = 0
     while parent:
-        p, theme_dir = get_sound_theme_index(parent)
+        par, theme_dir = get_sound_theme_index(parent)
         dirs.append(os.path.join(parent, theme_dir))
            
-        if p is not None:
-            parent = get_sound_theme(p)
+        if par is not None and count < 20:
+            parent = get_sound_theme(par)
+            count += 1
         
         else:
             break
@@ -69,12 +72,12 @@ def get_sound_dirs():
 
 def get_sound_files():
     sound_files = {}
-    for d in get_sound_dirs():
-        files = os.listdir(d)
+    for cur_dir in get_sound_dirs():
+        files = os.listdir(cur_dir)
         for i in files:
             name, ext = i.lower().split('.')
             if not ext == 'disabled':
-                sound_files[name] = os.path.join(d, i)
+                sound_files[name] = os.path.join(cur_dir, i)
 
     return sound_files
 

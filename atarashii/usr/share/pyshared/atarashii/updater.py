@@ -384,7 +384,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             
             # Stop immediately on network error
             except IOError, error:
-                    raise error
+                raise error
             
             # Something went wrong, either try it again or break with the error
             except TweepError, error:

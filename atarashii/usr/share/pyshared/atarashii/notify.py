@@ -48,12 +48,8 @@ class Notifier:
     def close(self):
         if self.last_id == -1:
             return
-    
-        try:
-            self.notify.CloseNotification(self.last_id)
         
-        except:
-            pass
+        self.notify.CloseNotification(self.last_id)
     
     
     # Add new notifications to the queue ---------------------------------------
@@ -90,7 +86,7 @@ class Notifier:
                     if sound in THEME_SOUNDS:
                         Sound(THEME_SOUNDS[sound])
                 
-                elif self.settings['sound_' + item[3]] != 'None':                
+                elif self.settings['sound_' + item[3]] != 'None': 
                     Sound(self.settings['sound_' + item[3]] )
 
 
