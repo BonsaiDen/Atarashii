@@ -44,6 +44,16 @@ class Notifier:
             self.notify = None
     
     
+    # Try to close the last notification ---------------------------------------
+    # This might get ignored on newer version of the notification debus thingy -
+    def close(self):
+        try:
+            self.notify.CloseNotification(self.last_id)
+        
+        except:
+            pass
+    
+    
     # Add new notifications to the queue ---------------------------------------
     def add(self, items):
         if isinstance(items, tuple):

@@ -108,6 +108,7 @@ class AtarashiiActions:
             os.unlink(LOGOUT_FILE)
     
     def quit(self):
+        self.notifier.close()
         self.save_settings(True)
         self.updater.running = False
         gtk.main_quit()
