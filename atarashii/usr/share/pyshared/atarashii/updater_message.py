@@ -49,6 +49,14 @@ class UpdaterMessage:
         if len(messages) > 0:
             self.set_last_message(messages[0].id)
         
+        # Expand the tweet count
+        if len(messages) > self.main.max_message_count:
+            self.main.max_message_count = len(messages)
+            
+            # Hard limit
+            if self.main.max_message_count > self.main.max_message_init_count:
+                self.main.max_message_count = self.main.max_message_init_count  
+        
         messages.reverse()
         for i in messages:
             self.message.update_list.append((i, self.get_image(i, True)))
@@ -58,7 +66,8 @@ class UpdaterMessage:
     
     
     # Main Function that fetches the messages ----------------------------------
-    def get_messages(self, since_id=0, max_id=None, max_count=200):
+    # Don't call this directly! Use updater.try_get_items instead
+    def get_messages(self, since_id, max_id, max_count):
         messages = []
         if since_id != HTML_UNSET_ID:
             if max_id is None:

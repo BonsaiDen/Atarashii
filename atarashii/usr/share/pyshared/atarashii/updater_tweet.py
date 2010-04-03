@@ -49,6 +49,14 @@ class UpdaterTweet:
         if len(updates) > 0:
             self.set_last_tweet(updates[0].id)
         
+        # Expand the tweet count
+        if len(updates) > self.main.max_tweet_count:
+            self.main.max_tweet_count = len(updates)
+            
+            # Hard limit
+            if self.main.max_tweet_count > self.main.max_tweet_init_count:
+                self.main.max_tweet_count = self.main.max_tweet_init_count
+        
         updates.reverse()
         for i in updates:
             if i is not None:
@@ -59,7 +67,8 @@ class UpdaterTweet:
     
     
     # Main Function that fetches the updates -----------------------------------
-    def get_updates(self, since_id=0, max_id=None, max_count=200):
+    # Don't call this directly! Use updater.try_get_items instead
+    def get_updates(self, since_id, max_id, max_count):
         gobject.idle_add(self.gui.update_status, True)
         updates = []
         mentions = []

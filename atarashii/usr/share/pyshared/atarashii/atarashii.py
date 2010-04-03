@@ -85,10 +85,22 @@ class Atarashii(AtarashiiActions):
         self.delete_tweet_id = UNSET_ID_NUM
         self.delete_message_id = UNSET_ID_NUM
         
+        # The number of items that should be loaded on each history call
         self.load_tweet_count = 20
+        
+        # The maximum number of items that should be displayed at one time
         self.max_tweet_count = 200
+        
+        # The maximum number of items that should be displayed at one time
+        # even if the initial load returns more than the above limit!
+        # Essentially this is the hard limit for tweets that are beeing loaded
+        # on startup
+        self.max_tweet_init_count = 400
+        
+        # Look above
         self.load_message_count = 20
         self.max_message_count = 200
+        self.max_message_init_count = 400
         
         # Timer
         self.refresh_time = UNSET_TIMEOUT
