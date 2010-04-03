@@ -159,7 +159,10 @@ class AboutDialog(Dialog):
                           % self.main.version)
         
         self.get('description').set_markup(lang.about_description)
-        self.get('image').set_from_file(self.main.get_image())
+        
+        if not gtk.IconTheme().has_icon('bonsaiden-atarashii'):
+            self.get('image').set_from_file(self.main.get_image())
+        
         self.get('subinfo').hide()
         
         def toggle(button, *args):
