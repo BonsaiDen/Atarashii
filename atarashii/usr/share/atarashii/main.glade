@@ -33,22 +33,14 @@
           </packing>
         </child>
         <child>
-          <object class="GtkToggleToolButton" id="message">
+          <object class="GtkToggleToolButton" id="about">
             <property name="visible">True</property>
             <property name="use_underline">True</property>
-            <property name="stock_id">gtk-dnd-multiple</property>
+            <property name="stock_id">gtk-about</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="homogeneous">True</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSeparatorToolItem" id="separator2">
-            <property name="visible">True</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
           </packing>
         </child>
         <child>
@@ -63,14 +55,12 @@
           </packing>
         </child>
         <child>
-          <object class="GtkToggleToolButton" id="about">
+          <object class="GtkSeparatorToolItem" id="separator2">
             <property name="visible">True</property>
-            <property name="use_underline">True</property>
-            <property name="stock_id">gtk-about</property>
+            <property name="draw">False</property>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="homogeneous">True</property>
+            <property name="expand">True</property>
           </packing>
         </child>
         <child>
@@ -237,31 +227,103 @@
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
-          <object class="GtkScrolledWindow" id="htmlscroll">
+          <object class="GtkVBox" id="vbox1">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">automatic</property>
-            <property name="vscrollbar_policy">automatic</property>
+            <property name="orientation">vertical</property>
             <child>
-              <placeholder/>
+              <object class="GtkScrolledWindow" id="htmlscroll">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">automatic</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow" id="messagescroll">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">automatic</property>
+                <property name="vscrollbar_policy">automatic</property>
+                <child>
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkNotebook" id="pages">
+                <property name="visible">True</property>
+                <property name="tab_pos">bottom</property>
+                <property name="show_border">False</property>
+                <property name="tab_hborder">6</property>
+                <child>
+                  <object class="GtkAlignment" id="alignment1">
+                    <property name="visible">True</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel" id="tab_tweets">
+                    <property name="width_request">85</property>
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Tweets</property>
+                    <property name="use_markup">True</property>
+                    <property name="track_visited_links">False</property>
+                  </object>
+                  <packing>
+                    <property name="tab_fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkAlignment" id="alignment2">
+                    <property name="visible">True</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child type="tab">
+                  <object class="GtkLabel" id="tab_messages">
+                    <property name="width_request">85</property>
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Messages</property>
+                    <property name="use_markup">True</property>
+                    <property name="track_visited_links">False</property>
+                  </object>
+                  <packing>
+                    <property name="position">1</property>
+                    <property name="tab_fill">False</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child type="tab">
+                  <placeholder/>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="position">2</property>
+              </packing>
             </child>
           </object>
           <packing>
             <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkScrolledWindow" id="messagescroll">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="hscrollbar_policy">automatic</property>
-            <property name="vscrollbar_policy">automatic</property>
-            <child>
-              <placeholder/>
-            </child>
-          </object>
-          <packing>
-            <property name="position">1</property>
           </packing>
         </child>
         <child>
@@ -274,7 +336,7 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="position">2</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child>
@@ -287,7 +349,7 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="position">3</property>
+            <property name="position">2</property>
           </packing>
         </child>
         <child>
@@ -296,7 +358,7 @@
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="position">4</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </object>
