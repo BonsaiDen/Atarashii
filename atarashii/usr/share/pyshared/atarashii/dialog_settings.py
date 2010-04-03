@@ -290,7 +290,6 @@ class SettingsDialog(Dialog):
         
         self.__class__.instance = None
         self.gui.settings_dialog = None
-        self.gui.settings_button.set_active(False)
         self.dlg.hide()
     
     # Generate Account List ----------------------------------------------------

@@ -138,42 +138,18 @@ class GUIEventHandler:
             self.main.save_settings(True)
     
     def on_settings(self, button, menu):
-        if not self.settings_toggle:
-            self.settings_toggle = True
-            if self.settings_button.get_active() and not self.settings_dialog:
-                self.settings_dialog = dialog_settings.SettingsDialog(self)
-            
-            elif menu and not self.settings_dialog:
-                self.settings_dialog = dialog_settings.SettingsDialog(self)
-                self.settings_button.set_active(True)
-            
-            elif menu and self.settings_dialog:
-                self.settings_dialog.on_close()
-                self.settings_button.set_active(False)
-            
-            elif self.settings_dialog:
-                self.settings_dialog.on_close()
-            
-            self.settings_toggle = False
+        if menu and not self.settings_dialog:
+            self.settings_dialog = dialog_settings.SettingsDialog(self)
+        
+        elif menu and self.settings_dialog:
+            self.settings_dialog.on_close()
     
     def on_about(self, button, menu):
-        if not self.about_toggle:
-            self.about_toggle = True
-            if self.about_button.get_active() and not self.about_dialog:
-                self.about_dialog = dialog.AboutDialog(self)
-            
-            elif menu and not self.about_dialog:
-                self.about_dialog = dialog.AboutDialog(self)
-                self.about_button.set_active(True)
-            
-            elif menu and self.about_dialog:
-                self.about_dialog.on_close()
-                self.about_button.set_active(False)
-            
-            elif self.about_dialog:
-                self.about_dialog.on_close()
-            
-            self.about_toggle = False
+        if menu and not self.about_dialog:
+            self.about_dialog = dialog.AboutDialog(self)
+        
+        elif menu and self.about_dialog:
+            self.about_dialog.on_close()
     
     def on_quit(self, widget=None, data=None):
         if data:

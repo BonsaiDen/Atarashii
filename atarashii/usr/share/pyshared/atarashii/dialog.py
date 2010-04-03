@@ -186,7 +186,6 @@ class AboutDialog(Dialog):
     def on_close(self, *args):
         self.__class__.instance = None
         self.gui.about_dialog = None
-        self.gui.about_button.set_active(False)
         self.dlg.hide()
 
 

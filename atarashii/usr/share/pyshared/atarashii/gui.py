@@ -62,7 +62,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.main = main
         self.hide_on_delete()
         self.set_border_width(2)
-        self.set_size_request(280, HT_400_BAD_REQUEST)
+        self.set_size_request(280, 400)
         self.set_icon_from_file(main.get_image())
         
         # Hide in Taskbar?
@@ -76,28 +76,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         gtb.get_object('content').set_border_width(2)
         
         # Multi Button
-        self.multi_button = gtb.get_object('refresh')
-        self.multi_button.connect('clicked', self.on_refresh_update)
+        self.multi_image = gtb.get_object('multi_image')
+        self.multi_button = gtb.get_object('multi')
+        self.multi_button.connect('button-press-event', self.on_refresh_update)
         self.multi_button.set_tooltip_text(lang.tool_refresh)
         self.multi_state = BUTTON_REFRESH
-        
-        # Settings Button
-        self.settings_button = gtb.get_object('settings')
-        self.settings_button.connect('toggled', self.on_settings, False)
-        
-        self.settings_button.set_tooltip_text(lang.tool_settings)
-        self.settings_toggle = False
-        
-        # About Button
-        self.about_button = gtb.get_object('about')
-        self.about_button.connect('toggled', self.on_about, False)
-        
-        self.about_button.set_tooltip_text(lang.tool_about)
-        self.about_toggle = False
-        
-        self.quit_button = gtb.get_object('quit')
-        self.quit_button.connect('clicked', self.on_quit)
-        self.quit_button.set_tooltip_text(lang.tool_quit)
         
         # Info Label
         self.info_label = gtb.get_object('label')
@@ -307,7 +290,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         if info is not None:
             self.multi_state = BUTTON_HISTORY
             self.multi_button.set_tooltip_text(info)
-            self.multi_button.set_stock_id(gtk.STOCK_GOTO_TOP)
+            self.multi_image.set_from_stock(gtk.STOCK_GOTO_TOP,
+                                            gtk.ICON_SIZE_MENU)
+            
             self.multi_button.set_sensitive(True)
             if status:
                 self.update_status()
@@ -333,8 +318,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         if info is None and read_mode:
             
             self.multi_state = BUTTON_READ
-            self.multi_button.set_stock_id(gtk.STOCK_OK)
-            
+            self.multi_image.set_from_stock(gtk.STOCK_OK, gtk.ICON_SIZE_MENU)
             
             # Set Tooltip
             if self.mode == MODE_TWEETS:
@@ -357,7 +341,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
         # Set icon and mode
         self.multi_state = BUTTON_REFRESH
-        self.multi_button.set_stock_id(gtk.STOCK_REFRESH)
+        self.multi_image.set_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_MENU)
     
         # Set Sensitive
         self.multi_button.set_sensitive(mode)

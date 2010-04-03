@@ -120,9 +120,16 @@ class ViewHelpers:
     # the mouse left the view
     def fake_move(self, pos):
         if not self.menu_no_fake_move:
+            
+            # Try to fix a crazy bug where this returns None...
+            win = self.get_window()
+            if win is None:
+                gobject.idle_add(self.fake_move, pos)
+                return False
+            
             self.fake_mouse = True
             event = gtk.gdk.Event(gtk.gdk.MOTION_NOTIFY)
-            event.window = self.get_window()
+            event.window = win
             event.x = pos[0]
             event.y = pos[1]
             self.emit('motion_notify_event', event)
