@@ -121,12 +121,19 @@ class GUIHelpers:
     
     # Tabs ---------------------------------------------------------------------
     def set_tabs(self):
-        label = lang.tabs_tweets_new % self.html.count if self.html.count > 0 else lang.tabs_tweets
-        self.tab_tweets.set_label('<b>%s</b>' % label if self.mode == MODE_TWEETS else label)
-
-        label = lang.tabs_messages_new % self.message.count if self.message.count > 0 else lang.tabs_messages
-        self.tab_messages.set_label('<b>%s</b>' % label if self.mode == MODE_MESSAGES else label)
+        label = lang.tabs_tweets_new % self.html.count \
+                if self.html.count > 0 else lang.tabs_tweets
         
+        self.tab_tweets.set_label('<b>%s</b>' % label \
+                                  if self.mode == MODE_TWEETS else label)
+        
+        label = lang.tabs_messages_new % self.message.count \
+                if self.message.count > 0 else lang.tabs_messages
+        
+        self.tab_messages.set_label('<b>%s</b>' % label \
+                                    if self.mode == MODE_MESSAGES else label)
+    
+    
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def set_mode(self, mode):
