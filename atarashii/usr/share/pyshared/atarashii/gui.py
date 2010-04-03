@@ -189,14 +189,16 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.show_all()
         
         # Fix tabs
-        tab_height = self.tabs.get_allocation()[3]
-        self.tabs.set_size_request(-1, tab_height - 2)
+        tab_height = self.tab_tweets.get_allocation()[3]
+        self.tabs.set_size_request(-1, tab_height + 8)
+        
+        self.tab_tweets.set_size_request(-1, tab_height + 4)
+        self.tab_messages.set_size_request(-1, tab_height + 4)
         
         # Hide Warning/Error Buttons
         self.warning_button.hide()
         self.error_button.hide()
         self.on_mode()
-        
         
         # Statusbar Updater
         self.update_status()
@@ -374,7 +376,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.is_on_multi_button = True
         
         self.multi_button.modify_bg(gtk.STATE_NORMAL,
-                          self.multi_button.get_style().bg[gtk.STATE_PRELIGHT])
+                          self.tabs.get_style().bg[gtk.STATE_NORMAL])
     
     def on_multi_leave(self, button, event):
         self.is_on_multi_button = False
