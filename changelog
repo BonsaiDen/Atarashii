@@ -1,6 +1,6 @@
-atarashii (0.99.18b-1) all;
+atarashii (0.99.19-1) all;
 
-  * Replace the message button with tabs.
+  * Replace the message button with tabs and got rid of nearly all the buttons.
   * Fix a bug were direct messages would be considered as unread, even if they
     had been already read.
   * Add "Send message to..." to the context menu of users in the tweet view.
@@ -10,7 +10,7 @@ atarashii (0.99.18b-1) all;
   * Fix an issue with text beeing cut off in the settings dialog under certain
     font sizes.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 3 Apr 2010 15:37:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 3 Apr 2010 20:03:00 +0200
 
 atarashii (0.99.18a-1) all;
 
