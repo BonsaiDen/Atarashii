@@ -44,12 +44,13 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     def __init__(self, main, gui, scroll, mode):
         self.main = main
         self.gui = gui
+        self.text = gui.text
         self.mode_type = mode
         
         webkit.WebView.__init__(self)
         self.connect('navigation-requested', self.open_link)
         self.connect('notify::load-status', self.loaded)
-        self.connect('button-release-event', self.gui.text.html_focus)
+        self.connect('button-release-event', self.text.html_focus)
         self.connect('button-press-event', self.on_button)
         self.connect('populate-popup', self.on_popup)
         self.popup_open = False
@@ -160,7 +161,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     def read(self):
         if self.init_id != self.get_latest():
             self.init_id = self.get_latest()
-            self.main.gui.set_refresh_update(False, True)
+            self.gui.set_refresh_update(False, True)
             if not self.history_loaded:
                 pos = len(self.items) - self.item_count
                 if pos < 0:
@@ -252,8 +253,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                 if self.load_history_id != HTML_UNSET_ID:
                     self.main.set_status(ST_HISTORY)
                     self.gui.show_progress()
-                    gobject.idle_add(self.main.gui.update_status, True)
-                    self.main.gui.text.html_focus()
+                    gobject.idle_add(self.gui.update_status, True)
+                    self.text.html_focus()
         
         # Replies
         elif uri.startswith('reply:') or uri.startswith('qreply:'):
@@ -268,11 +269,14 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             else:
                 self.main.reply_text = UNSET_TEXT
             
-            self.main.gui.text.reply()
-            self.main.gui.text.html_focus()
+            self.text.reply()
+            self.text.html_focus()
         
         # Send a message
         elif uri.startswith('message:') or uri.startswith('qmessage:'):
+            if self.gui != MODE_MESSAGES:
+                self.gui.set_mode(MODE_MESSAGES)
+        
             self.main.message_user, \
             self.main.message_id, num = uri.split(':')[1:]
             
@@ -286,14 +290,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             else:
                 self.main.message_text = UNSET_TEXT
             
-            # Fix for message menu entry in the timeline
-            if self.main.gui != MODE_MESSAGES:
-                user = self.main.message_user
-                self.main.gui.set_mode(MODE_MESSAGES)
-                self.main.message_user = user
-            
-            self.main.gui.text.message()
-            self.main.gui.text.html_focus()
+            self.text.message()
+            self.text.html_focus()
         
         # Retweet someone
         elif uri.startswith('retweet:'):
@@ -308,8 +306,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             elif int(ttype) == RETWEET_OLD:
                 self.main.retweet_text = unescape(self.get_text(extra))
                 self.main.retweet_user = name
-                self.main.gui.text.retweet()
-                self.main.gui.text.html_focus()
+                self.text.retweet()
+                self.text.html_focus()
         
         # Delete
         elif uri.startswith('delete:'):
@@ -326,13 +324,13 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             
             # Ask
             if dtype == 't':
-                gobject.idle_add(self.main.gui.ask_for_delete_tweet,
+                gobject.idle_add(self.gui.ask_for_delete_tweet,
                                  text,
                                  delete_tweet,
                                  None)
             
             elif dtype == 'm':
-                gobject.idle_add(self.main.gui.ask_for_delete_message,
+                gobject.idle_add(self.gui.ask_for_delete_message,
                                  text,
                                  delete_message,
                                  None)
@@ -353,8 +351,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             self.main.edit_reply_id = self.get_reply_id(extra) or UNSET_ID_NUM
             self.main.edit_reply_user = self.get_reply_user(extra) or UNSET_TEXT
             self.main.edit_id = self.get_id(extra)
-            self.main.gui.text.edit()
-            self.main.gui.text.html_focus()
+            self.text.edit()
+            self.text.html_focus()
         
         # Regular links
         else:
@@ -366,7 +364,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Don't close the textbox
         if self.give_text_focus:
-            gobject.idle_add(self.gui.text.grab_focus)
+            gobject.idle_add(self.text.grab_focus)
         
         return True
     

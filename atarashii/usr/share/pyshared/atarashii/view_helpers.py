@@ -37,8 +37,8 @@ class ViewHelpers:
         clipboard.set_text(data)
         
         # Make sure the textbox doesn't loose focus if it's opened
-        if self.gui.text.has_focus:
-            gobject.idle_add(self.gui.text.grab_focus)
+        if self.text.has_focus:
+            gobject.idle_add(self.text.grab_focus)
     
     def copy_link(self, menu, uri):
         self.copy_data(uri)
@@ -143,7 +143,7 @@ class ViewHelpers:
         gobject.timeout_add(10, self.fake_move, self.mouse_position)
     
     def fix_scroll(self):
-        if self.scroll_to != -1 and self.main.gui.mode == self.mode_type:
+        if self.scroll_to != -1 and self.gui.mode == self.mode_type:
             self.scroll.get_vscrollbar().set_value(self.scroll_to)
             gobject.timeout_add(25, self.check_offset)
             self.scroll_to = -1
@@ -259,7 +259,7 @@ class ViewHelpers:
     # Focus this view
     def focus_me(self):
         self.grab_focus()
-        self.gui.text.html_focus()
+        self.text.html_focus()
     
     # Get Image of an Item
     def get_image(self, num):

@@ -117,7 +117,7 @@ class ViewHTML:
                          'text/html', 'UTF-8', 'file:///')
     
     def set_html(self, renderitems):
-        self.main.gui.set_app_title()
+        self.gui.set_app_title()
         if len(self.items) > 0:
             self.render_html("""
                 <body ondragstart="return false">
