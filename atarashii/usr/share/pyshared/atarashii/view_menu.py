@@ -90,7 +90,7 @@ class ViewMenu:
     
     # Let's create our own nice little popup menu :)
     def on_button(self, view, event, *args):
-        self.give_text_focus = self.gui.text.has_focus
+        self.give_text_focus = self.text.has_focus
         if event.button == 3 and not self.popup_open:
             self.menu_no_fake_move = True
             
@@ -124,7 +124,7 @@ class ViewMenu:
             return True
     
     def add_menu_link(self, menu, name, callback, *args):
-        item = gtk.MenuItem(name)
+        item = gtk.MenuItem(name.replace('_', '__'))
         item.connect('activate', callback, *args)
         menu.append(item)
     
@@ -138,7 +138,7 @@ class ViewMenu:
             self.fake_move((-1.0, -1.0))
         
         self.popup_open = False
-        self.gui.text.html_focus()
+        self.text.html_focus()
     
     
     # Menu Building ------------------------------------------------------------
