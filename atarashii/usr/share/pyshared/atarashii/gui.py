@@ -79,9 +79,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.is_on_multi_button = False
         self.multi_image = gtb.get_object('multi_image')
         self.multi_button = gtb.get_object('multi')
-        self.multi_button_background = \
-                          self.multi_button.get_style().bg[gtk.STATE_NORMAL]
-        
         self.multi_button.connect('enter-notify-event', self.on_multi_enter)
         self.multi_button.connect('leave-notify-event', self.on_multi_leave)
         self.multi_button.connect('button-press-event', self.on_multi_press)
@@ -382,7 +379,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     def on_multi_leave(self, button, event):
         self.is_on_multi_button = False
         self.multi_button.modify_bg(gtk.STATE_NORMAL,
-                                   self.multi_button_background)
+                          self.get_style().bg[gtk.STATE_NORMAL])
     
     def on_multi_press(self, button, event):
         self.multi_button.modify_bg(gtk.STATE_NORMAL,
