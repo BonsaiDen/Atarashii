@@ -42,10 +42,11 @@ class TrayIcon(gtk.StatusIcon):
         self.tooltip_icon = None
         self.tooltip_buf = None
         self.tooltip_markup = ''
+        self.tooltip_special_icon = False
         
         # Create Tray Icon
         gtk.StatusIcon.__init__(self)
-        self.set_from_file(gui.main.get_image())
+        self.set_from_file(self.main.get_image())
         self.set_visible(True)
         
         # FIXME This breaks in older gtk versions
@@ -110,7 +111,7 @@ class TrayIcon(gtk.StatusIcon):
         if self.new_gtk_version:
             item = gtk.ImageMenuItem(image)
             item.set_label(text)
-            
+        
         else:
             item = gtk.MenuItem(text)
         
@@ -139,6 +140,10 @@ class TrayIcon(gtk.StatusIcon):
             self.tooltip_buf = gtk.gdk.pixbuf_new_from_file_at_size(img, 48, 48)
             self.tooltip_img_file = img
         
+        if self.tooltip_special_icon:
+            self.set_from_file(self.main.get_image())
+            self.tooltip_special_icon = False
+        
         self.tooltip_changed = True
     
     def set_tooltip_error(self, status, icon):
@@ -147,6 +152,8 @@ class TrayIcon(gtk.StatusIcon):
         
         self.tooltip_icon = icon
         self.tooltip_changed = True
+        self.set_from_stock(self.tooltip_icon)
+        self.tooltip_special_icon = True
     
     
     # Events -------------------------------------------------------------------
@@ -154,7 +161,8 @@ class TrayIcon(gtk.StatusIcon):
     def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
         if self.tooltip_changed:
             if self.tooltip_icon is not None:
-                self.tooltip_img.set_from_stock(self.tooltip_icon, 6)
+                self.tooltip_img.set_from_stock(self.tooltip_icon,
+                                                gtk.ICON_SIZE_DIALOG)
             
             elif self.tooltip_buf is not None:
                 self.tooltip_img.set_from_pixbuf(self.tooltip_buf)
