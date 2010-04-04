@@ -66,6 +66,8 @@ class TrayIcon(gtk.StatusIcon):
         self.connect('query-tooltip', self.on_tooltip)
         
         # Create Tray Menu
+        self.accel = gtk.AccelGroup()
+        self.gui.add_accel_group(self.accel)
         self.menu = gtk.Menu()
         
         # Do we have a recent version of gtk?
@@ -113,7 +115,14 @@ class TrayIcon(gtk.StatusIcon):
             item.set_label(text)
         
         else:
-            item = gtk.MenuItem(text)
+            item = gtk.MenuItem(text, self.accel)
+        
+        # Add accelerator
+        pos = text.find('_')
+        if pos != -1 and pos < len(text) - 1:
+            key = ord(text[pos + 1].lower())
+            item.add_accelerator('activate', self.accel, key, gtk.gdk.CONTROL_MASK,
+                                 gtk.ACCEL_VISIBLE)
         
         item.connect('activate', callback)
         self.menu.append(item)
