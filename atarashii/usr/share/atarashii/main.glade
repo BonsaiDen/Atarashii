@@ -210,10 +210,11 @@
                         </child>
                         <child type="tab">
                           <object class="GtkLabel" id="tab_tweets">
-                            <property name="width_request">85</property>
+                            <property name="width_request">100</property>
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Tweets</property>
                             <property name="use_markup">True</property>
+                            <property name="ellipsize">middle</property>
                             <property name="track_visited_links">False</property>
                           </object>
                           <packing>
@@ -233,10 +234,11 @@
                         </child>
                         <child type="tab">
                           <object class="GtkLabel" id="tab_messages">
-                            <property name="width_request">85</property>
+                            <property name="width_request">100</property>
                             <property name="visible">True</property>
                             <property name="label" translatable="yes">Messages</property>
                             <property name="use_markup">True</property>
+                            <property name="ellipsize">middle</property>
                             <property name="track_visited_links">False</property>
                           </object>
                           <packing>
