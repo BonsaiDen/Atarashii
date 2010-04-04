@@ -19,6 +19,7 @@
 import view
 
 from language import LANG as lang
+from utils import menu_escape
 
 from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, MODE_TWEETS, \
                       HTML_UNSET_ID
@@ -229,23 +230,25 @@ class HTML(view.HTMLView):
         if user is not None:
             if link in ('profile', 'avatar'):
                 reply = 'reply:%s:%d:-1' % (user, item_id)
-                self.add_menu_link(menu, lang.context_reply % user,
+                self.add_menu_link(menu, lang.context_reply % menu_escape(user),
                                    self.context_link, reply, item)
             
             else:
                 reply = 'reply:%s:-1:-1' % user
-                self.add_menu_link(menu, lang.context_tweet % user,
+                self.add_menu_link(menu, lang.context_tweet % menu_escape(user),
                                    self.context_link, reply)
         
             self.add_menu_separator(menu)
             message = 'message:%s:-1:-1' % user
-            self.add_menu_link(menu, lang.context_message % user,
+            self.add_menu_link(menu, lang.context_message % menu_escape(user),
                                self.context_link, message)
         
         # Source
         elif link == 'source':
             source = self.get_source(item)
-            self.add_menu_link(menu, lang.context_source % lang.name(source),
+            self.add_menu_link(menu,
+                               lang.context_source \
+                               % lang.name(menu_escape(source)),
                                self.context_link, full)
         
         # More
@@ -259,7 +262,8 @@ class HTML(view.HTMLView):
             # RT old
             name = self.get_user(item).screen_name
             full = 'retweet:%s' % RETWEET_OLD
-            self.add_menu_link(menu, lang.context_retweet_old % name,
+            self.add_menu_link(menu,
+                               lang.context_retweet_old % menu_escape(name),
                                self.context_link, full, item)
             
             # RT New
@@ -267,7 +271,8 @@ class HTML(view.HTMLView):
                and not self.get_protected(item):
                 
                 full = 'retweet:%s' % RETWEET_NEW
-                self.add_menu_link(menu, lang.context_retweet_new % name,
+                self.add_menu_link(menu,
+                                   lang.context_retweet_new % menu_escape(name),
                                    self.context_link, full, item)
             
             # Edit / Delete

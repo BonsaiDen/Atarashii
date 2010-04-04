@@ -22,7 +22,7 @@ import gtk
 import gobject
 
 from language import LANG as lang
-from utils import URLExpander, escape
+from utils import URLExpander, escape, menu_escape
 
 
 # This is the hacked part of Atarashii, getting this menu to work is quite a
@@ -124,7 +124,7 @@ class ViewMenu:
             return True
     
     def add_menu_link(self, menu, name, callback, *args):
-        item = gtk.MenuItem(name.replace('_', '__'))
+        item = gtk.MenuItem(name)
         item.connect('activate', callback, *args)
         menu.append(item)
     
@@ -157,7 +157,8 @@ class ViewMenu:
                 # Profile
                 if link in ('user', 'profile', 'rprofile', 'avatar'):
                     user = full[full.rfind('/') + 1:]
-                    self.add_menu_link(menu, lang.context_profile % user,
+                    self.add_menu_link(menu,
+                                       lang.context_profile % menu_escape(user),
                                        self.context_link, full)
                 
                 else:

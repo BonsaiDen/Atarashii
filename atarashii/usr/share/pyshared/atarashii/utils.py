@@ -56,6 +56,9 @@ def unescape(text):
     
     return text
 
+def menu_escape(text):
+    return text.replace('_', '__')
+
 def strip_tags(text):
     return STRIP.sub('', text)
 
