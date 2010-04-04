@@ -10,6 +10,7 @@ atarashii (0.99.19-1) all;
     something went wrong.
   * Fix the positioning of the tray menu, it's now conform with other GNOME 
     apps.
+  * Added keyboard accelerators to all menus.
   * Fix an issue with text beeing cut off in the settings dialog under certain
     font sizes.
   * Reduce the lag between view and statusbar updates after a refresh.
