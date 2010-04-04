@@ -225,7 +225,7 @@ LANG = {
         'error_crashed__python_title': 'Snake? Snake? Snaaaaaaaaaaake!',
         'error_crashed_python': 
             'Es handelt sich um einen <b>internen</b> Fehler das Log finden '
-            'sie <a href="file://%s">hier</a>.',
+            'S <a href="file://%s">hier</a>.',
         
         # User Errors
         'error_title': 'Atarashii - Fehler',
@@ -233,8 +233,7 @@ LANG = {
             'Die Anmeldung als <b>%s</b> ist fehlgeschlagen.',
         
         'error_already_retweeted':
-            'Es ist entweder nicht möglich diesen Tweet zu retweeten '
-            'oder er wurde bereits von ihnen retweeted.',
+            'Dieser Tweet wurde bereits von Ihnen retweeted.',
         
         'error_user_not_found': 'Der Benutzer <b>%s</b> existiert nicht.',
         'error_duplicate': 'Sie haben dies bereits getweetet.',
@@ -270,7 +269,7 @@ LANG = {
             'Twitter Requestlimit wurde überschritten.\n'
             'Automatische Aktualisierung in %d Minute(n).',
         
-        'error_template': '<b>Fehler von %H:%M:%S Uhr</b>\n',
+        'error_template': '<b>Fehler von %H:%M:%S:</b>\n',
         
         # Warning Dialogs
         'warning_title': 'Atarashii - Warnung',
@@ -296,7 +295,7 @@ LANG = {
             'es wird alle %d Sekunden versucht die Verbindung '
             'wiederherzustellen.',
         
-        'warning_template': '<b>Warnung von %H:%M:%S Uhr</b>\n',
+        'warning_template': '<b>Warnung von %H:%M:%S:</b>\n',
         
         # Buttons
         'button_open': 'Für weitere Informationen klicken',
@@ -534,10 +533,10 @@ LANG = {
         # Delete Dialogs
         'delete_title': 'Confirm delete',
         'delete_tweet_question':
-        '<b>Are you sure to delete this Tweet?</b>\n<i>%s</i>',
+            '<b>Are you sure to delete this Tweet?</b>\n<i>%s</i>',
         
         'delete_message_question':
-        '<b>Are you sure to delete this Message?</b>\n<i>%s</i>',
+            '<b>Are you sure to delete this Message?</b>\n<i>%s</i>',
         
         'delete_info_title': 'Deletion successful',
         'delete_info_tweet': 'The Tweet has been successfully deleted.',
@@ -563,8 +562,7 @@ LANG = {
         'error_title': 'Atarashii - Error',
         'error_login': 'The login as <b>%s</b> has failed.',
         'error_already_retweeted':
-            'Either it\'s not possible to retweet this Tweet or '
-            'you\'ve already retweeted it.',
+            'You\'ve already retweeted this Tweet.',
         
         'error_user_not_found': 'The user <b>%s</b> does not exist.',
         'error_duplicate': 'You\'ve already tweeted this.',
