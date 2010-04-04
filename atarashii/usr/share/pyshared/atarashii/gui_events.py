@@ -51,8 +51,36 @@ class GUIEventHandler:
     
     # Handlers -----------------------------------------------------------------
     # --------------------------------------------------------------------------
+    def on_multi_enter(self, button, event, mouse=True):
+        if mouse:
+            self.is_on_multi_button = True
+        
+        self.multi_button.modify_bg(gtk.STATE_NORMAL,
+                          self.tabs.get_style().bg[gtk.STATE_NORMAL])
+    
+    def on_multi_leave(self, button, event):
+        self.is_on_multi_button = False
+        self.multi_button.modify_bg(gtk.STATE_NORMAL,
+                          self.get_style().bg[gtk.STATE_NORMAL])
+    
+    def on_multi_press(self, button, event):
+        self.multi_button.modify_bg(gtk.STATE_NORMAL,
+                          self.multi_button.get_style().bg[gtk.STATE_ACTIVE])
+    
+    def on_multi_release(self, button, event):
+        self.on_multi_enter(button, event, mouse=False)
+        if self.is_on_multi_button:
+            if self.multi_state == BUTTON_REFRESH:
+                self.on_refresh()
+            
+            elif self.multi_state == BUTTON_HISTORY:
+                self.on_history()
+            
+            else:
+                self.on_read()
+    
     def on_refresh(self, *args):
-        self.set_refresh_update(False, status = False)
+        self.set_multi_button(False, status = False)
         if self.mode == MODE_MESSAGES:
             self.main.updater.unwait(messages = True)
         
@@ -60,18 +88,8 @@ class GUIEventHandler:
             self.main.updater.unwait(tweets = True)
     
     def on_refresh_all(self, button, menu=None):
-        self.set_refresh_update(False, status = False)
+        self.set_multi_button(False, status = False)
         self.main.updater.unwait(tweets = True, messages = True)
-    
-    def on_refresh_update(self, *args):
-        if self.multi_state == BUTTON_REFRESH:
-            self.on_refresh()
-        
-        elif self.multi_state == BUTTON_HISTORY:
-            self.on_history()
-        
-        else:
-            self.on_read()
     
     def on_history(self, *args):
         if self.mode == MODE_MESSAGES:
@@ -105,7 +123,7 @@ class GUIEventHandler:
             self.message_scroll.show()
             self.message.focus_me()
             self.message.fix_scroll()
-            self.set_refresh_update(True)
+            self.set_multi_button(True)
             
             if self.message.load_state == HTML_LOADING:
                 self.show_progress()
@@ -119,7 +137,7 @@ class GUIEventHandler:
             self.html_scroll.show()
             self.html.focus_me()
             self.html.fix_scroll()
-            self.set_refresh_update(True)
+            self.set_multi_button(True)
             
             if self.html.load_state == HTML_LOADING:
                 self.show_progress()

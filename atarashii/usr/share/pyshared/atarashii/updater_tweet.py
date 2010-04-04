@@ -136,7 +136,7 @@ class UpdaterTweet:
         def update_view():
             self.html.push_updates()
             self.gui.show_input()
-            self.gui.set_refresh_update(True)
+            self.gui.set_multi_button(True)
         
         gobject.idle_add(update_view)
 

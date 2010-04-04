@@ -155,13 +155,13 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.items = self.items[self.history_count:]
         self.set_item_count(self.get_item_count() - self.history_count)
         self.history_count = 0
-        self.gui.set_refresh_update(True)
+        self.gui.set_multi_button(True)
         self.render()
     
     def read(self):
         if self.init_id != self.get_latest():
             self.init_id = self.get_latest()
-            self.gui.set_refresh_update(False, True)
+            self.gui.set_multi_button(False, True)
             if not self.history_loaded:
                 pos = len(self.items) - self.item_count
                 if pos < 0:

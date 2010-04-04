@@ -237,7 +237,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.text.resize(1)
         
         self.text.set_sensitive(True)
-        self.set_refresh_update(True)
+        self.set_multi_button(True)
         self.tabs.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL))
     
     def progress_activity(self):
@@ -272,7 +272,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.progress_visible = False
         
         self.text_scroll.hide()
-        self.set_refresh_update(False, None, False, True)
+        self.set_multi_button(False, None, False, True)
         self.tabs.set_sensitive(False)
         self.warning_button.hide()
         self.error_button.hide()
@@ -280,8 +280,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Refresh / Read / History Button ------------------------------------------
     # --------------------------------------------------------------------------
-    def set_refresh_update(self, mode, refresh_mode=None, status=True,
-                           no_read=False):
+    def set_multi_button(self, mode, refresh_mode=None, status=True,
+                         no_read = False):
+        
+        if not no_read:
+            no_read = self.main.status(ST_UPDATE)
         
         # History mode ---------------------------------------------------------
         if self.mode == MODE_MESSAGES and self.message.history_loaded:
@@ -292,14 +295,14 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         else:
             info = None
-            
+        
         if info is not None:
             self.multi_state = BUTTON_HISTORY
             self.multi_button.set_tooltip_text(info)
             self.multi_image.set_from_stock(gtk.STOCK_GOTO_TOP,
                                             gtk.ICON_SIZE_MENU)
             
-            self.multi_button.set_sensitive(True)
+            self.multi_button.set_sensitive(not no_read)
             if status:
                 self.update_status()
             
@@ -371,27 +374,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             if status:
                 self.update_status()
     
-    def on_multi_enter(self, button, event, mouse=True):
-        if mouse:
-            self.is_on_multi_button = True
-        
-        self.multi_button.modify_bg(gtk.STATE_NORMAL,
-                          self.tabs.get_style().bg[gtk.STATE_NORMAL])
-    
-    def on_multi_leave(self, button, event):
-        self.is_on_multi_button = False
-        self.multi_button.modify_bg(gtk.STATE_NORMAL,
-                          self.get_style().bg[gtk.STATE_NORMAL])
-    
-    def on_multi_press(self, button, event):
-        self.multi_button.modify_bg(gtk.STATE_NORMAL,
-                          self.multi_button.get_style().bg[gtk.STATE_ACTIVE])
-    
-    def on_multi_release(self, button, event):
-        self.on_multi_enter(button, event, mouse=False)
-        if self.is_on_multi_button:
-            self.on_refresh_update()
-    
     
     # Statusbar ----------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -430,7 +412,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             pass
         
         elif self.main.status(ST_UPDATE):
-            self.set_refresh_update(False, None, False)
+            self.set_multi_button(False, None, False, True)
             self.set_status(lang.status_update)
         
         elif self.main.refresh_time == UNSET_TIMEOUT \
@@ -451,7 +433,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 wait = 0
             
             if wait == 0:
-                self.set_refresh_update(False, None, False)
+                self.set_multi_button(False, None, False, True)
                 self.set_status(lang.status_update)
             
             elif wait == 1:

@@ -199,7 +199,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                     gobject.idle_add(self.gui.show_input)
                 
                 else:
-                    gobject.idle_add(self.gui.set_refresh_update, True)
+                    gobject.idle_add(self.gui.set_multi_button, True)
             
             else:
                 self.message.load_state = HTML_RESET
@@ -212,7 +212,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                     gobject.idle_add(self.gui.show_input)
                 
                 else:
-                    gobject.idle_add(self.gui.set_refresh_update, True)
+                    gobject.idle_add(self.gui.set_multi_button, True)
             
             else:
                 self.message.load_state = HTML_RESET
@@ -231,7 +231,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # Init Timer
         gobject.idle_add(self.main.save_settings, True)
         self.main.refresh_time = calendar.timegm(time.gmtime())
-        gobject.idle_add(self.gui.set_refresh_update, True)
+        gobject.idle_add(self.gui.set_multi_button, True)
     
     
     # Mainloop -----------------------------------------------------------------
@@ -279,10 +279,11 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
            + self.main.refresh_timeout or self.refresh_now \
            or self.refresh_messages:
             
-            self.main.set_status(ST_UPDATE)
-            self.update()
             self.refresh_messages = False
             self.refresh_now = False
+            self.main.set_status(ST_UPDATE)
+            gobject.idle_add(self.gui.set_multi_button, False, None, True, True)
+            self.update()
             return True
         
     def end_update(self):
@@ -290,13 +291,14 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         self.main.unset_status(ST_UPDATE)
         
         self.main.refresh_time = calendar.timegm(time.gmtime())
-        gobject.idle_add(self.gui.set_refresh_update,
+        gobject.idle_add(self.gui.set_multi_button,
                          not self.main.status(ST_NETWORK_FAILED))
     
     
     # Update -------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def update(self):
+        
         # Tweets
         updates = []
         if not self.refresh_messages:
@@ -362,7 +364,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             # Update GUI
             self.finish = True
         
-        gobject.idle_add(self.gui.set_refresh_update, False, None, True, False)
         gobject.idle_add(update_views, updates, messages)
         return True
     
@@ -457,7 +458,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         if init: # Finish the login
             self.started = True
             gobject.idle_add(self.main.on_login)
-            gobject.idle_add(self.gui.set_refresh_update, True)
+            gobject.idle_add(self.gui.set_multi_button, True)
         
         if last: # Show login notification
             gobject.idle_add(self.main.show_start_notifications)

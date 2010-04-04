@@ -209,7 +209,7 @@ class Atarashii(AtarashiiActions):
         if self.gui.settings_dialog is not None:
             self.gui.settings_dialog.activate(True)
         
-        self.gui.set_refresh_update(False, None, False)
+        self.gui.set_multi_button(False, None, False)
         self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_app_title()
         self.gui.hide_all()

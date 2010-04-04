@@ -319,7 +319,7 @@ class AtarashiiActions:
             code = ERR_NETWORK_FAILED
             if self.status(ST_LOGIN_SUCCESSFUL):
                 code = ERR_NETWORK_TWITTER_FAILED
-                self.gui.set_refresh_update(True)
+                self.gui.set_multi_button(True)
                 self.gui.tray.refresh_menu.set_sensitive(False)
         
         # Catch common Twitter errors
@@ -347,7 +347,7 @@ class AtarashiiActions:
                 if code == HT_400_BAD_REQUEST and not self.status(ST_WAS_SEND) \
                    or code == HT_403_FORBIDDEN and self.status(ST_WAS_SEND):
                     
-                    self.gui.set_refresh_update(False)
+                    self.gui.set_multi_button(False)
                     self.gui.tray.refresh_menu.set_sensitive(False)
                     code, rate_error = self.reconnect()
                 
