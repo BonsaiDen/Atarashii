@@ -82,6 +82,7 @@ def compare_sub(item_x, item_y):
 # URL Shortener / Expander------------------------------------------------------
 # ------------------------------------------------------------------------------
 import urllib2
+import urlparse
 import httplib
 import threading
 import time
@@ -136,13 +137,27 @@ class URLShorter(threading.Thread):
             return self.__class__.url_list[url]
         
         try:
-            short = urllib2.urlopen(SHORTS[api] % urllib2.quote(url)).read()
+            short = self.try_shorten(url, api)
             self.__class__.url_list[url] = short
             return short
         
         except IOError:
             self.__class__.black_list.append(url)
             return url
+    
+    def try_shorten(self, url, api):
+        parsed_url = urlparse.urlparse(url)
+        
+        # Special treating of youtube links
+        if parsed_url.netloc.find('youtube.com') != -1 \
+           and parsed_url.path == '/watch':
+            video = urlparse.parse_qs(parsed_url.query).get('v', None)
+            if video is not None:
+                return 'http://youtu.be/%s' % video[0]
+        
+        # Handle everything else
+        else:
+            return urllib2.urlopen(SHORTS[api] % urllib2.quote(url)).read()
     
     @classmethod
     def reset(cls):
