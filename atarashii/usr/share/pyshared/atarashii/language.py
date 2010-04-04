@@ -305,20 +305,16 @@ LANG = {
         'tool_refresh': 'Tweets aktualisieren',
         'tool_history': 'Ältere Tweets zurücksetzen',
         'tool_read': 'Alle Tweets als gelesen markieren',
-        'tool_mode': 'Nachrichten',
-        'tool_settings': 'Einstellungen öffnen',
-        'tool_about': 'Über Atarashii',
-        'tool_quit': 'Atarashii beenden',
         'tool_refresh_message': 'Nachrichten aktualisieren',
         'tool_history_message': 'Ältere Nachrichten entfernen',
         'tool_read_message': 'Alle Nachrichten als gelesen markieren',
         
         # Tray Menu
-        'menu_update': 'Aktualisieren',
-        'menu_read': 'Alle als gelesen markieren',
-        'menu_settings': 'Einstellungen',
-        'menu_about': 'Über Atarashii',
-        'menu_quit': 'Beenden',
+        'menu_update': 'Akt_ualisieren',
+        'menu_read': 'Alle als _gelesen markieren',
+        'menu_settings': '_Einstellungen',
+        'menu_about': 'Über _Atarashii',
+        'menu_quit': '_Beenden',
         
         # Tray Tooltip
         'tray_title': 'Atarashii',
@@ -341,22 +337,22 @@ LANG = {
         'tray_error_rate_limit': 'Requestlimit überschritten.',
         
         # Context Menu
-        'context_browser': 'Im Browser öffnen',
-        'context_copy': 'Link kopieren',
-        'context_copy_tweet': 'Tweet kopieren',
-        'context_copy_message': 'Nachricht kopieren',
+        'context_browser': 'Im _Browser öffnen',
+        'context_copy': 'Link _kopieren',
+        'context_copy_tweet': 'Tweet _kopieren',
+        'context_copy_message': 'Nachricht _kopieren',
         'context_profile': '%s auf Twitter.com',
-        'context_reply': '%s antworten...',
-        'context_tweet': 'Tweet an %s...',
-        'context_message': 'Nachricht an %s...',
-        'context_source': '%s Homepage',
+        'context_reply': '%s _antworten...',
+        'context_tweet': '_Tweet an %s...',
+        'context_message': '_Nachricht an %s...',
+        'context_source': '%s _Homepage',
         'context_view': 'Auf Twitter.com aufrufen',
         'context_search': 'Auf Twitter.com suchen',
-        'context_retweet_old': '%s via RT retweeten',
-        'context_retweet_new': '%s via Twitter retweeten',
-        'context_delete_tweet': 'Tweet löschen',
-        'context_delete_message': 'Nachricht löschen',
-        'context_edit_tweet': 'Tweet bearbeiten'
+        'context_retweet_old': '%s via _RT retweeten',
+        'context_retweet_new': '%s via _Twitter retweeten',
+        'context_delete_tweet': 'Tweet _löschen',
+        'context_delete_message': 'Nachricht _löschen',
+        'context_edit_tweet': 'Tweet _bearbeiten'
     },
     
     # English ------------------------------------------------------------------
@@ -632,20 +628,16 @@ LANG = {
         'tool_refresh': 'Refresh Tweets',
         'tool_history': 'Reset History',
         'tool_read': 'Mark all Tweets as read',
-        'tool_mode': 'Messages',
-        'tool_settings': 'Open Preferences',
-        'tool_about': 'About Atarashii',
-        'tool_quit': 'Quit Atarashii',
         'tool_refresh_message': 'Refresh Message',
         'tool_history_message': 'Remove History',
         'tool_read_message': 'Mark all Messages as read',
         
         # Tray Menu
-        'menu_update': 'Refresh',
-        'menu_read': 'Mark all as read',
-        'menu_settings': 'Preferences',
-        'menu_about': 'About Atarashii',
-        'menu_quit': 'Quit',
+        'menu_update': '_Refresh',
+        'menu_read': '_Mark all as read',
+        'menu_settings': '_Preferences',
+        'menu_about': 'About _Atarashii',
+        'menu_quit': '_Quit',
         
         # Tray Tooltip
         'tray_title': 'Atarashii',
@@ -668,22 +660,22 @@ LANG = {
         'tray_error_rate_limit': 'Ratelimit exceeded.',
         
         # Context Menu
-        'context_browser': 'Open in Browser',
-        'context_copy': 'Copy link location',
-        'context_copy_tweet': 'Copy Tweet',
-        'context_copy_message': 'Copy Message',
+        'context_browser': 'Open in _Browser',
+        'context_copy': '_Copy link location',
+        'context_copy_tweet': '_Copy Tweet',
+        'context_copy_message': '_Copy Message',
         'context_profile': 'Visit %s on Twitter.com',
-        'context_reply': 'Reply to %s...',
-        'context_tweet': 'Tweet to %s...',
-        'context_message': 'Message to %s...',
-        'context_source': '%s Homepage',
+        'context_reply': '_Reply to %s...',
+        'context_tweet': '_Tweet to %s...',
+        'context_message': '_Message to %s...',
+        'context_source': '%s _Homepage',
         'context_view': 'View on Twitter.com',
         'context_search': 'Search on Twitter.com',
-        'context_retweet_old': 'Retweet %s via RT',
-        'context_retweet_new': 'Retweet %s via Twitter',
-        'context_delete_tweet': 'Delete Tweet',
-        'context_delete_message': 'Delete Message',
-        'context_edit_tweet': 'Edit Tweet'
+        'context_retweet_old': 'Retweet %s via _RT',
+        'context_retweet_new': 'Retweet %s via _Twitter',
+        'context_delete_tweet': '_Delete Tweet',
+        'context_delete_message': '_Delete Message',
+        'context_edit_tweet': '_Edit Tweet'
     }
 }
 
