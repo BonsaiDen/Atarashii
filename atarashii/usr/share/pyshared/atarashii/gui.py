@@ -279,87 +279,95 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     # Refresh / Read / History Button ------------------------------------------
     # --------------------------------------------------------------------------
     def set_multi_button(self, mode, refresh_mode=None, status=True,
-                         no_read = False):
+                         no_read = False): 
         
-        if not no_read:
-            no_read = self.main.status(ST_UPDATE)
-        
-        # History mode ---------------------------------------------------------
+        # History mode
         if self.mode == MODE_MESSAGES and self.message.history_loaded:
-            info = lang.multi_history_message
+            history_info = lang.multi_history_message
+            history_mode = True
         
         elif self.mode == MODE_TWEETS and self.html.history_loaded:
-            info = lang.multi_history
+            history_info = lang.multi_history
+            history_mode = True
         
         else:
-            info = None
+            history_info = None
+            history_mode = False
         
-        if info is not None:
-            self.multi_state = BUTTON_HISTORY
-            self.multi_button.set_tooltip_text(info)
-            self.multi_image.set_from_stock(gtk.STOCK_GOTO_TOP,
-                                            gtk.ICON_SIZE_MENU)
-            
-            self.multi_button.set_sensitive(not no_read)
-            if status:
-                self.update_status()
-            
-            return
-        
-        
-        # Toggle to read mode --------------------------------------------------
-        if self.mode == MODE_MESSAGES and not no_read:
+        # Read mode
+        if self.mode == MODE_MESSAGES:
             read_mode = self.message.last_id > self.message.init_id
+            read_icon = read_mode
             
-        elif self.mode == MODE_TWEETS and not no_read:
+        elif self.mode == MODE_TWEETS:
             read_mode = self.html.last_id > self.html.init_id
+            read_icon = read_mode
         
         else:
-            read_mode = False
-                
-        # Set Sensitive
-        self.multi_button.set_sensitive(read_mode)
-        self.tray.read_menu.set_sensitive(read_mode)
+            read_mode = False 
+            read_icon = False
         
-        # Set icon and mode
-        if info is None and read_mode:
-            
+        # Refresh mode
+        if refresh_mode is not None:
+            mode = refresh_mode
+    
+        if not self.is_ready() or read_mode or history_info is not None:
+            mode = False
+        
+        if self.main.status(ST_UPDATE) or no_read:
+            history_mode = False
+            read_mode = False
+            mode = False
+        
+        # Sensitivity
+        self.tray.read_menu.set_sensitive(read_mode)
+        self.tray.refresh_menu.set_sensitive(mode)   
+        
+        # Icon
+        if history_info != None:
+            multi_icon = gtk.STOCK_GOTO_TOP
+        
+        elif read_icon:
+            multi_icon = gtk.STOCK_OK
+        
+        else:
+            multi_icon = gtk.STOCK_REFRESH
+        
+        self.multi_image.set_from_stock(multi_icon, gtk.ICON_SIZE_MENU)
+        
+        # Status
+        if status:
+            self.update_status()
+        
+        # Set History
+        if history_info is not None:
+            self.multi_state = BUTTON_HISTORY
+            self.multi_button.set_tooltip_text(history_info)
+            self.multi_button.set_sensitive(history_mode)
+        
+        # Set Read
+        elif read_mode:
             self.multi_state = BUTTON_READ
-            self.multi_image.set_from_stock(gtk.STOCK_OK, gtk.ICON_SIZE_MENU)
+            self.multi_button.set_sensitive(read_mode)
             
             # Set Tooltip
             if self.mode == MODE_TWEETS:
                 self.multi_button.set_tooltip_text(lang.multi_read)
             
             elif self.mode == MODE_MESSAGES:
-                self.multi_button.set_tooltip_text( lang.multi_read_message)
+                self.multi_button.set_tooltip_text(lang.multi_read_message)
+        
+        # Set Refresh
+        else:
+            self.multi_state = BUTTON_REFRESH
+            self.multi_button.set_sensitive(mode)
             
-            if status:
-                self.update_status()
+            # Set Tooltip
+            if self.mode == MODE_TWEETS:
+                self.multi_button.set_tooltip_text(lang.multi_refresh)
             
-            return
-        
-        # Toggle to refresh mode -----------------------------------------------
-        if refresh_mode is not None:
-            mode = refresh_mode
-    
-        if not self.is_ready():
-            mode = False
-    
-        # Set icon and mode
-        self.multi_state = BUTTON_REFRESH
-        self.multi_image.set_from_stock(gtk.STOCK_REFRESH, gtk.ICON_SIZE_MENU)
-    
-        # Set Sensitive
-        self.multi_button.set_sensitive(mode)
-        self.tray.refresh_menu.set_sensitive(mode)
-        
-        # Set Tooltip
-        if self.mode == MODE_TWEETS:
-            self.multi_button.set_tooltip_text(lang.multi_refresh)
-        
-        elif self.mode == MODE_MESSAGES:
-            self.multi_button.set_tooltip_text(lang.multi_refresh_message)
+            elif self.mode == MODE_MESSAGES:
+                self.multi_button.set_tooltip_text(lang.multi_refresh_message)
         
         # Check for message/tweet switch
         if self.is_ready():
@@ -368,9 +376,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             elif self.text.tweet_to_send is not None:
                 self.set_mode(MODE_TWEETS)
-            
-            if status:
-                self.update_status()
     
     
     # Statusbar ----------------------------------------------------------------
