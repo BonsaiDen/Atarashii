@@ -51,10 +51,8 @@ class GUIEventHandler:
     
     # Handlers -----------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def on_multi_enter(self, button, event, mouse=True):
-        if mouse:
-            self.is_on_multi_button = True
-        
+    def on_multi_enter(self, button, event):
+        self.is_on_multi_button = False
         self.multi_button.modify_bg(gtk.STATE_NORMAL,
                           self.tabs.get_style().bg[gtk.STATE_NORMAL])
     
@@ -64,11 +62,14 @@ class GUIEventHandler:
                           self.get_style().bg[gtk.STATE_NORMAL])
     
     def on_multi_press(self, button, event):
+        self.is_on_multi_button = True
         self.multi_button.modify_bg(gtk.STATE_NORMAL,
                           self.multi_button.get_style().bg[gtk.STATE_ACTIVE])
     
     def on_multi_release(self, button, event):
-        self.on_multi_enter(button, event, mouse=False)
+        self.multi_button.modify_bg(gtk.STATE_NORMAL,
+                          self.tabs.get_style().bg[gtk.STATE_NORMAL])
+        
         if self.is_on_multi_button:
             if self.multi_state == BUTTON_REFRESH:
                 self.on_refresh()
