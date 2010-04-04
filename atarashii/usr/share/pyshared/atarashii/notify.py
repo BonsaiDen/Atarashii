@@ -31,12 +31,10 @@ class Notifier:
         self.items = []
         
         try:
-            bus = dbus.SessionBus()
-            self.notify = dbus.Interface(
-                               bus.get_object('org.freedesktop.Notifications',
-                                              '/org/freedesktop/Notifications'),
-                                              'org.freedesktop.Notifications')
+            obj = dbus.SessionBus().get_object('org.freedesktop.Notifications',
+                                               '/org/freedesktop/Notifications')
             
+            self.notify = dbus.Interface(obj, 'org.freedesktop.Notifications')
             self.notify.connect_to_signal('NotificationClosed', self.show)
         
         except dbus.exceptions.DBusException:
