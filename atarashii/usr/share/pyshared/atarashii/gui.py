@@ -215,8 +215,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         else:
             self.show_progress()
         
-        #gobject.timeout_add(250, lambda: self.error_button.show("foo", "bla"))
-        #gobject.timeout_add(250,lambda: self.warning_button.show("foo", "bla"))
         self.is_shown = True
     
     def force_show(self):
@@ -502,7 +500,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         code = self.main.settings['crash_reason']
         
         # Python error, link to the traceback file
-        if code == "70": #str(EX_SOFTWARE)
+        if code == '70': #str(EX_SOFTWARE)
             from settings import CRASH_LOG_FILE
             info = lang.error_crashed_python % CRASH_LOG_FILE
             title = lang.error_crashed__python_title
@@ -566,7 +564,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             msg = {
                 ERR_NETWORK_FAILED : (lang.tray_error_login \
-                                        % self.main.username) + "\n" \
+                                        % self.main.username) + '\n' \
                                         + lang.tray_warning_network,
                 
                 ERR_RATE_RECONNECT : lang.tray_error_rate,

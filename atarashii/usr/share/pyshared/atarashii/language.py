@@ -86,7 +86,7 @@ LANG = {
         
         # Notifications
         'notification_message': 'Nachricht von %s',
-        'notification_index': '%s (%d von %d)', # "Message (3 of 4)"
+        'notification_index': '%s (%d von %d)', # 'Message (3 of 4)'
         'notification_login': '%s wurde angemeldet',
         'notification_login_tweet': '%d neuer Tweet',
         'notification_login_message': '%d neue Nachricht',

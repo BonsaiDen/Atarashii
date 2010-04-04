@@ -37,7 +37,7 @@ from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \
                       MODE_MESSAGES
 
 
-# Watch out! This is one giant "Is this OK mommy?" hackery by the kittens!
+# Watch out! This is one giant 'Is this OK mommy?' hackery by the kittens!
 # You've been warned...
 # ------------------------------------------------------------------------------
 class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
@@ -189,7 +189,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         found = False
         for e, i in enumerate(self.items):
             if i[0].id == item[0].id:
-                if hasattr(i[0], "is_mentioned") and i[0].is_mentioned:
+                if hasattr(i[0], 'is_mentioned') and i[0].is_mentioned:
                     self.items.pop(e)
                     break
                 

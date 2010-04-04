@@ -31,7 +31,7 @@ finally:
 # ------------------------------------------------------------------------------
 import re
 
-STRIP = re.compile("<(.|\n)*?>")
+STRIP = re.compile('<(.|\n)*?>')
 SPACES = re.compile('\s+')
 ENTITIES = {
     '&': '&amp;',
@@ -111,7 +111,7 @@ class URLShorter(threading.Thread):
 
     def run(self):
         # Don't make multiple api calls for the same url
-        find_urls = SHORT_REGEX.findall(self.text + " ")
+        find_urls = SHORT_REGEX.findall(self.text + ' ')
         urls = []
         for url in find_urls:
             if not url[0] in urls and not url[0] in self.__class__.black_list:

@@ -33,7 +33,7 @@ def get_sound_theme(theme_name=None):
     dir_list.append(os.environ['HOME'] + '/.local/share/')
     
     for i in dir_list:
-        i += "sounds/" + theme_name + "/"
+        i += 'sounds/' + theme_name + '/'
         if os.access(i, os.F_OK):
             return i
     

@@ -93,7 +93,7 @@ class HTML(view.HTMLView):
         highlight = self.main.username.lower() in \
                     [i.lower() for i in formatted.users]
         
-        mentioned = hasattr(tweet, "is_mentioned") and tweet.is_mentioned
+        mentioned = hasattr(tweet, 'is_mentioned') and tweet.is_mentioned
         if num > 0:
             self.renderitems.insert(0,
                         self.insert_spacer(item, user, highlight, mentioned))
@@ -141,8 +141,8 @@ class HTML(view.HTMLView):
         # Source ---------------------------------------------------------------
         if tweet.source != 'web':
             if hasattr(tweet, 'source_url') and tweet.source_url != '':
-                if tweet.source_url == "/devices":
-                    tweet.source_url = "http://twitter.com/devices"
+                if tweet.source_url == '/devices':
+                    tweet.source_url = 'http://twitter.com/devices'
                 
                 by_user = lang.html_by \
                           % ('<a href="source:%s" title="%s">%s</a>' \
@@ -222,18 +222,18 @@ class HTML(view.HTMLView):
     # Create Popup Items -------------------------------------------------------
     # --------------------------------------------------------------------------
     def ok_menu(self, link):
-        return not link in ("fav", "unfav", "qreply")
+        return not link in ('fav', 'unfav', 'qreply')
     
     def create_menu(self, menu, item, item_id, link, full, user):
         # User Options
         if user is not None:
-            if link in ("profile", "avatar"):
-                reply = "reply:%s:%d:-1" % (user, item_id)
+            if link in ('profile', 'avatar'):
+                reply = 'reply:%s:%d:-1' % (user, item_id)
                 self.add_menu_link(menu, lang.context_reply % user,
                                    self.context_link, reply, item)
             
             else:
-                reply = "reply:%s:-1:-1" % user
+                reply = 'reply:%s:-1:-1' % user
                 self.add_menu_link(menu, lang.context_tweet % user,
                                    self.context_link, reply)
         
@@ -243,7 +243,7 @@ class HTML(view.HTMLView):
                                self.context_link, message)
         
         # Source
-        elif link == "source":
+        elif link == 'source':
             source = self.get_source(item)
             self.add_menu_link(menu, lang.context_source % lang.name(source),
                                self.context_link, full)
@@ -258,7 +258,7 @@ class HTML(view.HTMLView):
             
             # RT old
             name = self.get_user(item).screen_name
-            full = "retweet:%s" % RETWEET_OLD
+            full = 'retweet:%s' % RETWEET_OLD
             self.add_menu_link(menu, lang.context_retweet_old % name,
                                self.context_link, full, item)
             
@@ -266,18 +266,18 @@ class HTML(view.HTMLView):
             if name.lower() != self.main.username.lower() \
                and not self.get_protected(item):
                 
-                full = "retweet:%s" % RETWEET_NEW
+                full = 'retweet:%s' % RETWEET_NEW
                 self.add_menu_link(menu, lang.context_retweet_new % name,
                                    self.context_link, full, item)
             
             # Edit / Delete
             if name.lower() == self.main.username.lower():
                 self.add_menu_separator(menu)
-                full = "edit:%d" % item_id
+                full = 'edit:%d' % item_id
                 self.add_menu_link(menu, lang.context_edit_tweet,
                                    self.context_link, full, item)
                 
-                full = "delete:t:%d" % item_id
+                full = 'delete:t:%d' % item_id
                 self.add_menu_link(menu, lang.context_delete_tweet,
                                    self.context_link, full, item)
         

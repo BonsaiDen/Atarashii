@@ -64,7 +64,7 @@ class ViewHelpers:
         try:
             self.execute_script(
                 '''document.title=
-                   document.getElementById("newcontainer").offsetHeight;''')
+                   document.getElementById('newcontainer').offsetHeight;''')
             
             return int(self.get_main_frame().get_title())
         
@@ -73,7 +73,7 @@ class ViewHelpers:
     
     def loaded(self, *args):
         # HACK! The value of the constant might change, but currently it's not
-        # exposed to pygtk webkit and since the "load-finished" signal is
+        # exposed to pygtk webkit and since the 'load-finished' signal is
         # deprecated, it's a 50/50 chance that one of those will eventually
         # break the whole thing.. so do you want to be eaten by the tiger
         # or the lion?

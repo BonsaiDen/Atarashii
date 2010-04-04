@@ -220,7 +220,7 @@ class ViewMenu:
         try:
             self.execute_script('''
             var sizes = [];
-            var items = document.getElementsByClassName("viewitem");
+            var items = document.getElementsByClassName('viewitem');
             var pos = 0;
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
@@ -232,7 +232,7 @@ class ViewMenu:
             delete pos;
             delete items;
             var link = document.elementFromPoint(%d, %d);
-            document.title = sizes.join(";") + "|" +
+            document.title = sizes.join(';') + '|' +
             (link.href != undefined ? link.href : link.parentNode.href);
             delete link;
             delete sizes;''' % (event.x, event.y))

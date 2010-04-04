@@ -208,7 +208,7 @@ class TextInput(gtk.TextView):
                 self.set_text(UNSET_TEXT)
                 text = UNSET_TEXT
             
-            # check for "d user"
+            # check for 'd user'
             msg = MESSAGE_REGEX.match(text)
             self.message_len = 0
             if msg is not None:
@@ -237,7 +237,7 @@ class TextInput(gtk.TextView):
             elif self.main.message_id == UNSET_ID_NUM:
                 self.main.message_user = UNSET_TEXT
             
-            # check for "d user" and switch to messaging
+            # check for 'd user' and switch to messaging
             at_user = REPLY_REGEX.match(text)
             if at_user is not None:
                 if self.gui.load_state():
@@ -293,7 +293,7 @@ class TextInput(gtk.TextView):
             elif self.main.reply_id == UNSET_ID_NUM:
                 self.main.reply_user = UNSET_TEXT
             
-            # check for "d user" and switch to messaging
+            # check for 'd user' and switch to messaging
             msg = MESSAGE_REGEX.match(text)
             if msg is not None:
                 if self.gui.load_state():
