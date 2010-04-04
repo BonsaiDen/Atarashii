@@ -285,7 +285,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             gobject.idle_add(self.gui.set_multi_button, False, None, True, True)
             self.update()
             return True
-        
+    
     def end_update(self):
         gobject.idle_add(self.main.save_settings, True)
         self.main.unset_status(ST_UPDATE)
@@ -362,6 +362,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 self.message.render()
             
             # Update GUI
+            self.unwait()
             self.finish = True
         
         gobject.idle_add(update_views, updates, messages)
