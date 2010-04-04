@@ -211,7 +211,6 @@ LANG = {
         'delete_info_tweet': 'Der Tweet wurde erfolgreich gelöscht.',
         'delete_info_message': 'Die Nachricht wurde erfolgreich gelöscht.',
         
-        
         # Crash Error Dialogs
         'error_general': 
             '<span size="large"><b>Atarashii ist abgestürzt...</b></span>\n'
@@ -241,7 +240,6 @@ LANG = {
         'error_duplicate': 'Sie haben dies bereits getweetet.',
         'error_tweet_not_found': 'Dieser Tweet wurde bereits gelöscht.',
         'error_message_not_found': 'Diese Nachricht wurde bereits gelöscht.',
-        
         
         'error_network':
             'Atarashii konnte keine Verbindung zum Internet herstellen.',
@@ -638,7 +636,7 @@ LANG = {
         
         # Tray Menu
         'menu_update': '_Refresh',
-        'menu_read': '_Mark all as read',
+        'menu_read': 'Mark all as _read',
         'menu_settings': '_Preferences',
         'menu_about': 'About _Atarashii',
         'menu_quit': '_Quit',
