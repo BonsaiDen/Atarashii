@@ -83,33 +83,33 @@ class TrayIcon(gtk.StatusIcon):
         
         # Refresh
         self.refresh_menu = self.add_menu(lang.menu_update, gtk.STOCK_REFRESH,
-                                          self.gui.on_refresh_all)
+                                          'r', self.gui.on_refresh_all)
         
         # Readall
-        self.read_menu = self.add_menu(lang.menu_read, gtk.STOCK_OK,
+        self.read_menu = self.add_menu(lang.menu_read, gtk.STOCK_OK, 'm',
                                        self.gui.on_read_all)
         
         # Settings
-        self.settings_menu = self.add_menu(lang.menu_settings,
-                                           gtk.STOCK_PREFERENCES,
+        self.settings_menu = self.add_menu(lang.menu_settings, 
+                                           gtk.STOCK_PREFERENCES, 'p',
                                            lambda *args:
                                            self.gui.on_settings(None, True))
         
         # About
-        self.add_menu(lang.menu_about, gtk.STOCK_ABOUT,
+        self.add_menu(lang.menu_about, gtk.STOCK_ABOUT, 'a',
                       lambda *args: self.gui.on_about(None, True))
         
         # Separator
         self.menu.append(gtk.SeparatorMenuItem())
         
         # Quit
-        self.add_menu(lang.menu_quit, gtk.STOCK_QUIT, self.gui.on_quit)
+        self.add_menu(lang.menu_quit, gtk.STOCK_QUIT, 'q', self.gui.on_quit)
         
         # Popup
         self.menu.show_all()
         self.connect('popup-menu', self.on_popup_fake)
     
-    def add_menu(self, text, image, callback):
+    def add_menu(self, text, image, accel_key=None, callback=None):
         if self.new_gtk_version:
             item = gtk.ImageMenuItem(image)
             item.set_label(text)
@@ -118,11 +118,9 @@ class TrayIcon(gtk.StatusIcon):
             item = gtk.MenuItem(text, self.accel)
         
         # Add accelerator
-        pos = text.find('_')
-        if pos != -1 and pos < len(text) - 1:
-            key = ord(text[pos + 1].lower())
-            item.add_accelerator('activate', self.accel, key, gtk.gdk.CONTROL_MASK,
-                                 gtk.ACCEL_VISIBLE)
+        if accel_key != None:
+            item.add_accelerator('activate', self.accel, ord(accel_key),
+                                 gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
         
         item.connect('activate', callback)
         self.menu.append(item)
