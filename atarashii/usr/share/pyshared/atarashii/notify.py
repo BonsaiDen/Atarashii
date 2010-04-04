@@ -43,16 +43,7 @@ class Notifier:
             self.notify = None
     
     
-    # Try to close the last notification ---------------------------------------
-    # This might get ignored on newer version of the notification debus thingy -
-    def close(self):
-        if self.last_id == -1:
-            return
-        
-        self.notify.CloseNotification(self.last_id)
-    
-    
-    # Add new notifications to the queue ---------------------------------------
+    # Notifications ------------------------------------------------------------
     def add(self, items):
         if isinstance(items, tuple):
             items = [items]
@@ -69,8 +60,6 @@ class Notifier:
                 self.last_id = -1
                 self.show(-1)
     
-    
-    # Show a notification ------------------------------------------------------
     def show(self, item_id, *args):
         if (item_id == -1 or item_id == self.last_id) and len(self.items) > 0:
             item = self.items.pop(0)
@@ -87,9 +76,17 @@ class Notifier:
                         snd = Sound(THEME_SOUNDS[sound])
                         snd.start()
                 
-                elif self.settings['sound_' + item[3]] not in ('None', ''): 
+                elif self.settings['sound_' + item[3]] not in ('None', ''):
                     snd = Sound(self.settings['sound_' + item[3]])
                     snd.start()
+    
+    # Try to close the last notification, this might get ignored on newer 
+    # version of the notification dbus thingy
+    def close(self):
+        if self.last_id == -1:
+            return
+        
+        self.notify.CloseNotification(self.last_id)
 
 
 # Sound Player Thread ----------------------------------------------------------
