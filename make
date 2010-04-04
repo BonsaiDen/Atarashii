@@ -32,6 +32,10 @@ def getFileMD5(file):
     f.close()
     return md5.hexdigest()
 
+def getStringMD5(string):
+    md5 = hashlib.md5()
+    md5.update(string)
+    return md5.hexdigest()
 
 def update_init_file(commits, sha):
     init_file = os.path.join(sys.path[0], "atarashii/usr/share/pyshared/atarashii/__init__.py")
@@ -49,7 +53,7 @@ def update_init_file(commits, sha):
 
 
 # Get latest commit number -----------------------------------------------------
-print '---- Retrieving repo information ----'
+print "\n-- Kittens are inspecting your repository " + '-' * 37
 proc = subprocess.Popen('git shortlog -s -n', shell = True, stdout = subprocess.PIPE)
 stdout_value = proc.communicate()[0]
 commit_count = 0
@@ -64,7 +68,10 @@ stdout_value = proc.communicate()[0]
 commit_sha = stdout_value[7:14]
 
 update_init_file(commit_count, commit_sha)
-print ">> Done!"
+
+print ' ' + getStringMD5(str(commit_count))
+print ' ' + getStringMD5(str(commit_sha))
+print " = Done!"
 
 # Gather Information about the project -----------------------------------------
 sys.path.insert(0, os.path.join(sys.path[0], "atarashii/usr/share/pyshared"))
@@ -80,11 +87,10 @@ debDir = os.path.join(sys.path[0], "atarashii/DEBIAN")
 if not os.path.exists(debDir):
     os.mkdir(debDir)
 
-
-print "\n---- Packing changelog ----"
+print "\n-- Kittens are writing your changelogs " + '-' * 40
 log = os.path.join(sys.path[0], 'changelog')
 man = os.path.join(sys.path[0], 'manpage')
-print "Copying logs and manpage..."
+print ' ' + getStringMD5("Copying logs and manpage...")
 log1 = os.path.join(sys.path[0], "atarashii/usr/share/doc/atarashii/changelog")
 log2 = os.path.join(sys.path[0], "atarashii/usr/share/doc/atarashii/changelog.Debian")
 man1 = os.path.join(sys.path[0], "atarashii/usr/share/man/man1/atarashii.1")
@@ -93,7 +99,7 @@ shutil.copyfile(log, log1)
 shutil.copyfile(log, log2)
 shutil.copyfile(man, man1)
 shutil.copyfile(man, man2)
-print "Removing old logs and manpage..."
+print ' ' + getStringMD5("Removing old logs and manpage...")
 try:
     os.unlink(log1 + '.gz')
 except:
@@ -110,22 +116,24 @@ try:
     os.unlink(man2 + '.gz')
 except:
     pass
-print "Packing new logs and manpage..."
+print ' ' + getStringMD5("Packing new logs and manpage...")
 subprocess.call(["gzip", "--best", log1])
 subprocess.call(["gzip", "--best", log2])
 subprocess.call(["gzip", "--best", man1])
 subprocess.call(["gzip", "--best", man2])
-print ">> Done!"
+print " = Done!"
 
 
 # Check all files --------------------------------------------------------------
-print "\n---- Cleaning up ----"
-print "Checking files..."
+print "\n-- Kittens are calculating stuff, so you don't have to " + '-' * 24
 m = open(os.path.join(sys.path[0], "atarashii/DEBIAN/md5sums"), "w")
 size = 0
 cur = os.path.join(sys.path[0], "atarashii/usr")
 dirs = os.walk(cur)
 tempFiles = []
+deleted_count = 0
+temped_count = 0
+hashed_count = 0
 for i in dirs:
     files = i[2]
     path = os.path.join(cur, i[0])
@@ -133,33 +141,45 @@ for i in dirs:
     for f in files:
         file = os.path.join(path, f)
         if f.startswith('.'):
-            print "- temping %s" % file
+        #    print "- temping %s" % file
+            temped_count += 1
             to = os.path.join(sys.path[0], 'tmp' + f)
             tempFiles.append((file, to))
             shutil.move(file, to)
         
         elif f.endswith("~") or f.endswith(".pyc"):
             os.remove(file)
-            print "- deleting %s" % file
+            deleted_count += 1
+           # print "- deleting %s" % file
         
         else:
             if f == "atarashii" or f == "atarashiigui":
                 subprocess.call(["chmod", "644", file])
                 subprocess.call(["chmod", "+x", file])
+            
             else:
                 subprocess.call(["chmod", "644", file])
             
+            hashed_count += 1
             size += os.stat(file).st_size
             cf = file[len(cur)-3:]
             m.write("%s  %s\n" % (getFileMD5(file), cf))
 
 m.close()
-print ">> Done!"
+print ' ' + getStringMD5(str(temped_count))
+print ' ' + getStringMD5(str(deleted_count))
+print ' ' + getStringMD5(str(hashed_count))
+cc = commit_count // 3.4
+cd = int(commit_count * 5.7)
+ce = cd // cc
+tt = int(temped_count * ce)
+result = (cc * cd) / (temped_count ** hashed_count ^ deleted_count * tt)
 
-print "\n---- Packaging ----"
+print ' = (%d * %d) / (%d ** %d ^ %d * %d) = %d' % (cc, cd, temped_count, hashed_count, deleted_count,  tt, result)
+
+print "\n-- Kittens are building your package " + '-' * 42
 
 # Write control file -----------------------------------------------------------
-print "Creating control file..."
 try:
     os.remove(os.path.join(sys.path[0], "atarashii/DEBIAN/postinst~"))
     
@@ -171,7 +191,8 @@ try:
 except:
     pass
 
-c = open(os.path.join(sys.path[0], "atarashii/DEBIAN/control"), "w")
+control_file = os.path.join(sys.path[0], "atarashii/DEBIAN/control")
+c = open(control_file, "w")
 
 c.write("""Package: atarashii
 Version: """ + atarashii.__version__ + """-1
@@ -189,11 +210,9 @@ Description: Twitter Client for the GNOME Desktop
  for the GTK+ libraries.
 """)
 c.close()
-print ">> Created!"
 time.sleep(0.1) # make sure dpkg-deb finds the control file!
-print ""
+
 # Create package
-print "%s kittens are building your package..." % commit_count
 dpkg = False
 try:
     code = subprocess.call(["fakeroot", "dpkg-deb", "--build", "atarashii"], 
@@ -210,10 +229,10 @@ try:
 
 except OSError, error:
     if not dpkg:
-        print """ERROR: Could not build Atarashii package due to missing 'fakeroot'.\n       Please install 'fakeroot' via the package manager and try again."""
+        print """  ERROR: Could not build Atarashii package due to missing 'fakeroot'.\n       Please install 'fakeroot' via the package manager and try again."""
     
     else:
-        print """ERROR: dpkg-deb failed to create the package."""
+        print """  ERROR: dpkg-deb failed to create the package."""
         print error
     
     # Move all those temp files back
@@ -223,12 +242,9 @@ except OSError, error:
     update_init_file(0, "0000000")
     exit()
 
-print ">> Build complete!"
-
-print "\n---- Stats ----"
-print "Current Version is %s-%s#%s" % (atarashii.__version__, commit_sha, commit_count)
-print "Complete size is %d KB" % (size / 1024)
-print "Compressed size %d KB" % deb_size
+print ' ' + getFileMD5(control_file)
+print ' ' + getFileMD5(debfile)
+print " = Done!"
 
 # Move all those temp files back
 for file, to in tempFiles:
@@ -239,11 +255,18 @@ update_init_file(0, "0000000")
 # Check for errors
 try:
     subprocess.call(["lintian"], stdout = open("/dev/null", "wb")) 
+    print "\n-- Kittens are checking for package errors " + '-' * 36
+    subprocess.call(["lintian", "atarashii_%s-1_all.deb" % atarashii.__version__])
+    print " = Done!"
+
 except:
-    exit()
+    pass
 
-print "\n---- Checking for Errors ----"
-subprocess.call(["lintian", "atarashii_%s-1_all.deb" % atarashii.__version__])
-print ">> Done!"
-
+# Stats
+print "\n-- Kittens are showing you some stats " + '-' * 41
+print " Version: %s" % atarashii.__version__
+print ' Kittens: %d' % commit_count
+print '   Lucky: %s' % commit_sha
+print "    Size: %d KB" % (size / 1024)
+print " Compres: %d KB\n" % deb_size
 
