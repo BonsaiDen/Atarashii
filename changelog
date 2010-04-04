@@ -1,5 +1,6 @@
 atarashii (0.99.19-1) all;
 
+  * The kittens celebrated the 1000th commit to Atarashii!
   * Replace the message button with tabs and got rid of nearly all the buttons.
   * Fix a bug were direct messages would be considered as unread, even if they
     had been already read.
@@ -7,11 +8,13 @@ atarashii (0.99.19-1) all;
   * Use system sounds for login, warning and error notifications.
   * Show an warning/error icon instead of the atarashii icon in the tray, if
     something went wrong.
+  * Fix the positioning of the tray menu, it's now conform with other GNOME 
+    apps.
   * Fix an issue with text beeing cut off in the settings dialog under certain
     font sizes.
-  * The kittens celebrated the 1000th commit to Atarashii!
+  * Reduce the lag between view and statusbar updates after a refresh.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 4 Apr 2010 12:46:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 4 Apr 2010 16:52:00 +0200
 
 atarashii (0.99.18a-1) all;
 
