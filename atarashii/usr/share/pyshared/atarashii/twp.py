@@ -26,14 +26,16 @@ from language import LANG as lang
 # <http://github.com/mzsanford/twitter-text-java>
 AT_SIGNS = ur'[@\uff20]'
 UTF_CHARS = ur'a-z0-9_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u00ff'
-SPACES = ur'[\u0020\u00A0\u1680\u180E\u2002\u2003\u2004\u2005\u2006\u2007' \
-            + ur'\u2008\u2009\u200A\u200B\u200C\u200D\u202F\u205F\u2060\u3000]'
+SPACES = ur'[\u0020\u00A0\u1680\u180E\u2002-\u202F\u205F\u2060\u3000]'
+
+# Lists
+LIST_PRE_CHARS = ur'([^a-z0-9_]|^)'
+LIST_END_CHARS = ur'([a-z0-9_]{1,20})(/[a-z][a-z0-9\x80-\xFF-]{0,79})?'
+LIST_REGEX = re.compile(LIST_PRE_CHARS + '(' + AT_SIGNS + '+)' + LIST_END_CHARS,
+                        re.IGNORECASE)
 
 # Users
-USERNAME_REGEX = re.compile(ur'\B' + AT_SIGNS \
-                 + ur'([a-z0-9_]{1,20})(/[a-z][a-z0-9\\x80-\\xFF-]{0,79})?',
-                 re.IGNORECASE)
-
+USERNAME_REGEX = re.compile(ur'\B' + AT_SIGNS + LIST_END_CHARS, re.IGNORECASE)
 REPLY_REGEX = re.compile(ur'^(?:' + SPACES + ur')*' + AT_SIGNS \
               + ur'([a-z0-9_]{1,20}).*', re.IGNORECASE)
 
@@ -41,11 +43,6 @@ REPLY_REGEX = re.compile(ur'^(?:' + SPACES + ur')*' + AT_SIGNS \
 HASHTAG_EXP = ur'(^|[^0-9A-Z&/]+)(#|\uff03)([0-9A-Z_]*[A-Z_]+[%s]*)' % UTF_CHARS
 HASHTAG_REGEX = re.compile(HASHTAG_EXP, re.IGNORECASE)
 
-# Lists
-LIST_CHARS = ur'([^a-z0-9_]|^)(' + AT_SIGNS \
-             + ur'+)([a-z0-9_]{1,20})(/[a-z][a-z0-9\\x80-\\xFF-]{0,79})?'
-
-LIST_REGEX = re.compile(LIST_CHARS, re.IGNORECASE)
 
 # URLs
 PRE_CHARS = ur'(?:[^/"\':!=]|^|\:)'
@@ -56,13 +53,13 @@ QUERY_CHARS = ur'[a-z0-9!\*\'\(\);:&=\+\$/%#\[\]\-_\.,~]'
 # Valid end-of-path chracters (so /foo. does not gobble the period).
 # 1. Allow ) for Wikipedia URLs.
 # 2. Allow =&# for empty URL parameters and other URL-join artifacts
-PATH_ENDING_CHARS = ur'[%s\)=#/]' % UTF_CHARS
+PATH_ENDING_CHARS = r'[%s\)=#/]' % UTF_CHARS
 QUERY_ENDING_CHARS = '[a-z0-9_&=#]'
 
-URL_REGEX = re.compile('((' + PRE_CHARS + ')((https?://|www\\.)(' \
-                       + DOMAIN_CHARS + ')(/' + PATH_CHARS + '*' \
-                       + PATH_ENDING_CHARS + '?)?(\\?' + QUERY_CHARS + '*' \
-                       + QUERY_ENDING_CHARS + ')?))', re.IGNORECASE)
+URL_REGEX = re.compile('((%s)((https?://|www\\.)(%s)(\/%s*%s?)?(\?%s*%s)?))'
+                       % (PRE_CHARS, DOMAIN_CHARS, PATH_CHARS,
+                          PATH_ENDING_CHARS, QUERY_CHARS, QUERY_ENDING_CHARS),
+                       re.IGNORECASE)
 
 
 class ParseResult:
@@ -111,26 +108,34 @@ class Parser:
     def __init__(self, max_url_length=30):
         self._max_url_length = max_url_length
     
-    def parse(self, text):
+    def parse(self, text, html=True):
         '''Parse the text and return a ParseResult instance.'''
-        
-        # Reset
         self._urls = []
         self._users = []
         self._lists = []
         self._tags = []
         
-        # Filter
+        reply = REPLY_REGEX.match(text)       
+        reply = reply.groups(0)[0] if reply is not None else None
+        
+        parsed_html = self._html(text) if html else self._text(text)         
+        return ParseResult(self._urls, self._users, reply,
+                           self._lists, self._tags, parsed_html)
+    
+    def _text(self, text):
+        '''Parse a Tweet without generating HTML.'''
+        URL_REGEX.sub(self._parse_urls, text)
+        USERNAME_REGEX.sub(self._parse_users, text)
+        LIST_REGEX.sub(self._parse_lists, text)
+        HASHTAG_REGEX.sub(self._parse_tags, text)
+        return None
+    
+    def _html(self, text):
+        '''Parse a Tweet and generate HTML.'''
         html = URL_REGEX.sub(self._parse_urls, text)
         html = USERNAME_REGEX.sub(self._parse_users, html)
         html = LIST_REGEX.sub(self._parse_lists, html)
-        html = HASHTAG_REGEX.sub(self._parse_tags, html)
-        
-        # Reply?
-        reply = REPLY_REGEX.match(text)
-        self._reply = reply.groups(0)[0] if reply is not None else None        
-        return ParseResult(self._urls, self._users, self._reply,
-                           self._lists, self._tags, html)
+        return HASHTAG_REGEX.sub(self._parse_tags, html)
     
     
     # Internal parser stuff ----------------------------------------------------
@@ -157,8 +162,10 @@ class Parser:
             full_url = 'http://%s' % url
         
         self._urls.append(url)
-        return '%s%s' % (pre, self.format_url(full_url,
-                                              self._shorten_url(escape(url))))
+        
+        if self._html:
+            return '%s%s' % (pre, self.format_url(full_url,
+                                       self._shorten_url(escape(url))))
     
     def _parse_users(self, match):
         '''Parse usernames.'''
@@ -169,19 +176,23 @@ class Parser:
         
         mat = match.group(0)
         self._users.append(mat[1:])
-        return self.format_username(mat[0:1], mat[1:])
+        
+        if self._html:
+            return self.format_username(mat[0:1], mat[1:])
     
     def _parse_lists(self, match):
         '''Parse lists.'''
         
-        # Don't parse lists here
+        # Don't parse usernames here
         if match.group(4) is None:
             return match.group(0)
         
         pre, at_char, user, list_name = match.groups()
         list_name = list_name[1:]
         self._lists.append((user, list_name))
-        return '%s%s' % (pre, self.format_list(at_char, user, list_name))
+        
+        if self._html:
+            return '%s%s' % (pre, self.format_list(at_char, user, list_name))
     
     def _parse_tags(self, match):
         '''Parse hashtags.'''
@@ -198,7 +209,9 @@ class Parser:
         
         pre, text = mat[:pos], mat[pos + 1:]
         self._tags.append(text)
-        return '%s%s' % (pre, self.format_tag(tag, text))
+        
+        if self._html:
+            return '%s%s' % (pre, self.format_tag(tag, text))
     
     def _shorten_url(self, text):
         '''Shorten a URL and make sure to not cut of html entities.'''
