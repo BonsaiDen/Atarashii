@@ -37,7 +37,7 @@ class Notifier:
                                               '/org/freedesktop/Notifications'),
                                               'org.freedesktop.Notifications')
             
-            self.notify.connect_to_signal("NotificationClosed", self.show)
+            self.notify.connect_to_signal('NotificationClosed', self.show)
         
         except dbus.exceptions.DBusException:
             self.notify = None
@@ -71,8 +71,8 @@ class Notifier:
     
     
     # Show a notification ------------------------------------------------------
-    def show(self, sid, *args):
-        if (sid == -1 or sid == self.last_id) and len(self.items) > 0:
+    def show(self, item_id, *args):
+        if (item_id == -1 or item_id == self.last_id) and len(self.items) > 0:
             item = self.items.pop(0)
             self.last_id = self.notify.Notify('Atarashii', 0, item[2],
                                               item[0],  item[1], (),
