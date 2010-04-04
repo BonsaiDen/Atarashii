@@ -104,8 +104,8 @@ class TrayIcon(gtk.StatusIcon):
         self.add_menu(lang.menu_quit, gtk.STOCK_QUIT, self.gui.on_quit)
         
         # Popup
-        self.connect('popup-menu', self.on_popup, self.menu)
-    
+        self.menu.show_all()
+        self.connect('popup-menu', self.on_popup_fake)
     
     def add_menu(self, text, image, callback):
         if self.new_gtk_version:
@@ -174,11 +174,12 @@ class TrayIcon(gtk.StatusIcon):
         tip.set_custom(self.tooltip)
         return True
     
-    def on_popup(self, widget, button, time, data=None):
+    def on_popup_fake(self, tray, button, time):
         if button == 3:
-            if data:
-                data.show_all()
-                data.popup(None, None, None, 3, time)
+            rect = self.get_geometry()[1]
+            root_pos = (int(rect[0]), int(rect[1] + rect[3]), True)            
+            gobject.idle_add(self.menu.popup, None, None, lambda *arg: root_pos,
+                             button, time)
     
     def on_activate(self, *args):
         # Show GUI if started in tray
