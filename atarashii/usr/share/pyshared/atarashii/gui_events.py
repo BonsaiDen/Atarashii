@@ -24,6 +24,7 @@ import gobject
 import dialog
 import dialog_settings
 
+from constants import ST_UPDATE
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADING, HTML_LOADED, \
                       BUTTON_REFRESH, BUTTON_HISTORY
 
@@ -70,7 +71,8 @@ class GUIEventHandler:
         self.multi_button.modify_bg(gtk.STATE_NORMAL,
                           self.tabs.get_style().bg[gtk.STATE_NORMAL])
         
-        if self.is_on_multi_button:
+        if self.is_on_multi_button and not self.main.status(ST_UPDATE):
+            self.is_on_multi_button = False
             if self.multi_state == BUTTON_REFRESH:
                 self.on_refresh()
             
