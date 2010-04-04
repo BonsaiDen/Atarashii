@@ -83,7 +83,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.multi_button.connect('leave-notify-event', self.on_multi_leave)
         self.multi_button.connect('button-press-event', self.on_multi_press)
         self.multi_button.connect('button-release-event', self.on_multi_release)
-        self.multi_button.set_tooltip_text(lang.tool_refresh)
+        self.multi_button.set_tooltip_text(lang.multi_refresh)
         self.multi_state = BUTTON_REFRESH
         
         # Info Label
@@ -286,10 +286,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # History mode ---------------------------------------------------------
         if self.mode == MODE_MESSAGES and self.message.history_loaded:
-            info = lang.tool_history_message
+            info = lang.multi_history_message
         
         elif self.mode == MODE_TWEETS and self.html.history_loaded:
-            info = lang.tool_history
+            info = lang.multi_history
         
         else:
             info = None
@@ -329,10 +329,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             # Set Tooltip
             if self.mode == MODE_TWEETS:
-                self.multi_button.set_tooltip_text(lang.tool_read)
+                self.multi_button.set_tooltip_text(lang.multi_read)
             
             elif self.mode == MODE_MESSAGES:
-                self.multi_button.set_tooltip_text( lang.tool_read_message)
+                self.multi_button.set_tooltip_text( lang.multi_read_message)
             
             if status:
                 self.update_status()
@@ -356,10 +356,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Set Tooltip
         if self.mode == MODE_TWEETS:
-            self.multi_button.set_tooltip_text(lang.tool_refresh)
+            self.multi_button.set_tooltip_text(lang.multi_refresh)
         
         elif self.mode == MODE_MESSAGES:
-            self.multi_button.set_tooltip_text(lang.tool_refresh_message)
+            self.multi_button.set_tooltip_text(lang.multi_refresh_message)
         
         # Check for message/tweet switch
         if self.is_ready():

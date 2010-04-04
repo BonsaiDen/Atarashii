@@ -301,13 +301,13 @@ LANG = {
         # Buttons
         'button_open': 'Für weitere Informationen klicken',
         
-        # Toolbar Items
-        'tool_refresh': 'Tweets aktualisieren',
-        'tool_history': 'Ältere Tweets zurücksetzen',
-        'tool_read': 'Alle Tweets als gelesen markieren',
-        'tool_refresh_message': 'Nachrichten aktualisieren',
-        'tool_history_message': 'Ältere Nachrichten entfernen',
-        'tool_read_message': 'Alle Nachrichten als gelesen markieren',
+        # Multibutton
+        'multi_refresh': 'Tweets aktualisieren',
+        'multi_history': 'Ältere Tweets zurücksetzen',
+        'multi_read': 'Alle Tweets als gelesen markieren',
+        'multi_refresh_message': 'Nachrichten aktualisieren',
+        'multi_history_message': 'Ältere Nachrichten entfernen',
+        'multi_read_message': 'Alle Nachrichten als gelesen markieren',
         
         # Tray Menu
         'menu_update': 'Akt_ualisieren',
@@ -624,13 +624,13 @@ LANG = {
         # Buttons
         'button_open': 'Clock for more information',
         
-        # Toolbar items
-        'tool_refresh': 'Refresh Tweets',
-        'tool_history': 'Reset History',
-        'tool_read': 'Mark all Tweets as read',
-        'tool_refresh_message': 'Refresh Message',
-        'tool_history_message': 'Remove History',
-        'tool_read_message': 'Mark all Messages as read',
+        # Multibutton
+        'multi_refresh': 'Refresh Tweets',
+        'multi_history': 'Reset History',
+        'multi_read': 'Mark all Tweets as read',
+        'multi_refresh_message': 'Refresh Message',
+        'multi_history_message': 'Remove History',
+        'multi_read_message': 'Mark all Messages as read',
         
         # Tray Menu
         'menu_update': '_Refresh',
