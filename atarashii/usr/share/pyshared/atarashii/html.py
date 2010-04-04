@@ -41,9 +41,9 @@ class HTML(view.HTMLView):
         self.last_name = UNSET_TEXT
         self.last_highlight = UNSET_TEXT
         self.last_mentioned = UNSET_TEXT
-        
-        self.first_setting = 'firsttweet_'
     
+    
+    # Items --------------------------------------------------------------------
     def get_latest(self):
         if self.main.settings.isset('lasttweet_' + self.main.username):
             return self.main.settings['lasttweet_' + self.main.username]
@@ -57,7 +57,10 @@ class HTML(view.HTMLView):
         
         else:
             return HTML_UNSET_ID
-        
+    
+    def set_first(self, item_id):
+        self.main.settings['firsttweet_' + self.main.username] = item_id
+    
     def set_item_count(self, count):
         self.main.max_tweet_count = count
     

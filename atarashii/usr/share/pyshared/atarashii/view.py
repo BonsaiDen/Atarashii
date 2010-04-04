@@ -147,9 +147,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             if itemid < 0:
                 itemid = 0
             
-            setting = self.first_setting + self.main.username
-            self.main.settings[setting] = self.items[itemid][0].id - 1
-    
+            self.set_first(self.items[itemid][0].id - 1)
+        
     def clear(self):
         self.history_loaded = False
         self.items = self.items[self.history_count:]
