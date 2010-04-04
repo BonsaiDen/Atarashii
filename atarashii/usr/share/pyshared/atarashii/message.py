@@ -19,6 +19,7 @@
 import view
 
 from language import LANG as lang
+from utils import menu_escape
 
 from constants import UNSET_TEXT, MODE_MESSAGES, HTML_UNSET_ID
 
@@ -145,10 +146,7 @@ class HTML(view.HTMLView):
                 + '''">%s</a></b></span>''' \
                 + self.is_protected(user) \
                 + '''%s</div>
-            <div class="time">
-            <a href="status:http://twitter.com/%s/statuses/%d" title="''' \
-                + self.absolute_time(item.created_at) + '''">%s</a>
-            </div>
+            <div class="time">%s</div>
         </div>
         </div>'''
         
@@ -168,8 +166,6 @@ class HTML(view.HTMLView):
                 formatted.html,
                 
                 # Time
-                user.screen_name,
-                item.id,
                 self.relative_time(item.created_at))
         
         # Return the HTML string
@@ -188,19 +184,22 @@ class HTML(view.HTMLView):
                and user.lower() != self.main.username.lower():
                
                 reply = 'message:%s:%d:-1' % (user, self.get_sender(item).id)
-                self.add_menu_link(menu, lang.context_reply % user,
+                self.add_menu_link(menu,
+                                   lang.context_reply % menu_escape(user),
                                    self.context_link, reply, item)
             
             elif link == 'rprofile' \
                  and user.lower() != self.main.username.lower():
                 
                 reply = 'message:%s:%d:-1' % (user, self.get_recipient(item).id)
-                self.add_menu_link(menu, lang.context_message % user,
+                self.add_menu_link(menu,
+                                   lang.context_message % menu_escape(user),
                                    self.context_link, reply, item)
             
             elif link == 'user':
                 reply = 'message:%s:-1:-1' % user
-                self.add_menu_link(menu, lang.context_message % user,
+                self.add_menu_link(menu,
+                                   lang.context_message % menu_escape(user),
                                    self.context_link, reply)
         
         # More
@@ -208,8 +207,6 @@ class HTML(view.HTMLView):
             # Copy Message
             self.add_menu_link(menu, lang.context_copy_message,
                                self.copy_message, None, item)
-            
-            
             
             # Delete
             name = item.sender.screen_name
