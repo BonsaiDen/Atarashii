@@ -146,7 +146,8 @@ class HTML(view.HTMLView):
                 + '''">%s</a></b></span>''' \
                 + self.is_protected(user) \
                 + '''%s</div>
-            <div class="time">%s</div>
+            <div class="time" title="''' + \
+            self.absolute_time(item.created_at, True) + '''">%s</div>
         </div>
         </div>'''
         

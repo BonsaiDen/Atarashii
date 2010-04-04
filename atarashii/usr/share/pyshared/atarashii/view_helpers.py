@@ -213,16 +213,18 @@ class ViewHelpers:
             return time.strftime(lang.html_exact,
                         time.localtime(calendar.timegm(date.timetuple())))
     
-    def absolute_time(self, date):
+    def absolute_time(self, date, message=False):
         delta = long(calendar.timegm(time.gmtime())) \
                 - long(calendar.timegm(date.timetuple()))
         
         date = time.localtime(calendar.timegm(date.timetuple()))
         if delta <= 60 * 60 * 24:
-            return time.strftime(lang.html_time, date)
+            return time.strftime(lang.html_time_message if message \
+                                 else lang.html_time, date)
         
         else:
-            return time.strftime(lang.html_time_day, date)
+            return time.strftime(lang.html_time_day_message if message \
+                                 else lang.html_time_day, date)
     
     
     # Helpers ------------------------------------------------------------------
