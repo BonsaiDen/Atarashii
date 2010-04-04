@@ -634,7 +634,7 @@ LANG = {
         
         # Tray Menu
         'menu_update': '_Refresh',
-        'menu_read': 'Mark all as _read',
+        'menu_read': '_Mark all as read',
         'menu_settings': '_Preferences',
         'menu_about': 'About _Atarashii',
         'menu_quit': '_Quit',
