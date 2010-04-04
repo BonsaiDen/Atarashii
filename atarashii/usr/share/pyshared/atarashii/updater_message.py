@@ -18,7 +18,7 @@
 # ------------------------------------------------------------------------------
 import gobject
 
-from utils import TweepError, compare
+from utils import TweepError
 
 from constants import ST_HISTORY, ST_NETWORK_FAILED
 from constants import HTML_UNSET_ID
@@ -92,7 +92,7 @@ class UpdaterMessage:
                                  count = self.main.load_message_count // 2)
         
         self.refresh_messages = False
-        messages.sort(compare)
+        messages.sort(key = lambda m: m.id, reverse = True)
         self.update_limit()
         return messages
     

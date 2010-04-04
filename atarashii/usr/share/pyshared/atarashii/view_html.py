@@ -16,7 +16,7 @@
 
 # HTML View / HTML -------------------------------------------------------------
 # ------------------------------------------------------------------------------
-from utils import compare_sub, SPACES
+from utils import SPACES
 
 from language import LANG as lang
 from constants import HTML_UNSET_ID, ST_LOGIN_SUCCESSFUL, HTML_UNSET_TEXT
@@ -29,7 +29,7 @@ class ViewHTML:
         self.position = self.scroll.get_vscrollbar().get_value()
         self.current_scroll = self.position
         self.is_loading = True
-        self.items.sort(compare_sub)
+        self.items.sort(key = lambda i: i[0].id)
         self.count = 0
         
         # Newest Stuff
