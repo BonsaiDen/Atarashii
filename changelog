@@ -20,8 +20,9 @@ atarashii (0.99.19-1) all;
     apps.
   * Fix an issue with text beeing cut off in the settings dialog under certain
     font sizes.
+  * Tons of internal cleanup for an even more pythonic style.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 5 Apr 2010 19:38:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 5 Apr 2010 21:47:00 +0200
 
 atarashii (0.99.18a-1) all;
 
@@ -68,7 +69,7 @@ atarashii (0.99.17-1) all;
   ~ Send notifications directly over the dbus.
   ~ Switch to sox for notification sounds, instead of mplayer.
   ~ Removed mp3 support for notifications sounds and added flac instead.
-  ~ A bit of internal cleanup.
+  * A bit of internal cleanup.
   * Fixes to the way scrolling in the views is handled.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 27 Mar 2010 04:50:00 +0100
@@ -215,7 +216,7 @@ atarashii (0.99.12-1) all;
 
   ~ Unimportant errors and warning now pop up as a button above the timeline,
     the button can be clicked in order to retrieve more information.
-  ~ Lots of internal cleanup, by mainly splitting up files into subclasses.
+  * Lots of internal cleanup, by mainly splitting up files into subclasses.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 18 Mar 2010 00:29:00 +0100
 
@@ -309,7 +310,7 @@ atarashii (0.99.8-1) all;
 atarashii (0.99.7-1) all;
 
   + New auto switch to message/tweet view when typing in a message/reply.
-  ~ Lots of internal code cleanup by the kittens.
+  * Lots of internal code cleanup by the kittens.
   * Fixed a bug that prevented logging in when no user profile existed and one
     was created.
   * Some minor fixes for rare bugs.
@@ -321,7 +322,7 @@ atarashii (0.99.6-1) all;
   ~ Messages that you have sent to somebody else do now have the same color as
     mentions(yellow).
   ~ Prevent warning dialog on over capacity from being spammed.
-  ~ Lots of internal refactoring and cleanup e.g. converted all magic values
+  * Lots of internal refactoring and cleanup e.g. converted all magic values
     into constants.
   * Fixed display issues with mentions in the timeline.
   * Bugfixes for the GUI were some buttons would be in a bad state in some rare
@@ -333,7 +334,7 @@ atarashii (0.99.5-1) all;
 
   + New regular expressions for hashtags, usernames and urls based on the 
     official twitter ones.
-  ~ Some internal cleanup ragarding the html views.
+  * Some internal cleanup ragarding the html views.
   * Fix for hyperspeeded progressbar in some cases.
   * Yet again lots of small bugfixes by the kittens.
 
@@ -358,7 +359,7 @@ atarashii (0.99.3-1) all;
 atarashii (0.99.2-1) all;
 
   ~ Increased the update rate of direct messages.
-  ~ Internal code cleanup.
+  * Internal code cleanup.
   * Bugfix for direct message notifications.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 7 Mar 2010 00:22:00 +0100
