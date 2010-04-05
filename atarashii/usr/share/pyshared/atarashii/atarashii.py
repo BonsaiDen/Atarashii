@@ -147,10 +147,11 @@ class Atarashii(AtarashiiActions):
         # Disable the account menu
         self.gui.tray.activate_menu(False)
         
-        # Wait until the last update/delete/send is complete
-        # FIXME does this thing ever gets into action?
-        while self.any_status(ST_UPDATE, ST_DELETE, ST_SEND, ST_CONNECT):
-            time.sleep(0.1)
+        # Wait until the last update/delete/send/login is complete
+        if self.any_status(ST_UPDATE, ST_DELETE, ST_SEND, ST_CONNECT) \
+           or (not self.status(ST_LOGIN_COMPLETE) and change_user != None):
+            gobject.timeout_add(50, self.login, change_user)
+            return None
         
         # Switch User
         if change_user is not None:
