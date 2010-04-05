@@ -280,7 +280,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     # Refresh / Read / History Button ------------------------------------------
     # --------------------------------------------------------------------------
     def set_multi_button(self, mode, refresh_mode=None, status=True,
-                         no_read = False):
+                         no_read=False):
         
         # History mode
         if self.mode == MODE_MESSAGES and self.message.history_loaded:
@@ -297,11 +297,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Read mode
         if self.mode == MODE_MESSAGES:
-            read_mode = self.message.last_id > self.message.init_id
+            read_mode = self.message.count > 0
             read_icon = read_mode
             
         elif self.mode == MODE_TWEETS:
-            read_mode = self.html.last_id > self.html.init_id
+            read_mode = self.html.count > 0
             read_icon = read_mode
         
         else:

@@ -19,7 +19,8 @@
 from utils import SPACES
 
 from language import LANG as lang
-from constants import HTML_UNSET_ID, ST_LOGIN_SUCCESSFUL, HTML_UNSET_TEXT
+from constants import HTML_UNSET_ID, ST_LOGIN_SUCCESSFUL, HTML_UNSET_TEXT, \
+                      ST_NETWORK_FAILED
 
 
 class ViewHTML(object):
@@ -53,7 +54,7 @@ class ViewHTML(object):
         
         #print self.new_items_id, self.init_id
 
-    def render(self):
+    def render(self, update_multi=False):
         self.init_render()
         self.last_name = HTML_UNSET_TEXT
         self.last_recipient = HTML_UNSET_TEXT
@@ -92,6 +93,10 @@ class ViewHTML(object):
         
         # Render
         self.set_html(self.renderitems)
+        
+        # Update multi button
+        if update_multi:
+            self.gui.set_multi_button(not self.main.status(ST_NETWORK_FAILED))
     
     
     # HTML Helpers -------------------------------------------------------------

@@ -103,7 +103,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         settings = self.get_settings()
         for i in off:
             settings.set_property(i, False)
-        
+    
+    
     # Initiate a empty timeline ------------------------------------------------
     # --------------------------------------------------------------------------
     def init(self, splash=False, load=False):
@@ -188,7 +189,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                 
                 self.items = self.items[pos:]
             
-            self.render()
+            self.render(True)
             gobject.idle_add(self.main.save_settings, True)
     
     
