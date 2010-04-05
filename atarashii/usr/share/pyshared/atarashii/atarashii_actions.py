@@ -123,6 +123,8 @@ class AtarashiiActions:
         
         self.gui.html.save_first()
         self.gui.message.save_first()
+        self.gui.html.save_last_id()
+        self.gui.message.save_last_id()
         
         self.settings['position'] = str(self.gui.get_normalized_position())
         size = self.gui.get_allocation()

@@ -24,16 +24,7 @@ from constants import ST_HISTORY, ST_NETWORK_FAILED
 from constants import HTML_UNSET_ID
 
 
-class UpdaterTweet:
-    # Set lastest Tweet
-    def set_last_tweet(self, item_id):
-        if item_id >= self.html.last_id:
-            self.html.last_id = item_id
-            self.settings['lasttweet_' + self.main.username] = item_id
-            if len(self.html.items) > 0:
-                self.html.newest_id = self.html.items[
-                                      len(self.html.items) - 1][0].id
-    
+class UpdaterTweet:    
     
     # Load initial tweets ------------------------------------------------------
     def get_init_tweets(self, last=False, init=False):
@@ -47,7 +38,7 @@ class UpdaterTweet:
             return False
         
         if len(updates) > 0:
-            self.set_last_tweet(updates[0].id)
+            self.html.save_last_id(updates[0].id)
         
         # Expand the tweet count
         if len(updates) > self.main.max_tweet_count:

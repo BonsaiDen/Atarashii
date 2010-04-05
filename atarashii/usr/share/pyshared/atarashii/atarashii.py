@@ -16,10 +16,10 @@
 # TODO add multireply via shift/ctrl, replyid is from the first selected tweet
 # TODO make longer replies easier, either split them and add @user to each of 
 #      them, or use ctrl+enter to send and start a new reply to the same tweet
-# TODO cleanup dialog_settings!
 # TODO fixup tooltips not getting removed when switching workspaces
 # TODO fix tooltip flickering during updating. Maybe an issues with the loading
 #      state???
+# TODO add block/unfollow to avatar menus
 
 
 # Make sure there is only one instance of Atarashii ----------------------------

@@ -315,8 +315,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 return False
             
             if len(updates) > 0:
-                self.set_last_tweet(updates[0].id)
-                
+                self.html.save_last_id(updates[0].id)
+        
         # Messages
         messages = []
         if (self.message_counter > 1 or self.refresh_messages) \
@@ -335,7 +335,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 return False
             
             if len(messages) > 0:
-                self.set_last_message(messages[0].id)
+                self.message.save_last_id(messages[0].id)
             
             self.message_counter = 0
         

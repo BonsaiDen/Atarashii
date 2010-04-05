@@ -230,7 +230,7 @@ class ViewHelpers:
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def is_new_timeline(self, item): 
-        self.new_timeline = item.id > self.init_id
+        self.new_timeline = item.id > self.new_items_id
         if self.new_timeline:
             self.count += 1
         
@@ -275,19 +275,19 @@ class ViewHelpers:
         return self.items[num][1]
     
     # Attribute helpers for new style Retweets
-    def get_attr(self, item, attr):
+    def get_attr(self, item, attr, get_rt=False):
         item = self.items[item][0] if type(item) in (int, long) else item
-        status = item.retweeted_status \
-                 if hasattr(item, 'retweeted_status') else item
+        status = item.retweeted_status\
+                 if hasattr(item, 'retweeted_status') and not get_rt else item
         
         return getattr(status, attr) if hasattr(status, attr) else None  
     
-    def get_user(self, item):
-        user = self.get_attr(item, 'user')
+    def get_user(self, item, get_rt=False):
+        user = self.get_attr(item, 'user', get_rt = get_rt)
         return user if user is not None else self.get_attr(item, 'sender')
     
-    def get_screen_name(self, item):
-        return self.get_user(item).screen_name
+    def get_screen_name(self, item, get_rt=False):
+        return self.get_user(item, get_rt = get_rt).screen_name
     
     def get_text(self, item):
         return self.get_attr(item, 'text')

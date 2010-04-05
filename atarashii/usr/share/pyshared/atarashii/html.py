@@ -56,10 +56,14 @@ class HTML(view.HTMLView):
             return self.main.settings['firsttweet_' + self.main.username]
         
         else:
-            return HTML_UNSET_ID
+            return HTML_UNSET_ID   
     
     def set_first(self, item_id):
         self.main.settings['firsttweet_' + self.main.username] = item_id
+    
+    def save_last_id(self, item_id=None):
+        setting = 'lasttweet_' + self.main.username
+        self.save_last(setting, item_id)
     
     def set_item_count(self, count):
         self.main.max_tweet_count = count

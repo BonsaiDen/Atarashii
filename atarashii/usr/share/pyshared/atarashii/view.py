@@ -151,7 +151,24 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                 itemid = 0
             
             self.set_first(self.items[itemid][0].id - 1)
+    
+    def save_last(self, setting, item_id):
+        # Save on exit
+        if item_id is None:
+            if len(self.items) > 0 and self.load_state == HTML_LOADED:
+                itemid = len(self.items) - 1
+                self.main.settings[setting] = self.items[itemid][0].id
         
+        # Updates
+        elif item_id >= self.last_id:
+            self.last_id = item_id
+            self.main.settings[setting] = item_id
+            self.set_newest()
+    
+    def set_newest(self):
+        if len(self.items) > 0:
+            self.newest_id = self.items[len(self.items) - 1][0].id
+    
     def clear(self):
         self.history_loaded = False
         self.items = self.items[self.history_count:]

@@ -60,6 +60,10 @@ class HTML(view.HTMLView):
     def set_first(self, item_id):
         self.main.settings['firstmessage_' + self.main.username] = item_id  
     
+    def save_last_id(self, item_id=None):
+        setting = 'lastmessage_' + self.main.username
+        self.save_last(setting, item_id)
+    
     def set_item_count(self, count):
         self.main.max_message_count = count
     

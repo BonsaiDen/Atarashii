@@ -74,7 +74,7 @@ class Edit(threading.Thread):
             update = self.main.api.update_status(text,
                                 in_reply_to_status_id = self.main.edit_reply_id)
             
-            self.main.updater.set_last_tweet(update.id)
+            self.gui.html.set_newest()
             
             # Remove old tweet
             gobject.idle_add(self.gui.html.remove, self.tweet_id)
@@ -88,8 +88,8 @@ class Edit(threading.Thread):
         else:
             # Send Tweet
             update = self.main.api.update_status(text)
-            self.main.updater.set_last_tweet(update.id)
-                
+            self.gui.html.set_newest()
+            
             # Remove old tweet
             gobject.idle_add(self.gui.html.remove, self.tweet_id)
             
@@ -178,7 +178,8 @@ class Send(threading.Thread):
             # Send Tweet
             update = self.main.api.update_status(text,
                                 in_reply_to_status_id = self.main.reply_id)
-            self.main.updater.set_last_tweet(update.id)
+            
+            self.gui.html.set_newest()
             
             # Insert temporary tweet
             imgfile = self.main.updater.get_image(update)
@@ -189,7 +190,7 @@ class Send(threading.Thread):
         else:
             # Send Tweet
             update = self.main.api.update_status(text)
-            self.main.updater.set_last_tweet(update.id)
+            self.gui.html.set_newest()
             
             # Insert temporary tweet
             imgfile = self.main.updater.get_image(update)
@@ -209,7 +210,7 @@ class Send(threading.Thread):
             message = self.main.api.send_direct_message(text = text,
                                         screen_name = self.main.message_user)
         
-        self.main.updater.set_last_message(message.id)
+        self.gui.message.set_newest()
         
         # Insert temporary message
         imgfile = self.main.updater.get_image(message, True)

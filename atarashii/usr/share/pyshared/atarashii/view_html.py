@@ -36,10 +36,23 @@ class ViewHTML:
         self.newest = False
         self.newest_avatar = False
         self.new_timeline = False
-        self.new_items_id = self.init_id
+        self.new_items_id = HTML_UNSET_ID
         if self.newest_id == HTML_UNSET_ID:
             self.newest_id = self.init_id
-    
+        
+        # Find newest item
+        for item in self.items:
+            name = self.get_screen_name(item[0], True).lower()
+            #print item[0].id, name
+            if item[0].id > self.init_id and name != self.main.username.lower():
+                self.new_items_id = item[0].id - 1
+                break
+        
+        if self.new_items_id == HTML_UNSET_ID:
+            self.new_items_id = self.items[len(self.items) - 1][0].id
+        
+        #print self.new_items_id, self.init_id
+
     def render(self):
         self.init_render()
         self.last_name = HTML_UNSET_TEXT
