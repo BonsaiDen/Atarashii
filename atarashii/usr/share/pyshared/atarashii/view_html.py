@@ -35,7 +35,8 @@ class ViewHTML:
         # Newest Stuff
         self.newest = False
         self.newest_avatar = False
-        self.new_timline = False
+        self.new_timeline = False
+        self.new_items_id = self.init_id
         if self.newest_id == HTML_UNSET_ID:
             self.newest_id = self.init_id
     
@@ -145,7 +146,7 @@ class ViewHTML:
                       next_highlight=False, force=False):
         
         spacer = 'foo'
-        if item.id > self.init_id:
+        if item.id > self.new_items_id:
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if mentioned:

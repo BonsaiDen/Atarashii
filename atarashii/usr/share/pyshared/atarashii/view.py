@@ -299,7 +299,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         elif uri.startswith('retweet:'):
             ttype = uri.split(':')[1]
             tweet_id = self.get_id(extra)
-            name = self.get_user(extra).screen_name
+            name = self.get_screen_name(extra)
             
             # Which style?
             if int(ttype) == RETWEET_NEW:

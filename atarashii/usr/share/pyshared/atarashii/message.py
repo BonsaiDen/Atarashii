@@ -105,12 +105,14 @@ class HTML(view.HTMLView):
         
         
         # Background -----------------------------------------------------------
-        cls = 'oldtweet' if item.id <= self.init_id else 'tweet'
+        cls = 'oldtweet' if item.id <= self.new_items_id else 'tweet'
         if item.recipient_screen_name.lower() != self.main.username.lower():
             mode = lang.message_to
             name = item.recipient_screen_name
             reply = 'display: none;'
-            cls = 'mentionedold' if item.id <= self.init_id else 'mentioned'
+            cls = 'mentionedold' if item.id <= self.new_items_id \
+                   else 'mentioned'
+            
             username = item.recipient_screen_name
             user_realname = item.recipient.name.strip()
             toid = item.recipient.id

@@ -121,7 +121,7 @@ class HTML(view.HTMLView):
         # Avatar ---------------------------------------------------------------
         self.is_new_avatar(num)
         if (num < len(self.items) - 1 \
-           and (user.screen_name != self.get_user(num + 1).screen_name \
+           and (user.screen_name != self.get_screen_name(num + 1) \
            or self.new_avatar)  ) or num == len(self.items) - 1 \
            or self.new_timeline:
             
@@ -133,9 +133,10 @@ class HTML(view.HTMLView):
         
         # Background -----------------------------------------------------------
         if mentioned:
-            clas = 'mentionedold' if item.id <= self.init_id else 'mentioned'
+            clas = 'mentionedold' if item.id <= self.new_items_id \
+                   else 'mentioned'
         
-        elif item.id <= self.init_id:
+        elif item.id <= self.new_items_id:
             clas = 'highlightold' if highlight else 'oldtweet'
         
         else:
@@ -263,7 +264,7 @@ class HTML(view.HTMLView):
             self.add_menu_separator(menu)
             
             # RT old
-            name = self.get_user(item).screen_name
+            name = self.get_screen_name(item)
             full = 'retweet:%s' % RETWEET_OLD
             self.add_menu_link(menu,
                                lang.context_retweet_old % menu_escape(name),

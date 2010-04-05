@@ -229,7 +229,7 @@ class ViewHelpers:
     
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def is_new_timeline(self, item):
+    def is_new_timeline(self, item): 
         self.new_timeline = item.id > self.init_id
         if self.new_timeline:
             self.count += 1
@@ -242,12 +242,12 @@ class ViewHelpers:
     
     def is_new_avatar(self, num):
         if num < len(self.items) - 1:
-            self.new_avatar = self.items[num + 1][0].id > self.init_id
+            self.new_avatar = self.items[num + 1][0].id > self.new_items_id
         
         else:
             self.new_avatar = False
         
-        if num > 0 and self.items[num - 1][0].id <= self.init_id:
+        if num > 0 and self.items[num - 1][0].id <= self.new_items_id:
             self.new_timeline = False
         
         if self.newest_avatar or self.init_id == 0:
@@ -286,9 +286,12 @@ class ViewHelpers:
         user = self.get_attr(item, 'user')
         return user if user is not None else self.get_attr(item, 'sender')
     
+    def get_screen_name(self, item):
+        return self.get_user(item).screen_name
+    
     def get_text(self, item):
         return self.get_attr(item, 'text')
-        
+    
     def get_source(self, item):
         return self.get_attr(item, 'source')
     
