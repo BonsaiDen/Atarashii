@@ -42,8 +42,7 @@ class SettingsDialog(Dialog):
         if self.drop is not None:
             self.drop.set_sensitive(mode)
             self.add.set_sensitive(mode)
-            self.edit.set_sensitive(mode)
-            self.delete.set_sensitive(mode)
+            self.drop_changed()
     
     def __init__(self, parent):
         Dialog.__init__(self, parent, True, False)
@@ -326,13 +325,8 @@ class SettingsDialog(Dialog):
      # Setup Account List
     def drop_changed(self, *args):
         i = self.get_drop_active()
-        if i != -1:
-            self.edit.set_sensitive(True)
-            self.delete.set_sensitive(True)
-        
-        else:
-            self.edit.set_sensitive(False)
-            self.delete.set_sensitive(False)
+        self.edit.set_sensitive(i != -1)
+        self.delete.set_sensitive(i != -1)
     
     
     # Edit a User Account ------------------------------------------------------
