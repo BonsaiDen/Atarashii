@@ -97,10 +97,10 @@ class Settings:
             return
     
         # Don't save crash stuff
-        if self.values.has_key('crashed'):
+        if 'crashed' in self.values:
             del self.values['crashed']
         
-        if self.values.has_key('crash_reason'):
+        if 'crash_reason' in self.values:
             del self.values['crash_reason']
         
         # Create the file
@@ -128,19 +128,19 @@ class Settings:
     
     # Get / Set ----------------------------------------------------------------
     def __getitem__(self, key):
-        if self.values.has_key(key):
+        if key in self.values:
             return self.values[key]
         
         else:
             return None
     
     def __setitem__(self, key, value):
-        if not self.values.has_key(key) or self.values[key] != value:
+        if not key in self.values or self.values[key] != value:
             self.has_changed = True
             self.values[key] = value
     
     def __delitem__(self, key):
-        if self.values.has_key(key):
+        if key in self.values:
             self.has_changed = True
             del self.values[key]
     

@@ -117,7 +117,7 @@ class URLShorter(threading.Thread):
             gobject.idle_add(self.text_box.shorten_text, short_text)
     
     def shorten_url(self, url, api):
-        if self.__class__.url_list.has_key(url):
+        if url in self.__class__.url_list:
             return self.__class__.url_list[url]
         
         try:
@@ -163,7 +163,7 @@ class URLExpander(threading.Thread):
 
     def run(self):
         # Check for already resolved / failed urls
-        if self.__class__.url_list.has_key(self.url):
+        if self.url in self.__class__.url_list:
             current_url = self.__class__.url_list[self.url]
         
         elif self.url in self.__class__.black_list:

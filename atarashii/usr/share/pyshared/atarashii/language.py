@@ -700,7 +700,7 @@ LANG = {
 
 class Language:
     def __init__(self, code):
-        if LANG.has_key(code):
+        if code in LANG:
             stuff = LANG[code]
         
         else:

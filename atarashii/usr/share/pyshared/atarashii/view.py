@@ -356,7 +356,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         # Regular links
         else:
             link = self.get_link_type(uri)[1]
-            if self.expanded_links.has_key(link):
+            if link in self.expanded_links:
                 link = self.expanded_links[link]
             
             webbrowser.open(link)

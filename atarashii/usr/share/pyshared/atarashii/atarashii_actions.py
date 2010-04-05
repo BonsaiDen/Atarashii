@@ -233,7 +233,7 @@ class AtarashiiActions:
     
     # Favorite
     def favorite(self, tweet_id, mode, name):
-        if not self.favorites_pending.has_key(tweet_id):
+        if not tweet_id in self.favorites_pending:
             self.favorites_pending[tweet_id] = mode
             
             # Favoriter

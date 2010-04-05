@@ -58,7 +58,7 @@ class ViewMenu:
             
             # Try to expand links
             elif link.startswith('http://'):
-                if self.expanded_links.has_key(link):
+                if link in self.expanded_links:
                     if self.expanded_links[link] != link:
                         tip.set_markup(lang.html_expanded_tooltip
                                        % (escape(link),
