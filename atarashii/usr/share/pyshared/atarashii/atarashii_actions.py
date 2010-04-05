@@ -286,14 +286,12 @@ class AtarashiiActions:
             msg = ''
             error_code = 0
             error_errno = ERR_URLLIB_TIMEOUT
-            print "timeout"
         
         # GAI errors
         elif isinstance(error, socket.gaierror) or isinstance(error, URLError):
             msg = ''
             error_errno = ERR_URLLIB_FAILED
             error_code = 0
-            print "liberror"
         
         # IO errors
         elif isinstance(error, IOError):
@@ -306,7 +304,6 @@ class AtarashiiActions:
             else:
                 msg = ''
             
-            print "ioerror", error.errno
             error_errno = error.errno
             error_code = error.code
         
