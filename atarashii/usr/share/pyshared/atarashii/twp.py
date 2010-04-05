@@ -76,7 +76,7 @@ class ParseResult:
         A string containing the username this tweet was a reply to.
         This only matches a username at the beginning of the Tweet,
         it may however be preceeded by whitespace.
-        Note: It's generally better to rely on the Tweet JSON/XML in order to 
+        Note: It's generally better to rely on the Tweet JSON/XML in order to
         find out if it's a reply or not.
         
     - lists
@@ -115,10 +115,10 @@ class Parser:
         self._lists = []
         self._tags = []
         
-        reply = REPLY_REGEX.match(text)       
+        reply = REPLY_REGEX.match(text)
         reply = reply.groups(0)[0] if reply is not None else None
         
-        parsed_html = self._html(text) if html else self._text(text)         
+        parsed_html = self._html(text) if html else self._text(text)
         return ParseResult(self._urls, self._users, reply,
                            self._lists, self._tags, parsed_html)
     

@@ -329,7 +329,7 @@ class AtarashiiActions:
         elif error_code in (HT_400_BAD_REQUEST, HT_401_UNAUTHORIZED,
                             HT_403_FORBIDDEN, HT_404_NOT_FOUND,
                             HT_500_INTERNAL_SERVER_ERROR, HT_502_BAD_GATEWAY,
-                            HT_503_SERVICE_UNAVAILABLE):            
+                            HT_503_SERVICE_UNAVAILABLE):
             
             if msg.lower().startswith('no status'):
                 code = ERR_TWEET_NOT_FOUND

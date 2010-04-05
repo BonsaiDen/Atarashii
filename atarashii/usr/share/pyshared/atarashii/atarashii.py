@@ -14,7 +14,7 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 # TODO add multireply via shift/ctrl, replyid is from the first selected tweet
-# TODO make longer replies easier, either split them and add @user to each of 
+# TODO make longer replies easier, either split them and add @user to each of
 #      them, or use ctrl+enter to send and start a new reply to the same tweet
 # TODO fixup tooltips not getting removed when switching workspaces
 # TODO fix tooltip flickering during updating. Maybe an issues with the loading

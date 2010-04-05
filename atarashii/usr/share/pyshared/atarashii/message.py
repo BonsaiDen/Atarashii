@@ -58,7 +58,7 @@ class HTML(view.HTMLView):
             return HTML_UNSET_ID
     
     def set_first(self, item_id):
-        self.main.settings['firstmessage_' + self.main.username] = item_id  
+        self.main.settings['firstmessage_' + self.main.username] = item_id
     
     def save_last_id(self, item_id=None):
         setting = 'lastmessage_' + self.main.username

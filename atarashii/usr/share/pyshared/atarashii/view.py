@@ -119,7 +119,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.is_loading = False
         self.position = 0
         self.current_scroll = 0
-        self.count = 0 
+        self.count = 0
         self.offset_count = 0
         
         # Item stuff

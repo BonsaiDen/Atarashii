@@ -117,7 +117,7 @@ class GUIEventHandler:
             self.set_mode(MODE_TWEETS)
         
         elif page_num == 1 and self.mode != MODE_MESSAGES:
-            self.set_mode(MODE_MESSAGES) 
+            self.set_mode(MODE_MESSAGES)
     
     def on_mode(self, *args):
         if self.mode == MODE_MESSAGES:

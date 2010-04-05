@@ -49,7 +49,7 @@ LANG = {
         'html_account':
             'Derzeit ist kein Account aktiviert.',
         
-        'html_account_info': 
+        'html_account_info':
             'Klicken sie auf das Atarashii Symbol in Ihrer Taskleiste und '
             'wählen sie "Einstellungen" um einen Account zu erstellen und/oder'
             ' wählen sie "Accounts" und aktivieren Sie einen der vorhandenen.',
@@ -220,18 +220,18 @@ LANG = {
         'delete_info_message': 'Die Nachricht wurde erfolgreich gelöscht.',
         
         # Crash Error Dialogs
-        'error_general': 
+        'error_general':
             '<span size="large"><b>Atarashii ist abgestürzt...</b></span>\n'
             '...hat sich aber automatisch neu gestartet!\n\n'
             'Im Normalfall sollten keine Daten verloren gegangen sein.\n\n',
         
         'error_crashed_title': 'Keizoku wa chikara nari',
-        'error_crashed': 
+        'error_crashed':
             'Es handelt sich um einen <b>externen</b> Fehler mit dem Code '
             '<b>%s</b>, mehr konnten die Kätzchen leider nicht herausfinden.',
         
         'error_crashed__python_title': 'Snake? Snake? Snaaaaaaaaaaake!',
-        'error_crashed_python': 
+        'error_crashed_python':
             'Es handelt sich um einen <b>internen</b> Fehler das Log finden '
             'Sie <a href="file://%s">hier</a>.',
         
@@ -396,7 +396,7 @@ LANG = {
         'html_account':
             'No Account is currently activated.',
         
-        'html_account_info': 
+        'html_account_info':
             'Click on the Atarashii icon in your Taskbar and select '
             '"Preferences" in order to create an Account and/or select '
             '"Accounts" to choose from a list of already existing ones.',
@@ -565,18 +565,18 @@ LANG = {
         'delete_info_message': 'The Message has been successfully deleted.',
         
         # Crash Error Dialogs
-        'error_general': 
+        'error_general':
             '<span size="large"><b>Atarashii has crashed...</b></span>\n'
             '...but it has automatically restarted itself!\n\n'
             'In the normal case no data was lost.\n\n',
         
         'error_crashed_title': 'Keizoku wa chikara nari',
-        'error_crashed': 
+        'error_crashed':
             'The error was an <b>external</b> one with the code <b>%s</b>,'
             ' that\'s all the Kittens could find out.',
         
         'error_crashed__python_title': 'Snake? Snake? Snaaaaaaaaaaake!',
-        'error_crashed_python': 
+        'error_crashed_python':
             'The error was an <b>internal</b> one, you\'ll find the log '
             '<a href="file://%s">here</a>.',
         

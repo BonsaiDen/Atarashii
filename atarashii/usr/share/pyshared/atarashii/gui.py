@@ -280,7 +280,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     # Refresh / Read / History Button ------------------------------------------
     # --------------------------------------------------------------------------
     def set_multi_button(self, mode, refresh_mode=None, status=True,
-                         no_read = False): 
+                         no_read = False):
         
         # History mode
         if self.mode == MODE_MESSAGES and self.message.history_loaded:
@@ -305,7 +305,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             read_icon = read_mode
         
         else:
-            read_mode = False 
+            read_mode = False
             read_icon = False
         
         # Refresh mode
@@ -322,7 +322,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Sensitivity
         self.tray.read_menu.set_sensitive(read_mode)
-        self.tray.refresh_menu.set_sensitive(mode)   
+        self.tray.refresh_menu.set_sensitive(mode)
         
         # Icon
         if history_info is not None:

@@ -229,7 +229,7 @@ class ViewHelpers:
     
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def is_new_timeline(self, item): 
+    def is_new_timeline(self, item):
         self.new_timeline = item.id > self.new_items_id
         if self.new_timeline:
             self.count += 1
@@ -280,7 +280,7 @@ class ViewHelpers:
         status = item.retweeted_status\
                  if hasattr(item, 'retweeted_status') and not get_rt else item
         
-        return getattr(status, attr) if hasattr(status, attr) else None  
+        return getattr(status, attr) if hasattr(status, attr) else None
     
     def get_user(self, item, get_rt=False):
         user = self.get_attr(item, 'user', get_rt = get_rt)

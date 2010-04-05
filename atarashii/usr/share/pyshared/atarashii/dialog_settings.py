@@ -368,7 +368,7 @@ class SettingsDialog(Dialog):
         del self.main.settings['firstmessage_' + name]
         del self.main.settings['lastmessage_' + name]
         del self.main.settings['xkey_' + name]
-        del self.main.settings['xsecret_' + name]        
+        del self.main.settings['xsecret_' + name]
         self.create_drop_list()
 
 

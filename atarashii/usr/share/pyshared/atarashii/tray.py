@@ -91,7 +91,7 @@ class TrayIcon(gtk.StatusIcon):
                                        self.gui.on_read_all)
         
         # Settings
-        self.settings_menu = self.add_menu(lang.menu_settings, 
+        self.settings_menu = self.add_menu(lang.menu_settings,
                                            gtk.STOCK_PREFERENCES, 'p',
                                            lambda *args:
                                            self.gui.on_settings(None, True))
@@ -237,7 +237,7 @@ class TrayIcon(gtk.StatusIcon):
     def on_popup(self, tray, button, time):
         if button == 3:
             rect = self.get_geometry()[1]
-            root_pos = (int(rect[0]), int(rect[1] + rect[3]), True)            
+            root_pos = (int(rect[0]), int(rect[1] + rect[3]), True)
             gobject.idle_add(self.menu.popup, None, None, lambda *arg: root_pos,
                              button, time)
     

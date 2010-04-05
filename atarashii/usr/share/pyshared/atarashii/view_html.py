@@ -84,7 +84,7 @@ class ViewHTML:
             else:
                 if item.id >= self.newest_id and not newest_closed:
                     newest_closed = True
-                    self.renderitems.insert(0, '</div>')   
+                    self.renderitems.insert(0, '</div>')
         
         # make sure to close the new container
         if not newest_closed:

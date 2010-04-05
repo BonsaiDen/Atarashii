@@ -24,7 +24,7 @@ from constants import ST_HISTORY, ST_NETWORK_FAILED
 from constants import HTML_UNSET_ID
 
 
-class UpdaterTweet:    
+class UpdaterTweet:
     
     # Load initial tweets ------------------------------------------------------
     def get_init_tweets(self, last=False, init=False):

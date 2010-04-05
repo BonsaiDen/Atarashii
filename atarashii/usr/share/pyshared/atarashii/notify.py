@@ -78,7 +78,7 @@ class Notifier:
                     snd = Sound(self.settings['sound_' + item[3]])
                     snd.start()
     
-    # Try to close the last notification, this might get ignored on newer 
+    # Try to close the last notification, this might get ignored on newer
     # version of the notification dbus thingy
     def close(self):
         if self.last_id == -1:
@@ -100,7 +100,7 @@ class Sound(threading.Thread):
         code = -1
         
         # Wacka! This thing is a mess, sometimes it goes zombie and on other
-        # ocasions it just fails. So the kittens just threw some try/except 
+        # ocasions it just fails. So the kittens just threw some try/except
         # on it!
         player = None
         while code != 0 and tries < 3:

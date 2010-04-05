@@ -56,7 +56,7 @@ class HTML(view.HTMLView):
             return self.main.settings['firsttweet_' + self.main.username]
         
         else:
-            return HTML_UNSET_ID   
+            return HTML_UNSET_ID
     
     def set_first(self, item_id):
         self.main.settings['firsttweet_' + self.main.username] = item_id

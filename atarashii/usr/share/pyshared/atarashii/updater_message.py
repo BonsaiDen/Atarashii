@@ -46,7 +46,7 @@ class UpdaterMessage:
             
             # Hard limit
             if self.main.max_message_count > self.main.max_message_init_count:
-                self.main.max_message_count = self.main.max_message_init_count  
+                self.main.max_message_count = self.main.max_message_init_count
         
         messages.reverse()
         for i in messages:

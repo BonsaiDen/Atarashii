@@ -331,7 +331,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 self.main.unset_status(ST_UPDATE)
                 gobject.idle_add(self.message.render)
                 gobject.idle_add(self.main.handle_error, error)
-                self.main.refresh_time = calendar.timegm(time.gmtime()) 
+                self.main.refresh_time = calendar.timegm(time.gmtime())
                 return False
             
             if len(messages) > 0:
@@ -382,7 +382,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             # Timeouts
             except socket.timeout, error:
                 if count == 2:
-                    raise error     
+                    raise error
             
             # Stop immediately on network error
             except IOError, error:

@@ -87,11 +87,11 @@ class GUIHelpers:
             self.info_label.set_markup(info % escape(label_text))
     
     # App Title ----------------------------------------------------------------
-    def set_app_title(self):    
+    def set_app_title(self):
         if self.main.username == UNSET_TEXT \
            or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
            
-            self.set_title(lang.title)        
+            self.set_title(lang.title)
         
         # Tray Tooltip
         if not self.main.status(ST_CONNECT) \
