@@ -1,32 +1,35 @@
 atarashii (0.99.19-1) all;
 
-  * The kittens celebrated the 1000th commit to Atarashii!
-  * Replace the message button with tabs and got rid of nearly all the buttons.
+  + The kittens celebrated the 1000th commit to Atarashii!
+  + Tweets that you sent are now automatically marked as read.
+  + Add "Send message to..." to the context menu of users in the tweet view.
+  + Use system sounds for login, warning and error notifications.
+  + Show an warning/error icon instead of the atarashii icon in the tray, if
+    something went wrong.
+  + Added keyboard accelerators to all menus.
+  ~ Replace the message button with tabs and got rid of nearly all the buttons.
+  ~ Move the account selection to the tray menu.
+  ~ Reduce the lag between view and statusbar updates after a refresh.
+  * Fix a bug that "swallowed" tweets in cases were you sent a tweet and the 
+    tweets were sent after the last update, but before you'd sent the tweet.
   * Fix a bug were direct messages would be considered as unread, even if they
     had been already read.
-  * Move the account selection to the tray menu.
-  * Add "Send message to..." to the context menu of users in the tweet view.
-  * Use system sounds for login, warning and error notifications.
-  * Show an warning/error icon instead of the atarashii icon in the tray, if
-    something went wrong.
   * Fix an issue with fast relogs.
-  * Some fixes to the error handling.
+  * Fix some issues with the error handling.
   * Fix the positioning of the tray menu, it's now conform with other GNOME 
     apps.
-  * Added keyboard accelerators to all menus.
   * Fix an issue with text beeing cut off in the settings dialog under certain
     font sizes.
-  * Reduce the lag between view and statusbar updates after a refresh.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 5 Apr 2010 17:11:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 5 Apr 2010 19:38:00 +0200
 
 atarashii (0.99.18a-1) all;
 
-  * Cleaned up the notification code.
-  * Reworked, now much smaller, preferences dialog.
-  * Better handling of some network errors.
-  * Updated tweet parser, now supports the linking of lists.
-  * Reworked about dialog.
+  ~ Cleaned up the notification code.
+  ~ Reworked, now much smaller, preferences dialog.
+  ~ Updated tweet parser, now supports the linking of lists.
+  ~ Reworked about dialog.
+  * Better handling of some network errors. 
   * Small fix to a flickering issues with the read/refresh button.
   * Minor changes here and there.
 
@@ -34,7 +37,7 @@ atarashii (0.99.18a-1) all;
 
 atarashii (0.99.18-1) all;
 
-  * Revamped the notification sounds, now each popup has its own sound. Also
+  ~ Revamped the notification sounds, now each popup has its own sound. Also
     tweets/replies/messages and infos can each have a different sound.
   * More fixes to the scrolling.
   * Some small fixes to the UI.
@@ -58,35 +61,35 @@ atarashii (0.99.17a-1) all;
 
 atarashii (0.99.17-1) all;
 
-  * Try to expand all links, and display the redirect info when they can be
+  + Some more information in the about dialog.
+  + Try to resolve multiple redirects, but only 5 levels deep.
+  ~ Try to expand all links, and display the redirect info when they can be
     expanded.
-  * Also try to resolve multiple redirects, but only 5 levels deep.
-  * Send notifications directly over the dbus.
-  * Switch to sox for notification sounds, instead of mplayer.
-  * Removed mp3 support for notifications sounds and added flac instead.
-  * Some more information in the about dialog.
+  ~ Send notifications directly over the dbus.
+  ~ Switch to sox for notification sounds, instead of mplayer.
+  ~ Removed mp3 support for notifications sounds and added flac instead.
+  ~ A bit of internal cleanup.
   * Fixes to the way scrolling in the views is handled.
-  * A bit of internal cleanup.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 27 Mar 2010 04:50:00 +0100
 
 atarashii (0.99.16b-1) all;
 
-  * Normalize the window position on exit and save it.
-  * Preview expanded shortened links on mouseover.
+  + Preview expanded shortened links on mouseover.
+  ~ Normalize the window position on exit and save it.
+  ~ Improved the shortening of links.
   * When Twitter lags and mentions arrive before replies, replace them 
     afterwards when the replies come in.
-  * Improved the shortening of links.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 26 Mar 2010 01:02:00 +0100
 
 atarashii (0.99.16a-1) all;
 
-  * Notifications now always show up.
+  + Long URLs are now automatically shortened, you can choose a shortening
+    service in the settings dialog.
   * Settings now get saved on user logout and shutdown, also the error wrapper
     now catches all possible errors.
-  * Long URLs are now automatically shortened, you can choose a shortening
-    service in the settings dialog.
+  * Notifications now always show up. 
   * Fixed a bug that allowed someone to relog before the current login was 
     complete. Causing major confusion under the kittens!
 
@@ -94,10 +97,10 @@ atarashii (0.99.16a-1) all;
 
 atarashii (0.99.16-1) all;
 
-  * Read button now gets disabled just before new tweets are loaded, this is to
+  - Removed unneeded spacer in the direct message context menu.
+  ~ Read button now gets disabled just before new tweets are loaded, this is to
     prevent the user from accidently marking all tweets as read.
-  * Removed unneeded spacer in the direct message context menu.
-  * Reworked the notification code, notifications should now always show up.
+  ~ Reworked the notification code, notifications should now always show up.
   * Fix a bug where invalid screen position would been saved, causing a reset of
     the position on program start.
   * Fixed scrolling issues on refreshes when huge amounts of tweets are loaded.
@@ -117,34 +120,35 @@ atarashii (0.99.15c-1) all;
 
 atarashii (0.99.15b-1) all;
 
-  * New "edit" Tweet feature! This basically performs a delete/send in one row
+  + New "edit" Tweet feature! This basically performs a delete/send in one row
     and preserves @replies.
-  * Add error messages for cases when trying to delete items that have already
+  + Add error messages for cases when trying to delete items that have already
     been delete form another client.
+  ~ Updated crash dialogs, additionally a crashlog gets generated on python
+    errors.
   * Fix broken copying of links.
   * Fix the sometimes flickering refresh button when a lot of tweets are loaded.
-  * Updated crash dialogs, additionally a crashlog gets generated on python
-    errors.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 22 Mar 2010 08:06:00 +0100
 
 atarashii (0.99.15a-1) all;
 
+  ~ Workarounds for bugs under older versions of GTK.
   * Fixes to the sound file chooser.
-  * Workarounds for bugs under older versions of GTK.
   * Also a couple of other minor fixes here and there.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 21 Mar 2010 08:57:00 +0100
 
 atarashii (0.99.15-1) all;
 
-  * Atarashii now has a repository @ http://bonsaiden.github.com/Atarashii
+  + Atarashii now has a Debian repository @ 
+    http://bonsaiden.github.com/Atarashii
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 21 Mar 2010 02:49:00 +0100
 
 atarashii (0.99.14e-1) all;
 
-  * Catch internal python errors and treat them as crashes.
+  ~ Catch internal python errors and treat them as crashes.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 20 Mar 2010 19:46:00 +0100
 
@@ -175,64 +179,64 @@ atarashii (0.99.14a-1) all;
 
 atarashii (0.99.14-1) all;
 
-  * Merged the Refresh/Read/History buttons in to one that changes its state
+  + Added support for accents in urls.
+  ~ Merged the Refresh/Read/History buttons in to one that changes its state
     as needed.
+  ~ Update spacer css.
   * Fixed non disabled tray menu items.
-  * Update spacer css.
-  * Added support for accents in urls.
   * Fixed issues with keyboard scrolling in the views.
   
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 19 Mar 2010 23:30:00 +0100
 
 atarashii (0.99.13-1) all;
 
-  * Don't allow selection anymore, instead offer context menu options for
+  + Added CTRL+D and CTRL+T to quick start a message/tweet.
+  + Added CTRL+S shortcut for canceling tweet/message writing completely.
+  + New shiny avatar tooltips.
+  ~ Don't allow selection anymore, instead offer context menu options for
     copying tweets/messages.
-  * Added CTRL+D and CTRL+T to quick start a message/tweet.
-  * Added CTRL+S shortcut for canceling tweet/message writing completely.
-  * New shiny avatar tooltips.
-  * Improved handling of network errors.
+  ~ Improved handling of network errors.
   * The usual internal cleanup and bugfixing.
   
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 19 Mar 2010 08:51:00 +0100
 
 atarashii (0.99.12a-1) all;
 
-  * Improved the textbox, it now trys to remove unnecessary whitespace by 
+  + Added error/warning status to the tray icon tooltip.
+  ~ Improved the textbox, it now trys to remove unnecessary whitespace by 
     itself.
+  ~ Updated the application icon.
   * Fixed the broken links in the message view that caused a 
     "User does not exists" error when trying to send a message.
-  * Added error/warning status to the tray icon tooltip.
-  * Updated the application icon.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 18 Mar 2010 11:22:00 +0100
 
 atarashii (0.99.12-1) all;
 
-  * Unimportant errors and warning now pop up as a button above the timeline,
+  ~ Unimportant errors and warning now pop up as a button above the timeline,
     the button can be clicked in order to retrieve more information.
-  * Lots of internal cleanup, by mainly splitting up files into subclasses.
+  ~ Lots of internal cleanup, by mainly splitting up files into subclasses.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 18 Mar 2010 00:29:00 +0100
 
 atarashii (0.99.11-1) all;
   
-  * Fixed an issues with the views not scrolling correctly to the first unread
-    item.
-  * Cleanup of the internal exception handling this means better error messages.
-  * The tray menu now has an entry to mark all messages and tweets as read.
-  * Added markup to most of the warning/error/info/question dialogs. Usernames
+  + The tray menu now has an entry to mark all messages and tweets as read.
+  + Added markup to most of the warning/error/info/question dialogs. Usernames
     and such are now bold.
-  * Notify the user that his typed in password is too short.
+  + New listview for users in the preferences window.
+  ~ Notify the user that his typed in password is too short.
+  ~ Autostart now works nicely with the GNOME autostart manager.
+  ~ Quicklinks no longer have a context menu.
+  ~ Translated and updated the about dialog.
   * Bugfix for white/empty views on startup.
-  * Autostart now works nicely with the GNOME autostart manager.
   * Multiple fixes to the handling of user deletion.
   * Fixed a bug where the message button would stay activated on logout.
-  * New listview for users in the preferences window.
   * Fix for textbox focus issues when copying a link.
   * Fixed wrong status in the tray icon tooltip.
-  * Quicklinks no longer have a context menu.
-  * Translated and updated the about dialog.
+  * Cleanup of the internal exception handling this means better error messages.
+  * Fixed an issues with the views not scrolling correctly to the first unread
+    item.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 17 Mar 2010 15:23:00 +0100
 
@@ -259,7 +263,7 @@ atarashii (0.99.10a-1) all;
 
 atarashii (0.99.10-1) all;
 
-  * Added favorites! You can now favorite Tweets by clicking on the gray heart
+  + Added favorites! You can now favorite Tweets by clicking on the gray heart
     besides them, if a Tweet is favorited a nice red heart will show up!
     Isn't that cute?
   * Many fixes to the timeline/message views.
@@ -268,35 +272,35 @@ atarashii (0.99.10-1) all;
 
 atarashii (0.99.9-1) all;
 
-  * Removed retweet settings from the preferences...
-  * ...and added a completely new context menu to the view!
-  * You can now retweet from there, either new or old style.
-  * It's now also possible to delete tweets and messages directly from
+  - Removed retweet settings from the preferences...
+  + ...and added a completely new context menu to the view!
+  + You can now retweet from there, either new or old style.
+  + It's now also possible to delete tweets and messages directly from
     Atarashii.
-  * New and improved handling of network errors.
+  + New and improved handling of network errors.
   * And as usual there have been a lot of bugfixes by the kittens.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 16 Mar 2010 05:58:00 +0100
 
 atarashii (0.99.8b-1) all;
 
-  * Added new tooltip for the tray icon.
+  + Added new tooltip for the tray icon.
+  + When pressing Escape in the input text box, it will now loose its focus.
+  + Added min/max lengths to username and password fields, in order to make it 
+    compliant with Twitter.com.
+  + New .markdown README for GitHub.
   * Fixed the "popping" of the input text box.
-  * When pressing Escape in the input text box, it will now loose its focus.
   * Fix for a bug that caused the login notification to not display the count of
     new messages.
-  * Added min/max lengths to username and password fields, in order to make it 
-    compliant with Twitter.com.
-  * New .markdown README for GitHub.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 15 Mar 2010 04:32:00 +0100
 
 atarashii (0.99.8-1) all;
 
-  * New notification on login that wraps up info about new Tweets and Messages.
-  * It's now possible to add Atarashii to the Autostart.
-  * Atarashii can now be started minimized(in the system tray).
-  * There's now an option to hide Atarashii from the Taskbar.
+  + New notification on login that wraps up info about new Tweets and Messages.
+  + It's now possible to add Atarashii to the Autostart.
+  + Atarashii can now be started minimized(in the system tray).
+  + There's now an option to hide Atarashii from the Taskbar.
   * Fixed wrong size of the text input box under some font size configurations.
   * The kittens applied a lot of fixes to the error handling.
 
@@ -304,8 +308,8 @@ atarashii (0.99.8-1) all;
 
 atarashii (0.99.7-1) all;
 
-  * New auto switch to message/tweet view when typing in a message/reply.
-  * Lots of internal code cleanup by the kittens.
+  + New auto switch to message/tweet view when typing in a message/reply.
+  ~ Lots of internal code cleanup by the kittens.
   * Fixed a bug that prevented logging in when no user profile existed and one
     was created.
   * Some minor fixes for rare bugs.
@@ -314,22 +318,22 @@ atarashii (0.99.7-1) all;
 
 atarashii (0.99.6-1) all;
 
-  * Bugfixes for the GUI were some buttons would be in a bad state in some rare
-    conditions-
-  * Messages that you have sent to somebody else do now have the same color as
+  ~ Messages that you have sent to somebody else do now have the same color as
     mentions(yellow).
-  * Fixed display issues with mentions in the timeline.
-  * Prevent warning dialog on over capacity from being spammed.
-  * Lots of internal refactoring and cleanup e.g. converted all magic values
+  ~ Prevent warning dialog on over capacity from being spammed.
+  ~ Lots of internal refactoring and cleanup e.g. converted all magic values
     into constants.
+  * Fixed display issues with mentions in the timeline.
+  * Bugfixes for the GUI were some buttons would be in a bad state in some rare
+    conditions.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 13 Mar 2010 01:19:00 +0100
 
 atarashii (0.99.5-1) all;
 
-  * New regular expressions for hashtags, usernames and urls based on the 
+  + New regular expressions for hashtags, usernames and urls based on the 
     official twitter ones.
-  * Some internal cleanup ragarding the html views.
+  ~ Some internal cleanup ragarding the html views.
   * Fix for hyperspeeded progressbar in some cases.
   * Yet again lots of small bugfixes by the kittens.
 
@@ -337,32 +341,32 @@ atarashii (0.99.5-1) all;
 
 atarashii (0.99.4-1) all;
 
-  * Users are now able to actually use new style retweets.
+  + Users are now able to actually use new style retweets.
+  ~ Improved detection of #Hashtags, works more like Twitter.com now.
   * Notifications for Direct Messages do work again.
   * Fixed an issue with escaped HTML getting copied into the textbox.
-  * Improved detection of #Hashtags, works more like Twitter.com now.
   * Lots of other bugfixes by the kittens.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 9 Mar 2010 04:26:00 +0100
 
 atarashii (0.99.3-1) all;
 
-  * Added support for new style retweets.
+  + Added support for new style retweets.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 7 Mar 2010 18:29:00 +0100
 
 atarashii (0.99.2-1) all;
 
+  ~ Increased the update rate of direct messages.
+  ~ Internal code cleanup.
   * Bugfix for direct message notifications.
-  * Increased the update rate of direct messages.
-  * Internal code cleanup.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 7 Mar 2010 00:22:00 +0100
 
 atarashii (0.99.1-1) all;
 
+  ~ Password is no longer being stored, instead the access tokens are stored.
   * Fixed xAuth authentication.
-  * Password is no longer being stored, instead the access tokens are stored.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 6 Mar 2010 16:37:00 +0100
 
@@ -374,20 +378,20 @@ atarashii (0.99-1) all;
 
 atarashii (0.98-1) all;
 
-  * Added xAuth authentication.
-  * Real changelog will start with version 1.0 development is still to busy.
+  + Added xAuth authentication.
+  ~ Real changelog will start with version 1.0 development is still to busy.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 3 Mar 2010 22:52:00 +0100
 
 atarashii (0.96-1) all;
 
-  * Added support for direct messages.
+  + Added support for direct messages.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 2 Mar 2010 18:23:00 +0100
 
 atarashii (0.93-1) all;
 
-  * Atarashii is now being distributed as a Debian package.
+  ~ Atarashii is now being distributed as a Debian package.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 27 Feb 2010 10:45:00 +0100
 
