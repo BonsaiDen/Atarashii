@@ -103,8 +103,7 @@ class Settings:
         if self.values.has_key('crash_reason'):
             del self.values['crash_reason']
         
-           
-        # Test
+        # Create the file
         settings_file = open(os.path.join(ATARASHII_DIR, 'atarashii.conf'), 'w')
         keys = self.values.keys()
         keys.sort()
