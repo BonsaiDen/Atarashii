@@ -31,7 +31,8 @@ class ViewMenu:
     
     # Tooltip Building ---------------------------------------------------------
     def on_link_hover(self, view, title, url):
-        self.last_hovered_link = url # url might be none!
+        # url might be none!
+        self.last_hovered_link = url
     
     def expand_link(self, url, expanded):
         self.expanded_links[url] = expanded
@@ -147,10 +148,13 @@ class ViewMenu:
         link, full = link_data[0], link_data[2]
         item_id = self.get_id(item) if item is not None else -1
         if self.ok_menu(link):
-            if self.create_link_menu(menu, link, full): # Link options
+            
+            # Link options
+            if self.create_link_menu(menu, link, full):
                 return True
             
-            elif self.create_status_tag_menu(menu, link, full): # Status / Tag
+            # Status / Tag
+            elif self.create_status_tag_menu(menu, link, full):
                 return True
             
             else:
@@ -226,7 +230,7 @@ class ViewMenu:
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 pos += item.offsetHeight;
-                sizes.push([item.getAttribute("id"), pos])
+                sizes.push([item.getAttribute('id'), pos])
                 pos += 2;
                 delete item;
             };
