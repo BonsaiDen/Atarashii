@@ -143,7 +143,10 @@ class Atarashii(AtarashiiActions):
            and (change_user is None or change_user == UNSET_TEXT):
             self.gui.set_app_title()
             return
-            
+        
+        # Disable the account menu
+        self.gui.tray.activate_menu(False)
+        
         # Wait until the last update/delete/send is complete
         # FIXME does this thing ever gets into action?
         while self.any_status(ST_UPDATE, ST_DELETE, ST_SEND, ST_CONNECT):
@@ -180,7 +183,6 @@ class Atarashii(AtarashiiActions):
         if self.gui.mode == MODE_MESSAGES:
             self.gui.html.start()
         
-        self.gui.tray.settings_menu.set_sensitive(False)
         self.gui.message.init(True)
         if self.gui.mode == MODE_TWEETS:
             self.gui.message.start()
@@ -192,25 +194,25 @@ class Atarashii(AtarashiiActions):
     def on_login(self):
         self.unset_status(ST_LOGIN_ERROR | ST_CONNECT | ST_DELETE)
         self.set_status(ST_LOGIN_SUCCESSFUL)
-        
-        self.gui.tray.settings_menu.set_sensitive(True)
+        self.gui.tray.activate_menu(True)
         self.gui.set_title(lang.title_logged_in % self.username)
         self.gui.update_status()
         self.gui.show_input()
     
     def on_login_failed(self, error=None):
+        self.username = ''
+        self.settings['username'] = ''
+        self.gui.tray.update_account_menu()
+        
         self.refresh_time = UNSET_TIMEOUT
         self.refresh_timeout = UNSET_TIMEOUT
         self.gui.set_mode(MODE_TWEETS)
         self.unset_status(ST_ALL)
         if error is not None:
             self.set_status(ST_LOGIN_ERROR)
-        
-        if self.gui.settings_dialog is not None:
-            self.gui.settings_dialog.activate(True)
-        
+                
+        self.gui.tray.activate_menu(True)
         self.gui.set_multi_button(False, None, False)
-        self.gui.tray.settings_menu.set_sensitive(True)
         self.gui.set_app_title()
         self.gui.hide_all()
         self.gui.update_status()
@@ -229,14 +231,12 @@ class Atarashii(AtarashiiActions):
         self.gui.set_mode(MODE_TWEETS)
         self.unset_status(ST_ALL)
         self.gui.update_status()
-        self.gui.set_app_title()
         self.gui.hide_all()
         
-        if self.gui.settings_dialog is not None:
-            self.gui.settings_dialog.activate(True)
-        
+        self.gui.tray.activate_menu(True)
         gobject.idle_add(self.gui.message.init, True)
         gobject.idle_add(self.gui.html.init, True)
+        gobject.idle_add(self.gui.set_app_title)
     
     
     # Helper Functions ---------------------------------------------------------
