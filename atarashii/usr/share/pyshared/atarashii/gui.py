@@ -144,6 +144,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         else:
             self.resize(280, HT_400_BAD_REQUEST)
         
+        # Dialogs
+        self.about_dialog = None
+        self.settings_dialog = None
+        
         # Tray
         self.tray = tray.TrayIcon(self)
         
@@ -152,10 +156,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.connect('destroy', self.destroy_event)
         self.connect('window-state-event', self.state_event)
         self.connect('focus-out-event', self.fix_tooltips)
-        
-        # Dialogs
-        self.about_dialog = None
-        self.settings_dialog = None
         
         # Variables
         self.mode = MODE_TWEETS
@@ -324,7 +324,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.tray.refresh_menu.set_sensitive(mode)   
         
         # Icon
-        if history_info != None:
+        if history_info is not None:
             multi_icon = gtk.STOCK_GOTO_TOP
         
         elif read_icon:
