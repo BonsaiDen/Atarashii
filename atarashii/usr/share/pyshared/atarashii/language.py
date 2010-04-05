@@ -453,7 +453,7 @@ LANG = {
         # Statusbar
         'status_logout': 'Not connected.',
         'status_connecting': 'Connecting as %s...',
-        'status_connected': 'Connected, loading...',
+        'status_connected': 'Connected, refreshing...',
         'status_error': 'Connection failed.',
         'status_seconds': 'Refresh in %s seconds.',
         'status_one_second': 'Refresh in one second.',
