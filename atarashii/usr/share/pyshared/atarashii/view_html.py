@@ -19,8 +19,8 @@
 from utils import SPACES
 
 from language import LANG as lang
-from constants import HTML_UNSET_ID, ST_LOGIN_SUCCESSFUL, HTML_UNSET_TEXT, \
-                      ST_NETWORK_FAILED
+from constants import HTML_UNSET_ID, HTML_UNSET_TEXT
+from constants import ST_NETWORK_FAILED, ST_LOGIN_SUCCESSFUL
 
 
 class ViewHTML(object):

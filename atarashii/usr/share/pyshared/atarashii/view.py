@@ -31,7 +31,7 @@ from view_menu import ViewMenu
 from view_helpers import ViewHelpers
 from view_html import ViewHTML
 
-from constants import ST_HISTORY
+from constants import ST_HISTORY, ST_NETWORK_FAILED
 from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \
                       UNSET_ID_NUM, HTML_UNSET_TEXT, HTML_LOADED, \
                       MODE_MESSAGES
@@ -175,13 +175,12 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.items = self.items[self.history_count:]
         self.set_item_count(self.get_item_count() - self.history_count)
         self.history_count = 0
-        self.gui.set_multi_button(True)
+        self.gui.set_multi_button(not self.main.status(ST_NETWORK_FAILED))
         self.render()
     
     def read(self):
         if self.init_id != self.get_latest():
             self.init_id = self.get_latest()
-            self.gui.set_multi_button(False, True)
             if not self.history_loaded:
                 pos = len(self.items) - self.item_count
                 if pos < 0:
