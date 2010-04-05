@@ -149,7 +149,8 @@ class Atarashii(AtarashiiActions):
         
         # Wait until the last update/delete/send/login is complete
         if self.any_status(ST_UPDATE, ST_DELETE, ST_SEND, ST_CONNECT) \
-           or (not self.status(ST_LOGIN_COMPLETE) and change_user != None):
+           or (not self.status(ST_LOGIN_COMPLETE) and change_user != None and self.username != ''):
+            print "blaaa", self.status(ST_CONNECT), self.status(ST_UPDATE)
             gobject.timeout_add(50, self.login, change_user)
             return None
         
@@ -180,11 +181,11 @@ class Atarashii(AtarashiiActions):
         
         # Reset
         self.gui.update_status()
-        self.gui.html.init(True)
+        self.gui.html.init(load = True)
         if self.gui.mode == MODE_MESSAGES:
             self.gui.html.start()
         
-        self.gui.message.init(True)
+        self.gui.message.init(load = True)
         if self.gui.mode == MODE_TWEETS:
             self.gui.message.start()
         

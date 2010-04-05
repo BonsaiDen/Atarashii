@@ -28,6 +28,7 @@ import calendar
 import time
 import math
 import socket
+from urllib2 import URLError
 
 import send
 
@@ -285,12 +286,14 @@ class AtarashiiActions:
             msg = ''
             error_code = 0
             error_errno = ERR_URLLIB_TIMEOUT
+            print "timeout"
         
         # GAI errors
-        elif isinstance(error, socket.gaierror):
+        elif isinstance(error, socket.gaierror) or isinstance(error, URLError):
             msg = ''
             error_errno = ERR_URLLIB_FAILED
             error_code = 0
+            print "liberror"
         
         # IO errors
         elif isinstance(error, IOError):
@@ -303,6 +306,7 @@ class AtarashiiActions:
             else:
                 msg = ''
             
+            print "ioerror", error.errno
             error_errno = error.errno
             error_code = error.code
         
@@ -317,7 +321,7 @@ class AtarashiiActions:
         if error_errno in (ERR_URLLIB_FAILED, ERR_URLLIB_TIMEOUT):
             self.set_status(ST_NETWORK_FAILED)
             code = ERR_NETWORK_FAILED
-            if self.status(ST_LOGIN_SUCCESSFUL):
+            if self.status(ST_LOGIN_SUCCESSFUL) or ERR_URLLIB_FAILED:
                 code = ERR_NETWORK_TWITTER_FAILED
                 self.gui.set_multi_button(True)
                 self.gui.tray.refresh_menu.set_sensitive(False)

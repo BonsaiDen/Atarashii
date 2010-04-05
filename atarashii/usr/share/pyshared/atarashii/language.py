@@ -233,7 +233,7 @@ LANG = {
         'error_crashed__python_title': 'Snake? Snake? Snaaaaaaaaaaake!',
         'error_crashed_python': 
             'Es handelt sich um einen <b>internen</b> Fehler das Log finden '
-            'S <a href="file://%s">hier</a>.',
+            'Sie <a href="file://%s">hier</a>.',
         
         # User Errors
         'error_title': 'Atarashii - Fehler',
@@ -303,6 +303,9 @@ LANG = {
             'es wird alle %d Sekunden versucht die Verbindung '
             'wiederherzustellen.',
         
+        'warning_network_twitter':
+            'Atarashii konnte keine Verbindung zu Twitter herstellen.',
+        
         'warning_template': '<b>Warnung von %H:%M:%S:</b>\n',
         
         # Buttons
@@ -339,7 +342,7 @@ LANG = {
         'tray_error_login': 'Anmeldung als <b>%s</b> fehlgeschlagen.',
         'tray_error_rate': 'Requestlimit überschritten.',
         'tray_warning_network': '<b>Netzwerkfehler.</b>',
-        'tray_warning_twitter': '<b>Twitter ist überlastet</b>',
+        'tray_warning_overload': '<b>Twitter ist überlastet</b>',
         'tray_error_twitter': 'Twitter Serverfehler.',
         'tray_error_down': 'Twitter ist derzeit offline.',
         'tray_error_rate_limit': 'Requestlimit überschritten.',
@@ -636,6 +639,9 @@ LANG = {
             'Atarashii has lost the conntection to Twitter. It '
             'will automatically try to reconnect itself every %d seconds.',
         
+        'warning_network_twitter':
+            'Atarashii couldn\'t establish a connection to Twitter.',
+        
         'warning_template': '<b>Warning from %H:%M:%S</b>\n',
         
         # Buttons
@@ -672,7 +678,7 @@ LANG = {
         'tray_error_login': 'Login as <b>%s</b> failed.',
         'tray_error_rate': 'Request limit exceeded.',
         'tray_warning_network': '<b>Network error.</b>',
-        'tray_warning_twitter': '<b>Twitter is over capacity.</b>',
+        'tray_warning_overload': '<b>Twitter is over capacity.</b>',
         'tray_error_twitter': 'Twitter server error.',
         'tray_error_down': 'Twitter is offline.',
         'tray_error_rate_limit': 'Ratelimit exceeded.',

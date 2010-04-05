@@ -106,7 +106,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
     # Initiate a empty timeline ------------------------------------------------
     # --------------------------------------------------------------------------
-    def init(self, splash=False):
+    def init(self, splash=False, load=False):
         # Links and items
         self.items = []
         self.update_list = []
@@ -137,6 +137,9 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         if splash:
             self.splash()
+    
+        elif load:
+            self.start()
     
     
     # History / Read Button ----------------------------------------------------
