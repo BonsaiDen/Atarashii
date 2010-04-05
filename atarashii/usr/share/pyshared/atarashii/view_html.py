@@ -93,11 +93,18 @@ class ViewHTML:
     def splash(self):
         self.scroll.get_vscrollbar().set_value(0)
         self.offset_count = 0
+        acc = lang.html_account if self.main.username == '' else ''
+        acc_info = lang.html_account_info if self.main.username == '' else ''        
         self.render_html('''
             <body class="unloaded" ondragstart="return false">
-                <div class="loading"><img src="file://%s" /><br/>
-                <b class="loadingtext">%s</b></div>
-            </body>''' % (self.main.get_image(), lang.html_welcome))
+                <div class="loading">
+                <img src="file://%s" /><br/>
+                <b class="loadingtext">%s</b>
+                <div class="infoheader">%s</div>
+                <div class="infotext">%s</div>
+                </div>
+            </body>''' % (self.main.get_image(), lang.html_welcome, acc,
+                          acc_info))
     
     def render_html(self, html):
         data = '''

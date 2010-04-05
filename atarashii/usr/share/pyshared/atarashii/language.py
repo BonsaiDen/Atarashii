@@ -45,6 +45,15 @@ LANG = {
         # HTML
         'html_welcome': 'Willkommen bei Atarashii.',
         'html_loading': 'Tweets werden geladen...',
+        
+        'html_account':
+            'Derzeit ist kein Account aktiviert.',
+        
+        'html_account_info': 
+            'Klicken sie auf das Atarashii Symbol in Ihrer Taskleiste und '
+            'wählen sie "Einstellungen" um einen Account zu erstellen und/oder '
+            'wählen sie "Accounts" und aktivieren Sie einen der vorhandenen.',
+        
         'html_avatar_tooltip':
             '<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n'
             '<b>%d</b> Follower\nFollowing <b>%d</b>',
@@ -378,6 +387,15 @@ LANG = {
         # HTML
         'html_welcome': 'Welcome to Atarashii.',
         'html_loading': 'Loading Tweets...',
+        
+        'html_account':
+            'No Account is currently activated.',
+        
+        'html_account_info': 
+            'Click on the Atarashii icon in your Taskbar and select '
+            '"Preferences" in order to create an Account and/or select '
+            '"Accounts" to choose from a list of already existing ones.',
+        
         'html_avatar_tooltip':
             '<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n'
             '<b>%d</b> Follower\nFollowing <b>%d</b>',

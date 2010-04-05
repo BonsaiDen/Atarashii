@@ -67,6 +67,22 @@ a {
     padding-top: 8px;
 }
 
+.infoheader {
+    padding-top: 32px;
+    padding-left: 8px;
+    padding-right: 8px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.infotext {
+    padding-top: 2px;
+    padding-left: 12px;
+    padding-right: 12px;
+    font-size: 9px;
+    font-weight: bold;
+}
+
 .unloaded {
 	background: #dbdbdb;
 }
