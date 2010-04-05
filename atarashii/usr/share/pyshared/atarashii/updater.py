@@ -410,7 +410,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         if count > 0:
             notify_message_list.reverse()
             if count > 1:
-                for i in range(0, count):
+                for i in xrange(count):
                     notify_message_list[i][0] = lang.notification_index \
                                                 % (notify_message_list[i][0],
                                                    i + 1, count)
@@ -444,11 +444,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         if count > 0:
             notify_tweet_list.reverse()
             if count > 1:
-                for i in range(0, count):
+                for i in xrange(count):
                     notify_tweet_list[i][0] = lang.notification_index \
                                               % (notify_tweet_list[i][0],
                                                  i + 1, count)
-        
         
         # Show Notifications
         if self.settings.is_true('notify'):
