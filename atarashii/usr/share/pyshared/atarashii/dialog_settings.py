@@ -42,7 +42,12 @@ class SettingsDialog(Dialog):
         if self.drop is not None:
             self.drop.set_sensitive(mode)
             self.add.set_sensitive(mode)
-            self.drop_changed()
+            if mode:
+                self.drop_changed()
+                
+            else:
+                self.edit.set_sensitive(mode)
+                self.delete.set_sensitive(mode)
     
     def __init__(self, parent):
         Dialog.__init__(self, parent, True, False)
@@ -59,14 +64,13 @@ class SettingsDialog(Dialog):
         cancel_button = self.get('cancelbutton')
         cancel_button.set_label(lang.settings_buttonCancel)
         
-        
         # Tabs
-        self.get('users').set_label(lang.settings_tab_users)
+        self.get('users').set_label(lang.settings_tab_accounts)
         self.get('general').set_label(lang.settings_tab_general)
         self.get('notifications').set_label(lang.settings_tab_notifications)
         
         
-        # Accounts
+        # Accounts -------------------------------------------------------------
         self.add = add = self.get('add')
         add.set_label(lang.settings_add)
         self.edit = edit = self.get('edit')
@@ -79,7 +83,8 @@ class SettingsDialog(Dialog):
         self.accounts_list = None
         self.drop = drop = gtk.TreeView()
         drop.get_selection().set_mode(gtk.SELECTION_BROWSE)
-        column = gtk.TreeViewColumn(lang.settings_accounts_name)
+        column = gtk.TreeViewColumn('')
+        drop.set_headers_visible(False)
         drop.append_column(column)
         cell = gtk.CellRendererText()
         column.pack_start(cell, True)
@@ -114,13 +119,8 @@ class SettingsDialog(Dialog):
         
         delete.connect('clicked', delete_dialog)
         
-        # Notifications
-        notify = self.get('notify')
-        sound = self.get('sound')
-        notify.set_label(lang.settings_notifications_enable)
-        sound.set_label(lang.settings_notifications_sound)
         
-        # General
+        # General --------------------------------------------------------------
         autostart = self.get('autostart')
         taskbar = self.get('taskbar')
         tray = self.get('tray')
@@ -176,14 +176,19 @@ class SettingsDialog(Dialog):
             del_button = self.get('button_' + snd + '_del')
             del_button.connect('clicked', del_sound, snd)
             snd_file = get_sound(snd)
-            snd_file = os.path.basename(snd_file) if snd_file != None \
+            snd_file = os.path.basename(snd_file) if snd_file is not None \
                        else lang.settings_file_none
             
             del_button.set_sensitive(snd_file != lang.settings_file_none)
             self.get('file_' + snd).set_label(snd_file)
         
         
-        # Notification Setting -------------------------------------------------
+        # Notification ---------------------------------------------------------
+        notify = self.get('notify')
+        sound = self.get('sound')
+        notify.set_label(lang.settings_notifications_enable)
+        sound.set_label(lang.settings_notifications_sound)
+        
         notify.set_active(self.settings.is_true('notify'))
         sound.set_active(self.settings.is_true('sound'))
         notify.set_sensitive(True)
@@ -193,8 +198,8 @@ class SettingsDialog(Dialog):
         
         def toggle(*args):
             sound.set_sensitive(notify.get_active())
-            self.get('soundfiles').set_sensitive(
-                        notify.get_active() and sound.get_active())
+            self.get('soundfiles').set_sensitive(notify.get_active() \
+                                                 and sound.get_active())
         
         toggle()
         notify.connect('toggled', toggle)
@@ -239,25 +244,16 @@ class SettingsDialog(Dialog):
             self.main.save_mode()
             
             # Set new Username
-            if self.get_drop_active() != -1:
-                username = self.user_accounts[self.get_drop_active()]
-            
-            else:
-                username = ''
-            
-            # Save Settings
-            self.main.save_settings(False)
-            if username == '':
+            if self.get_drop_active() == -1 \
+               or not oldusername in self.main.settings.get_accounts():
+               
                 self.main.username = ''
                 self.settings['username'] = ''
                 self.main.logout()
             
-            elif username != oldusername \
-                 or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
-                
-                self.activate(False)
-                self.main.login(username)
-            
+            # Save Settings
+            self.main.save_settings(False)
+            self.gui.tray.update_account_menu()
             self.on_close()
         
         if self.main.status(ST_UPDATE) \
@@ -355,15 +351,11 @@ class SettingsDialog(Dialog):
             self.main.settings['firstmessage_' + username] = fm_tmp
             self.main.settings['lastmessage_' + username] = lm_tmp
             
-            if self.main.username == name:
-                self.main.username = self.main.settings['username'] = username
-            
             self.main.settings.save()
             self.create_drop_list(username)
     
     def create_account(self, username):
         self.main.settings['account_' + username] = ''
-        self.main.username = username
         self.create_drop_list()
         if len(self.user_accounts) == 1:
             self.select_drop(0)
@@ -377,10 +369,7 @@ class SettingsDialog(Dialog):
         del self.main.settings['firstmessage_' + name]
         del self.main.settings['lastmessage_' + name]
         del self.main.settings['xkey_' + name]
-        del self.main.settings['xsecret_' + name]
-        if self.main.username == name:
-            self.main.username = self.main.settings['username'] = ''
-        
+        del self.main.settings['xsecret_' + name]        
         self.create_drop_list()
 
 

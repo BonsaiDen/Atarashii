@@ -22,6 +22,7 @@ import gtk
 import gobject
 
 from language import LANG as lang
+from utils import menu_escape
 
 
 class TrayIcon(gtk.StatusIcon):
@@ -99,6 +100,11 @@ class TrayIcon(gtk.StatusIcon):
         self.add_menu(lang.menu_about, gtk.STOCK_ABOUT, 'a',
                       lambda *args: self.gui.on_about(None, True))
         
+        # Accounts
+        self.account_menu_item = self.add_menu(lang.menu_accounts, gtk.STOCK_ABOUT)
+        self.account_menu = gtk.Menu()
+        self.account_menu_item.set_submenu(self.account_menu)
+        
         # Separator
         self.menu.append(gtk.SeparatorMenuItem())
         
@@ -107,8 +113,12 @@ class TrayIcon(gtk.StatusIcon):
         
         # Popup
         self.menu.show_all()
-        self.connect('popup-menu', self.on_popup_fake)
+        self.update_account_menu()
+        self.connect('popup-menu', self.on_popup)
     
+    
+    # Menus --------------------------------------------------------------------
+    # --------------------------------------------------------------------------
     def add_menu(self, text, image, accel_key=None, callback=None):
         if self.new_gtk_version:
             item = gtk.ImageMenuItem(image)
@@ -118,13 +128,54 @@ class TrayIcon(gtk.StatusIcon):
             item = gtk.MenuItem(text, self.accel)
         
         # Add accelerator
-        if accel_key != None:
+        if accel_key is not None:
             item.add_accelerator('activate', self.accel, ord(accel_key),
                                  gtk.gdk.CONTROL_MASK, gtk.ACCEL_VISIBLE)
         
-        item.connect('activate', callback)
+        if callback is not None:
+            item.connect('activate', callback)
+        
         self.menu.append(item)
         return item
+    
+    def update_account_menu(self):
+        for i in self.account_menu.get_children():
+            self.account_menu.remove(i)
+        
+        group = None
+        selected = None
+        account_list = self.main.settings.get_accounts()
+        for i in account_list:
+            item = gtk.RadioMenuItem(group, menu_escape(i))
+            if group is None:
+                group = item
+            
+            item.connect('toggled', self.on_account_select, i)
+            self.account_menu.append(item)
+            
+            # Select
+            if i == self.main.username:
+                selected = item
+        
+        self.activate_menu(True)
+        self.account_menu.show_all()
+        if selected != None:
+            selected.set_active(True)
+    
+    def activate_menu(self, mode):
+        if self.gui.settings_dialog is not None:
+            self.gui.settings_dialog.activate(mode)
+        
+        self.settings_menu.set_sensitive(mode)
+        if len(self.account_menu.get_children()) == 0:
+            mode = False
+        
+        self.account_menu_item.set_sensitive(mode)
+    
+    def on_account_select(self, item, username):
+        if username != self.main.username and item.get_active():
+            self.activate_menu(False)
+            self.main.login(username)
     
     
     # Tooltip ------------------------------------------------------------------
@@ -181,7 +232,7 @@ class TrayIcon(gtk.StatusIcon):
         tip.set_custom(self.tooltip)
         return True
     
-    def on_popup_fake(self, tray, button, time):
+    def on_popup(self, tray, button, time):
         if button == 3:
             rect = self.get_geometry()[1]
             root_pos = (int(rect[0]), int(rect[1] + rect[3]), True)            
