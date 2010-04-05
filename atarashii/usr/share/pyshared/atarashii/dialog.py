@@ -187,6 +187,7 @@ class AboutDialog(Dialog):
         self.__class__.instance = None
         self.gui.about_dialog = None
         self.dlg.hide()
+        self.dlg.destroy()
 
 
 # Message Dialog ---------------------------------------------------------------
