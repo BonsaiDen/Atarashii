@@ -28,8 +28,7 @@ from dialog import Dialog, MessageDialog
 from utils import SHORTS_LIST, URLShorter, URLExpander
 from settings import THEME_SOUNDS, THEME_DIR
 
-from constants import ST_LOGIN_SUCCESSFUL, ST_CONNECT, ST_UPDATE, \
-                      ST_LOGIN_COMPLETE
+from constants import ST_CONNECT, ST_UPDATE, ST_LOGIN_COMPLETE
 
 from constants import MESSAGE_QUESTION
 

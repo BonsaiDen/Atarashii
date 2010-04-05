@@ -101,7 +101,9 @@ class TrayIcon(gtk.StatusIcon):
                       lambda *args: self.gui.on_about(None, True))
         
         # Accounts
-        self.account_menu_item = self.add_menu(lang.menu_accounts, gtk.STOCK_ABOUT)
+        self.account_menu_item = self.add_menu(lang.menu_accounts,
+                                               gtk.STOCK_ABOUT)
+        
         self.account_menu = gtk.Menu()
         self.account_menu_item.set_submenu(self.account_menu)
         

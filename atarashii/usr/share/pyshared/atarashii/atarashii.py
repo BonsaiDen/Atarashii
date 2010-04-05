@@ -149,8 +149,9 @@ class Atarashii(AtarashiiActions):
         
         # Wait until the last update/delete/send/login is complete
         if self.any_status(ST_UPDATE, ST_DELETE, ST_SEND, ST_CONNECT) \
-           or (not self.status(ST_LOGIN_COMPLETE) and change_user != None and self.username != ''):
-            print "blaaa", self.status(ST_CONNECT), self.status(ST_UPDATE)
+           or (not self.status(ST_LOGIN_COMPLETE) and change_user != None \
+               and self.username != ''):
+            
             gobject.timeout_add(50, self.login, change_user)
             return None
         

@@ -108,7 +108,7 @@ class ViewHTML:
         self.scroll.get_vscrollbar().set_value(0)
         self.offset_count = 0
         acc = lang.html_account if self.main.username == '' else ''
-        acc_info = lang.html_account_info if self.main.username == '' else ''        
+        acc_info = lang.html_account_info if self.main.username == '' else ''
         self.render_html('''
             <body class="unloaded" ondragstart="return false">
                 <div class="loading">

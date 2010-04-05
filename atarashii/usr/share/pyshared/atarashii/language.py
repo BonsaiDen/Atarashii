@@ -51,8 +51,8 @@ LANG = {
         
         'html_account_info': 
             'Klicken sie auf das Atarashii Symbol in Ihrer Taskleiste und '
-            'wählen sie "Einstellungen" um einen Account zu erstellen und/oder '
-            'wählen sie "Accounts" und aktivieren Sie einen der vorhandenen.',
+            'wählen sie "Einstellungen" um einen Account zu erstellen und/oder'
+            ' wählen sie "Accounts" und aktivieren Sie einen der vorhandenen.',
         
         'html_avatar_tooltip':
             '<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n'
@@ -348,6 +348,8 @@ LANG = {
         'tray_error_rate_limit': 'Requestlimit überschritten.',
         
         # Context Menu
+        'content_block': '%s blockieren',
+        'content_unfollow': '%s entfolgen',
         'context_browser': 'Im _Browser öffnen',
         'context_copy': 'Link _kopieren',
         'context_copy_tweet': 'Tweet _kopieren',
@@ -684,6 +686,8 @@ LANG = {
         'tray_error_rate_limit': 'Ratelimit exceeded.',
         
         # Context Menu
+        'content_block': 'Block %s',
+        'content_unfollow': 'Unfollow %s',
         'context_browser': 'Open in _Browser',
         'context_copy': '_Copy link location',
         'context_copy_tweet': '_Copy Tweet',
