@@ -97,7 +97,7 @@ class TrayIcon(gtk.StatusIcon):
                                            self.gui.on_settings(None, True))
         
         # About
-        self.add_menu(lang.menu_about, gtk.STOCK_ABOUT, 'a',
+        self.add_menu(lang.menu_about, gtk.STOCK_ABOUT, 'b',
                       lambda *args: self.gui.on_about(None, True))
         
         # Accounts
