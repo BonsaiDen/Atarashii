@@ -140,9 +140,8 @@ LANG = {
         'settings_button': 'Speichern',
         'settings_buttonCancel': 'Abbrechen',
         'settings_tab_general': 'Allgemein',
-        'settings_tab_users': 'Benutzer',
+        'settings_tab_accounts': 'Accounts',
         'settings_tab_notifications': 'Benachrichtigungen',
-        'settings_accounts_name': 'Name',
         'settings_notifications_enable': 'Aktivieren',
         'settings_notifications_sound': 'Sounds abspielen',
         'settings_file_tweets': 'Tweets:',
@@ -313,6 +312,7 @@ LANG = {
         'menu_read': 'Alle als _gelesen markieren',
         'menu_settings': '_Einstellungen',
         'menu_about': 'Über _Atarashii',
+        'menu_accounts': 'Accounts',
         'menu_quit': '_Beenden',
         
         # Tray Tooltip
@@ -473,9 +473,8 @@ LANG = {
         'settings_button': 'Save',
         'settings_buttonCancel': 'Cancel',
         'settings_tab_general': 'General',
-        'settings_tab_users': 'Users',
+        'settings_tab_accounts': 'Accounts',
         'settings_tab_notifications': 'Notifications',
-        'settings_accounts_name': 'Name',
         'settings_notifications_enable': 'Enable',
         'settings_notifications_sound': 'Play sounds',
         'settings_file_tweets': 'Tweets:',
@@ -637,6 +636,7 @@ LANG = {
         'menu_read': '_Mark all as read',
         'menu_settings': '_Preferences',
         'menu_about': 'About _Atarashii',
+        'menu_accounts': 'Accounts',
         'menu_quit': '_Quit',
         
         # Tray Tooltip
