@@ -402,19 +402,32 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     # --------------------------------------------------------------------------
     def show_notifications(self, updates, messages):
         username = self.main.username.lower()
-        notify_list = []
+        
+        # Messages
+        notify_message_list = []
         message_ids = []
         for i in messages:
             img_file = self.get_image(i, True)
             if not i.id in message_ids:
                 message_ids.append(i.id)
                 if i.sender.screen_name.lower() != username:
-                    notify_list.append([lang.notification_message % \
+                    notify_message_list.append([lang.notification_message % \
                                         i.sender.screen_name, i.text, img_file,
                                         'messages'])
             
             self.message.update_list.append((i, img_file))
         
+        count = len(notify_message_list)
+        if count > 0:
+            notify_message_list.reverse()
+            if count > 1:
+                for i in range(0, count):
+                    notify_message_list[i][0] = lang.notification_index \
+                                                % (notify_message_list[i][0],
+                                                   i + 1, count)
+        
+        # Tweets
+        notify_tweet_list = []
         updates_ids = []
         for i in updates:
             img_file = self.get_image(i)
@@ -434,20 +447,23 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                         if i.in_reply_to_screen_name.lower() == username:
                             e = 'reply'
                     
-                    notify_list.append([name, text, img_file, e])
+                    notify_tweet_list.append([name, text, img_file, e])
             
             self.html.update_list.append((i, img_file))
         
-        # Show Notifications
-        count = len(notify_list)
-        if count > 0 and self.settings.is_true('notify'):
-            notify_list.reverse()
+        count = len(notify_tweet_list)
+        if count > 0:
+            notify_tweet_list.reverse()
             if count > 1:
                 for i in range(0, count):
-                    notify_list[i][0] = lang.notification_index \
-                                        % (notify_list[i][0], i + 1, count)
-            
-            self.notifier.add(notify_list)
+                    notify_tweet_list[i][0] = lang.notification_index \
+                                              % (notify_tweet_list[i][0],
+                                                 i + 1, count)
+        
+        
+        # Show Notifications
+        if self.settings.is_true('notify'):
+            self.notifier.add(notify_message_list + notify_tweet_list)
     
     
     # Helpers ------------------------------------------------------------------
