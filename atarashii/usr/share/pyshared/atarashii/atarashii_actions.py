@@ -54,7 +54,7 @@ from constants import HT_400_BAD_REQUEST, HT_401_UNAUTHORIZED, \
                       HT_503_SERVICE_UNAVAILABLE
 
 
-class AtarashiiActions:
+class AtarashiiActions(object):
     
     # Start & Quit -------------------------------------------------------------
     def start(self):

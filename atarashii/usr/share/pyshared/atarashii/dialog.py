@@ -29,7 +29,7 @@ from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \
                       MESSAGE_INFO, UNSET_TEXT, UNSET_TIMEOUT
 
 
-class Dialog:
+class Dialog(object):
     resource = ''
     instance = None
     
@@ -242,7 +242,7 @@ class MessageDialog(gtk.MessageDialog):
 
 # Button Dialog ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
-class ButtonDialog:
+class ButtonDialog(object):
     def __init__(self, gui, dtype, template, title):
         self.gui = gui
         self.box = gui.gtb.get_object(dtype)

@@ -27,7 +27,7 @@ from utils import URLExpander, escape, menu_escape
 
 # This is the hacked part of Atarashii, getting this menu to work is quite a
 # pain. The kittens spend some real time developing this...
-class ViewMenu:
+class ViewMenu(object):
     
     # Tooltip Building ---------------------------------------------------------
     def on_link_hover(self, view, title, url):

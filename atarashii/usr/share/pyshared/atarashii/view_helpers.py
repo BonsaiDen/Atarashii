@@ -28,7 +28,7 @@ import math
 from language import LANG as lang
 
 
-class ViewHelpers:
+class ViewHelpers(object):
     
     # Copy stuff to clipboard --------------------------------------------------
     def copy_data(self, data):

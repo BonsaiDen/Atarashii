@@ -374,7 +374,7 @@ class SettingsDialog(Dialog):
 
 # Sound File Chooser -----------------------------------------------------------
 # ------------------------------------------------------------------------------
-class SoundChooser:
+class SoundChooser(object):
     def __init__(self, dlg):
         self.chooser = gtk.FileChooserDialog(None, dlg,
                            action = gtk.FILE_CHOOSER_ACTION_OPEN,

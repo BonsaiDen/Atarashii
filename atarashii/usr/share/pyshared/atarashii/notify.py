@@ -24,7 +24,7 @@ import threading
 from settings import THEME_SOUNDS
 
 
-class Notifier:
+class Notifier(object):
     def __init__(self, main):
         self.settings = main.settings
         self.last_id = -1

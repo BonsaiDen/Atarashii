@@ -62,7 +62,7 @@ URL_REGEX = re.compile('((%s)((https?://|www\\.)(%s)(\/%s*%s?)?(\?%s*%s)?))'
                        re.IGNORECASE)
 
 
-class ParseResult:
+class ParseResult(object):
     '''A class containing the results of a parsed Tweet.
     
     Attributes:
@@ -102,7 +102,7 @@ class ParseResult:
         self.html = html
 
 
-class Parser:
+class Parser(object):
     '''A Tweet Parser'''
     
     def __init__(self, max_url_length=30):

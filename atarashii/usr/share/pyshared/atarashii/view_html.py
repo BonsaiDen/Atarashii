@@ -22,7 +22,7 @@ from language import LANG as lang
 from constants import HTML_UNSET_ID, ST_LOGIN_SUCCESSFUL, HTML_UNSET_TEXT
 
 
-class ViewHTML:
+class ViewHTML(object):
     
     # Render the actual HTML ---------------------------------------------------
     def init_render(self):

@@ -29,7 +29,7 @@ from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADING, HTML_LOADED, \
                       BUTTON_REFRESH, BUTTON_HISTORY
 
 
-class GUIEventHandler:
+class GUIEventHandler(object):
     
     # Events -------------------------------------------------------------------
     def delete_event(self, widget, event, data=None):

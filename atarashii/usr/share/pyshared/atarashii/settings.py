@@ -41,7 +41,7 @@ THEME_SOUNDS = get_sound_files()
 THEME_DIR = get_sound_dirs()[0]
 
 
-class Settings:
+class Settings(object):
     def __init__(self):
         if not os.path.exists(ATARASHII_DIR):
             os.mkdir(ATARASHII_DIR )

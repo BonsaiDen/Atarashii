@@ -708,7 +708,7 @@ LANG = {
 }
 
 
-class Language:
+class Language(object):
     def __init__(self, code):
         if code in LANG:
             stuff = LANG[code]
