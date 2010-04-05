@@ -11,7 +11,7 @@
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 #  GNU General Public License for more details.
-# 
+#
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
@@ -21,7 +21,7 @@
 import sys
 import os
 
-PATH = os.path.join(sys.path[0], "atarashii/usr/share/pyshared")
+PATH = os.path.join(sys.path[0], 'atarashii/usr/share/pyshared')
 
 
 # Import Atarashii -------------------------------------------------------------
@@ -31,7 +31,7 @@ try:
     sys.path.pop(0)
     
 except:
-    if sys.path[0] == PATH: 
+    if sys.path[0] == PATH:
         sys.path.pop(0)
     
     exit(75)

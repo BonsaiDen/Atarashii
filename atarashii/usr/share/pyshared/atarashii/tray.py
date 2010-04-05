@@ -161,7 +161,7 @@ class TrayIcon(gtk.StatusIcon):
         
         self.activate_menu(True)
         self.account_menu.show_all()
-        if selected != None:
+        if selected is not None:
             selected.set_active(True)
     
     def activate_menu(self, mode):

@@ -136,7 +136,7 @@ class PasswordDialog(Dialog):
         self.cancel_button.connect('clicked', abort)
 
     def on_close(self, *args):
-        if self.main.api_temp_password == None:
+        if self.main.api_temp_password is None:
             self.main.api_temp_password = ''
         
         self.main.updater.password_wait.set()
