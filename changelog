@@ -10,6 +10,8 @@ atarashii (0.99.19-1) all;
   ~ Replace the message button with tabs and got rid of nearly all the buttons.
   ~ Move the account selection to the tray menu.
   ~ Reduce the lag between view and statusbar updates after a refresh.
+  * Fix for sending tweets that start with 'd ' which would be interpreted as
+    direct messages by twitter.
   * Fix a bug that "swallowed" tweets in cases were you sent a tweet and the 
     tweets were sent after the last update, but before you'd sent the tweet.
   * Fix a bug were direct messages would be considered as unread, even if they
@@ -20,9 +22,10 @@ atarashii (0.99.19-1) all;
     apps.
   * Fix an issue with text beeing cut off in the settings dialog under certain
     font sizes.
+  * Removed some dead code.
   * Tons of internal cleanup for an even more pythonic style.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 5 Apr 2010 21:47:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 6 Apr 2010 20:42:00 +0200
 
 atarashii (0.99.18a-1) all;
 
