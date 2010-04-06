@@ -78,10 +78,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Multi Button
         self.is_on_multi_button = False
+        self.multi_container = gtb.get_object('multi_container')
         self.multi_image = gtb.get_object('multi_image')
         self.multi_button = gtb.get_object('multi')
-        self.multi_button.connect('enter-notify-event', self.on_multi_enter)
-        self.multi_button.connect('leave-notify-event', self.on_multi_leave)
+        self.multi_button.connect('enter-notify-event', self.on_multi_move)
+        self.multi_button.connect('leave-notify-event', self.on_multi_move)
         self.multi_button.connect('button-press-event', self.on_multi_press)
         self.multi_button.connect('button-release-event', self.on_multi_release)
         self.multi_button.set_tooltip_text(lang.multi_refresh)
@@ -102,6 +103,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.html_scroll.set_shadow_type(gtk.SHADOW_IN)
         self.html.splash()
         
+
         # Messages
         self.message_scroll = gtb.get_object('messagescroll')
         self.message = message.HTML(self.main, self)
@@ -117,7 +119,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.tabs.set_property('can-focus', False)
         self.tab_tweets.set_property('can-focus', False)
         self.tab_messages.set_property('can-focus', False)
-          
+        
         # Bars
         self.toolbar = gtb.get_object('toolbar')
         self.progress = gtb.get_object('progressbar')
@@ -195,6 +197,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         # Fix tabs
         tab_height = self.tab_tweets.get_allocation()[3]
         self.tabs.set_size_request(-1, tab_height + 9)
+        
+        # Multi Button
+        self.on_multi_move(None, None)
+        self.multi_border()
         
         # Hide Warning/Error Buttons
         self.warning_button.hide()

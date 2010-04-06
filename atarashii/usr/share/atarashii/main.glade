@@ -277,18 +277,41 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkEventBox" id="multi">
+                  <object class="GtkVBox" id="vbox5">
                     <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkImage" id="multi_image">
+                      <object class="GtkEventBox" id="multi_container">
                         <property name="visible">True</property>
-                        <property name="stock">gtk-missing-image</property>
+                        <child>
+                          <object class="GtkAlignment" id="multi_align">
+                            <property name="visible">True</property>
+                            <property name="top_padding">1</property>
+                            <property name="bottom_padding">1</property>
+                            <property name="left_padding">1</property>
+                            <property name="right_padding">1</property>
+                            <child>
+                              <object class="GtkEventBox" id="multi">
+                                <property name="visible">True</property>
+                                <child>
+                                  <object class="GtkImage" id="multi_image">
+                                    <property name="visible">True</property>
+                                    <property name="stock">gtk-refresh</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
                       </object>
+                      <packing>
+                        <property name="padding">1</property>
+                        <property name="position">0</property>
+                      </packing>
                     </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="padding">1</property>
                     <property name="position">2</property>
                   </packing>
                 </child>

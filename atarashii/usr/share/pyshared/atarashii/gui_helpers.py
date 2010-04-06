@@ -14,8 +14,12 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
-# GUI / Events -----------------------------------------------------------------
+# GUI / Helpers ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
+import pygtk
+pygtk.require('2.0')
+import gtk
+
 from utils import escape, strip_tags
 from language import LANG as lang
 
@@ -195,6 +199,25 @@ class GUIHelpers(object):
         
         else: # TODO implement search
             pass
+    
+    # Hack a border around the multi button
+    def multi_border(self):
+        # Crazy color blending!
+        col1 = self.multi_container.get_style().\
+                   bg[gtk.STATE_NORMAL].to_string()[1:]
+        
+        col2 = self.html.get_style().dark[gtk.STATE_NORMAL].to_string()[1:]
+        col1 = (col1[0:4], col1[4:8], col1[8:12])
+        col2 = (col2[0:4], col2[4:8], col2[8:12])
+        col3 = [0, 0, 0]
+        
+        # Aplhalend the two colors since there is no way to get the lighter
+        # border color of the scrollbar
+        for i in xrange(3):
+            col3[i] = int(int((1 - 0.5) * int(col2[i], 16) + 0.5 * int(col1[i], 16)))
+        
+        col = gtk.gdk.color_parse('#' + ''.join([hex(i)[2:] for i in col3]))
+        self.multi_container.modify_bg(gtk.STATE_NORMAL, col)
     
     # Toggle visibility of taskbar entry
     def show_in_taskbar(self, mode):
