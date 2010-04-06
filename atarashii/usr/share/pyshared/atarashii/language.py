@@ -173,17 +173,17 @@ LANG = {
         # About Dialog
         'about_title': 'Über Atarashii',
         'about_okbutton': 'OK',
-        'about_kitten_button': 'Kätzchen',
+        'about_kitten_button': 'Kittens',
         'about_back_button': 'Zurück',
         'about_description':
             'Twitter Client für den GNOME Desktop.',
         
         'about_kittens1':
-            '<span size="small">Diese Version wurde von <b>%s</b> '
-            'Kätzchen verpackt.</span>',
+            '<span size="small">This Version was packaged by <b>%s</b> '
+            'kittens.</span>',
         
         'about_kittens2':
-            '<span size="small">Ihre Glückszahl ist <b>%s</b>!</span>',
+            '<span size="small">Their lucky number is <b>%s</b>!</span>',
         
         # Account Dialog
         'account_edit': 'Benutzer bearbeiten',
@@ -526,7 +526,7 @@ LANG = {
             'Twitter Client for the GNOME Desktop.',
         
         'about_kittens1':
-            '<span size="small">This Version has been build by <b>%s</b> '
+            '<span size="small">This Version was packaged by <b>%s</b> '
             'kittens.</span>',
         
         'about_kittens2':

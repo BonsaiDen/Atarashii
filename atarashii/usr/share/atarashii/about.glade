@@ -106,6 +106,54 @@
                 <property name="no_show_all">True</property>
                 <property name="orientation">vertical</property>
                 <child>
+                  <object class="GtkLabel" id="label1">
+                    <property name="visible">True</property>
+                    <property name="ypad">6</property>
+                    <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Kitten Facts!&lt;/b&gt;&lt;/span&gt;</property>
+                    <property name="use_markup">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="kittens1">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">This version was build by &lt;b&gt;1024&lt;/b&gt; kittens.</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">center</property>
+                    <property name="wrap">True</property>
+                    <property name="width_chars">35</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="kittens2">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Their lucky number is &lt;b&gt;e456357&lt;/b&gt;!</property>
+                    <property name="use_markup">True</property>
+                    <property name="justify">center</property>
+                    <property name="wrap">True</property>
+                    <property name="width_chars">35</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="sapcer">
+                    <property name="visible">True</property>
+                  </object>
+                  <packing>
+                    <property name="position">3</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkLabel" id="details">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -119,7 +167,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">0</property>
+                    <property name="position">4</property>
                   </packing>
                 </child>
                 <child>
@@ -136,7 +184,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">1</property>
+                    <property name="position">5</property>
                   </packing>
                 </child>
                 <child>
@@ -153,7 +201,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">2</property>
+                    <property name="position">6</property>
                   </packing>
                 </child>
                 <child>
@@ -170,39 +218,15 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">3</property>
+                    <property name="position">7</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="sapcer">
+                  <object class="GtkAccelLabel" id="accellabel1">
                     <property name="visible">True</property>
                   </object>
                   <packing>
-                    <property name="position">4</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="kittens1">
-                    <property name="visible">True</property>
-                    <property name="justify">center</property>
-                    <property name="wrap">True</property>
-                    <property name="width_chars">30</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="position">5</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="kittens2">
-                    <property name="visible">True</property>
-                    <property name="justify">center</property>
-                    <property name="wrap">True</property>
-                    <property name="width_chars">35</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="position">6</property>
+                    <property name="position">8</property>
                   </packing>
                 </child>
               </object>
