@@ -170,8 +170,13 @@ class TextInput(gtk.TextView):
                     if self.main.edit_text.lower() == text.lower().strip():
                         return
                 
-                # Prevent @reply to be send without text
+                # Prevent submitting a direct message which won't return a tweet
+                # since twitter thinks that you wanted to send a DM
                 ctext = text.strip()
+                if text.lstrip()[0:2] == 'd ' or ctext == 'd':
+                    return
+                
+                # Prevent @reply to be send without text
                 if ctext[0:1] in u'@\uFF20':
                     if ctext.find(' ') == -1 \
                        or self.main.reply_user == UNSET_TEXT:
@@ -216,6 +221,7 @@ class TextInput(gtk.TextView):
                 
                 if self.main.message_id == UNSET_ID_NUM:
                     self.main.message_user = msg.group(1)
+                
                 else:
                     if msg.group(1) != self.main.message_user:
                         self.main.message_text = UNSET_TEXT
