@@ -29,9 +29,7 @@ from language import LANG as lang
 
 
 class ViewHelpers(object):
-    
-    # Copy stuff to clipboard --------------------------------------------------
-    def copy_data(self, data):
+    def copy_to_clipboard(self, data):
         display = gtk.gdk.display_manager_get().get_default_display()
         clipboard = gtk.Clipboard(display, 'CLIPBOARD')
         clipboard.set_text(data)
@@ -41,18 +39,19 @@ class ViewHelpers(object):
             gobject.idle_add(self.text.grab_focus)
     
     def copy_link(self, menu, uri):
-        self.copy_data(uri)
+        self.copy_to_clipboard(uri)
     
     def copy_tweet(self, menu, uri, item):
         user = self.get_user(item)
         text = self.get_text(item)
-        self.copy_data('%s%s\n%s' % (lang.tweet_at, user.screen_name, text))
-
+        self.copy_to_clipboard('%s%s\n%s' \
+                               % (lang.tweet_at, user.screen_name, text))
+    
     def copy_message(self, menu, uri, item):
         user = self.get_user(item)
         text = self.get_text(item)
-        self.copy_data('%s%s\n%s' % (lang.tweet_at, user.screen_name, text))
-    
+        self.copy_to_clipboard('%s%s\n%s' \
+                               % (lang.tweet_at, user.screen_name, text))
     
     # Scrolling ----------------------------------------------------------------
     # --------------------------------------------------------------------------
