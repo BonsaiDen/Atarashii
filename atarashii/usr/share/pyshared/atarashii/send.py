@@ -248,12 +248,12 @@ class Retweet(threading.Thread):
             
             self.main.unset_status(ST_WAS_SEND)
             gobject.idle_add(self.gui.show_retweet_info, self.name)
-            gobject.idle_add(self.gui.update_status)
         
         except (IOError, TweepError), error:
             gobject.idle_add(self.main.handle_error, error)
         
         self.main.unset_status(ST_SEND)
+        gobject.idle_add(self.gui.update_status, True)
 
 
 # Deletes ----------------------------------------------------------------------
@@ -300,7 +300,6 @@ class Delete(threading.Thread):
             gobject.idle_add(self.gui.show_delete_info,
                              self.tweet_id, self.message_id)
             
-            gobject.idle_add(self.gui.update_status)
             self.main.delete_tweet_id = UNSET_ID_NUM
             self.main.delete_message_id = UNSET_ID_NUM
         
@@ -308,8 +307,9 @@ class Delete(threading.Thread):
             gobject.idle_add(self.main.handle_error, error)
         
         self.main.unset_status(ST_DELETE)
-        
-        
+        gobject.idle_add(self.gui.update_status, True)
+
+
 # Favorites --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Favorite(threading.Thread):
