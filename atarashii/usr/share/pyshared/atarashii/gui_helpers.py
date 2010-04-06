@@ -31,8 +31,6 @@ from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADED, UNSET_TEXT, \
 
 
 class GUIHelpers(object):
-    
-    # Info Label ---------------------------------------------------------------
     def set_label(self):
         if self.main.status(ST_SEND):
             return

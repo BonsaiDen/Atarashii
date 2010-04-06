@@ -55,8 +55,6 @@ from constants import HT_400_BAD_REQUEST, HT_401_UNAUTHORIZED, \
 
 
 class AtarashiiActions(object):
-    
-    # Start & Quit -------------------------------------------------------------
     def start(self):
         # Remove old logout indicator
         self.on_logout_cancel()

@@ -25,8 +25,6 @@ from constants import HTML_UNSET_ID
 
 
 class UpdaterMessage(object):
-    
-    # Load initial messages ----------------------------------------------------
     def get_init_messages(self, last=False, init=False):
         messages = []
         try:

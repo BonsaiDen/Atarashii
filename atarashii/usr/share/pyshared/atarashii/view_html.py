@@ -24,8 +24,6 @@ from constants import ST_NETWORK_FAILED, ST_LOGIN_SUCCESSFUL
 
 
 class ViewHTML(object):
-    
-    # Render the actual HTML ---------------------------------------------------
     def init_render(self):
         self.position = self.scroll.get_vscrollbar().get_value()
         self.current_scroll = self.position
