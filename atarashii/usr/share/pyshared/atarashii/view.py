@@ -80,7 +80,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.tooltip_user = None
         self.tooltip.show_all()
         self.scrolled = True
-                
+        
         # Other Stuff
         self.scroll = scroll
         self.set_maintains_back_forward_list(False)

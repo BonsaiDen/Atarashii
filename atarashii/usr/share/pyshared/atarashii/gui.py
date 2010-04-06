@@ -81,7 +81,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.multi_container = gtb.get_object('multi_container')
         self.multi_image = gtb.get_object('multi_image')
         self.multi_button = gtb.get_object('multi')
-        self.multi_button.connect('enter-notify-event', self.on_multi_move)
+        self.multi_button.connect('enter-notify-event',
+                                   self.on_multi_move, True)
+        
         self.multi_button.connect('leave-notify-event', self.on_multi_move)
         self.multi_button.connect('button-press-event', self.on_multi_press)
         self.multi_button.connect('button-release-event', self.on_multi_release)
@@ -200,7 +202,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Multi Button
         self.on_multi_move(None, None)
-        self.multi_border()
         
         # Hide Warning/Error Buttons
         self.warning_button.hide()

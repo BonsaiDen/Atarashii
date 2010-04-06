@@ -50,13 +50,14 @@ class GUIEventHandler(object):
     
     # Handlers -----------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def on_multi_move(self, button, event):
+    def on_multi_move(self, button, event, mode=False):
         self.is_on_multi_button = False
-        self.multi_button.modify_bg(gtk.STATE_NORMAL,
-                          self.tabs.get_style().bg[gtk.STATE_PRELIGHT])
+        color = self.tabs.get_style().light[gtk.STATE_NORMAL] if mode \
+                else self.get_style().bg[gtk.STATE_NORMAL]
         
-        self.multi_button.modify_bg(gtk.STATE_INSENSITIVE,
-                          self.tabs.get_style().bg[gtk.STATE_PRELIGHT])
+        self.multi_button.modify_bg(gtk.STATE_NORMAL, color)
+        self.multi_button.modify_bg(gtk.STATE_INSENSITIVE, color)
+        self.multi_border(mode)
     
     def on_multi_press(self, button, event):
         self.is_on_multi_button = True

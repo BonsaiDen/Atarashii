@@ -199,10 +199,14 @@ class GUIHelpers(object):
             pass
     
     # Hack a border around the multi button
-    def multi_border(self):
+    def multi_border(self, mode):
+        base_color = self.get_style().bg[gtk.STATE_NORMAL]
+        if not mode:
+            self.multi_container.modify_bg(gtk.STATE_NORMAL, base_color)
+            return
+        
         # Crazy color blending!
-        col1 = self.multi_container.get_style().\
-                   bg[gtk.STATE_NORMAL].to_string()[1:]
+        col1 = base_color.to_string()[1:]
         
         col2 = self.html.get_style().dark[gtk.STATE_NORMAL].to_string()[1:]
         col1 = (col1[0:4], col1[4:8], col1[8:12])
