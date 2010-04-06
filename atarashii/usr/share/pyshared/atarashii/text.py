@@ -394,7 +394,8 @@ class TextInput(gtk.TextView):
     # Acceleratores ------------------------------------------------------------
     # --------------------------------------------------------------------------
     def start_tweet(self, *args):
-        if not self.has_typed:
+        if not self.has_typed or self.get_text().strip() == 'd':
+            self.gui.set_mode(MODE_TWEETS)
             self.is_changing = True
             self.grab_focus()
             self.set_text('')
@@ -402,6 +403,7 @@ class TextInput(gtk.TextView):
     
     def start_message(self, *args):
         if not self.has_typed:
+            self.gui.set_mode(MODE_MESSAGES)
             self.is_changing = True
             self.grab_focus()
             self.set_text('d ')
