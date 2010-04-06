@@ -40,7 +40,7 @@ from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_LOGIN_COMPLETE
 
 from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
-                      MESSAGE_WARNING, MESSAGE_QUESTION, MESSAGE_INFO, \
+                      MESSAGE_WARNING, MESSAGE_QUESTION, \
                       UNSET_TIMEOUT, HTML_UNSET_ID, MESSAGE_ERROR, \
                       MESSAGE_WARNING, BUTTON_REFRESH, BUTTON_READ, \
                       BUTTON_HISTORY
@@ -129,11 +129,18 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Warning Button
         self.warning_button = dialog.ButtonDialog(self, 'warning',
-                                     lang.warning_template, lang.warning_title)
+                                                  lang.warning_template,
+                                                  lang.warning_title)
         
         # Error Button
         self.error_button = dialog.ButtonDialog(self, 'error',
-                                     lang.error_template, lang.error_title)
+                                                lang.error_template,
+                                                lang.error_title)
+        
+        # Info Button
+        self.info_button = dialog.ButtonDialog(self, 'info',
+                                               lang.info_template,
+                                               lang.info_title)
         
         
         # Restore Position & Size ----------------------------------------------
@@ -206,6 +213,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         # Hide Warning/Error Buttons
         self.warning_button.hide()
         self.error_button.hide()
+        self.info_button.hide()
         self.on_mode()
         
         # Statusbar Updater
@@ -481,9 +489,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                               lang.name(self.main.username))
     
     def show_retweet_info(self, name):
-        dialog.MessageDialog(self, MESSAGE_INFO,
-                        lang.retweet_info % name,
-                        lang.retweet_info_title)
+        self.info_button.show(lang.retweet_button, None, None)
     
     def ask_for_delete_tweet(self, info_text, yes, noo):
         dialog.MessageDialog(self, MESSAGE_QUESTION,
@@ -498,17 +504,16 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                         yes_callback = yes, no_callback = noo)
     
     def show_delete_info(self, tweet, msg):
-        dialog.MessageDialog(self, MESSAGE_INFO, lang.delete_info_tweet \
+        self.info_button.show(lang.delete_button_tweet \
                              if tweet != UNSET_ID_NUM \
-                             else lang.delete_info_message,
-                             lang.delete_info_title)
+                             else lang.delete_button_message, None, None)
     
     def show_favorite_error(self, name, mode):
         dialog.MessageDialog(self, MESSAGE_WARNING,
                              lang.error_favorite_on % lang.name(name) \
                              if mode else lang.error_favorite_off \
                              % lang.name(name), lang.error_title)
-                    
+    
     def show_crash_report(self):
         code = self.main.settings['crash_reason']
         

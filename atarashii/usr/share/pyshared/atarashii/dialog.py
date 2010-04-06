@@ -27,7 +27,7 @@ from language import LANG as lang
 
 from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \
                       MESSAGE_INFO, UNSET_TEXT, UNSET_TIMEOUT, UNSET_PASSWORD, \
-                      UNSET_RESOURCE
+                      UNSET_RESOURCE, MESSAGE_INFO
 
 
 class Dialog(object):
@@ -268,11 +268,14 @@ class ButtonDialog(object):
         
         self.box.hide()
     
-    def show(self, button, info):
+    def show(self, button, info, title=None):
         self.information = info
         if self.dialog is not None:
             self.dialog.destroy()
             self.dialog = None
+        
+        if title is not None:
+            self.title = title
         
         self.time = time.time()
         self.box.show()
@@ -287,11 +290,24 @@ class ButtonDialog(object):
             self.dialog.destroy()
             self.dialog = None
         
+        if self.information is None:
+            self.hide()
+            return
+        
         date = time.localtime(self.time)
-        self.dialog = MessageDialog(self.gui,
-                              MESSAGE_WARNING if self.dtype == 'warning' \
-                              else MESSAGE_ERROR,
-                              time.strftime(self.template, date) + \
-                              self.information,
-                              self.title, close_callback = self.hide)
+        if self.dtype == 'warning':
+            itype = MESSAGE_WARNING
+            msg = time.strftime(self.template, date) + self.information
+        
+        elif self.dtype == 'error':
+            itype = MESSAGE_ERROR
+            msg = time.strftime(self.template, date) + self.information
+        
+        elif self.dtype == 'info':
+            itype = MESSAGE_INFO
+            msg = self.information
+        
+        self.dialog = MessageDialog(self.gui, itype,
+                                    msg,
+                                    self.title, close_callback = self.hide)
 

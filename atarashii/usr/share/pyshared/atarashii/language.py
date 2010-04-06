@@ -204,20 +204,18 @@ LANG = {
         'password_too_short': '<i><b>Fehler:</b> Mindestens 6 Zeichen.</i>',
         
         # Retweet Dialogs
-        'retweet_info_title': 'Retweet erfolgreich',
-        'retweet_info': '<b>%s</b> wurde erfolgreich retweeted.',
+        'retweet_button': 'Retweet erfolgreich',
         
         # Delete Dialogs
         'delete_title': 'Löschen bestätigen',
         'delete_tweet_question':
-        '<b>Diesen Tweet wirklich löschen?</b>\n<i>%s</i>',
+            '<b>Diesen Tweet wirklich löschen?</b>\n<i>%s</i>',
         
         'delete_message_question':
-        '<b>Diese Nachricht wirklich löschen?</b>\n<i>%s</i>',
+            '<b>Diese Nachricht wirklich löschen?</b>\n<i>%s</i>',
         
-        'delete_info_title': 'Löschen erfolgreich',
-        'delete_info_tweet': 'Der Tweet wurde erfolgreich gelöscht.',
-        'delete_info_message': 'Die Nachricht wurde erfolgreich gelöscht.',
+        'delete_button_message': 'Nachricht gelöscht',
+        'delete_button_tweet': 'Tweet gelöscht',
         
         # Crash Error Dialogs
         'error_general':
@@ -307,6 +305,10 @@ LANG = {
             'Atarashii konnte keine Verbindung zu Twitter herstellen.',
         
         'warning_template': '<b>Warnung von %H:%M:%S:</b>\n',
+        
+        # Info Button
+        'info_title': '',
+        'info_template': '',
         
         # Buttons
         'button_open': 'Für weitere Informationen klicken',
@@ -549,8 +551,7 @@ LANG = {
         'password_too_short': '<i><b>Error:</b> At least 6 characters.</i>',
         
         # Retweet Dialogs
-        'retweet_info_title': 'Retweet successful',
-        'retweet_info': '<b>%s</b> has been successfully retweeted.',
+        'retweet_button': 'Retweet successful',
         
         # Delete Dialogs
         'delete_title': 'Confirm delete',
@@ -560,9 +561,8 @@ LANG = {
         'delete_message_question':
             '<b>Are you sure to delete this Message?</b>\n<i>%s</i>',
         
-        'delete_info_title': 'Deletion successful',
-        'delete_info_tweet': 'The Tweet has been successfully deleted.',
-        'delete_info_message': 'The Message has been successfully deleted.',
+        'delete_button_message': 'Message deleted',
+        'delete_button_tweet': 'Tweet deleted',
         
         # Crash Error Dialogs
         'error_general':
