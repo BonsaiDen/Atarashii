@@ -81,13 +81,6 @@ class ViewMenu(object):
     
     
     # Menu Events --------------------------------------------------------------
-    def on_popup(self, view, menu, *args): # Kill of the original context menu!
-        menu.hide()
-        menu.cancel()
-        menu.destroy()
-        return True
-    
-    # Let's create our own nice little popup menu :)
     def on_button(self, view, event, *args):
         self.give_text_focus = self.text.has_focus
         if event.button == 3 and not self.popup_open:
