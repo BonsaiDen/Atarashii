@@ -26,11 +26,12 @@ import time
 from language import LANG as lang
 
 from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \
-                      MESSAGE_INFO, UNSET_TEXT, UNSET_TIMEOUT
+                      MESSAGE_INFO, UNSET_TEXT, UNSET_TIMEOUT, UNSET_PASSWORD, \
+                      UNSET_RESOURCE
 
 
 class Dialog(object):
-    resource = ''
+    resource = UNSET_RESOURCE
     instance = None
     
     def __init__(self, gui, close=True, init=True):
@@ -137,7 +138,7 @@ class PasswordDialog(Dialog):
 
     def on_close(self, *args):
         if self.main.api_temp_password is None:
-            self.main.api_temp_password = ''
+            self.main.api_temp_password = UNSET_PASSWORD
         
         self.main.updater.password_wait.set()
         self.__class__.instance = None

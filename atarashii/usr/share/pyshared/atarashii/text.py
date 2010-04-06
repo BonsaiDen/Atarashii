@@ -465,7 +465,7 @@ class TextInput(gtk.TextView):
         self.has_focus = True
         text = self.get_text()
         if not self.has_typed:
-            text = ''
+            text = UNSET_TEXT
         
         return text
     

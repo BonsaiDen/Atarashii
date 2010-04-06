@@ -22,6 +22,7 @@ import gtk
 import gobject
 
 from language import LANG as lang
+from constants import UNSET_TOOLTIP
 from utils import menu_escape
 
 
@@ -42,7 +43,7 @@ class TrayIcon(gtk.StatusIcon):
         self.tooltip_changed = False
         self.tooltip_icon = None
         self.tooltip_buf = None
-        self.tooltip_markup = ''
+        self.tooltip_markup = UNSET_TOOLTIP
         self.tooltip_special_icon = False
         
         # Create Tray Icon

@@ -35,7 +35,7 @@ import send
 from language import LANG as lang
 from settings import LOGOUT_FILE
 
-from constants import UNSET_ID_NUM, UNSET_TEXT
+from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
                       ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_SUCCESSFUL, \
@@ -281,17 +281,17 @@ class AtarashiiActions(object):
         self.gui.text.check_refocus()
         
         # Determine the kind of the error
-        rate_error = ''
+        rate_error = UNSET_ERROR
         
         # Timeout errors
         if isinstance(error, socket.timeout):
-            msg = ''
+            msg = UNSET_ERROR
             error_code = 0
             error_errno = ERR_URLLIB_TIMEOUT
         
         # GAI errors
         elif isinstance(error, socket.gaierror) or isinstance(error, URLError):
-            msg = ''
+            msg = UNSET_ERROR
             error_errno = ERR_URLLIB_FAILED
             error_code = 0
         
@@ -304,7 +304,7 @@ class AtarashiiActions(object):
                 msg = error.msg
             
             else:
-                msg = ''
+                msg = UNSET_ERROR
             
             error_errno = error.errno
             error_code = error.code

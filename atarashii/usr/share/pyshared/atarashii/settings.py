@@ -20,6 +20,8 @@ import os
 import urllib
 import time
 
+from constants import UNSET_SETTING
+
 # File Paths
 HOME_DIR = os.path.expanduser('~')
 DESKTOP_FILE = os.path.join(HOME_DIR, '.config',
@@ -68,7 +70,7 @@ class Settings(object):
                 value = i[len(vtype)+1:]
                 try:
                     if vtype == 'long':
-                        if value == '':
+                        if value == UNSET_SETTING:
                             value = long(-1)
                         
                         else:
@@ -77,7 +79,7 @@ class Settings(object):
                     elif vtype == 'bool':
                         value = True if value == 'True' else False
                     
-                    if name != '':
+                    if name != UNSET_SETTING:
                         self.values[urllib.unquote(name)] = value
                 
                 except ValueError, detail:
@@ -153,7 +155,7 @@ class Settings(object):
                 return True
             
             else:
-                return self[key].strip() != ''
+                return self[key].strip() != UNSET_SETTING
     
     def get(self, key, default):
         return self.values.get(key, default)

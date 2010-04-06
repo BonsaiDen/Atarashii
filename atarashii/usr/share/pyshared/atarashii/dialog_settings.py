@@ -28,8 +28,8 @@ from dialog import Dialog, MessageDialog
 from utils import SHORTS_LIST, URLShorter, URLExpander
 from settings import THEME_SOUNDS, THEME_DIR
 
+from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING
 from constants import ST_CONNECT, ST_UPDATE, ST_LOGIN_COMPLETE
-
 from constants import MESSAGE_QUESTION
 
 
@@ -139,12 +139,12 @@ class SettingsDialog(Dialog):
         self.get('snd_messages').set_label(lang.settings_file_messages)
 
         self.sounds = ['tweets', 'reply', 'messages']
-        default_sound = THEME_SOUNDS.get('message-new-instant', '')
+        default_sound = THEME_SOUNDS.get('message-new-instant', UNSET_SOUND)
         
         def get_sound(key):
             if self.settings.isset('sound_' + key, True):
                 snd = str(self.settings['sound_' + key]).strip()
-                return None if snd in ('', 'None') else snd
+                return None if snd in (UNSET_SETTING, 'None') else snd
             
             else:
                 return default_sound
@@ -162,7 +162,7 @@ class SettingsDialog(Dialog):
         
         def del_sound(button, snd):
             self.get('file_' + snd).set_label(lang.settings_file_none)
-            soundfiles[snd] = ''
+            soundfiles[snd] = UNSET_SOUND
             button.set_sensitive(False)
         
         self.file_chooser = None
@@ -246,8 +246,8 @@ class SettingsDialog(Dialog):
             if self.get_drop_active() == -1 \
                or not oldusername in self.main.settings.get_accounts():
                
-                self.main.username = ''
-                self.settings['username'] = ''
+                self.main.username = UNSET_USERNAME
+                self.settings['username'] = UNSET_USERNAME
                 self.main.logout()
             
             # Save Settings
@@ -278,8 +278,8 @@ class SettingsDialog(Dialog):
         
         if not self.saved:
             if self.get_drop_active() == -1:
-                self.main.username = ''
-                self.settings['username'] = ''
+                self.main.username = UNSET_USERNAME
+                self.settings['username'] = UNSET_USERNAME
                 self.main.logout()
         
         self.__class__.instance = None
@@ -344,7 +344,7 @@ class SettingsDialog(Dialog):
             del self.main.settings['xsecret_' + name]
             
             self.main.settings['mode_' + username] = lo_tmp
-            self.main.settings['account_' + username] = ''
+            self.main.settings['account_' + username] = UNSET_USERNAME
             self.main.settings['firsttweet_' + username] = ft_tmp
             self.main.settings['lasttweet_' + username] = lt_tmp
             self.main.settings['firstmessage_' + username] = fm_tmp
@@ -354,7 +354,7 @@ class SettingsDialog(Dialog):
             self.create_drop_list(username)
     
     def create_account(self, username):
-        self.main.settings['account_' + username] = ''
+        self.main.settings['account_' + username] = UNSET_USERNAME
         self.create_drop_list()
         if len(self.user_accounts) == 1:
             self.select_drop(0)
@@ -446,13 +446,11 @@ class AccountDialog(Dialog):
         self.close_button.set_label(lang.account_button)
         cancel_button = self.get('cancelbutton')
         cancel_button.set_label(lang.account_button_cancel)
-        
         self.get('user').set_text(lang.account_username)
-        
         
         def save(*args):
             username = self.get('username').get_text().strip()
-            if username == '':
+            if username == UNSET_USERNAME:
                 self.get('username').grab_focus()
             
             elif username in self.parent.user_accounts \

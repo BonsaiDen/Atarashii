@@ -22,7 +22,7 @@ from language import LANG as lang
 from utils import menu_escape
 
 from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, MODE_TWEETS, \
-                      HTML_UNSET_ID
+                      HTML_UNSET_ID, HTML_UNSET_TEXT
 
 
 class HTML(view.HTMLView):
@@ -77,7 +77,7 @@ class HTML(view.HTMLView):
     def render_item(self, num, item, img):
         # Check for new style retweet
         retweeted = False
-        retweet = ''
+        retweet = HTML_UNSET_TEXT
         if hasattr(item, 'retweeted_status'):
             tweet = item.retweeted_status
             retweeted = True
@@ -119,7 +119,7 @@ class HTML(view.HTMLView):
                         tweet.in_reply_to_screen_name)
         
         else:
-            reply = ''
+            reply = HTML_UNSET_TEXT
         
         
         # Avatar ---------------------------------------------------------------
@@ -132,7 +132,7 @@ class HTML(view.HTMLView):
             avatar = self.avatar_html(user, num, img)
         
         else:
-            avatar = ''
+            avatar = HTML_UNSET_TEXT
         
         
         # Background -----------------------------------------------------------
@@ -149,7 +149,9 @@ class HTML(view.HTMLView):
         
         # Source ---------------------------------------------------------------
         if tweet.source != 'web':
-            if hasattr(tweet, 'source_url') and tweet.source_url != '':
+            if hasattr(tweet, 'source_url') \
+               and tweet.source_url != HTML_UNSET_TEXT:
+                
                 if tweet.source_url == '/devices':
                     tweet.source_url = 'http://twitter.com/devices'
                 
@@ -161,7 +163,7 @@ class HTML(view.HTMLView):
                 by_user =  lang.html_by % tweet.source
         
         else:
-            by_user = ''
+            by_user = HTML_UNSET_TEXT
         
         
         # Favorite -------------------------------------------------------------

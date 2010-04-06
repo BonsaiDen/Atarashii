@@ -19,7 +19,7 @@
 from utils import SPACES
 
 from language import LANG as lang
-from constants import HTML_UNSET_ID, HTML_UNSET_TEXT
+from constants import HTML_UNSET_ID, HTML_UNSET_TEXT, UNSET_USERNAME
 from constants import ST_NETWORK_FAILED, ST_LOGIN_SUCCESSFUL
 
 
@@ -112,8 +112,12 @@ class ViewHTML(object):
     def splash(self):
         self.scroll.get_vscrollbar().set_value(0)
         self.offset_count = 0
-        acc = lang.html_account if self.main.username == '' else ''
-        acc_info = lang.html_account_info if self.main.username == '' else ''
+        acc = lang.html_account if self.main.username == UNSET_USERNAME \
+                                else HTML_UNSET_TEXT
+        
+        acc_info = lang.html_account_info \
+                   if self.main.username == UNSET_USERNAME else HTML_UNSET_TEXT
+        
         self.render_html('''
             <body class="unloaded" ondragstart="return false">
                 <div class="loading">
@@ -232,7 +236,7 @@ class ViewHTML(object):
                     spacer = '11' # Middle Normal Gray
                 
                 else:
-                    spacer = '' # Normal Gray
+                    spacer = '0' # Normal Gray
             
             else:
                 # More @username
@@ -246,7 +250,7 @@ class ViewHTML(object):
                 # More mentions
                 elif mentioned:
                     if not self.last_mentioned:
-                        spacer = '' # Normal Gray
+                        spacer = '0' # Normal Gray
                     
                     else:
                         spacer = '8' # Yellow
@@ -254,7 +258,7 @@ class ViewHTML(object):
                 # Just more normal tweets
                 else:
                     if next_highlight and self.last_highlight:
-                        spacer = '' # Normal Gray
+                        spacer = '0' # Normal Gray
                     
                     elif next and self.last_mentioned:
                         spacer = '1' # Dark Gray

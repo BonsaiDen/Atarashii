@@ -34,7 +34,8 @@ from constants import ST_WARNING_RATE, ST_UPDATE, ST_LOGIN_COMPLETE, \
                       ST_NETWORK_FAILED
 
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_UNSET_ID, \
-                      UNSET_TIMEOUT, HTML_RESET, HTML_LOADING, HTML_LOADED
+                      UNSET_TIMEOUT, HTML_RESET, HTML_LOADING, HTML_LOADED, \
+                      UNSET_PASSWORD
 
 
 class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
@@ -134,8 +135,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                     raise error
                 
                 except TweepError, error:
-                    self.settings[key_name] = ''
-                    self.settings[secret_name] = ''
+                    self.settings[key_name] = UNSET_PASSWORD
+                    self.settings[secret_name] = UNSET_PASSWORD
             
             # Get a new token!
             if not token_ok:
@@ -147,7 +148,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 self.password_wait.wait()
                 
                 # Try to login with the new password
-                if self.main.api_temp_password != '':
+                if self.main.api_temp_password != UNSET_PASSWORD:
                     token = auth.get_xauth_access_token(
                                  self.main.username,
                                  self.main.api_temp_password)

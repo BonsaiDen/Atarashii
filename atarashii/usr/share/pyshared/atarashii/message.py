@@ -21,7 +21,7 @@ import view
 from language import LANG as lang
 from utils import menu_escape
 
-from constants import UNSET_TEXT, MODE_MESSAGES, HTML_UNSET_ID
+from constants import UNSET_TEXT, MODE_MESSAGES, HTML_UNSET_ID, HTML_UNSET_TEXT
 
 
 class HTML(view.HTMLView):
@@ -105,7 +105,7 @@ class HTML(view.HTMLView):
             avatar = self.avatar_html(user, num, img)
         
         else:
-            avatar = ''
+            avatar = HTML_UNSET_TEXT
         
         
         # Background -----------------------------------------------------------
@@ -125,7 +125,7 @@ class HTML(view.HTMLView):
         else:
             mode = lang.message_from
             name = user.screen_name
-            reply = ''
+            reply = HTML_UNSET_TEXT
             toid = user.id
             username = user.screen_name
             user_realname = user.name.strip()

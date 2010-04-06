@@ -52,7 +52,7 @@ class GUIEventHandler(object):
     
     # Handlers -----------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def on_multi_move(self, button, Event):
+    def on_multi_move(self, button, event):
         self.is_on_multi_button = False
         self.multi_button.modify_bg(gtk.STATE_NORMAL,
                           self.tabs.get_style().bg[gtk.STATE_PRELIGHT])

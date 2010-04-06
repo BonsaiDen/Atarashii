@@ -53,7 +53,7 @@ from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_NONE, ST_SEND, ST_DELETE, ST_LOGIN_COMPLETE
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
-                      MODE_TWEETS, MODE_MESSAGES
+                      MODE_TWEETS, MODE_MESSAGES, UNSET_USERNAME
 
 
 class Atarashii(AtarashiiActions):
@@ -113,7 +113,7 @@ class Atarashii(AtarashiiActions):
         self.favorites_pending = {}
         
         # Current Username
-        self.username = self.settings['username'] or UNSET_TEXT
+        self.username = self.settings['username'] or UNSET_USERNAME
         
         # Notifier
         self.notifier = notify.Notifier(self)
@@ -139,7 +139,7 @@ class Atarashii(AtarashiiActions):
     
     def login(self, change_user=None):
         # We need a username!
-        if self.username == UNSET_TEXT \
+        if self.username == UNSET_USERNAME \
            and (change_user is None or change_user == UNSET_TEXT):
             self.gui.set_app_title()
             return
@@ -150,7 +150,7 @@ class Atarashii(AtarashiiActions):
         # Wait until the last update/delete/send/login is complete
         if self.any_status(ST_UPDATE, ST_DELETE, ST_SEND, ST_CONNECT) \
            or (not self.status(ST_LOGIN_COMPLETE) and change_user is not None \
-               and self.username != ''):
+               and self.username != UNSET_USERNAME):
             
             gobject.timeout_add(50, self.login, change_user)
             return None
@@ -203,8 +203,8 @@ class Atarashii(AtarashiiActions):
         self.gui.show_input()
     
     def on_login_failed(self, error=None):
-        self.username = ''
-        self.settings['username'] = ''
+        self.username = UNSET_USERNAME
+        self.settings['username'] = UNSET_USERNAME
         self.gui.tray.update_account_menu()
         
         self.refresh_time = UNSET_TIMEOUT

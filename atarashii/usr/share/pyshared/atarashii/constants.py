@@ -16,15 +16,23 @@
 
 # Constants --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-# Rewteets
-RETWEET_NEW = 1          # Can be anything
-RETWEET_OLD = 2          # Can be anything
 
-# General Stuff
+# Generic Stuff
+UNSET_TOOLTIP = ''       # Should be ''
+UNSET_PASSWORD = ''      # Must be ''
+UNSET_RESOURCE = ''      # Should be ''
+UNSET_SETTING = ''       # Must be ''
+UNSET_USERNAME = ''      # Must be ''
 UNSET_ID_NUM = -1        # Must be lower than 0
 UNSET_TEXT = ''          # Must be ''
 UNSET_LABEL = ''         # Should be ''
 UNSET_TIMEOUT = -1       # Must be lower than 0
+UNSET_ERROR = ''         # Must be ''
+UNSET_SOUND = ''         # Must be ''
+
+# Rewteets
+RETWEET_NEW = 1          # Can be anything
+RETWEET_OLD = 2          # Can be anything
 
 # Modes
 MODE_TWEETS = 0          # Can be anything

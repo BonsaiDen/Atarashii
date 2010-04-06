@@ -27,7 +27,7 @@ from constants import ST_SEND, ST_CONNECT, ST_LOGIN_SUCCESSFUL, \
                       ST_LOGIN_COMPLETE, ST_UPDATE
 
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADED, UNSET_TEXT, \
-                      UNSET_LABEL, MESSAGE_ERROR
+                      UNSET_LABEL, MESSAGE_ERROR, UNSET_USERNAME
 
 
 class GUIHelpers(object):
@@ -92,7 +92,7 @@ class GUIHelpers(object):
     
     # App Title ----------------------------------------------------------------
     def set_app_title(self):
-        if self.main.username == UNSET_TEXT \
+        if self.main.username == UNSET_USERNAME \
            or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
            
             self.set_title(lang.title)
@@ -101,7 +101,7 @@ class GUIHelpers(object):
         if not self.main.status(ST_CONNECT) \
            and self.main.status(ST_LOGIN_COMPLETE):
            
-            if self.main.username == UNSET_TEXT \
+            if self.main.username == UNSET_USERNAME \
                or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
                 self.tray.set_tooltip(lang.tray_logged_out)
             
@@ -214,7 +214,8 @@ class GUIHelpers(object):
         # Aplhalend the two colors since there is no way to get the lighter
         # border color of the scrollbar
         for i in xrange(3):
-            col3[i] = int(int((1 - 0.5) * int(col2[i], 16) + 0.5 * int(col1[i], 16)))
+            col3[i] = int(int((1 - 0.5) * int(col2[i], 16) \
+                                          + 0.5 * int(col1[i], 16)))
         
         col = gtk.gdk.color_parse('#' + ''.join([hex(i)[2:] for i in col3]))
         self.multi_container.modify_bg(gtk.STATE_NORMAL, col)
