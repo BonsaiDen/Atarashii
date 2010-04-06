@@ -31,7 +31,7 @@ def start():
     from atarashii import Atarashii
     Atarashii(__version__, __secret__, __kittens__,).start()
 
-def debug(path = None):
+def debug(path=None):
     from atarashii import Atarashii
     Atarashii(__version__ , __secret__, __kittens__, True, path).start()
 

@@ -146,7 +146,7 @@ class Settings(object):
             self.has_changed = True
             del self.values[key]
     
-    def isset(self, key, allow_empty = False):
+    def isset(self, key, allow_empty=False):
         if self[key] is not None:
             if type(self[key]) == long or type(self[key]) == int:
                 return self[key] != -1
