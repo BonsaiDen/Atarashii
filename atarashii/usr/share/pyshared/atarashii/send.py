@@ -248,6 +248,7 @@ class Retweet(threading.Thread):
             
             self.main.unset_status(ST_WAS_SEND)
             gobject.idle_add(self.gui.show_retweet_info, self.name)
+            gobject.idle_add(self.gui.update_status)
         
         except (IOError, TweepError), error:
             gobject.idle_add(self.main.handle_error, error)
@@ -291,14 +292,15 @@ class Delete(threading.Thread):
             # Remove from view!
             if self.tweet_id != UNSET_ID_NUM:
                 gobject.idle_add(self.gui.html.remove, self.tweet_id)
-                
+            
             elif self.message_id != UNSET_ID_NUM:
                 gobject.idle_add(self.gui.message.remove, self.message_id)
             
             # Show Info
             gobject.idle_add(self.gui.show_delete_info,
                              self.tweet_id, self.message_id)
-        
+            
+            gobject.idle_add(self.gui.update_status)
             self.main.delete_tweet_id = UNSET_ID_NUM
             self.main.delete_message_id = UNSET_ID_NUM
         
