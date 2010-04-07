@@ -37,7 +37,7 @@ from gui_helpers import GUIHelpers
 
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_DELETE, ST_UPDATE, ST_SEND, ST_RECONNECT, ST_HISTORY, \
-                      ST_LOGIN_COMPLETE
+                      ST_LOGIN_COMPLETE, ST_NETWORK_FAILED
 
 from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       MESSAGE_WARNING, MESSAGE_QUESTION, \
@@ -613,7 +613,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             if code == HT_503_SERVICE_UNAVAILABLE:
                 info = lang.warning_overload
                 button = lang.warning_button_overload
-                simple = lang.tray_warning_overload
+                self.notifcation(MESSAGE_WARNING, lang.tray_warning_overload)
             
             # twitter/network lost/network failed
             else:
@@ -628,10 +628,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 elif code == ERR_NETWORK_FAILED:
                     info = lang.warning_network
                 
-                simple = lang.tray_warning_network
                 button = lang.warning_button_network
+                if not self.status(ST_NETWORK_FAILED):
+                    self.notifcation(MESSAGE_WARNING, lang.tray_warning_network)
+                    self.set_status(ST_NETWORK_FAILED)
             
-            self.notifcation(MESSAGE_WARNING, simple)
             self.warning_button.show(button, info)
             return True
         

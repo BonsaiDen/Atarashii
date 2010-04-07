@@ -38,8 +38,7 @@ from settings import LOGOUT_FILE
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
-                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_SUCCESSFUL, \
-                      ST_NETWORK_FAILED
+                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_SUCCESSFUL
 
 from constants import ERR_TWEET_NOT_FOUND, ERR_MESSAGE_NOT_FOUND, \
                       ERR_ALREADY_RETWEETED, ERR_TWEET_DUPLICATED, \
@@ -316,7 +315,6 @@ class AtarashiiActions(object):
         
         # Catch errors due to missing network
         if error_errno in (ERR_URLLIB_FAILED, ERR_URLLIB_TIMEOUT):
-            self.set_status(ST_NETWORK_FAILED)
             code = ERR_NETWORK_FAILED
             if self.status(ST_LOGIN_SUCCESSFUL) or ERR_URLLIB_FAILED:
                 code = ERR_NETWORK_TWITTER_FAILED
