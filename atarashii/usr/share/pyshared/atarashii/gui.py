@@ -625,9 +625,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                     info = lang.warning_network
                 
                 button = lang.warning_button_network
-                if not self.status(ST_NETWORK_FAILED):
+                if not self.main.status(ST_NETWORK_FAILED):
                     self.notifcation(MESSAGE_WARNING, lang.tray_warning_network)
-                    self.set_status(ST_NETWORK_FAILED)
+                    self.main.set_status(ST_NETWORK_FAILED)
             
             self.warning_button.show(button, info)
             return True
