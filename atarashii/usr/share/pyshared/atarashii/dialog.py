@@ -257,6 +257,7 @@ class ButtonDialog(object):
         self.shown = False
         self.information = UNSET_TEXT
         self.time = UNSET_TIMEOUT
+        self.timer = None
         
         self.title = title
         self.template = template
@@ -266,9 +267,13 @@ class ButtonDialog(object):
             self.dialog.destroy()
             self.dialog = None
         
+        if self.timer is not None:
+            gobject.source_remove(self.timer)
+            self.timer = None
+        
         self.box.hide()
     
-    def show(self, button, info, title=None):
+    def show(self, button, info, title=None, timeout=UNSET_TIMEOUT):
         self.information = info
         if self.dialog is not None:
             self.dialog.destroy()
@@ -276,6 +281,9 @@ class ButtonDialog(object):
         
         if title is not None:
             self.title = title
+            
+        if timeout != UNSET_TIMEOUT:
+            self.timer = gobject.timeout_add(timeout, self.hide)
         
         self.time = time.time()
         self.box.show()

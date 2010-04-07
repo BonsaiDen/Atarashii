@@ -488,9 +488,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                               lang.password_question % \
                               lang.name(self.main.username))
     
-    def show_retweet_info(self, name):
-        self.info_button.show(lang.retweet_button, None, None)
-    
     def ask_for_delete_tweet(self, info_text, yes, noo):
         dialog.MessageDialog(self, MESSAGE_QUESTION,
                         lang.delete_tweet_question % info_text,
@@ -506,7 +503,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     def show_delete_info(self, tweet, msg):
         self.info_button.show(lang.delete_button_tweet \
                              if tweet != UNSET_ID_NUM \
-                             else lang.delete_button_message, None, None)
+                             else lang.delete_button_message, None, None, 2500)
+    
+    def show_retweet_info(self, name):
+        self.info_button.show(lang.retweet_button, None, None, 2500)
     
     def show_favorite_error(self, name, mode):
         dialog.MessageDialog(self, MESSAGE_WARNING,
