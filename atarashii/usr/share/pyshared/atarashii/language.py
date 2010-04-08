@@ -328,6 +328,7 @@ LANG = {
         'menu_settings': '_Einstellungen',
         'menu_about': 'Über Atarashii',
         'menu_accounts': '_Accounts',
+        'menu_logout': 'Ausl_oggen',
         'menu_quit': '_Beenden',
         
         # Tray Tooltip
@@ -666,6 +667,7 @@ LANG = {
         'menu_settings': '_Preferences',
         'menu_about': 'About Atarashii',
         'menu_accounts': '_Accounts',
+        'menu_logout': 'L_ogout',
         'menu_quit': '_Quit',
         
         # Tray Tooltip

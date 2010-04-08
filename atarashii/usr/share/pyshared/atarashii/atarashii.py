@@ -34,6 +34,7 @@ pygtk.require('2.0')
 import gobject
 
 import time
+import calendar
 import os
 import sys
 
@@ -197,10 +198,20 @@ class Atarashii(AtarashiiActions):
     def on_login(self):
         self.unset_status(ST_LOGIN_ERROR | ST_CONNECT | ST_DELETE)
         self.set_status(ST_LOGIN_SUCCESSFUL)
-        self.gui.tray.activate_menu(True)
         self.gui.set_title(lang.title_logged_in % self.username)
         self.gui.update_status()
         self.gui.show_input()
+    
+    def on_login_complete(self):
+        self.set_status(ST_LOGIN_COMPLETE)
+        self.gui.tray.activate_menu(True)
+        self.gui.set_app_title()
+        if self.gui.settings_dialog is not None:
+            self.gui.settings_dialog.activate(True)
+            
+        self.save_settings(True)
+        self.gui.set_multi_button(True)
+        self.refresh_time = calendar.timegm(time.gmtime())
     
     def on_login_failed(self, error=None):
         self.username = UNSET_USERNAME
@@ -228,11 +239,15 @@ class Atarashii(AtarashiiActions):
     def on_network_failed(self, error):
         self.on_login_failed(error)
     
-    def logout(self):
+    def logout(self, menu=None):
+        self.username = UNSET_USERNAME
+        self.settings['username'] = UNSET_USERNAME
         self.refresh_time = UNSET_TIMEOUT
         self.refresh_timeout = UNSET_TIMEOUT
         self.gui.set_mode(MODE_TWEETS)
         self.unset_status(ST_ALL)
+        self.unset_status(ST_LOGIN_SUCCESSFUL)
+        self.unset_status(ST_LOGIN_COMPLETE)
         self.gui.update_status()
         self.gui.hide_all()
         
@@ -249,9 +264,8 @@ class Atarashii(AtarashiiActions):
            and self.status(ST_LOGIN_SUCCESSFUL):
             return False
         
-        info_text = []
-        
         # Tweet Info
+        info_text = []
         if self.gui.html.count > 0:
             info_text.append(
               (lang.notification_login_tweets if self.gui.html.count > 1 \

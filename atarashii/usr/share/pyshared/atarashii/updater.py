@@ -475,16 +475,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             gobject.idle_add(self.main.show_start_notifications)
             
             # Force Title Update
-            self.main.set_status(ST_LOGIN_COMPLETE)
-            gobject.idle_add(self.gui.set_app_title)
-            if self.gui.settings_dialog is not None:
-                gobject.idle_add(self.gui.settings_dialog.activate, True)
-            
-            # Init Timer
-            gobject.idle_add(self.main.save_settings, True)
-            self.main.refresh_time = calendar.timegm(time.gmtime())
-            gobject.idle_add(self.gui.set_multi_button, True)
-            
+            gobject.idle_add(self.main.on_login_complete)
+    
     
     # Calculate refresh interval based on rate limit information
     def update_limit(self):

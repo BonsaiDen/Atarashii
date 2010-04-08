@@ -22,7 +22,7 @@ import gtk
 import gobject
 
 from language import LANG as lang
-from constants import UNSET_TOOLTIP
+from constants import UNSET_TOOLTIP, UNSET_USERNAME
 from utils import menu_escape
 
 
@@ -145,6 +145,15 @@ class TrayIcon(gtk.StatusIcon):
         for i in self.account_menu.get_children():
             self.account_menu.remove(i)
         
+        self.logout_item = gtk.MenuItem(lang.menu_logout, ord('o'))
+        self.logout_item.add_accelerator('activate', self.accel, ord('o'),
+                                         gtk.gdk.CONTROL_MASK,
+                                         gtk.ACCEL_VISIBLE)
+        
+        self.logout_item.connect('activate', self.main.logout)
+        self.account_menu.append(self.logout_item)
+        self.account_menu.append(gtk.SeparatorMenuItem())
+        
         group = None
         selected = None
         account_list = self.main.settings.get_accounts()
@@ -171,9 +180,18 @@ class TrayIcon(gtk.StatusIcon):
         
         self.settings_menu.set_sensitive(mode)
         if len(self.account_menu.get_children()) == 0:
+            self.account_menu_item.set_sensitive(False)
             mode = False
         
-        self.account_menu_item.set_sensitive(mode)
+        self.logout_item.set_sensitive(mode)
+        if self.main.username == UNSET_USERNAME:
+            self.logout_item.set_sensitive(False)
+        
+        for pos, item in enumerate(self.account_menu.get_children()):
+            if pos > 1:
+                item.set_active(False)
+            
+            item.set_sensitive(mode)
     
     def on_account_select(self, item, username):
         if username != self.main.username and item.get_active():

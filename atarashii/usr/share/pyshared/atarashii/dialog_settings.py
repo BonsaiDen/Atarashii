@@ -245,9 +245,7 @@ class SettingsDialog(Dialog):
             # Set new Username
             if self.get_drop_active() == -1 \
                or not oldusername in self.main.settings.get_accounts():
-               
-                self.main.username = UNSET_USERNAME
-                self.settings['username'] = UNSET_USERNAME
+                
                 self.main.logout()
             
             # Save Settings
@@ -278,8 +276,6 @@ class SettingsDialog(Dialog):
         
         if not self.saved:
             if self.get_drop_active() == -1:
-                self.main.username = UNSET_USERNAME
-                self.settings['username'] = UNSET_USERNAME
                 self.main.logout()
         
         self.__class__.instance = None
