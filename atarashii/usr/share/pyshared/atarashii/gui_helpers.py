@@ -92,8 +92,11 @@ class GUIHelpers(object):
     def set_app_title(self):
         if self.main.username == UNSET_USERNAME \
            or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
-           
+            
             self.set_title(lang.title)
+        
+        elif self.main.status(ST_CONNECT):
+            self.set_title(lang.title_logging_in % self.main.username)
         
         # Tray Tooltip
         if not self.main.status(ST_CONNECT) \
@@ -116,7 +119,7 @@ class GUIHelpers(object):
         
         else:
             self.tray.set_tooltip(lang.tray_logged_out)
-    
+        
         # Set Tabs
         self.set_tabs()
     

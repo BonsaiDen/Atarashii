@@ -28,6 +28,7 @@ LANG = {
         # Title
         'title': 'Atarashii',
         'title_logged_in': '%s - Atarashii',
+        'title_logging_in': 'Verbinde als %s...',
         
         # Tabs
         'tabs_tweets': 'Tweets',
@@ -377,6 +378,7 @@ LANG = {
         # Title
         'title': 'Atarashii',
         'title_logged_in': '%s - Atarashii',
+        'title_logging_in': 'Connecting as %s...',
         
         # Tabs
         'tabs_tweets': 'Tweets',
