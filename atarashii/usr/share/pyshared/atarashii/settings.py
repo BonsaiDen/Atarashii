@@ -36,6 +36,7 @@ CONFIG_FILE = os.path.join(ATARASHII_DIR, 'atarashii.conf')
 COPY_FILE = '/usr/share/applications/atarashii.desktop'
 CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
 CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')
+ERROR_LOG_FILE = os.path.join(ATARASHII_DIR, 'error.log')
 LOGOUT_FILE = os.path.join(ATARASHII_DIR, 'logout')
 
 # Theme sounds
