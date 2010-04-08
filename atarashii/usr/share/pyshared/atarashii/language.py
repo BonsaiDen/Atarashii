@@ -300,7 +300,7 @@ LANG = {
         'warning_network_timeout':
             'Atarashii hat die Verbindung zu Twitter verloren, dies ist in '
             'den meisten Fällen lediglich ein temporäres Problem '
-            'aufgrund von Überlastung seitens Twitter.
+            'aufgrund von Überlastung seitens Twitter.',
         
         'warning_network_twitter':
             'Atarashii konnte keine Verbindung zu Twitter herstellen.',
