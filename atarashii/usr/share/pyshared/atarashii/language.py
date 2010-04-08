@@ -322,11 +322,11 @@ LANG = {
         'multi_read_message': 'Alle Nachrichten als gelesen markieren',
         
         # Tray Menu
-        'menu_update': 'Akt_ualisieren',
-        'menu_read': 'Alle als _gelesen markieren',
+        'menu_update': 'Akualisie_ren',
+        'menu_read': 'Alle als gelesen _markieren',
         'menu_settings': '_Einstellungen',
-        'menu_about': 'Über _Atarashii',
-        'menu_accounts': 'Accounts',
+        'menu_about': 'Über Atarashii',
+        'menu_accounts': '_Accounts',
         'menu_quit': '_Beenden',
         
         # Tray Tooltip
@@ -661,8 +661,8 @@ LANG = {
         'menu_update': '_Refresh',
         'menu_read': '_Mark all as read',
         'menu_settings': '_Preferences',
-        'menu_about': 'About _Atarashii',
-        'menu_accounts': 'Accounts',
+        'menu_about': 'About Atarashii',
+        'menu_accounts': '_Accounts',
         'menu_quit': '_Quit',
         
         # Tray Tooltip
