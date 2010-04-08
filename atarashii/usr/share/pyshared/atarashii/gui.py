@@ -615,8 +615,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             else:
                 if code == ERR_NETWORK_TWITTER_FAILED:
                     if self.main.status(ST_LOGIN_COMPLETE):
-                        info = lang.warning_network_timeout \
-                               % self.main.refresh_timeout
+                        info = lang.warning_network_timeout
                     
                     else:
                         info = lang.warning_network_twitter

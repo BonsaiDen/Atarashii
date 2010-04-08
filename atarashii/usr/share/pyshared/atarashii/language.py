@@ -298,9 +298,9 @@ LANG = {
             'Atarashii konnte keine Verbindung zum Internet herstellen.',
         
         'warning_network_timeout':
-            'Atarashii hat die Verbindung zu Twitter verloren, '
-            'es wird alle %d Sekunden versucht die Verbindung '
-            'wiederherzustellen.',
+            'Atarashii hat die Verbindung zu Twitter verloren, dies ist in '
+            'den meisten Fällen lediglich ein temporäres Problem '
+            'aufgrund von Überlastung seitens Twitter.
         
         'warning_network_twitter':
             'Atarashii konnte keine Verbindung zu Twitter herstellen.',
@@ -640,8 +640,9 @@ LANG = {
             'Atarashii couldn\'t establish a connection to the Internet.',
         
         'warning_network_timeout':
-            'Atarashii has lost the conntection to Twitter. It '
-            'will automatically try to reconnect itself every %d seconds.',
+            'Atarashii has lost the conntection to Twitter, in most cases '
+            'this is just a temporary issue due to Twitter being too '
+            'busy at the moment.',
         
         'warning_network_twitter':
             'Atarashii couldn\'t establish a connection to Twitter.',
