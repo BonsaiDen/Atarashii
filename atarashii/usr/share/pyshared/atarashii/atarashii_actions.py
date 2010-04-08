@@ -28,12 +28,14 @@ import calendar
 import time
 import math
 import socket
+import traceback
+import locale
 from urllib2 import URLError
 
 import send
 
 from language import LANG as lang
-from settings import LOGOUT_FILE
+from settings import LOGOUT_FILE, CRASH_LOG_FILE, ERROR_LOG_FILE
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
@@ -45,7 +47,7 @@ from constants import ERR_TWEET_NOT_FOUND, ERR_MESSAGE_NOT_FOUND, \
                       ERR_USER_NOT_FOUND, ERR_RATE_RECONNECT, \
                       ERR_RATE_LIMIT, ERR_NETWORK_FAILED, \
                       ERR_NETWORK_TWITTER_FAILED, ERR_URLLIB_FAILED, \
-                      ERR_URLLIB_TIMEOUT
+                      ERR_URLLIB_TIMEOUT, ERR_MAPPING
 
 from constants import HT_400_BAD_REQUEST, HT_401_UNAUTHORIZED, \
                       HT_403_FORBIDDEN, HT_404_NOT_FOUND, \
@@ -57,6 +59,9 @@ class AtarashiiActions(object):
     def start(self):
         # Remove old logout indicator
         self.on_logout_cancel()
+        
+        self.log_error(HT_400_BAD_REQUEST, -2)
+        self.log_error(ERR_ALREADY_RETWEETED, -3)
         
         # Connect to gnome session in order to be notified on shutdown
         gnome.program_init('Atarashii', self.version)
@@ -72,25 +77,20 @@ class AtarashiiActions(object):
         # Catch Python Errors
         if not self.exited:
             # Set date format to english
-            import locale
             locale.setlocale(locale.LC_TIME, 'C')
                         
-            # Save the crashlog
-            import traceback
-            from settings import CRASH_LOG_FILE
-            crash_file = open(CRASH_LOG_FILE, 'ab')
+            # Save the crashlo
             trace = traceback.extract_tb(sys.last_traceback)
-            crash_file.write(
-                 '''Atarashii %s\nStarted at %s\nCrashed at %s\nTraceback:\n'''
-                 % (self.version,
-                 time.strftime('%a %b %d %H:%M:%S +0000 %Y',
-                                time.gmtime(time.time())),
-                 
-                 time.strftime('%a %b %d %H:%M:%S +0000 %Y', time.gmtime())
-                 ))
-        
-            crash_file.write('\n'.join(traceback.format_list(trace)))
-            crash_file.close()
+            with open(CRASH_LOG_FILE, 'ab') as f:
+                f.write('''Atarashii %s\nStarted at %s\n'''
+                        '''Crashed at %s\nTraceback:\n''' % (self.version,
+                        time.strftime('%a %b %d %H:%M:%S +0000 %Y',
+                                      time.gmtime(self.start_time)),
+                        
+                        time.strftime('%a %b %d %H:%M:%S +0000 %Y',
+                                      time.gmtime())))
+                
+                f.write('\n'.join(traceback.format_list(trace)))
             
             # Exit with specific error
             sys.exit(70) # os.EX_SOFTWARE
@@ -338,7 +338,7 @@ class AtarashiiActions(object):
             
             elif msg.lower().startswith('status is a duplicate'):
                 code = ERR_TWEET_DUPLICATED
-                
+            
             else:
                 code = error_code
                 
@@ -367,4 +367,19 @@ class AtarashiiActions(object):
         
         # Leave it to the GUI!
         self.gui.show_error(code, error_code, error_errno, rate_error)
+    
+        # Log the error
+        self.log_error(code, error_errno)
+    
+    
+    # Log errors to ~/.atarashii/error.log -------------------------------------
+    # --------------------------------------------------------------------------
+    def log_error(self, code, error_errno):
+        locale.setlocale(locale.LC_TIME, 'C')
+        with open(ERROR_LOG_FILE, 'ab') as f:
+            f.write('%s %s %d\n' \
+                    % (time.strftime('%a %b %d %H:%M:%S +0000 %Y',
+                       time.gmtime()), ERR_MAPPING[code], error_errno))
+        
+        locale.setlocale(locale.LC_TIME, '')
 

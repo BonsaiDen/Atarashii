@@ -16,6 +16,7 @@
 
 # Constants --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
+import sys
 
 # Generic Stuff
 UNSET_TOOLTIP = ''       # Should be ''
@@ -86,6 +87,14 @@ HT_500_INTERNAL_SERVER_ERROR = 500
 HT_502_BAD_GATEWAY = 502
 HT_503_SERVICE_UNAVAILABLE = 503
 
+ERR_NAMES = [i for i in dir() if i.startswith('ERR') or i.startswith('HT')]
+
+# Must be defined after ERR_NAMES otherwise we try to make a hash from a dict
+# which of course doesn't work
+ERR_MAPPING = {}
+for i in ERR_NAMES:
+    ERR_MAPPING[sys.modules[__name__].__dict__[i]] = i
+
 
 # Status Flags -----------------------------------------------------------------
 ST_NONE = 0
@@ -120,4 +129,5 @@ ST_NETWORK_FAILED = 32768
 # All
 ST_ALL = ST_ALL_PENDING | ST_WAS_ALL | ST_WARNING_RATE | ST_LOGIN_ALL | \
          ST_NETWORK_FAILED
+
 
