@@ -65,9 +65,7 @@ class Edit(threading.Thread):
         self.main.unset_status(ST_SEND)
         self.main.unset_status(ST_WAS_SEND)
     
-    
-    # Send a Tweet -------------------------------------------------------------
-    # --------------------------------------------------------------------------
+    # Send a Tweet
     def send_tweet(self, text):
         if self.main.edit_reply_id != UNSET_ID_NUM:
             # Send Tweet
@@ -76,13 +74,9 @@ class Edit(threading.Thread):
             
             self.gui.html.set_newest()
             
-            # Remove old tweet
+            # Remove old tweet and insert new one
             gobject.idle_add(self.gui.html.remove, self.tweet_id)
-            
-            # Insert temporary tweet
-            imgfile = self.main.updater.get_image(update)
-            self.gui.html.update_list.append((update, imgfile))
-            gobject.idle_add(self.gui.html.push_updates)
+            self.insert_tweet(update)
         
         # Normal Tweet / Retweet
         else:
@@ -90,17 +84,17 @@ class Edit(threading.Thread):
             update = self.main.api.update_status(text)
             self.gui.html.set_newest()
             
-            # Remove old tweet
+            # Remove old tweet and insert new one
             gobject.idle_add(self.gui.html.remove, self.tweet_id)
-            
-            # Insert temporary tweet
-            imgfile = self.main.updater.get_image(update)
-            self.gui.html.update_list.append((update, imgfile))
-            gobject.idle_add(self.gui.html.push_updates)
+            self.insert_tweet(update)
     
+    # Insert a tweet temporary into the timeline
+    def insert_tweet(self, update):
+        imgfile = self.main.updater.get_image(update)
+        self.gui.html.update_list.append((update, imgfile))
+        gobject.idle_add(self.gui.html.push_updates)
     
-    # Delete a Tweet -----------------------------------------------------------
-    # --------------------------------------------------------------------------
+    # Delete a Tweet
     def delete(self):
         self.main.set_status(ST_WAS_DELETE)
         try:
@@ -170,9 +164,7 @@ class Send(threading.Thread):
         
         self.main.unset_status(ST_WAS_SEND)
     
-    
-    # Send a Tweet -------------------------------------------------------------
-    # --------------------------------------------------------------------------
+    # Send a Tweet
     def send_tweet(self, text):
         if self.main.reply_id != UNSET_ID_NUM:
             # Send Tweet
@@ -180,26 +172,22 @@ class Send(threading.Thread):
                                 in_reply_to_status_id = self.main.reply_id)
             
             self.gui.html.set_newest()
-            
-            # Insert temporary tweet
-            imgfile = self.main.updater.get_image(update)
-            self.gui.html.update_list.append((update, imgfile))
-            gobject.idle_add(self.gui.html.push_updates)
+            self.insert_tweet(update)
         
         # Normal Tweet / Retweet
         else:
             # Send Tweet
             update = self.main.api.update_status(text)
             self.gui.html.set_newest()
-            
-            # Insert temporary tweet
-            imgfile = self.main.updater.get_image(update)
-            self.gui.html.update_list.append((update, imgfile))
-            gobject.idle_add(self.gui.html.push_updates)
+            self.insert_tweet(update)
     
+    # Insert a tweet temporary into the timeline
+    def insert_tweet(self, update):
+        imgfile = self.main.updater.get_image(update)
+        self.gui.html.update_list.append((update, imgfile))
+        gobject.idle_add(self.gui.html.push_updates)
     
-    # Send a Direct Message ----------------------------------------------------
-    # --------------------------------------------------------------------------
+    # Send a Direct Message
     def send_message(self, text):
         # Send Message
         if self.main.message_id != UNSET_ID_NUM:
