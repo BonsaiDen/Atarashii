@@ -722,3 +722,4 @@ class Language(object):
 
 # Select Language
 LANG = Language(locale.getdefaultlocale()[0])
+
