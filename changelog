@@ -7,6 +7,8 @@ atarashii (0.99.19-1) all;
   + Show an warning/error icon instead of the atarashii icon in the tray, if
     something went wrong.
   + Added keyboard accelerators to all menus.
+  + New logging of errors and warnings to ~/.atarashii/error.log
+  ~ The window title now changes accordingly when a user is logging in.
   ~ Replace the message button with tabs and got rid of nearly all the buttons.
   ~ Move the account selection to the tray menu.
   ~ Reduce the lag between view and statusbar updates after a refresh.
@@ -27,7 +29,7 @@ atarashii (0.99.19-1) all;
   * Removed some dead code.
   * Tons of internal cleanup for an even more pythonic style.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 6 Apr 2010 20:42:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 8 Apr 2010 18:54:00 +0200
 
 atarashii (0.99.18a-1) all;
 
