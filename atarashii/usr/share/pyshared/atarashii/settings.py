@@ -20,7 +20,7 @@ import os
 import urllib
 import time
 
-from constants import UNSET_SETTING
+from constants import UNSET_SETTING, UNSET_ID_NUM
 
 # File Paths
 HOME_DIR = os.path.expanduser('~')
@@ -32,6 +32,7 @@ AUTOSTART_DIR = os.path.join(HOME_DIR, '.config', 'autostart')
 ATARASHII_DIR = os.path.join(HOME_DIR, '.atarashii')
 CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
 
+CONFIG_FILE = os.path.join(ATARASHII_DIR, 'atarashii.conf')
 COPY_FILE = '/usr/share/applications/atarashii.desktop'
 CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
 CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')
@@ -46,32 +47,28 @@ THEME_DIR = get_sound_dirs()[0]
 class Settings(object):
     def __init__(self):
         if not os.path.exists(ATARASHII_DIR):
-            os.mkdir(ATARASHII_DIR )
+            os.mkdir(ATARASHII_DIR)
         
         # Record running time
         self.values = {}
         self.load()
         self.save_count = 0
         self.has_changed = False
-        
+    
     
     # Load ---------------------------------------------------------------------
     def load(self):
         try:
-            settings_file = open(os.path.join(ATARASHII_DIR,
-                                 'atarashii.conf'), 'r')
-            
-            lines = settings_file.read().split('\n')
-            settings_file.close()
-            for i in lines:
-                name = i[:i.find(' ')]
-                i = i[len(name)+1:]
-                vtype = i[:i.find(' ')]
-                value = i[len(vtype)+1:]
+            for line in open(CONFIG_FILE, 'rb'):
+                line = line.strip()
+                name = line[:line.find(' ')]
+                line = line[len(name) + 1:]
+                vtype = line[:line.find(' ')]
+                value = line[len(vtype) + 1:]
                 try:
                     if vtype == 'long':
                         if value == UNSET_SETTING:
-                            value = long(-1)
+                            value = long(UNSET_ID_NUM)
                         
                         else:
                             value = long(value)
@@ -82,8 +79,8 @@ class Settings(object):
                     if name != UNSET_SETTING:
                         self.values[urllib.unquote(name)] = value
                 
-                except ValueError, detail:
-                    print detail
+                except ValueError, error:
+                    print error
         
         except IOError:
             self.values = {}
@@ -97,44 +94,31 @@ class Settings(object):
     def save(self):
         if not self.has_changed:
             return
-    
-        # Don't save crash stuff
-        if 'crashed' in self.values:
-            del self.values['crashed']
         
-        if 'crash_reason' in self.values:
-            del self.values['crash_reason']
+        # Don't save crash stuff
+        del self['crashed']
+        del self['crash_reason']
         
         # Create the file
-        settings_file = open(os.path.join(ATARASHII_DIR, 'atarashii.conf'), 'w')
-        keys = self.values.keys()
-        keys.sort()
-        for name in keys:
-            value = self.values[name]
-            cls = type(value)
-            if cls == int or cls == long:
-                vtype = 'long'
-            
-            elif cls == bool:
-                vtype = 'bool'
-            
-            else:
-                vtype = 'str'
-            
-            settings_file.write('%s %s %s\n'
-                                 % (urllib.quote(name), vtype, value))
+        with open(CONFIG_FILE, 'wb') as f:
+            for key, value in sorted(self.values.items()):
+                if isinstance(value, bool):
+                    key_type = 'bool'
+                
+                elif isinstance(value, (int, long)):
+                    key_type = 'long'
+                
+                else:
+                    key_type = 'str'
+                
+                f.write('%s %s %s\n' % (urllib.quote(key), key_type, value))
         
-        settings_file.close()
         self.has_changed = False
     
     
     # Get / Set ----------------------------------------------------------------
     def __getitem__(self, key):
-        if key in self.values:
-            return self.values[key]
-        
-        else:
-            return None
+        return self.values[key] if key in self.values else None
     
     def __setitem__(self, key, value):
         if not key in self.values or self.values[key] != value:
@@ -161,20 +145,10 @@ class Settings(object):
         return self.values.get(key, default)
     
     def is_true(self, key, default=True):
-        if self[key] is None:
-            return default
-        
-        else:
-            return self[key]
+        return default if self[key] is None else self[key]
     
     def get_accounts(self):
-        accounts = []
-        for i in self.values:
-            if i.startswith('account_'):
-                accounts.append(i[8:])
-        
-        accounts.sort()
-        return accounts
+        return sorted([i[8:] for i in self.values if i.startswith('account_')])
     
     
     # Manage Autostart ---------------------------------------------------------
@@ -187,17 +161,15 @@ class Settings(object):
                 os.mkdir(AUTOSTART_DIR)
             
             # Get contents of the desktop file
-            cfp = open(COPY_FILE, 'rb')
-            text = cfp.read()
-            cfp.close()
+            with open(COPY_FILE, 'rb') as f:
+                text = f.read()
             
             # Tweak the file bit
-            dfp = open(DESKTOP_FILE, 'wb')
             bmode = 'true' if mode else 'false'
             text = text.replace('Exec=atarashii', 'Exec=atarashii auto')
             text = text.replace('StartupNotify=true', 'StartupNotify=false')
-            dfp.write(text + '\nX-GNOME-Autostart-enabled=%s' % bmode)
-            dfp.close()
+            with open(DESKTOP_FILE, 'wb') as f:
+                f.write(text + '\nX-GNOME-Autostart-enabled=%s' % bmode)
             
             # Only save if we succeeded
             self['autostart'] = mode
@@ -208,9 +180,9 @@ class Settings(object):
     def check_autostart(self):
         if os.path.exists(DESKTOP_FILE):
             try:
-                cfp = open(DESKTOP_FILE, 'rb')
-                text = cfp.read()
-                cfp.close()
+                with open(DESKTOP_FILE, 'rb') as f:
+                    text = f.read()
+                
                 if text.find('X-GNOME-Autostart-enabled=false') != -1:
                     self['autostart'] = False
                 
@@ -230,9 +202,9 @@ class Settings(object):
     def check_crash(self):
         self['crashed'] = os.path.exists(CRASH_FILE)
         if self['crashed']:
-            cfp = open(CRASH_FILE, 'rb')
-            self['crash_reason'] = cfp.read().strip()
-            cfp.close()
+            with open(CRASH_FILE, 'rb') as f:
+                self['crash_reason'] = f.read().strip()
+            
             print 'ERROR: Atarashii crashed!'
     
     
@@ -247,7 +219,7 @@ class Settings(object):
                         os.unlink(cache_file)
                     
                     except (OSError, IOError):
-                        print 'Could not delete file %s' % i
+                        print 'Could not delete file %s' % cache_file
 
 
 # Create Crashfile -------------------------------------------------------------
@@ -255,9 +227,8 @@ class Settings(object):
 def crash_file(mode, data=None):
     try:
         if mode:
-            cfp = open(CRASH_FILE, 'wb')
-            cfp.write(str(data))
-            cfp.close()
+            with open(CRASH_FILE, 'wb') as f:
+                f.write(str(data))
         
         elif os.path.exists(CRASH_FILE):
             os.unlink(CRASH_FILE)
