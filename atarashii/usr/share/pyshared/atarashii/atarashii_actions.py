@@ -60,9 +60,6 @@ class AtarashiiActions(object):
         # Remove old logout indicator
         self.on_logout_cancel()
         
-        self.log_error(HT_400_BAD_REQUEST, -2)
-        self.log_error(ERR_ALREADY_RETWEETED, -3)
-        
         # Connect to gnome session in order to be notified on shutdown
         gnome.program_init('Atarashii', self.version)
         client = gnome.ui.master_client()
