@@ -22,7 +22,7 @@
 # TODO add block/unfollow to avatar menus
 
 
-# Make sure there is only one instance of Atarashii ----------------------------
+# Make sure there is only one instance of Atarashii
 import bus
 DBUS_INSTANCE = bus.get_instance()
 
