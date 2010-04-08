@@ -336,7 +336,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         # Update Views
         def update_views(updates, messages):
-            # Notifications this INSERTS the tweets/messages
+            # this INSERTS the tweets/messages
             self.show_notifications(updates, messages)
             
             if len(updates) > 0:
@@ -392,6 +392,9 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     # Notifications ------------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_notifications(self, updates, messages):
+        if not self.settings.is_true('notify'):
+            return
+        
         username = self.main.username.lower()
         
         # Messages
@@ -452,8 +455,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                                                  i + 1, count)
         
         # Show Notifications
-        if self.settings.is_true('notify'):
-            self.notifier.add(notify_message_list + notify_tweet_list)
+        self.notifier.add(notify_message_list + notify_tweet_list)
     
     
     # Helpers ------------------------------------------------------------------

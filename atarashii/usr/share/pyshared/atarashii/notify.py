@@ -46,8 +46,7 @@ class Notifier(object):
         if isinstance(items, tuple):
             items = [items]
         
-        if self.notify and self.settings.is_true('notify') \
-           and len(items) > 0:
+        if self.notify and len(items) > 0:
             
             # Add items and save old count
             pending = len(self.items)

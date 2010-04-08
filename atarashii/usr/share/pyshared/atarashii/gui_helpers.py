@@ -210,7 +210,6 @@ class GUIHelpers(object):
         
         # Crazy color blending!
         col1 = base_color.to_string()[1:]
-        
         col2 = self.html.get_style().dark[gtk.STATE_NORMAL].to_string()[1:]
         col1 = (col1[0:4], col1[4:8], col1[8:12])
         col2 = (col2[0:4], col2[4:8], col2[8:12])
@@ -232,7 +231,8 @@ class GUIHelpers(object):
     
     # Show a popup notification
     def notifcation(self, typ, msg):
-        typ = 'dialog-error' if typ == MESSAGE_ERROR else 'dialog-warning'
-        self.main.notifier.add(('Atarashii', strip_tags(msg),
-                                 typ, 'theme:' + typ))
+        if self.main.settings.is_true('notify'):
+            typ = 'dialog-error' if typ == MESSAGE_ERROR else 'dialog-warning'
+            self.main.notifier.add(('Atarashii', strip_tags(msg),
+                                     typ, 'theme:' + typ))
 
