@@ -33,7 +33,22 @@ disable-checker=similarities
 
 # Disable the message(s) with the given id(s).
 # List of all available ids: http://www.logilab.org/card/pylintfeatures
-disable-msg=C0111,E1101,W0403,R0902,R0904,W0613,R0903,W0201,R0912,R0915,R0913,R0911,R0914,R0901,R0201,E1102,W0231,W0702,E0203,F0401
+
+# C0111 = Missing docstring
+# E1102 = not callable
+# E1101 = has no member, generated more than 700 times due to the splitting of gui etc. into subclassed
+# E0203 = access to member before definition, reason: same as above
+
+# W0201 = attribute defined outside of init, again raised due to the above
+# W0403 = relative import, since atarashii is not installed as a module we don't care
+# W0231 = init method of base class not called, again...
+# W0703 = catch exception
+# W0232 = Class has no init method
+
+# F0401 = import failed, this happens with constants.py and co, don't know why but the messages are annoying
+
+
+disable-msg=C0111, E1102, E1101, E0203, W0201, W0232, W0403, W0231, W0703, F0401, R0902,R0904,W0613,R0903,R0912,R0915,R0913,R0911,R0914,R0901, R0201
 
 [BASIC]
-good-names=i,j,k,ex,Run,_,e,v,TweepError
+good-names=i,j,k,ex,Run,_,e,v,TweepError,f
