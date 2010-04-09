@@ -277,7 +277,6 @@ class AtarashiiActions(object):
             error_code = error.response.status
             error_errno = None
         
-        
         # Catch errors due to missing network
         if error_errno in (ERR_URLLIB_FAILED, ERR_URLLIB_TIMEOUT):
             code = ERR_NETWORK_FAILED
