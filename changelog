@@ -19,6 +19,8 @@ atarashii (0.99.19-1) all;
     info box at the top.
   ~ Better handling of crashes due to python errors.
   ~ Multi button now gets hidden if not logged in.
+  * Fix for a bug that caused very high CPU usage when starting minimized in
+    tray.
   * Fix for the handlind of some special network errors.
   * Fix for sending tweets that start with 'd ' which would be interpreted as
     direct messages by twitter.
@@ -35,7 +37,7 @@ atarashii (0.99.19-1) all;
   * Fix broken tooltips while the context menu is opened.
   * Tons of internal cleanup for an even more pythonic style.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 9 Apr 2010 19:18:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 9 Apr 2010 21:49:00 +0200
 
 atarashii (0.99.18a-1) all;
 
