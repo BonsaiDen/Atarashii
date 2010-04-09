@@ -155,7 +155,7 @@ class TrayIcon(gtk.StatusIcon):
         self.account_menu.append(gtk.SeparatorMenuItem())
         
         group = None
-        selected = None
+        self.selected_account = None
         account_list = self.main.settings.get_accounts()
         for i in account_list:
             item = gtk.RadioMenuItem(group, menu_escape(i))
@@ -167,12 +167,12 @@ class TrayIcon(gtk.StatusIcon):
             
             # Select
             if i == self.main.username:
-                selected = item
+                self.selected_account = item
         
         self.activate_menu(True)
         self.account_menu.show_all()
-        if selected is not None:
-            selected.set_active(True)
+        if self.selected_account is not None:
+            self.selected_account.set_active(True)
     
     def activate_menu(self, mode):
         if self.gui.settings_dialog is not None:
@@ -187,14 +187,16 @@ class TrayIcon(gtk.StatusIcon):
         if self.main.username == UNSET_USERNAME:
             self.logout_item.set_sensitive(False)
         
+        if self.selected_account is not None:
+            self.selected_account.set_active(False)
+        
         for pos, item in enumerate(self.account_menu.get_children()):
             if pos > 1:
-                item.set_active(False)
-            
-            item.set_sensitive(mode)
+                item.set_sensitive(mode)
     
     def on_account_select(self, item, username):
         if username != self.main.username and item.get_active():
+            self.selected_account = item
             self.activate_menu(False)
             self.main.login(username)
     
