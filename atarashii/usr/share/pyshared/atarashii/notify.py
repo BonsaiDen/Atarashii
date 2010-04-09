@@ -61,8 +61,7 @@ class Notifier(object):
             item = self.items.pop(0)
             self.last_id = self.notify.Notify('Atarashii', 0, item[2],
                                               item[0],  item[1], (),
-                                              {'urgency': dbus.Byte(2)},
-                                              -1)
+                                              {'urgency': dbus.Byte(2)}, -1)
             
             # Play the sound
             if self.settings.is_true('sound'):
