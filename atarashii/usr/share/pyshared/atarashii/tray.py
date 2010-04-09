@@ -30,6 +30,7 @@ class TrayIcon(gtk.StatusIcon):
     def __init__(self, gui):
         self.gui = gui
         self.main = gui.main
+        self.switch_tries = 0
         
         # Tooltip
         gtb = gtk.Builder()
@@ -294,5 +295,18 @@ class TrayIcon(gtk.StatusIcon):
             else:
                 pos = self.gui.window_position
                 self.gui.move(pos[0], pos[1])
+                self.switch_tries = 0
                 self.gui.present()
+                gobject.timeout_add(5, self.check_switch)
+    
+    def check_switch(self):
+        if not self.gui.is_active():
+            self.gui.present()
+            self.switch_tries += 1
+            print self.switch_tries
+            if self.switch_tries > 25:
+                return False
+            
+            else:
+                return True
 
