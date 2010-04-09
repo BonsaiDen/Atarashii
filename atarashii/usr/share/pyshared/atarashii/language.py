@@ -218,7 +218,7 @@ LANG = {
         'block_button': '%s wird nun geblockt',
         'unblock_button': '%s wird nicht mehr geblockt',
         'error_block': '%s konnte nicht geblockt werden.',
-        'error_unblock': '%s konnte nicht entblockt werden.', 
+        'error_unblock': '%s konnte nicht entblockt werden.',
         
         # Delete Dialogs
         'delete_title': 'Löschen bestätigen',
@@ -585,7 +585,7 @@ LANG = {
         'block_button': '%s has been blocked',
         'unblock_button': '%s has been unblocked',
         'error_block': 'Could not block %s.',
-        'error_unblock': 'Could not unblock %s.',    
+        'error_unblock': 'Could not unblock %s.',
         
         # Delete Dialogs
         'delete_title': 'Confirm delete',

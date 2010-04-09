@@ -354,6 +354,7 @@ class Friends(threading.Thread):
                                    target_screen_name = self.name)
         
         except (IOError, TweepError), error:
+            print error
             friend = None
         
         if self.menu is not None:
@@ -384,6 +385,7 @@ class Follow(threading.Thread):
             gobject.idle_add(self.gui.show_follow_info, self.mode, self.name)
         
         except (IOError, TweepError), error:
+            print error
             gobject.idle_add(self.gui.show_follow_error, self.mode, self.name)
         
         del self.main.follow_pending[self.name.lower()]
@@ -413,6 +415,7 @@ class Block(threading.Thread):
             gobject.idle_add(self.gui.show_block_info, self.mode, self.name)
         
         except (IOError, TweepError), error:
+            print error
             gobject.idle_add(self.gui.show_block_error, self.mode, self.name)
         
         del self.main.block_pending[self.name.lower()]
