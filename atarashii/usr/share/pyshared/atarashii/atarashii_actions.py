@@ -269,7 +269,7 @@ class AtarashiiActions(object):
                 msg = UNSET_ERROR
             
             error_errno = error.errno
-            error_code = error.code
+            error_code = error.code if hasattr(error, 'code') else 0
         
         # Tweepy errors
         else:
