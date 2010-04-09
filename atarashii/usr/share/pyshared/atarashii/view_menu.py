@@ -81,6 +81,14 @@ class ViewMenu(object):
     
     
     # Menu Events --------------------------------------------------------------
+    
+    # Remove the default menu, this might appear besides the 'more' link
+    def on_popup(self, view, menu, *args):
+        menu.hide()
+        menu.cancel()
+        menu.destroy()
+        return True
+    
     def on_button(self, view, event, *args):
         self.give_text_focus = self.text.has_focus
         if event.button == 3 and not self.popup_open:
@@ -117,8 +125,11 @@ class ViewMenu(object):
     
     def add_menu_link(self, menu, name, callback, *args):
         item = gtk.MenuItem(name)
-        item.connect('activate', callback, *args)
+        if callback is not None:
+            item.connect('activate', callback, *args)
+        
         menu.append(item)
+        return item
     
     def add_menu_separator(self, menu):
         item = gtk.SeparatorMenuItem()
@@ -159,7 +170,13 @@ class ViewMenu(object):
                 else:
                     user = None
                 
-                return self.create_menu(menu, item, item_id, link, full, user)
+                self.create_menu(menu, item, item_id, link, full, user)
+                
+                # Follow / Block
+                if link in ('profile', 'avatar'):
+                    pass
+                
+                return True
         
         else:
             return False

@@ -52,6 +52,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.connect('notify::load-status', self.loaded)
         self.connect('button-release-event', self.text.html_focus)
         self.connect('button-press-event', self.on_button)
+        self.connect('populate-popup', self.on_popup)
         self.popup_open = False
         self.menu_no_fake_move = False
         

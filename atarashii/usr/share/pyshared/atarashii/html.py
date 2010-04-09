@@ -247,16 +247,12 @@ class HTML(view.HTMLView):
                 reply = 'reply:%s:-1:-1' % user
                 self.add_menu_link(menu, lang.context_tweet % menu_escape(user),
                                    self.context_link, reply)
-                        
+            
             self.add_menu_separator(menu)
             message = 'message:%s:-1:-1' % user
             self.add_menu_link(menu, lang.context_message % menu_escape(user),
                                self.context_link, message)
-        
-            # Block / Unfollow
-            if link == 'avatar':
-                pass # TODO add this, but this needs additional api calls
-        
+                
         # Source
         elif link == 'source':
             source = self.get_source(item)
@@ -299,6 +295,4 @@ class HTML(view.HTMLView):
                 full = 'delete:t:%d' % item_id
                 self.add_menu_link(menu, lang.context_delete_tweet,
                                    self.context_link, full, item)
-        
-        return True
 

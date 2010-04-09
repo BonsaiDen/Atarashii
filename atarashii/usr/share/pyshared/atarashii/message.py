@@ -221,6 +221,4 @@ class HTML(view.HTMLView):
                 full = 'delete:m:%d' % item_id
                 self.add_menu_link(menu, lang.context_delete_message,
                                    self.context_link, full, item)
-        
-        return True
 
