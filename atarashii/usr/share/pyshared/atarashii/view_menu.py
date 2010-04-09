@@ -180,7 +180,9 @@ class ViewMenu(object):
                 
                 # Follow / Block
                 if link in ('profile', 'avatar') \
-                   and not user in self.main.follow_pending:
+                   and user.lower() != self.main.username.lower() \
+                   and not user.lower() in self.main.follow_pending \
+                   and not user.lower() in self.main.block_pending:
                     
                     self.add_menu_separator(menu)
                     self.add_menu_link(menu, lang.context_friend_loading,
@@ -196,12 +198,28 @@ class ViewMenu(object):
     
     def create_friend_menu(self, menu, friend):
         items = menu.get_children()
-        menu.remove(items[-2])
-        menu.remove(items[-1])
         if friend is not None:
-            info = 'Unfollow' if friend[0].following else 'Follow'
+            menu.remove(items[-1])
+            name = friend[1].screen_name
+            info = lang.context_friend_unfollow % menu_escape(name) \
+                   if friend[0].following \
+                   else lang.context_friend_follow % menu_escape(name)
+            
             self.add_menu_link(menu, info, self.main.follow,
-                               friend[1].id, friend[0].following)
+                               friend[1].id, name, not friend[0].following)
+            
+            info = lang.context_friend_unblock % menu_escape(name) \
+                   if friend[0].blocking \
+                   else lang.context_friend_block % menu_escape(name)
+            
+            self.add_menu_link(menu, info, self.main.block,
+                               friend[1].id, name, not friend[0].blocking)
+            
+            menu.show_all()
+        
+        else:
+            menu.remove(items[-2])
+            menu.remove(items[-1])
     
     def create_link_menu(self, menu, link, full):
         if link == 'link':

@@ -499,13 +499,34 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     def show_delete_info(self, tweet, msg):
         self.info_button.show(lang.delete_button_tweet \
                              if tweet != UNSET_ID_NUM \
-                             else lang.delete_button_message, None, None, 2500)
+                             else lang.delete_button_message,
+                             None, None, 5000)
     
     def show_retweet_info(self, name):
-        self.info_button.show(lang.retweet_button, None, None, 2500)
+        self.info_button.show(lang.retweet_button, None, None, 5000)
+    
+    def show_follow_info(self, mode, name):
+        self.info_button.show(lang.follow_button % name if mode \
+                              else lang.unfollow_button % name,
+                              None, None, 5000)
+    
+    def show_follow_error(self, mode, name):
+        dialog.MessageDialog(self, MESSAGE_ERROR,
+                             lang.error_follow % name if mode \
+                             else lang.error_unfollow % name, lang.error_title)
+    
+    def show_block_info(self, mode, name):
+        self.info_button.show(lang.block_button % name if mode \
+                              else lang.unblock_button % name,
+                              None, None, 5000)
+    
+    def show_block_error(self, mode, name):
+        dialog.MessageDialog(self, MESSAGE_ERROR,
+                             lang.error_block % name if mode \
+                             else lang.error_unblock % name, lang.error_title)  
     
     def show_favorite_error(self, name, mode):
-        dialog.MessageDialog(self, MESSAGE_WARNING,
+        dialog.MessageDialog(self, MESSAGE_ERROR,
                              lang.error_favorite_on % lang.name(name) \
                              if mode else lang.error_favorite_off \
                              % lang.name(name), lang.error_title)

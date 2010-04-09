@@ -207,6 +207,18 @@ LANG = {
         # Retweet Dialogs
         'retweet_button': 'Retweet erfolgreich',
         
+        # Follow Dialogs
+        'follow_button': '%s wird nun gefollowed',
+        'unfollow_button': '%s wird nicht mehr gefollowed',
+        'error_follow': '%s konnte nicht gefollowed werden.',
+        'error_unfollow': '%s konnte nicht unfollowed werden.',
+        
+        # Block Dialogs
+        'block_button': '%s wird nun geblockt',
+        'unblock_button': '%s wird nicht mehr geblockt',
+        'error_block': '%s konnte nicht geblockt werden.',
+        'error_unblock': '%s konnte nicht entblockt werden.', 
+        
         # Delete Dialogs
         'delete_title': 'Löschen bestätigen',
         'delete_tweet_question':
@@ -370,7 +382,11 @@ LANG = {
         'context_delete_tweet': 'Tweet _löschen',
         'context_delete_message': 'Nachricht _löschen',
         'context_edit_tweet': 'Tweet _bearbeiten',
-        'context_friend_loading': 'Lade Status...'
+        'context_friend_loading': 'Lade Status...',
+        'context_friend_follow': '%s followen',
+        'context_friend_unfollow': '%s unfollowen',
+        'context_friend_block': '%s blocken',
+        'context_friend_unblock': '%s unblocken'
     },
     
     # English ------------------------------------------------------------------
@@ -557,6 +573,18 @@ LANG = {
         # Retweet Dialogs
         'retweet_button': 'Retweet successful',
         
+        # Follow Dialogs
+        'follow_button': 'You now follow %s',
+        'unfollow_button': 'You no longer follow %s',
+        'error_follow': 'Could not follow %s.',
+        'error_unfollow': 'Could not unfollow %s.',
+        
+        # Block Dialogs
+        'block_button': '%s has been blocked',
+        'unblock_button': '%s has been unblocked',
+        'error_block': 'Could not block %s.',
+        'error_unblock': 'Could not unblock %s.',    
+        
         # Delete Dialogs
         'delete_title': 'Confirm delete',
         'delete_tweet_question':
@@ -651,6 +679,10 @@ LANG = {
         
         'warning_template': '<b>Warning from %H:%M:%S</b>\n',
         
+        # Info Button
+        'info_title': '',
+        'info_template': '',
+        
         # Buttons
         'button_open': 'Clock for more information',
         
@@ -710,7 +742,11 @@ LANG = {
         'context_delete_tweet': '_Delete Tweet',
         'context_delete_message': '_Delete Message',
         'context_edit_tweet': '_Edit Tweet',
-        'context_friend_loading': 'Loading status...'
+        'context_friend_loading': 'Loading status...',
+        'context_friend_follow': 'Follow %s',
+        'context_friend_unfollow': 'Unfollow %s',
+        'context_friend_block': 'Block %s',
+        'context_friend_unblock': 'Unblock %s'
     }
 }
 

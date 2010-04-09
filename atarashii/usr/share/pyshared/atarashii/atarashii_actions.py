@@ -196,6 +196,16 @@ class AtarashiiActions(object):
             self.favorites_pending[tweet_id] = mode
             send.Favorite(self, tweet_id, mode, name)
     
+    # Follow / Unfollow
+    def follow(self, menu, user_id, name, mode):
+        self.follow_pending[name.lower()] = True
+        send.Follow(self, user_id, name, mode)
+    
+    # Block / Unblock
+    def block(self, menu, user_id, name, mode):
+        self.block_pending[name.lower()] = True
+        send.Block(self, user_id, name, mode)
+    
     
     # Reconnect ----------------------------------------------------------------
     # --------------------------------------------------------------------------

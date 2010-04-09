@@ -336,7 +336,7 @@ class Favorite(threading.Thread):
         del self.main.favorites_pending[self.tweet_id]
 
 
-# Friends ----------------------------------------------------------------------
+# Friend information -----------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Friends(threading.Thread):
     def __init__(self, main, name, menu, callback):
@@ -350,11 +350,70 @@ class Friends(threading.Thread):
     
     def run(self):
         try:
-            friend = self.main.api.show_friendship(target_screen_name=self.name)
+            friend = self.main.api.show_friendship(
+                                   target_screen_name = self.name)
         
         except (IOError, TweepError), error:
             friend = None
         
         if self.menu is not None:
             gobject.idle_add(self.callback, self.menu, friend)
+
+
+# Follow -----------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class Follow(threading.Thread):
+    def __init__(self, main, user_id, name, mode):
+        threading.Thread.__init__(self)
+        self.main = main
+        self.gui = self.main.gui
+        self.user_id = user_id
+        self.name = name
+        self.mode = mode
+        self.daemon = True
+        self.start()
+    
+    def run(self):
+        try:
+            if self.mode:
+                self.main.api.create_friendship(user_id = self.user_id)
+            
+            else:
+                self.main.api.destroy_friendship(user_id = self.user_id)
+            
+            gobject.idle_add(self.gui.show_follow_info, self.mode, self.name)
+        
+        except (IOError, TweepError), error:
+            gobject.idle_add(self.gui.show_follow_error, self.mode, self.name)
+        
+        del self.main.follow_pending[self.name.lower()]
+
+
+# Block -----------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class Block(threading.Thread):
+    def __init__(self, main, user_id, name, mode):
+        threading.Thread.__init__(self)
+        self.main = main
+        self.gui = self.main.gui
+        self.user_id = user_id
+        self.name = name
+        self.mode = mode
+        self.daemon = True
+        self.start()
+    
+    def run(self):
+        try:
+            if self.mode:
+                self.main.api.create_block(user_id = self.user_id)
+            
+            else:
+                self.main.api.destroy_block(user_id = self.user_id)
+            
+            gobject.idle_add(self.gui.show_block_info, self.mode, self.name)
+        
+        except (IOError, TweepError), error:
+            gobject.idle_add(self.gui.show_block_error, self.mode, self.name)
+        
+        del self.main.block_pending[self.name.lower()]
 
