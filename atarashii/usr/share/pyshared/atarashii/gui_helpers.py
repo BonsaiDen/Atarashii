@@ -177,7 +177,7 @@ class GUIHelpers(object):
         position = self.get_position()
         if position[0] < 0 - size[0] or position[0] > screen.get_width() \
            or position[1] < 0 - size[1] or position[1] > screen.get_height():
-           
+            
             return False
             
         else:

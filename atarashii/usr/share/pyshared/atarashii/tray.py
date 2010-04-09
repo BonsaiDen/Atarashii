@@ -308,7 +308,6 @@ class TrayIcon(gtk.StatusIcon):
             self.gui.present()
             self.switch_tries += 1
             if self.switch_tries > 10:
-                print 'fooooooooooooooooooooooooooooooo'
                 self.gui.stick()
                 self.gui.unstick()
                 self.gui.present()
