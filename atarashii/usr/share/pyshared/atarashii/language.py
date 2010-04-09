@@ -369,7 +369,8 @@ LANG = {
         'context_retweet_new': '%s via _Twitter retweeten',
         'context_delete_tweet': 'Tweet _löschen',
         'context_delete_message': 'Nachricht _löschen',
-        'context_edit_tweet': 'Tweet _bearbeiten'
+        'context_edit_tweet': 'Tweet _bearbeiten',
+        'context_friend_loading': 'Lade Status...'
     },
     
     # English ------------------------------------------------------------------
@@ -708,7 +709,8 @@ LANG = {
         'context_retweet_new': 'Retweet %s via _Twitter',
         'context_delete_tweet': '_Delete Tweet',
         'context_delete_message': '_Delete Message',
-        'context_edit_tweet': '_Edit Tweet'
+        'context_edit_tweet': '_Edit Tweet',
+        'context_friend_loading': 'Loading status...'
     }
 }
 

@@ -335,3 +335,26 @@ class Favorite(threading.Thread):
         
         del self.main.favorites_pending[self.tweet_id]
 
+
+# Friends ----------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class Friends(threading.Thread):
+    def __init__(self, main, name, menu, callback):
+        threading.Thread.__init__(self)
+        self.main = main
+        self.name = name
+        self.menu = menu
+        self.callback = callback
+        self.daemon = True
+        self.start()
+    
+    def run(self):
+        try:
+            friend = self.main.api.show_friendship(target_screen_name=self.name)
+        
+        except (IOError, TweepError), error:
+            friend = None
+        
+        if self.menu is not None:
+            gobject.idle_add(self.callback, self.menu, friend)
+

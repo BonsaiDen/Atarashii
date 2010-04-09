@@ -21,6 +21,8 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
+import send
+
 from language import LANG as lang
 from utils import URLExpander, escape, menu_escape
 
@@ -136,6 +138,10 @@ class ViewMenu(object):
         menu.append(item)
     
     def on_popup_close(self, *args):
+        if self.friend_thread is not None:
+            self.friend_thread.menu = None
+            self.friend_thread = None
+        
         if self.menu_no_fake_move:
             self.menu_no_fake_move = False
             self.fake_move((-1.0, -1.0))
@@ -173,13 +179,29 @@ class ViewMenu(object):
                 self.create_menu(menu, item, item_id, link, full, user)
                 
                 # Follow / Block
-                if link in ('profile', 'avatar'):
-                    pass
+                if link in ('profile', 'avatar') \
+                   and not user in self.main.follow_pending:
+                    
+                    self.add_menu_separator(menu)
+                    self.add_menu_link(menu, lang.context_friend_loading,
+                                       None).set_sensitive(False)
+                    
+                    self.friend_thread = send.Friends(self.main, user, menu,
+                                                      self.create_friend_menu)
                 
                 return True
         
         else:
             return False
+    
+    def create_friend_menu(self, menu, friend):
+        items = menu.get_children()
+        menu.remove(items[-2])
+        menu.remove(items[-1])
+        if friend is not None:
+            info = 'Unfollow' if friend[0].following else 'Follow'
+            self.add_menu_link(menu, info, self.main.follow,
+                               friend[1].id, friend[0].following)
     
     def create_link_menu(self, menu, link, full):
         if link == 'link':
