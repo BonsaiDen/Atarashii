@@ -32,10 +32,10 @@ atarashii (0.99.19-1) all;
     apps.
   * Fix an issue with text beeing cut off in the settings dialog under certain
     font sizes.
-  * Removed some dead code.
+  * Fix broken tooltips while the context menu is opened.
   * Tons of internal cleanup for an even more pythonic style.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 9 Apr 2010 18:47:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 9 Apr 2010 19:18:00 +0200
 
 atarashii (0.99.18a-1) all;
 
