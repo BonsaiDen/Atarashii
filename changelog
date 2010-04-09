@@ -14,6 +14,7 @@ atarashii (0.99.19-1) all;
   ~ Reduce the lag between view and statusbar updates after a refresh.
   ~ Instead of showing dialogs on successful retweets/deletions just pop up a
     info box at the top.
+  ~ Better handling of crashes due to python errors.
   * Fix for sending tweets that start with 'd ' which would be interpreted as
     direct messages by twitter.
   * Fix a bug that "swallowed" tweets in cases were you sent a tweet and the 
@@ -29,7 +30,7 @@ atarashii (0.99.19-1) all;
   * Removed some dead code.
   * Tons of internal cleanup for an even more pythonic style.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 8 Apr 2010 18:54:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 9 Apr 2010 02:07:00 +0200
 
 atarashii (0.99.18a-1) all;
 
