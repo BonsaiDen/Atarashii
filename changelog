@@ -8,6 +8,8 @@ atarashii (0.99.19-1) all;
     something went wrong.
   + Added keyboard accelerators to all menus.
   + New logging of errors and warnings to ~/.atarashii/error.log
+  + Added sounds to the info boxes that don't have a notification, they can be
+    disabled in the preferences.
   ~ The window title now changes accordingly when a user is logging in.
   ~ Replace the message button with tabs and got rid of nearly all the buttons.
   ~ Move the account selection to the tray menu.
@@ -15,6 +17,8 @@ atarashii (0.99.19-1) all;
   ~ Instead of showing dialogs on successful retweets/deletions just pop up a
     info box at the top.
   ~ Better handling of crashes due to python errors.
+  ~ Multi button now gets hidden of not logged in.
+  * Fix for the handlind of some special network errors.
   * Fix for sending tweets that start with 'd ' which would be interpreted as
     direct messages by twitter.
   * Fix a bug that "swallowed" tweets in cases were you sent a tweet and the 
@@ -30,7 +34,7 @@ atarashii (0.99.19-1) all;
   * Removed some dead code.
   * Tons of internal cleanup for an even more pythonic style.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 9 Apr 2010 02:07:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 9 Apr 2010 18:43:00 +0200
 
 atarashii (0.99.18a-1) all;
 
