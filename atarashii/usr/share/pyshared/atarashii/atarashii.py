@@ -36,9 +36,11 @@ import gobject
 import time
 import calendar
 import os
-import sys
 
 gobject.threads_init()
+
+# Import the module to handle python exceptions
+from utils import SHORTS_LIST
 
 import notify
 import gui
@@ -46,7 +48,6 @@ import settings
 import updater
 
 from language import LANG as lang
-from utils import SHORTS_LIST
 from atarashii_actions import AtarashiiActions
 
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
@@ -67,11 +68,6 @@ class Atarashii(AtarashiiActions):
         self.kittens = kittens
         self.debug = debug
         self.debug_path = debug_path
-        self.exited = False
-        self.start_time = time.time()
-        
-        # Catch python errors
-        sys.exitfunc = self.crash_exit
         
         # Load Settings
         self.settings = settings.Settings()

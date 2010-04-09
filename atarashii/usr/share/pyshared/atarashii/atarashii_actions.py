@@ -25,17 +25,16 @@ import gnome.ui
 import os
 import sys
 import calendar
+import locale
 import time
 import math
 import socket
-import traceback
-import locale
 from urllib2 import URLError
 
 import send
 
 from language import LANG as lang
-from settings import LOGOUT_FILE, CRASH_LOG_FILE, ERROR_LOG_FILE
+from settings import LOGOUT_FILE, ERROR_LOG_FILE
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
@@ -70,28 +69,6 @@ class AtarashiiActions(object):
         # Start GTK
         gtk.main()
     
-    def crash_exit(self):
-        # Catch Python Errors
-        if not self.exited:
-            # Set date format to english
-            locale.setlocale(locale.LC_TIME, 'C')
-                        
-            # Save the crashlo
-            trace = traceback.extract_tb(sys.last_traceback)
-            with open(CRASH_LOG_FILE, 'ab') as f:
-                f.write('''Atarashii %s\nStarted at %s\n'''
-                        '''Crashed at %s\nTraceback:\n''' % (self.version,
-                        time.strftime('%a %b %d %H:%M:%S +0000 %Y',
-                                      time.gmtime(self.start_time)),
-                        
-                        time.strftime('%a %b %d %H:%M:%S +0000 %Y',
-                                      time.gmtime())))
-                
-                f.write('\n'.join(traceback.format_list(trace)))
-            
-            # Exit with specific error
-            sys.exit(70) # os.EX_SOFTWARE
-    
     # Add / Delete indicator file
     def on_logout(self, *args):
         self.save_settings(True)
@@ -108,7 +85,7 @@ class AtarashiiActions(object):
         gtk.main_quit()
         self.notifier.close()
         self.settings.check_cache()
-        self.exited = True
+        sys.last_traceback = None
         sys.exit(0) # os.EX_OK
     
     def save_settings(self, mode=False):

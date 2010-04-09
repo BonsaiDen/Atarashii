@@ -14,23 +14,72 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
+# Utility functions and classes ------------------------------------------------
+# ------------------------------------------------------------------------------
+import gobject
+
+from __init__ import __version__ as VERSION
+from settings import CRASH_LOG_FILE
+
+import sys
+import re
+import time
+import traceback
+import locale
+import urllib2
+import urlparse
+import httplib
+import threading
+
+
 # Tweepy Wrapper ---------------------------------------------------------------
 # ------------------------------------------------------------------------------
 try:
-    import sys
     sys.path.insert(0, __file__[:__file__.rfind('/')])
     import tweepy
     TweepError = tweepy.get_error()
 
 finally:
     sys.path.pop(0)
-    del sys
 
 
-# Utility stuff ----------------------------------------------------------------
+# Python error handling --------------------------------------------------------
 # ------------------------------------------------------------------------------
-import re
+START_TIME = time.time()
 
+def crash_exit():
+    # Check if an uncatched error occured
+    try:
+        if sys.last_traceback is None:
+            return
+        
+    except AttributeError:
+        return
+    
+    # Set date format to english
+    locale.setlocale(locale.LC_TIME, 'C')
+    
+    # Save the crashlog
+    trace = traceback.extract_tb(sys.last_traceback)
+    with open(CRASH_LOG_FILE, 'ab') as f:
+        error = '''Atarashii %s\nStarted at %s\nCrashed at %s\nTraceback:\n''' \
+                % (VERSION,
+                   time.strftime('%a %b %d %H:%M:%S +0000 %Y',
+                   time.gmtime(START_TIME)),
+                   
+                   time.strftime('%a %b %d %H:%M:%S +0000 %Y',
+                   time.gmtime()))
+        
+        f.write(error + '\n'.join(traceback.format_list(trace)) + '\n')
+    
+    # Exit with specific error
+    sys.exit(70) # os.EX_SOFTWARE
+
+sys.exitfunc = crash_exit
+
+
+# Escaping stuff ---------------------------------------------------------------
+# ------------------------------------------------------------------------------
 STRIP = re.compile('<(.|\n)*?>')
 SPACES = re.compile('\s+')
 ENTITIES = {
@@ -65,14 +114,6 @@ def strip_tags(text):
 
 # URL Shortener / Expander------------------------------------------------------
 # ------------------------------------------------------------------------------
-import urllib2
-import urlparse
-import httplib
-import threading
-import time
-import gobject
-
-# Shorter ----------------------------------------------------------------------
 SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{35,})')
 SHORTS = {
     'is.gd': 'http://is.gd/api.php?longurl=%s',
