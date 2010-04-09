@@ -17,9 +17,9 @@
 # Notifications ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import dbus
-
-import subprocess
 import threading
+
+import sounds
 
 from settings import THEME_SOUNDS
 
@@ -70,12 +70,10 @@ class Notifier(object):
                 if item[3].startswith('theme:'):
                     sound = item[3].split(':')[1]
                     if sound in THEME_SOUNDS:
-                        snd = Sound(THEME_SOUNDS[sound])
-                        snd.start()
+                        sounds.Sound(THEME_SOUNDS[sound])
                 
                 elif self.settings['sound_' + item[3]] not in ('None', ''):
-                    snd = Sound(self.settings['sound_' + item[3]])
-                    snd.start()
+                    sounds.Sound(self.settings['sound_' + item[3]])
     
     # Try to close the last notification, this might get ignored on newer
     # version of the notification dbus thingy
@@ -84,42 +82,4 @@ class Notifier(object):
             return
         
         self.notify.CloseNotification(self.last_id)
-
-
-# Sound Player Thread ----------------------------------------------------------
-# ------------------------------------------------------------------------------
-class Sound(threading.Thread):
-    def __init__(self, sound):
-        threading.Thread.__init__(self)
-        self.daemon = True
-        self.sound = sound
-    
-    def run(self):
-        tries = 0
-        code = -1
-        
-        # Wacka! This thing is a mess, sometimes it goes zombie and on other
-        # ocasions it just fails. So the kittens just threw some try/except
-        # on it!
-        player = None
-        while code != 0 and tries < 3:
-            try:
-                # Check for Zombieeeeeees!
-                try:
-                    if player is not None:
-                        player.kill()
-                        print 'Sound Zombieeeees!'
-                
-                except OSError:
-                    pass
-                
-                player = subprocess.Popen(['play', '-q', self.sound])
-                code = player.wait()
-                if code != 0:
-                    print 'sound failed!', code
-            
-            except OSError, error:
-                print 'Failed to play sound', error
-            
-            tries += 1
 

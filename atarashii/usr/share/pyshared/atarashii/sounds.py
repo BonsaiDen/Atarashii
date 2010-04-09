@@ -18,6 +18,9 @@
 # ------------------------------------------------------------------------------
 import gconf
 import os
+import threading
+import subprocess
+
 
 def get_sound_theme(theme_name=None):
     if theme_name is None:
@@ -80,4 +83,43 @@ def get_sound_files():
                 sound_files[name] = os.path.join(cur_dir, i)
 
     return sound_files
+
+
+# Sound Player Thread ----------------------------------------------------------
+# ------------------------------------------------------------------------------
+class Sound(threading.Thread):
+    def __init__(self, sound):
+        threading.Thread.__init__(self)
+        self.daemon = True
+        self.sound = sound
+        self.start()
+    
+    def run(self):
+        tries = 0
+        code = -1
+        
+        # Wacka! This thing is a mess, sometimes it goes zombie and on other
+        # ocasions it just fails. So the kittens just threw some try/except
+        # on it!
+        player = None
+        while code != 0 and tries < 3:
+            try:
+                # Check for Zombieeeeeees!
+                try:
+                    if player is not None:
+                        player.kill()
+                        print 'Sound Zombieeeees!'
+                
+                except OSError:
+                    pass
+                
+                player = subprocess.Popen(['play', '-q', self.sound])
+                code = player.wait()
+                if code != 0:
+                    print 'sound failed!', code
+            
+            except OSError, error:
+                print 'Failed to play sound', error
+            
+            tries += 1
 
