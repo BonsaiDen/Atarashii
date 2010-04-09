@@ -262,6 +262,7 @@ class ButtonDialog(object):
         self.time = UNSET_TIMEOUT
         self.timer = None
         
+        self.default_title = title
         self.title = title
         self.template = template
     
@@ -282,7 +283,7 @@ class ButtonDialog(object):
             self.dialog.destroy()
             self.dialog = None
         
-        self.title = title
+        self.title = self.default_title if title is None else title
         
         if self.timer is not None:
             gobject.source_remove(self.timer)
