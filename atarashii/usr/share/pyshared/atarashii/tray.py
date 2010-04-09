@@ -294,5 +294,5 @@ class TrayIcon(gtk.StatusIcon):
             else:
                 pos = self.gui.window_position
                 self.gui.move(pos[0], pos[1])
-                gobject.timeout_add(10, self.gui.force_focus)
+                self.gui.present()
 

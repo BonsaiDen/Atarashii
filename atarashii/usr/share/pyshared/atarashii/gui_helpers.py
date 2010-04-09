@@ -166,16 +166,6 @@ class GUIHelpers(object):
         return self.message.load_state == HTML_LOADED \
                and self.html.load_state == HTML_LOADED
     
-    def force_focus(self):
-        self.stick()
-        self.grab_focus()
-        self.present()
-        if not self.is_active():
-            return True
-        
-        else:
-            self.unstick()
-    
     def get_normalized_position(self):
         screen = self.get_screen()
         pos = self.get_position()
