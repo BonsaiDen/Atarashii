@@ -147,18 +147,11 @@ class AtarashiiActions(object):
         else:
             self.gui.set_status(lang.status_send)
         
-        # Editer
         if edit:
-            editer = send.Edit(self, self.edit_id, text, self.edit_reply_id)
-            editer.setDaemon(True)
-            editer.start()
+            send.Edit(self, self.edit_id, text, self.edit_reply_id)
         
-        # Sender
         else:
-            sender = send.Send(self, self.gui.mode, text)
-            sender.setDaemon(True)
-            sender.start()
-    
+            send.Send(self, self.gui.mode, text)
     
     # New style Retweet
     def retweet(self, name, tweet_id, new_style=False):
@@ -176,12 +169,8 @@ class AtarashiiActions(object):
         self.gui.show_progress()
         self.gui.set_status(lang.status_retweet % name)
         
-        # Retweeter
-        retweeter = send.Retweet(self, name, tweet_id)
-        retweeter.setDaemon(True)
-        retweeter.start()
-    
-    
+        send.Retweet(self, name, tweet_id)
+        
     # Delete
     def delete(self, tweet_id=UNSET_ID_NUM, message_id=UNSET_ID_NUM):
         # Abort if pending
@@ -198,22 +187,14 @@ class AtarashiiActions(object):
         self.gui.set_status(lang.status_deleting_tweet \
                             if tweet_id != UNSET_ID_NUM \
                             else lang.status_deleting_message)
-    
-        # Deleter
-        deleter = send.Delete(self, tweet_id, message_id)
-        deleter.setDaemon(True)
-        deleter.start()
-    
+        
+        send.Delete(self, tweet_id, message_id)
     
     # Favorite
     def favorite(self, tweet_id, mode, name):
         if not tweet_id in self.favorites_pending:
             self.favorites_pending[tweet_id] = mode
-            
-            # Favoriter
-            favoriter = send.Favorite(self, tweet_id, mode, name)
-            favoriter.setDaemon(True)
-            favoriter.start()
+            send.Favorite(self, tweet_id, mode, name)
     
     
     # Reconnect ----------------------------------------------------------------

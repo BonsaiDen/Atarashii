@@ -37,7 +37,9 @@ class Edit(threading.Thread):
         self.tweet_id = tweet_id
         self.text = text
         self.reply = reply
-        
+        self.daemon = True
+        self.start()
+    
     def run(self):
         # Delete the old tweet
         if not self.delete():
@@ -120,9 +122,9 @@ class Send(threading.Thread):
         self.main = main
         self.mode = mode
         self.text = text
+        self.daemon = True
+        self.start()
     
-    
-    # Do a send ----------------------------------------------------------------
     def run(self):
         self.main.set_status(ST_WAS_SEND)
         try:
@@ -215,6 +217,8 @@ class Retweet(threading.Thread):
         self.main = main
         self.name = name
         self.tweet_id = tweet_id
+        self.daemon = True
+        self.start()
     
     def run(self):
         self.main.set_status(ST_WAS_SEND)
@@ -253,6 +257,8 @@ class Delete(threading.Thread):
         self.main = main
         self.tweet_id = tweet_id
         self.message_id = message_id
+        self.daemon = True
+        self.start()
     
     def run(self):
         self.main.set_status(ST_WAS_DELETE)
@@ -308,6 +314,8 @@ class Favorite(threading.Thread):
         self.tweet_id = tweet_id
         self.mode = mode
         self.name = name
+        self.daemon = True
+        self.start()
     
     def run(self):
         try:
