@@ -23,6 +23,9 @@ import gobject
 
 import time
 
+import sounds
+
+from settings import THEME_SOUNDS
 from language import LANG as lang
 
 from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \
@@ -279,9 +282,11 @@ class ButtonDialog(object):
             self.dialog.destroy()
             self.dialog = None
         
-        if title is not None:
-            self.title = title
-            
+        self.title = title
+        
+        if self.timer is not None:
+            gobject.source_remove(self.timer)
+        
         if timeout != UNSET_TIMEOUT:
             self.timer = gobject.timeout_add(timeout, self.hide)
         
@@ -289,7 +294,23 @@ class ButtonDialog(object):
         self.box.show()
         self.label.set_markup(button)
         
-        # Show GUI if not shown so the user does notice the message
+        # Play sound
+        if self.gui.main.settings.is_true('infosound', True) \
+           and title is None:
+            
+            if self.dtype == 'warning':
+                sound = 'dialog-warning'
+            
+            elif self.dtype == 'error':
+                sound = 'dialog-error'
+            
+            elif self.dtype == 'info':
+                sound = 'dialog-information'
+            
+            if sound in THEME_SOUNDS:
+                sounds.Sound(THEME_SOUNDS[sound])
+        
+        # Show GUI if not shown so the user does notices the message
         if not self.gui.is_shown:
             gobject.idle_add(self.gui.show_gui)
     
