@@ -40,7 +40,7 @@ from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_LOGIN_COMPLETE, ST_NETWORK_FAILED
 
 from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
-                      MESSAGE_WARNING, MESSAGE_QUESTION, \
+                      UNSET_USERNAME, MESSAGE_WARNING, MESSAGE_QUESTION, \
                       UNSET_TIMEOUT, HTML_UNSET_ID, MESSAGE_ERROR, \
                       MESSAGE_WARNING, BUTTON_REFRESH, BUTTON_READ, \
                       BUTTON_HISTORY
@@ -380,6 +380,15 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         else:
             self.multi_state = BUTTON_REFRESH
             self.multi_button.set_sensitive(mode)
+        
+        # Hide?
+        if self.main.username == UNSET_USERNAME \
+           or not self.main.status(ST_LOGIN_SUCCESSFUL):
+            
+            self.multi_button.hide()
+            
+        else:
+            self.multi_button.show()
         
         # Check for message/tweet switch
         if self.is_ready():
