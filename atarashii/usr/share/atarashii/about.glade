@@ -119,9 +119,10 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="kittens1">
+                  <object class="GtkLabel" id="kittens">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">This version was build by &lt;b&gt;1024&lt;/b&gt; kittens.</property>
+                    <property name="label" translatable="yes">This version was build by &lt;b&gt;1024&lt;/b&gt; kittens.
+Their lucky number is &lt;b&gt;e456357&lt;/b&gt;!</property>
                     <property name="use_markup">True</property>
                     <property name="justify">center</property>
                     <property name="wrap">True</property>
@@ -133,25 +134,11 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="kittens2">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">Their lucky number is &lt;b&gt;e456357&lt;/b&gt;!</property>
-                    <property name="use_markup">True</property>
-                    <property name="justify">center</property>
-                    <property name="wrap">True</property>
-                    <property name="width_chars">35</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkLabel" id="sapcer">
                     <property name="visible">True</property>
                   </object>
                   <packing>
-                    <property name="position">3</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
@@ -168,7 +155,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">4</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
@@ -185,7 +172,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">5</property>
+                    <property name="position">4</property>
                   </packing>
                 </child>
                 <child>
@@ -202,7 +189,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">6</property>
+                    <property name="position">5</property>
                   </packing>
                 </child>
                 <child>
@@ -219,7 +206,7 @@
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="position">7</property>
+                    <property name="position">6</property>
                   </packing>
                 </child>
                 <child>
@@ -227,7 +214,7 @@
                     <property name="visible">True</property>
                   </object>
                   <packing>
-                    <property name="position">8</property>
+                    <property name="position">7</property>
                   </packing>
                 </child>
               </object>

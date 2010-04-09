@@ -180,12 +180,10 @@ LANG = {
         'about_description':
             'Twitter Client für den GNOME Desktop.',
         
-        'about_kittens1':
+        'about_kittens':
             '<span size="small">This Version was packaged by <b>%s</b> '
-            'kittens.</span>',
-        
-        'about_kittens2':
-            '<span size="small">Their lucky number is <b>%s</b>!</span>',
+            'kittens.</span><span size="small">Their lucky number is '
+            '<b>%s</b>!</span>',
         
         # Account Dialog
         'account_edit': 'Benutzer bearbeiten',
@@ -549,12 +547,10 @@ LANG = {
         'about_description':
             'Twitter Client for the GNOME Desktop.',
         
-        'about_kittens1':
+        'about_kittens':
             '<span size="small">This Version was packaged by <b>%s</b> '
-            'kittens.</span>',
-        
-        'about_kittens2':
-            '<span size="small">Their lucky number is <b>%s</b>!</span>',
+            'kittens.</span>\n<span size="small">Their lucky number is '
+            '<b>%s</b>!</span>',
         
         # Account Dialog
         'account_edit': 'Edit user',

@@ -182,8 +182,8 @@ class AboutDialog(Dialog):
                 self.get('maininfo').show()
                 self.get('subinfo').hide()
         
-        self.get('kittens1').set_markup(lang.about_kittens1 % self.main.kittens)
-        self.get('kittens2').set_markup(lang.about_kittens2 % self.main.secret)
+        self.get('kittens').set_markup(lang.about_kittens \
+                                       % (self.main.kittens, self.main.secret))
         
         self.kitten_button.connect('toggled', toggle)
     

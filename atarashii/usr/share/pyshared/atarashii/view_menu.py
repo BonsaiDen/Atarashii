@@ -96,6 +96,7 @@ class ViewMenu(object):
         menu.destroy()
         return True
     
+    # Create our own menu, kitten style!
     def on_button(self, view, event, *args):
         self.give_text_focus = self.text.has_focus
         if event.button == 3 and not self.popup_open:
