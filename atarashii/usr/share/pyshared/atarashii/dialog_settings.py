@@ -123,14 +123,17 @@ class SettingsDialog(Dialog):
         autostart = self.get('autostart')
         taskbar = self.get('taskbar')
         tray = self.get('tray')
+        info_sound = self.get('infosound')
         
         autostart.set_label(lang.settings_autostart)
         taskbar.set_label(lang.settings_taskbar)
         tray.set_label(lang.settings_tray)
+        info_sound.set_label(lang.settings_info_sound)
         
         autostart.set_active(self.settings.is_true('autostart', False))
         taskbar.set_active(self.settings.is_true('taskbar'))
         tray.set_active(self.settings.is_true('tray', False))
+        info_sound.set_active(self.settings.is_true('infosound', True))
         
         
         # Soundfiles -----------------------------------------------------------
@@ -230,6 +233,8 @@ class SettingsDialog(Dialog):
             self.settings['notify'] = notify.get_active()
             self.settings['sound'] = sound.get_active()
             self.settings['tray'] = tray.get_active()
+            self.settings['infosound'] = info_sound.get_active()
+            
             old_short = self.settings['shortener']
             self.settings['shortener'] = SHORTS_LIST[shorts.get_active()]
             if old_short != self.settings['shortener']:
