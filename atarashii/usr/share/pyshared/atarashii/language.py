@@ -301,9 +301,9 @@ LANG = {
         
         'warning_button_overload': 'Twitter überlastet',
         'warning_overload':
-            'Atarashii konnte Twitter nicht erreichen, dies ist in '
-            'den meisten Fällen lediglich ein temporäres Problem '
-            'aufgrund von Überlastung seitens Twitter.',
+            'Twitter ist derzeit überlastet, dies ist in '
+            'den meisten Fällen lediglich ein temporäres Problem und sollte '
+            'nur einige Minuten anhalten.',
         
         'warning_button_network': 'Netzwerkfehler',
         'warning_network':
@@ -661,9 +661,9 @@ LANG = {
         
         'warning_button_overload': 'Twitter is over capacity',
         'warning_overload':
-            'Atarashii couldn\'t connect to Twitter, in most cases '
-            'this is just a temporary issue due to Twitter being too '
-            'busy at the moment.',
+            'Twitter is currently over capacity, in most cases '
+            'this is just a temporary issue and should fix itself in a '
+            'couple of minutes.',
         
         'warning_button_network': 'Network error',
         'warning_network':
