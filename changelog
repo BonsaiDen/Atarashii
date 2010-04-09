@@ -14,11 +14,11 @@ atarashii (0.99.19-1) all;
   ~ The window title now changes accordingly when a user is logging in.
   ~ Replace the message button with tabs and got rid of nearly all the buttons.
   ~ Move the account selection to the tray menu.
-  ~ Reduce the lag between view and statusbar updates after a refresh.
+  ~ Reduced the lag between view and statusbar updates after a refresh.
   ~ Instead of showing dialogs on successful retweets/deletions just pop up a
     info box at the top.
   ~ Better handling of crashes due to python errors.
-  ~ Multi button now gets hidden of not logged in.
+  ~ Multi button now gets hidden if not logged in.
   * Fix for the handlind of some special network errors.
   * Fix for sending tweets that start with 'd ' which would be interpreted as
     direct messages by twitter.
