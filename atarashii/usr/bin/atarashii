@@ -26,9 +26,10 @@ fi
 
 # Start Atarashii
 RESTART=0
+MAX=3
 CODE=0
 echo "Starting Atarashii..."
-while [ $RESTART -lt 3 ]
+while [ $RESTART -lt $MAX ]
 do
     # Start
     atarashiigui
@@ -54,7 +55,9 @@ do
     elif [ $CODE -eq 70 ]; then
         echo "70" >~/.atarashii/crashed
         echo "Atarashii crashed due to an internal error!"
-        echo "Restarting..."
+        if [ $RESTART -lt $MAX ]; then
+            echo "Restarting..."
+        fi
     
     elif [ $CODE -eq 75 ]; then
         echo "Atarashii could not be started!"
@@ -71,7 +74,9 @@ do
     else
         echo $CODE >~/.atarashii/crashed
         echo "Atarashii crashed due to an external error!"
-        echo "Restarting..."
+        if [ $RESTART -lt $MAX ]; then
+            echo "Restarting..."
+        fi
     fi
 done
 
