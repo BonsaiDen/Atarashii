@@ -3,6 +3,7 @@
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="dialog">
+    <property name="resizable">False</property>
     <property name="window_position">center-on-parent</property>
     <property name="default_width">240</property>
     <property name="type_hint">dialog</property>
