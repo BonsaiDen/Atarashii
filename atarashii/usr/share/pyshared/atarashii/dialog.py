@@ -297,7 +297,7 @@ class ButtonDialog(object):
         
         # Play sound
         if self.gui.main.settings.is_true('infosound', True) \
-           and title is None:
+           and self.title is None:
             
             if self.dtype == 'warning':
                 sound = 'dialog-warning'
