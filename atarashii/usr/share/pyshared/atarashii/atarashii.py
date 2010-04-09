@@ -249,10 +249,15 @@ class Atarashii(AtarashiiActions):
         self.gui.update_status()
         self.gui.hide_all()
         
-        self.gui.tray.activate_menu(True)
+        self.gui.warning_button.hide()
+        self.gui.error_button.hide()
+        self.gui.info_button.hide()
+        
         gobject.idle_add(self.gui.message.init, True)
         gobject.idle_add(self.gui.html.init, True)
         gobject.idle_add(self.gui.set_app_title)
+        self.gui.tray.update_account_menu()
+        self.gui.tray.activate_menu(True)
     
     
     # Helper Functions ---------------------------------------------------------
