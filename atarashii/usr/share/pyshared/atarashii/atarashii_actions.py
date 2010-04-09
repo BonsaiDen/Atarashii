@@ -340,6 +340,9 @@ class AtarashiiActions(object):
     # Log errors to ~/.atarashii/error.log -------------------------------------
     # --------------------------------------------------------------------------
     def log_error(self, code, error_errno):
+        if error_errno is None:
+            error_errno = 0
+        
         locale.setlocale(locale.LC_TIME, 'C')
         with open(ERROR_LOG_FILE, 'ab') as f:
             f.write('%s %s %d\n' \
