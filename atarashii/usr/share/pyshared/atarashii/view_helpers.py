@@ -117,8 +117,8 @@ class ViewHelpers(object):
     # Fakeman! Roger Buster!
     # This fixes an issue where the reply/favorite links wouldn't disapear if
     # the mouse left the view
-    def fake_move(self, pos):
-        if not self.menu_no_fake_move:
+    def fake_move(self, pos, force=False):
+        if not self.menu_no_fake_move or force:
             
             # Try to fix a crazy bug where this returns None...
             win = self.get_window()

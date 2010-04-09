@@ -40,6 +40,11 @@ class ViewMenu(object):
         self.fake_move(self.mouse_position)
     
     def on_tooltip(self, icon, pos_x, pos_y, key, tip, *args):
+        # Prevent broken tooltips while the context menu is opened
+        if self.popup_open:
+            self.fake_move((0.0, self.mouse_position[1]), True)
+            return True
+        
         link = self.last_hovered_link
         if link is not None:
             if link.startswith('avatar:'):
@@ -122,6 +127,7 @@ class ViewMenu(object):
             gobject.idle_add(menu.popup, None, None, lambda *arg: root_pos,
                              event.button, event.get_time())
             
+            self.fake_move((0.0, 0.0))
             self.popup_open = True
             return True
     
