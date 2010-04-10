@@ -288,7 +288,7 @@ class TrayIcon(gtk.StatusIcon):
             pos = self.gui.get_normalized_position()
             self.gui.main.settings['position'] = str(pos)
             self.gui.window_position = pos
-            if self.gui.on_screen() and not iconified:
+            if self.gui.on_screen() and not iconified and self.gui.is_active():
                 self.gui.hide()
             
             else:

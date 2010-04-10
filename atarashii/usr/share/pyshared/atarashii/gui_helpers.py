@@ -192,6 +192,12 @@ class GUIHelpers(object):
         pos = self.get_normalized_position()
         self.move(pos[0], pos[1])
         
+        # Try to focus the window... this fails fairly often...
+        screen = self.get_screen()
+        for i in screen.get_toplevel_windows():
+            i.focus(False)
+        
+        self.get_window().raise_()
         self.present()
         self.get_window().focus(True)
         self.activate_tries = 0
@@ -200,6 +206,7 @@ class GUIHelpers(object):
     def check_active(self):
         if not self.is_active():
             self.activate_tries += 1
+            self.get_window().raise_()
             self.present()
             self.get_window().focus(True)
             if self.activate_tries < 10:
