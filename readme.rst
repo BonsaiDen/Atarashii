@@ -47,7 +47,7 @@ If you want to hack on **Atarashii** you can just clone the repo and then run
     Watch out if you clone the ``next`` branch, sometimes changes that get 
     pushed up their can break stuff.
 
-.. _Debian-Package: http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.19-1_all.deb
+.. _Debian-Package: http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.20-1_all.deb
 
 
 TODO
