@@ -70,21 +70,27 @@ class ViewHelpers(object):
         except Exception:
             return 0
     
-    def loaded(self, *args):
+    def loaded(self, view, state, force=False):
         # HACK! The value of the constant might change, but currently it's not
         # exposed to pygtk webkit and since the 'load-finished' signal is
         # deprecated, it's a 50/50 chance that one of those will eventually
         # break the whole thing.. so do you want to be eaten by the tiger
         # or the lion?
         # Note from Ivo: Actually, the Lion won't eat me since I'm one too ;D
-        if self.get_property('load-status') != 2:
+        if self.get_property('load-status') != 2 and not force:
             return False
         
         else:
             self.is_loading = False
         
+        if not self.gui.is_shown:
+            return False
+        
+        print 'scroll'
+        
         # Offset
-        if len(self.items) > 0 and self.has_newitems and not self.load_history:
+        if len(self.items) > 0 and self.has_newitems \
+           and not self.load_history:
             offset = self.get_offset()
         
         else:
