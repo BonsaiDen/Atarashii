@@ -33,29 +33,36 @@ def get_next(lines, start):
 
 
 def check(path, folders, excludes, flags):
-    for i in sorted(os.listdir(path)):
-        if os.path.isdir(path + '/' + i):
-            if not i in excludes:
-                folders.append(path + '/' + i)
+    state = 0
+    files = sorted(os.listdir(path))
+    for foo in files:
+        if os.path.isdir(path + '/' + foo):
+            if not foo in excludes:
+                folders.append(path + '/' + foo)
             
             continue
         
-        elif i.endswith('~'):
+        elif foo.endswith('~'):
+            
             continue
         
-        elif not i.endswith('.py'):
-            test = open(path + '/' + i).read(20)
-            if test[0:2] == '#!':
-                if test.find('python') == -1:
-                    continue
+        elif not foo.endswith('.py'):
+            if foo.find('.') != -1:
+                continue
             
             else:
-                continue
+                test = open(path + '/' + foo).read(20)
+                if test[0:2] == '#!':
+                    if test.find('python') == -1:
+                        continue
+                
+                else:
+                    continue
         
         errors = ''
         in_def = False
         
-        lines = open(path + '/' + i).read().split('\n')
+        lines = open(path + '/' + foo).read().split('\n')
         string = 0
         last_empty = True
         last_comment = False
@@ -82,7 +89,6 @@ def check(path, folders, excludes, flags):
                 indent = len(d) - len(d.lstrip())
                 token_indent = get_next(lines, l + 1)
                 if indent != token_indent and d.strip() == '':
-                
                     errors += '%d: Invalid indentation of %d instead of %d\n' % (l + 1, indent, token_indent)
             
             e = len(d.rstrip())
@@ -154,8 +160,8 @@ def check(path, folders, excludes, flags):
                             var2 = var
                     
                     var3 = var2
-                    for i in var2:
-                        if i != i.upper() and i != '_':
+                    for o in var2:
+                        if o != o.upper() and o != '_':
                             var3 = None
                             break
                     
@@ -174,16 +180,19 @@ def check(path, folders, excludes, flags):
                 mdef = mdef.strip('\n').strip()
                 if mdef.find(' = ') != -1:
                     errors += '%d: Spaces around "=" in method defintion\n' % (l + 1)
-        
+            
             
             dd = d.strip()
-            if dd.startswith('else:') or dd.startswith('elif ') :
+            if dd == 'return':
+                errors += '%d: Empty return statement\n' % (l + 1)
+            
+            if dd.startswith('else:') or dd.startswith('elif '):
                 if not last_empty:
-                    errors += '%d: No newline line before else/elif\n' % (l + 1)
+                    errors += '%d: No newline line before else/elif statement\n\n' % (l + 1)
             
             if dd.startswith('#') and not last_comment and not last_empty and not last_def:
                 errors += '%d: No newline before comment\n' % (l + 1)
-        
+            
             last_def = dd.startswith('def ') or dd.startswith('try:') \
                        or dd.startswith('except ') or dd.startswith('except:')
             
@@ -205,12 +214,15 @@ def check(path, folders, excludes, flags):
             errors += 'xx: File ends with more than one newline\n'
         
         if errors != '':
-            print '- %s/%s' % (path, i)
+            print '- %s/%s' % (path, foo)
             print errors
+            state += 1
+        
+    return state
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        sys.argv = ['', '-r', 'atarashii', 'tweepy']
+        sys.argv = ['', '-r', os.getcwd() + '/atarashii', 'tweepy']
     
     sys.argv.pop(0)
     args = []
@@ -233,12 +245,15 @@ if __name__ == '__main__':
     
     excludes = args[1:]
     folders = [path]
+    state = 0
     if rec:
         p = 0
         while p < len(folders):
-            check(folders[p], folders, excludes, flags)
+            state += check(folders[p], folders, excludes, flags)
             p += 1
     
     else:
-        check(path, folders, excludes, flags)
+        state += check(path, folders, excludes, flags)
+    
+    exit(state)
 
