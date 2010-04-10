@@ -51,10 +51,10 @@ def crash_exit():
     # Check if an uncatched error occured
     try:
         if sys.last_traceback is None:
-            return
+            return False
     
     except AttributeError:
-        return
+        return False
     
     # Set date format to english
     locale.setlocale(locale.LC_TIME, 'C')

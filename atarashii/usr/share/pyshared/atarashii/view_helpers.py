@@ -78,7 +78,7 @@ class ViewHelpers(object):
         # or the lion?
         # Note from Ivo: Actually, the Lion won't eat me since I'm one too ;D
         if self.get_property('load-status') != 2:
-            return
+            return False
         
         else:
             self.is_loading = False

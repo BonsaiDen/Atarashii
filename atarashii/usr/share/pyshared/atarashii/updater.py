@@ -180,13 +180,13 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             if not self.get_init_messages(init = True):
                 self.message.load_state = HTML_RESET
                 self.html.load_state = HTML_RESET
-                return
+                return False
         
         elif self.gui.mode == MODE_TWEETS:
             if not self.get_init_tweets(init = True):
                 self.message.load_state = HTML_RESET
                 self.html.load_state = HTML_RESET
-                return
+                return False
         
         # TODO implement loading of search
         else:
@@ -204,7 +204,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             else:
                 self.message.load_state = HTML_RESET
                 self.html.load_state = HTML_RESET
-                return
+                return False
         
         elif self.gui.mode == MODE_MESSAGES:
             if self.get_init_tweets(True):
@@ -217,9 +217,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             else:
                 self.message.load_state = HTML_RESET
                 self.html.load_state = HTML_RESET
-                return
+                return False
         
-        else: # TODO implement loading of search
+        # TODO implement loading of search
+        else:
             pass
     
     
@@ -392,7 +393,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     # --------------------------------------------------------------------------
     def show_notifications(self, updates, messages):
         if not self.settings.is_true('notify'):
-            return
+            return False
         
         username = self.main.username.lower()
         
@@ -482,7 +483,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         ratelimit = self.api.rate_limit_status()
         if ratelimit is None:
             self.main.refresh_timeout = 60
-            return
+            return False
         
         minutes = (ratelimit['reset_time_in_seconds'] \
                    - calendar.timegm(time.gmtime())) / 60

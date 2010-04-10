@@ -77,7 +77,7 @@ class Notifier(object):
     # version of the notification dbus thingy
     def close(self):
         if self.last_id == -1:
-            return
+            return False
         
         self.notify.CloseNotification(self.last_id)
 

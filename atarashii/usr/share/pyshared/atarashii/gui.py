@@ -570,7 +570,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         is_visible = self.is_shown and self.on_screen()
         
         if self.show_box(code, rate_error, is_visible):
-            return
+            return False
         
         else:
             

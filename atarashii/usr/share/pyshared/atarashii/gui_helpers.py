@@ -34,7 +34,7 @@ from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADED, UNSET_TEXT, \
 class GUIHelpers(object):
     def set_label(self):
         if self.main.status(ST_SEND):
-            return
+            return False
         
         # Unset
         if self.main.reply_user == UNSET_TEXT \
@@ -144,7 +144,7 @@ class GUIHelpers(object):
     # --------------------------------------------------------------------------
     def set_mode(self, mode):
         if mode == self.mode:
-            return
+            return False
         
         if mode is None:
             self.mode = MODE_TWEETS
@@ -229,7 +229,8 @@ class GUIHelpers(object):
         elif self.mode == MODE_MESSAGES:
             self.message.fake_move((-1.0, -1.0))
         
-        else: # TODO implement search
+        # TODO implement search
+        else:
             pass
     
     # Hack a border around the multi button
@@ -237,7 +238,7 @@ class GUIHelpers(object):
         base_color = self.get_style().bg[gtk.STATE_NORMAL]
         if not mode:
             self.multi_container.modify_bg(gtk.STATE_NORMAL, base_color)
-            return
+            return False
         
         # Crazy color blending!
         col1 = base_color.to_string()[1:]

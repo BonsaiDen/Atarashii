@@ -266,7 +266,7 @@ class TrayIcon(gtk.StatusIcon):
         # Show GUI if started in tray
         if not self.gui.is_shown:
             self.gui.show_gui()
-            return
+            return False
         
         # Toggle minimized
         if self.gui.minimized:

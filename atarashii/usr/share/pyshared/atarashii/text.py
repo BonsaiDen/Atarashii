@@ -155,10 +155,10 @@ class TextInput(gtk.TextView):
                        or self.main.message_user == UNSET_TEXT:
                         
                         self.set_text(text.lstrip())
-                        return
+                        return False
                 
                 if self.main.message_user == UNSET_TEXT:
-                    return
+                    return False
                 
                 ctext = ctext[2:]
                 ctext = ctext[len(self.main.message_user):].strip()
@@ -170,13 +170,13 @@ class TextInput(gtk.TextView):
                 # edited
                 if self.main.edit_text != UNSET_TEXT:
                     if self.main.edit_text.lower() == text.lower().strip():
-                        return
+                        return False
                 
                 # Prevent submitting a direct message which won't return a tweet
                 # since twitter thinks that you wanted to send a DM
                 ctext = text.strip()
                 if text.lstrip()[0:2] == 'd ' or ctext == 'd':
-                    return
+                    return False
                 
                 # Prevent @reply to be send without text
                 if ctext[0:1] in u'@\uFF20':
@@ -184,11 +184,12 @@ class TextInput(gtk.TextView):
                        or self.main.reply_user == UNSET_TEXT:
                         
                         self.set_text(text.lstrip())
-                        return
+                        return False
                 
                 self.main.send(ctext)
             
-            else: # TODO implement search field submit
+            # TODO implement search field submit
+            else:
                 pass
     
     def paste(self, view):

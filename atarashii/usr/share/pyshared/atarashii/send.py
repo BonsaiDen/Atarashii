@@ -44,7 +44,7 @@ class Edit(threading.Thread):
         # Delete the old tweet
         if not self.delete():
             self.main.unset_status(ST_SEND)
-            return
+            return False
         
         # Send a new one!
         self.main.set_status(ST_WAS_SEND)

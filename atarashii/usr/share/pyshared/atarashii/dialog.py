@@ -147,6 +147,7 @@ class PasswordDialog(Dialog):
         self.__class__.instance = None
         self.dlg.hide()
 
+
 # About Dialog -----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class AboutDialog(Dialog):
@@ -322,7 +323,7 @@ class ButtonDialog(object):
         
         if self.information is None:
             self.hide()
-            return
+            return False
         
         date = time.localtime(self.time)
         if self.dtype == 'warning':

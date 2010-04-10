@@ -151,7 +151,7 @@ class Atarashii(AtarashiiActions):
         if self.username == UNSET_USERNAME \
            and (change_user is None or change_user == UNSET_TEXT):
             self.gui.set_app_title()
-            return
+            return False
         
         # Disable the account menu
         self.gui.tray.activate_menu(False)
@@ -162,7 +162,7 @@ class Atarashii(AtarashiiActions):
                and self.username != UNSET_USERNAME):
             
             gobject.timeout_add(50, self.login, change_user)
-            return None
+            return False
         
         # Switch User
         if change_user is not None:

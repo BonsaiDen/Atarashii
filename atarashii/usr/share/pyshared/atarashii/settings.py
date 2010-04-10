@@ -94,7 +94,7 @@ class Settings(object):
     # Save ---------------------------------------------------------------------
     def save(self):
         if not self.has_changed:
-            return
+            return False
         
         # Don't save crash stuff
         del self['crashed']
