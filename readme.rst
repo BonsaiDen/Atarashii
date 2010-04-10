@@ -54,7 +54,7 @@ TODO
 ----
 
 - Add more translations ( See Issue6_ )
-- Implement a search view
+- Implement a search view(?)
 
 .. _Issue6: http://github.com/BonsaiDen/Atarashii/issues#issue/6
 
