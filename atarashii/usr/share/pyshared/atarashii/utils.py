@@ -215,8 +215,12 @@ class URLExpander(threading.Thread):
             current_url = self.url
             try:
                 hops = 0
+                last_host = ''
                 while hops < 5:
                     host, path = self.get_url_parts(current_url)
+                    if host != '':
+                        last_host = host
+                    
                     conn = httplib.HTTPConnection(host, 80)
                     conn.request('HEAD', path)
                     response = conn.getresponse()
@@ -225,6 +229,16 @@ class URLExpander(threading.Thread):
                     
                     else:
                         current_url = response.getheader('location', self.url)
+                        
+                        # Work around locations without hosts
+                        # Who the hell would return something like that?
+                        # Flickr does with 'flic.kr' links
+                        if current_url.startswith('/'):
+                            if not last_host.startswith('http'):
+                                last_host = 'http://' + last_host
+                            
+                            current_url = last_host + current_url
+                        
                         hops += 1
             
             except IOError:
