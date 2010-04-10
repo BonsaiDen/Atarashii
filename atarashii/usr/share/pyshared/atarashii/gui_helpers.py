@@ -21,8 +21,6 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-import subprocess
-
 from utils import escape, strip_tags
 from language import LANG as lang
 
@@ -194,17 +192,10 @@ class GUIHelpers(object):
         pos = self.get_normalized_position()
         self.move(pos[0], pos[1])
         
-        # Move the window with wmctrl, everything else is just useless hacking
-        # http://tripie.sweb.cz/utils/wmctrl/
-        try:
-            subprocess.call(['wmctrl', '-R', str(self.window.xid)])
-            self.present()
-            self.activate_tries = 0
-            gobject.timeout_add(5, self.check_active)
-        
-        except OSError:
-            self.present()
-    
+        self.present()
+        self.activate_tries = 0
+        gobject.timeout_add(5, self.check_active)
+
     def check_active(self):
         if not self.is_active():
             self.activate_tries += 1
