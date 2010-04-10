@@ -208,8 +208,7 @@ class GUIHelpers(object):
             self.get_window().focus()
             self.present()
             self.switch_tries += 1
-            print self.switch_tries
-            if self.switch_tries > 10:
+            if self.switch_tries > 12:
                 self.get_window().stick()
                 self.get_window().unstick()
                 self.get_window().focus()
