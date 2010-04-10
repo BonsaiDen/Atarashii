@@ -131,7 +131,7 @@ class HTML(view.HTMLView):
             user_realname = user.name.strip()
             ltype = 'profile'
         
-                
+        
         # HTML Snippet ---------------------------------------------------------
         html = '''
         <div class="viewitem %s" id="%d"><div class="avatar">%s</div>

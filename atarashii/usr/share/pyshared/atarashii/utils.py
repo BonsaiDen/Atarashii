@@ -52,7 +52,7 @@ def crash_exit():
     try:
         if sys.last_traceback is None:
             return
-        
+    
     except AttributeError:
         return
     
@@ -92,7 +92,7 @@ ENTITIES = {
 
 REPLY_REGEX = re.compile(ur'^[@\uFF20]([a-z0-9_]{1,20})\s.*',
                             re.UNICODE | re.IGNORECASE)
- 
+
 MESSAGE_REGEX = re.compile('d ([a-z0-9_]{1,20})\s.*',
                             re.UNICODE | re.IGNORECASE)
 
@@ -127,14 +127,14 @@ SHORTS_LIST = ['is.gd', 'tinyurl.com', 'snipurl.com']
 class URLShorter(threading.Thread):
     url_list = {}
     black_list = []
-        
+    
     def __init__(self, text, text_box):
         threading.Thread.__init__(self)
         self.text = text
         self.text_box = text_box
         self.daemon = True
         self.start()
-
+    
     def run(self):
         # Don't make multiple api calls for the same url
         find_urls = SHORT_REGEX.findall(self.text + ' ')
@@ -201,7 +201,7 @@ class URLExpander(threading.Thread):
         self.callback = callback
         self.daemon = True
         self.start()
-
+    
     def run(self):
         # Check for already resolved / failed urls
         if self.url in self.__class__.url_list:

@@ -41,7 +41,7 @@ def get_sound_theme(theme_name=None):
             return i
     
     return None
-    
+
 def get_sound_theme_index(theme_dir):
     index_file = os.path.join(theme_dir, 'index.theme')
     parent = None
@@ -49,7 +49,7 @@ def get_sound_theme_index(theme_dir):
         line = line.strip()
         if line.startswith('Inherits='):
             parent = line.split('=')[1]
-            
+        
         elif line.startswith('Directories='):
             sound_dir = line.split('=')[1].split(',')[0]
     
@@ -57,13 +57,13 @@ def get_sound_theme_index(theme_dir):
 
 def get_sound_dirs():
     dirs = []
-
+    
     parent = get_sound_theme()
     count = 0
     while parent:
         par, theme_dir = get_sound_theme_index(parent)
         dirs.append(os.path.join(parent, theme_dir))
-           
+        
         if par is not None and count < 20:
             parent = get_sound_theme(par)
             count += 1
@@ -81,7 +81,7 @@ def get_sound_files():
             name, ext = i.lower().split('.')
             if not ext == 'disabled':
                 sound_files[name] = os.path.join(cur_dir, i)
-
+    
     return sound_files
 
 

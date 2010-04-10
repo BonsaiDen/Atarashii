@@ -228,8 +228,8 @@ class HTML(view.HTMLView):
         
         # Return the HTML string
         return html
-        
-        
+    
+    
     # Create Popup Items -------------------------------------------------------
     # --------------------------------------------------------------------------
     def ok_menu(self, link):
@@ -252,7 +252,7 @@ class HTML(view.HTMLView):
             message = 'message:%s:-1:-1' % user
             self.add_menu_link(menu, lang.context_message % menu_escape(user),
                                self.context_link, message)
-                
+        
         # Source
         elif link == 'source':
             source = self.get_source(item)

@@ -216,7 +216,7 @@ class Atarashii(AtarashiiActions):
         self.gui.set_app_title()
         if self.gui.settings_dialog is not None:
             self.gui.settings_dialog.activate(True)
-            
+        
         self.save_settings(True)
         self.gui.set_multi_button(True)
         self.refresh_time = calendar.timegm(time.gmtime())
@@ -232,7 +232,7 @@ class Atarashii(AtarashiiActions):
         self.unset_status(ST_ALL)
         if error is not None:
             self.set_status(ST_LOGIN_ERROR)
-                
+        
         self.gui.tray.activate_menu(True)
         self.gui.set_multi_button(False, None, False)
         self.gui.set_app_title()

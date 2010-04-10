@@ -138,7 +138,7 @@ class PasswordDialog(Dialog):
         self.password.connect('key-press-event', key)
         self.close_button.connect('clicked', save)
         self.cancel_button.connect('clicked', abort)
-
+    
     def on_close(self, *args):
         if self.main.api_temp_password is None:
             self.main.api_temp_password = UNSET_PASSWORD

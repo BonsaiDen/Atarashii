@@ -79,7 +79,7 @@ class TrayIcon(gtk.StatusIcon):
         try:
             menu_item = gtk.ImageMenuItem()
             menu_item.set_label('')
-            
+        
         except AttributeError:
             self.new_gtk_version = False
         

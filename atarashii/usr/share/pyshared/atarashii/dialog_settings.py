@@ -43,7 +43,7 @@ class SettingsDialog(Dialog):
             self.add.set_sensitive(mode)
             if mode:
                 self.drop_changed()
-                
+            
             else:
                 self.edit.set_sensitive(mode)
                 self.delete.set_sensitive(mode)
@@ -93,7 +93,7 @@ class SettingsDialog(Dialog):
         drop.connect('cursor-changed', self.drop_changed)
         self.create_drop_list()
         self.drop_changed()
-
+        
         
         # Edit Action
         def edit_dialog(*args):
@@ -140,7 +140,7 @@ class SettingsDialog(Dialog):
         self.get('snd_tweets').set_label(lang.settings_file_tweets)
         self.get('snd_reply').set_label(lang.settings_file_replies)
         self.get('snd_messages').set_label(lang.settings_file_messages)
-
+        
         self.sounds = ['tweets', 'reply', 'messages']
         default_sound = THEME_SOUNDS.get('message-new-instant', UNSET_SOUND)
         
@@ -229,7 +229,7 @@ class SettingsDialog(Dialog):
             
             for k, v in soundfiles.iteritems():
                 self.settings['sound_' + k] = v
-                        
+            
             self.settings['notify'] = notify.get_active()
             self.settings['sound'] = sound.get_active()
             self.settings['tray'] = tray.get_active()
@@ -298,7 +298,7 @@ class SettingsDialog(Dialog):
     def select_drop(self, num):
         self.drop.get_selection().select_path((num,))
         self.drop_changed()
-
+    
     def create_drop_list(self, name=None):
         self.user_accounts = self.main.settings.get_accounts()
         self.accounts_list = gtk.ListStore(str)
@@ -317,7 +317,7 @@ class SettingsDialog(Dialog):
         
         else:
             self.drop_changed()
-            
+    
      # Setup Account List
     def drop_changed(self, *args):
         i = self.get_drop_active()
@@ -418,7 +418,7 @@ class SoundChooser(object):
         
         else:
             self.chooser.set_filename(current_file)
-    
+        
         self.chooser.show()
     
     # Fix bug with the file filter no beeing selected

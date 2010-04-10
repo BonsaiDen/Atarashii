@@ -623,7 +623,7 @@ LANG = {
         
         'error_network':
             'Atarashii could not establish a connection to the Internet.',
-            
+        
         'error_network_timeout':
             'Atarashii could not establish a connection to Twitter.',
         
@@ -651,7 +651,7 @@ LANG = {
         
         # Warning Dialogs
         'warning_title': 'Atarashii - Warning',
-
+        
         'warning_button_rate_limit': 'Rate limit reduced',
         'warning_rate_limit':
             'Twitter has lowered the rate limit to %d requests per '

@@ -53,9 +53,7 @@ class ViewHTML(object):
             
             else:
                 self.new_items_id = self.init_id
-        
-        #print self.new_items_id, self.init_id
-
+    
     def render(self, update_multi=False):
         self.init_render()
         self.last_name = HTML_UNSET_TEXT
@@ -188,7 +186,7 @@ class ViewHTML(object):
                     
                     else:
                         spacer = '5' # Yellow
-            
+                
                 elif highlight and self.last_highlight:
                     spacer = '13' # Middle Dark Blue
                 
@@ -239,7 +237,7 @@ class ViewHTML(object):
                     
                     else:
                         spacer = '8' # Yellow
-            
+                
                 elif highlight and self.last_highlight:
                     spacer = '12' # Middle Normal Blue
                 

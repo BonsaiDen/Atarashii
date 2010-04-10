@@ -105,7 +105,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.html_scroll.set_shadow_type(gtk.SHADOW_IN)
         self.html.splash()
         
-
+        
         # Messages
         self.message_scroll = gtb.get_object('messagescroll')
         self.message = message.HTML(self.main, self)
@@ -319,7 +319,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         if self.mode == MODE_MESSAGES:
             read_mode = self.message.count > 0
             read_icon = read_mode
-            
+        
         elif self.mode == MODE_TWEETS:
             read_mode = self.html.count > 0
             read_icon = read_mode
@@ -331,7 +331,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         # Refresh mode
         if refresh_mode is not None:
             mode = refresh_mode
-    
+        
         if not self.is_ready() or read_mode or history_info is not None:
             mode = False
         
@@ -391,7 +391,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
            or not self.main.status(ST_LOGIN_SUCCESSFUL):
             
             self.multi_button.hide()
-            
+        
         else:
             self.multi_button.show()
         
@@ -427,7 +427,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.set_status(lang.status_load_history \
                             if self.html.load_history_id != HTML_UNSET_ID \
                             else lang.status_load_message_history)
-                    
+        
         elif self.main.status(ST_CONNECT):
             self.set_status(lang.status_connecting % self.main.username)
         
@@ -576,7 +576,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             # Clear already deleted tweets
             if self.main.delete_tweet_id != UNSET_ID_NUM:
                 gobject.idle_add(self.html.remove, self.main.delete_tweet_id)
-                
+            
             elif self.main.delete_message_id != UNSET_ID_NUM:
                 gobject.idle_add(self.message.remove,
                                  self.main.delete_message_id)

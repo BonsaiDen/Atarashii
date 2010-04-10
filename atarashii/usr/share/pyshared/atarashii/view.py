@@ -139,7 +139,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         if splash:
             self.splash()
-    
+        
         elif load:
             self.start()
     
@@ -296,7 +296,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         elif uri.startswith('message:') or uri.startswith('qmessage:'):
             if self.gui != MODE_MESSAGES:
                 self.gui.set_mode(MODE_MESSAGES)
-        
+            
             self.main.message_user, \
             self.main.message_id, num = uri.split(':')[1:]
             
@@ -334,7 +334,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             dtype, item_id = uri.split(':')[1:]
             item_id = int(item_id)
             text = unescape(self.get_text(extra))
-
+            
             
             def delete_tweet():
                 self.main.delete(tweet_id = item_id)

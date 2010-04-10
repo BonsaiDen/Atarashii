@@ -152,7 +152,7 @@ class TextInput(gtk.TextView):
                 if ctext[0:1] == 'd':
                     if ctext[2:].find(' ') == -1 \
                        or self.main.message_user == UNSET_TEXT:
-                       
+                        
                         self.set_text(text.lstrip())
                         return
                 
@@ -180,7 +180,7 @@ class TextInput(gtk.TextView):
                 if ctext[0:1] in u'@\uFF20':
                     if ctext.find(' ') == -1 \
                        or self.main.reply_user == UNSET_TEXT:
-                       
+                        
                         self.set_text(text.lstrip())
                         return
                 
@@ -227,7 +227,7 @@ class TextInput(gtk.TextView):
                         self.main.message_text = UNSET_TEXT
                         self.main.message_user = msg.group(1)
                         self.main.message_id = UNSET_ID_NUM
-                        
+                
                 # Remove space between username and text
                 check = text[self.message_len:]
                 length = len(check) - len(check.lstrip())
@@ -260,7 +260,7 @@ class TextInput(gtk.TextView):
             # Cancel reply mode
             if not text.strip()[0:1] in u'@\uFF20' \
                and not self.is_changing:
-               
+                
                 self.main.unset('reply')
             
             # Remove spaces only
@@ -276,7 +276,7 @@ class TextInput(gtk.TextView):
             at_user = REPLY_REGEX.match(text)
             if at_user is not None:
                 at_len = len('%s%s ' % (lang.tweet_at, at_user.group(1)))
-            
+                
                 if self.main.reply_id == UNSET_ID_NUM:
                     self.main.reply_user = at_user.group(1)
                 

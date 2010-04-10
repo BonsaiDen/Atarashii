@@ -129,7 +129,7 @@ class AtarashiiActions(object):
             
             else:
                 self.gui.set_status(lang.status_edit)
-        
+            
             edit = True
         
         elif self.reply_user != UNSET_TEXT:
@@ -170,7 +170,7 @@ class AtarashiiActions(object):
         self.gui.set_status(lang.status_retweet % name)
         
         send.Retweet(self, name, tweet_id)
-        
+    
     # Delete
     def delete(self, tweet_id=UNSET_ID_NUM, message_id=UNSET_ID_NUM):
         # Abort if pending
@@ -293,10 +293,10 @@ class AtarashiiActions(object):
             
             if msg.lower().startswith('no status'):
                 code = ERR_TWEET_NOT_FOUND
-        
+            
             elif msg.lower().startswith('no direct message'):
                 code = ERR_MESSAGE_NOT_FOUND
-        
+            
             elif msg.lower().startswith('share sharing'):
                 code = ERR_ALREADY_RETWEETED
             
@@ -331,7 +331,7 @@ class AtarashiiActions(object):
         
         # Leave it to the GUI!
         self.gui.show_error(code, error_code, error_errno, rate_error)
-    
+        
         # Log the error
         self.log_error(code, error_errno)
     

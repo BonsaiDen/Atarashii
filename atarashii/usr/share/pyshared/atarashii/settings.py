@@ -189,7 +189,7 @@ class Settings(object):
                 
                 else:
                     self['autostart'] = True
-                
+            
             except (OSError, IOError):
                 print 'Could not check autostart'
                 self['autostart'] = False

@@ -102,7 +102,7 @@ class GUIHelpers(object):
         # Tray Tooltip
         if not self.main.status(ST_CONNECT) \
            and self.main.status(ST_LOGIN_COMPLETE):
-           
+            
             if self.main.username == UNSET_USERNAME \
                or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
                 self.tray.set_tooltip(lang.tray_logged_out)
@@ -180,7 +180,7 @@ class GUIHelpers(object):
            or position[1] < 0 - size[1] or position[1] > screen.get_height():
             
             return False
-            
+        
         else:
             return True
     
@@ -191,7 +191,7 @@ class GUIHelpers(object):
         old_pos = self.get_position()
         pos = self.get_normalized_position()
         self.move(pos[0], pos[1])
-
+        
         self.switch_tries = 0
         self.get_window().focus()
         self.get_window().focus()

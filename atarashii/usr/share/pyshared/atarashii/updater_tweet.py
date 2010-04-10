@@ -65,7 +65,7 @@ class UpdaterTweet(object):
             if max_id is None:
                 updates = self.api.home_timeline(since_id = since_id,
                                                  count = max_count)
-            
+                
                 if len(updates) > 0:
                     since_id = updates[len(updates) - 1].id
                 

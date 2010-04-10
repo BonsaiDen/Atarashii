@@ -220,7 +220,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         else: # TODO implement loading of search
             pass
-        
+    
     
     # Mainloop -----------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -253,7 +253,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         if tweets:
             self.refresh_now = True
-            
+        
         if messages:
             self.refresh_messages = True
         
