@@ -122,6 +122,7 @@ SHORTS = {
 }
 
 SHORTS_LIST = ['is.gd', 'tinyurl.com', 'snipurl.com']
+UNSET_HOST = ''
 
 
 class URLShorter(threading.Thread):
@@ -215,10 +216,10 @@ class URLExpander(threading.Thread):
             current_url = self.url
             try:
                 hops = 0
-                last_host = ''
+                last_host = UNSET_HOST
                 while hops < 5:
                     host, path = self.get_url_parts(current_url)
-                    if host != '':
+                    if host != UNSET_HOST:
                         last_host = host
                     
                     conn = httplib.HTTPConnection(host, 80)
