@@ -19,6 +19,10 @@ atarashii (0.99.19-1) all;
     info box at the top.
   ~ Better handling of crashes due to python errors.
   ~ Multi button now gets hidden if not logged in.
+  * Fixed the "Starting Atarashii..." taskbar entry when trying to launch a
+    second instace, in this case Atarashii also moves itself to the current
+    workspace.
+  * Fix for broken rendering of empty timelines.
   * Fix for mentions gathering at the bottom of the timeline when lots of tweets
     are loaded.
   * Fix for a bug that caused very high CPU usage when starting minimized in
@@ -39,7 +43,7 @@ atarashii (0.99.19-1) all;
   * Fix broken tooltips while the context menu is opened.
   * Tons of internal cleanup for an even more pythonic style.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 9 Apr 2010 22:12:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 10 Apr 2010 16:09:00 +0200
 
 atarashii (0.99.18a-1) all;
 
