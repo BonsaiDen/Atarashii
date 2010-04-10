@@ -193,6 +193,7 @@ class GUIHelpers(object):
         self.move(pos[0], pos[1])
         
         self.present()
+        self.get_window().focus(True)
         self.activate_tries = 0
         gobject.timeout_add(5, self.check_active)
 
@@ -200,6 +201,7 @@ class GUIHelpers(object):
         if not self.is_active():
             self.activate_tries += 1
             self.present()
+            self.get_window().focus(True)
             if self.activate_tries < 10:
                 return True
     
