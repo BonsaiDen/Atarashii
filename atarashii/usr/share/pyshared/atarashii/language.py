@@ -182,7 +182,7 @@ LANG = {
         
         'about_kittens':
             '<span size="small">This Version was packaged by <b>%s</b> '
-            'kittens.</span><span size="small">Their lucky number is '
+            'kittens.</span>\n<span size="small">Their lucky number is '
             '<b>%s</b>!</span>',
         
         # Account Dialog
