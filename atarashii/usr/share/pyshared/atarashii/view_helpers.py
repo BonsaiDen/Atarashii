@@ -158,9 +158,9 @@ class ViewHelpers(object):
             self.scroll_to = -1
     
     def on_key(self, view, event):
-        i = gtk.keysyms
         # FIXME 65360 = Begin, it seems that the constant is broken, at least
         # on my keyboard
+        i = gtk.keysyms
         if event.keyval in (i.Up, i.Down, i.Page_Up, i.Page_Down, i.End,
                             i.Begin, 65360, i.KP_Up, i.KP_Down, i.KP_Page_Up,
                             i.KP_Page_Down, i.KP_End, i.KP_Begin):

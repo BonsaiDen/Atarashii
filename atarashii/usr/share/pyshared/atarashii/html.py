@@ -261,8 +261,8 @@ class HTML(view.HTMLView):
                                % lang.name(menu_escape(source)),
                                self.context_link, full)
         
-        # More
         else:
+            
             # Copy Tweet
             self.add_menu_link(menu, lang.context_copy_tweet,
                                self.copy_tweet, None, item)

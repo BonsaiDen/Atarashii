@@ -145,6 +145,7 @@ class URLShorter(threading.Thread):
         
         # Replace them all
         if len(urls) > 0:
+            
             # Wait a bit, this is better for the user experience!
             time.sleep(0.2)
             short_text = self.text_box.get_text()

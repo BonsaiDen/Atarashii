@@ -173,6 +173,7 @@ class ViewMenu(object):
                 return True
             
             else:
+                
                 # Profile
                 if link in ('user', 'profile', 'rprofile', 'avatar'):
                     user = full[full.rfind('/') + 1:]

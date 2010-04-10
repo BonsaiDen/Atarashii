@@ -188,7 +188,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 self.html.load_state = HTML_RESET
                 return
         
-        else: # TODO implement loading of search
+        # TODO implement loading of search
+        else:
             pass
         
         # Load other stuff

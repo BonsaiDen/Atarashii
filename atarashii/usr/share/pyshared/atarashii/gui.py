@@ -573,6 +573,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             return
         
         else:
+            
             # Clear already deleted tweets
             if self.main.delete_tweet_id != UNSET_ID_NUM:
                 gobject.idle_add(self.html.remove, self.main.delete_tweet_id)
@@ -672,6 +673,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             msg = lang.tray_logged_in % self.main.username + '\n'
             if code != ERR_RATE_LIMIT:
+                
                 # internal twitter error
                 if code == HT_500_INTERNAL_SERVER_ERROR:
                     button = lang.error_button_twitter

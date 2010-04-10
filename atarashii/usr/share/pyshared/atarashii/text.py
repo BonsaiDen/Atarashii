@@ -147,6 +147,7 @@ class TextInput(gtk.TextView):
         text = self.get_text().lstrip()
         if len(text) <= 140 + self.message_len and text.strip() != UNSET_TEXT:
             if self.gui.mode == MODE_MESSAGES:
+                
                 # Prevent message to be send without text
                 ctext = text.strip()
                 if ctext[0:1] == 'd':
@@ -164,6 +165,7 @@ class TextInput(gtk.TextView):
                 self.main.send(ctext)
             
             elif self.gui.mode == MODE_TWEETS:
+                
                 # Don't submit in edit mode when the text doesn't have been
                 # edited
                 if self.main.edit_text != UNSET_TEXT:
@@ -204,6 +206,7 @@ class TextInput(gtk.TextView):
         
         # Message mode ---------------------------------------------------------
         if self.gui.mode == MODE_MESSAGES:
+            
             # Cancel message mode
             if len(text) == 0 and not self.is_changing:
                 self.main.unset('message')

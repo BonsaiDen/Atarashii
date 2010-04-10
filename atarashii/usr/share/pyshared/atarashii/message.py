@@ -208,8 +208,8 @@ class HTML(view.HTMLView):
                                    lang.context_message % menu_escape(user),
                                    self.context_link, reply)
         
-        # More
         else:
+            
             # Copy Message
             self.add_menu_link(menu, lang.context_copy_message,
                                self.copy_message, None, item)

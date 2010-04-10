@@ -69,8 +69,8 @@ class Edit(threading.Thread):
     
     # Send a Tweet
     def send_tweet(self, text):
+        # Reply
         if self.main.edit_reply_id != UNSET_ID_NUM:
-            # Send Tweet
             update = self.main.api.update_status(text,
                                 in_reply_to_status_id = self.main.edit_reply_id)
             
@@ -82,7 +82,6 @@ class Edit(threading.Thread):
         
         # Normal Tweet / Retweet
         else:
-            # Send Tweet
             update = self.main.api.update_status(text)
             self.gui.html.set_newest()
             
@@ -168,8 +167,8 @@ class Send(threading.Thread):
     
     # Send a Tweet
     def send_tweet(self, text):
+        # Reply
         if self.main.reply_id != UNSET_ID_NUM:
-            # Send Tweet
             update = self.main.api.update_status(text,
                                 in_reply_to_status_id = self.main.reply_id)
             
@@ -178,7 +177,6 @@ class Send(threading.Thread):
         
         # Normal Tweet / Retweet
         else:
-            # Send Tweet
             update = self.main.api.update_status(text)
             self.gui.html.set_newest()
             self.insert_tweet(update)

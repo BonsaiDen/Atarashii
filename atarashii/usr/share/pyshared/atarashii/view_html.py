@@ -42,7 +42,6 @@ class ViewHTML(object):
         # Find newest item
         for item in self.items:
             name = self.get_screen_name(item[0], True).lower()
-            #print item[0].id, name
             if item[0].id > self.init_id and name != self.main.username.lower():
                 self.new_items_id = item[0].id - 1
                 break
@@ -178,6 +177,7 @@ class ViewHTML(object):
         
         spacer = 'foo'
         if item.id > self.new_items_id:
+            
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if mentioned:
@@ -197,6 +197,7 @@ class ViewHTML(object):
                     spacer = '1' # Dark Gray
             
             else:
+                
                 # More @username
                 if highlight:
                     if not self.last_highlight:
@@ -229,6 +230,7 @@ class ViewHTML(object):
         
         # Old Tweets
         else:
+            
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if mentioned:
@@ -248,6 +250,7 @@ class ViewHTML(object):
                     spacer = '0' # Normal Gray
             
             else:
+                
                 # More @username
                 if highlight:
                     if not self.last_highlight:
