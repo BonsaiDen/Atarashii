@@ -196,6 +196,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
            or main.settings.is_true('crashed', False): # show after crash
             self.show_gui()
         
+        else:
+            gtk.gdk.notify_startup_complete()
+        
         gobject.idle_add(self.main.on_init)
     
     
