@@ -36,7 +36,7 @@ import send
 from language import LANG as lang
 from settings import LOGOUT_FILE, ERROR_LOG_FILE
 
-from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR
+from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR, UNSET_USERNAME
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
                       ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_SUCCESSFUL
@@ -92,10 +92,11 @@ class AtarashiiActions(object):
         if mode:
             self.save_mode()
         
-        self.gui.html.save_first()
-        self.gui.message.save_first()
-        self.gui.html.save_last_id()
-        self.gui.message.save_last_id()
+        if self.username != UNSET_USERNAME:
+            self.gui.html.save_first()
+            self.gui.message.save_first()
+            self.gui.html.save_last_id()
+            self.gui.message.save_last_id()
         
         self.settings['position'] = str(self.gui.get_normalized_position())
         size = self.gui.get_allocation()
@@ -112,7 +113,7 @@ class AtarashiiActions(object):
     # --------------------------------------------------------------------------
     def send(self, text):
         if self.any_status(ST_SEND, ST_DELETE):
-            return
+            return False
         
         # Send
         self.set_status(ST_SEND)
@@ -157,7 +158,7 @@ class AtarashiiActions(object):
     def retweet(self, name, tweet_id, new_style=False):
         # Abort if pending
         if self.any_status(ST_SEND, ST_DELETE):
-            return
+            return False
         
         if new_style:
             self.set_status(ST_WAS_RETWEET_NEW)
@@ -175,7 +176,7 @@ class AtarashiiActions(object):
     def delete(self, tweet_id=UNSET_ID_NUM, message_id=UNSET_ID_NUM):
         # Abort if pending
         if self.any_status(ST_SEND, ST_DELETE):
-            return
+            return False
         
         # Setup
         self.delete_tweet_id = tweet_id
