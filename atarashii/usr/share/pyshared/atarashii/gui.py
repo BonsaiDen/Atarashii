@@ -161,6 +161,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.settings_dialog = None
         
         # Tray
+        self.switch_tries = 0
         self.tray = tray.TrayIcon(self)
         
         # Events
@@ -175,6 +176,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.minimized = False
         self.is_shown = False
         self.progress_visible = False
+        
         
         # Set Message/Tweet Mode
         self.set_mode(self.mode)

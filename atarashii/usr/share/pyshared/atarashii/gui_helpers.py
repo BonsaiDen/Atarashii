@@ -19,6 +19,7 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import gobject
 
 from utils import escape, strip_tags
 from language import LANG as lang
@@ -182,6 +183,42 @@ class GUIHelpers(object):
             
         else:
             return True
+    
+    
+    # Kitten HackAttack for presenting the window to the user ------------------
+    # --------------------------------------------------------------------------
+    def force_present(self):
+        old_pos = self.get_position()
+        pos = self.get_normalized_position()
+        self.move(pos[0], pos[1])
+
+        self.switch_tries = 0
+        self.get_window().focus()
+        self.get_window().focus()
+        self.present()
+        
+        # Fix around non compiz enabled workspaces by using stick/unstick
+        # (this breaks on compiz enabled ones...)
+        if self.get_position() == old_pos:
+            gobject.timeout_add(10, self.check_switch)
+    
+    def check_switch(self):
+        if not self.is_active():
+            self.get_window().raise_()
+            self.get_window().focus()
+            self.present()
+            self.switch_tries += 1
+            print self.switch_tries
+            if self.switch_tries > 10:
+                self.get_window().stick()
+                self.get_window().unstick()
+                self.get_window().focus()
+                self.present()
+                gobject.idle_add(self.grab_focus)
+                return False
+            
+            else:
+                return True
     
     # Fix tooltips that would stay on screen when switching workspaces
     # This doesn't work 100% of the time, but it's better than nothing

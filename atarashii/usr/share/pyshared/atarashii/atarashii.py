@@ -19,18 +19,25 @@
 # TODO fixup tooltips not getting removed when switching workspaces
 # TODO fix tooltip flickering during updating. Maybe an issues with the loading
 #      state???
-# TODO add block/unfollow to avatar menus
-
-
-# Make sure there is only one instance of Atarashii
-import bus
-DBUS_INSTANCE = bus.get_instance()
 
 
 # Atarashii --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import pygtk
 pygtk.require('2.0')
+import gtk
+
+import bus
+import sys
+
+# Make sure there is only one instance of Atarashii
+DBUS_INSTANCE = bus.AtarashiiObject()
+if not DBUS_INSTANCE.unique:
+    gtk.gdk.notify_startup_complete()
+    sys.exit(69) # os.EX_UNAVAILABLE
+
+
+# Main Application -------------------------------------------------------------
 import gobject
 
 import time
@@ -127,7 +134,10 @@ class Atarashii(AtarashiiActions):
         if not self.settings['shortener'] in SHORTS_LIST:
             self.settings['shortener'] = SHORTS_LIST[0]
         
-        # Start
+        # Create DBUS
+        DBUS_INSTANCE.set_main(self)
+        
+        # Start updater thread
         self.updater.start()
     
     

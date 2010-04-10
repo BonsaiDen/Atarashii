@@ -30,7 +30,6 @@ class TrayIcon(gtk.StatusIcon):
     def __init__(self, gui):
         self.gui = gui
         self.main = gui.main
-        self.switch_tries = 0
         
         # Tooltip
         gtb = gtk.Builder()
@@ -293,26 +292,5 @@ class TrayIcon(gtk.StatusIcon):
                 self.gui.hide()
             
             else:
-                old_pos = self.gui.get_position()
-                pos = self.gui.window_position
-                self.gui.move(pos[0], pos[1])
-                self.switch_tries = 0
-                self.gui.present()
-                
-                # Fix around non compz enabled workspaces
-                if self.gui.get_position() == old_pos:
-                    gobject.timeout_add(10, self.check_switch)
-    
-    def check_switch(self):
-        if not self.gui.is_active():
-            self.gui.present()
-            self.switch_tries += 1
-            if self.switch_tries > 10:
-                self.gui.stick()
-                self.gui.unstick()
-                self.gui.present()
-                return False
-            
-            else:
-                return True
+                self.gui.force_present()
 

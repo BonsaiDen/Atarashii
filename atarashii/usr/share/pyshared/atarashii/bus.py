@@ -18,19 +18,47 @@
 # ------------------------------------------------------------------------------
 import dbus
 import dbus.service
-import sys
+import gobject
 
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default = True)
 
-def get_instance():
-    session = dbus.SessionBus()
-    obj = session.get_object('org.freedesktop.DBus', '/org/freedesktop/DBus')
-    services = dbus.Interface(obj ,'org.freedesktop.DBus').ListNames()
+# DBUS stuff
+DESK_NAME = 'org.freedesktop.DBus'
+DESK_PATH = '/org/freedesktop/DBus'
+
+DBUS_NAME = 'org.bonsaiden.Atarashii'
+DBUS_PATH = '/org/bonsaiden/Atarashii'
+
+
+class AtarashiiObject(dbus.service.Object):
+    def __init__(self):
+        self.main = None
+        self.unique = False
+        
+        self.session = dbus.SessionBus()
+        self.obj = self.session.get_object(DESK_NAME, DESK_PATH)
+        services = dbus.Interface(self.obj, DESK_NAME).ListNames()
+        
+        # Is Atarashii already running?
+        if DBUS_NAME in services:
+            obj = self.session.get_object(DBUS_NAME, DBUS_PATH)
+            atarashii = dbus.Interface(obj, DBUS_NAME)
+            
+            # Show the window
+            atarashii.present()
+        
+        else:
+            self.unique = True
+            bus_name = dbus.service.BusName(DBUS_NAME, bus = self.session)
+            dbus.service.Object.__init__(self, bus_name, DBUS_PATH)
     
-    if 'org.bonsaiden.Atarashii' in services:
-        sys.exit(69) # os.EX_UNAVAILABLE
+    def set_main(self, main):
+        self.main = main
     
-    else:
-        return dbus.service.BusName('org.bonsaiden.Atarashii', bus = session)
+    # DBUS interface -----------------------------------------------------------
+    @dbus.service.method(DBUS_NAME)
+    def present(self):
+        if self.main is not None:
+            gobject.idle_add(self.main.gui.force_present)
 
