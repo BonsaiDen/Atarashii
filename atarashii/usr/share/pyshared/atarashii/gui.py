@@ -161,7 +161,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.settings_dialog = None
         
         # Tray
-        self.switch_tries = 0
+        self.activate_tries = 0
         self.tray = tray.TrayIcon(self)
         
         # Events

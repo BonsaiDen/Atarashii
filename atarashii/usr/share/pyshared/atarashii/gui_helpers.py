@@ -21,6 +21,8 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
+import subprocess
+
 from utils import escape, strip_tags
 from language import LANG as lang
 
@@ -192,31 +194,22 @@ class GUIHelpers(object):
         pos = self.get_normalized_position()
         self.move(pos[0], pos[1])
         
-        self.switch_tries = 0
-        self.get_window().focus()
-        self.get_window().focus()
-        self.present()
-        
-        # Fix around non compiz enabled workspaces by using stick/unstick
-        # (this breaks on compiz enabled ones...)
-        if self.get_position() == old_pos:
-            gobject.timeout_add(10, self.check_switch)
-    
-    def check_switch(self):
-        if not self.is_active():
-            self.get_window().raise_()
-            self.get_window().focus()
+        # Move the window with wmctrl, everything else is just useless hacking
+        # http://tripie.sweb.cz/utils/wmctrl/
+        try:
+            subprocess.call(['wmctrl', '-R', str(self.window.xid)])
             self.present()
-            self.switch_tries += 1
-            if self.switch_tries > 12:
-                self.get_window().stick()
-                self.get_window().unstick()
-                self.get_window().focus()
-                self.present()
-                gobject.idle_add(self.grab_focus)
-                return False
-            
-            else:
+            self.activate_tries = 0
+            gobject.timeout_add(5, self.check_active)
+        
+        except OSError:
+            self.present()
+    
+    def check_active(self):
+        if not self.is_active():
+            self.activate_tries += 1
+            self.present()
+            if self.activate_tries < 10:
                 return True
     
     # Fix tooltips that would stay on screen when switching workspaces

@@ -200,7 +200,7 @@ Section: misc
 Priority: optional
 Architecture: all
 Installed-Size: """ + str(size / 1024) + """
-Depends: python (>= 2.6), python-webkit, python-gtk2, python-gobject, python-dbus, python-gnome2, python-gconf, sox
+Depends: python (>= 2.6), python-webkit, python-gtk2, python-gobject, python-dbus, python-gnome2, python-gconf, sox, wmctrl
 Maintainer: Ivo Wetzel <ivo.wetzel@googlemail.com>
 Homepage: http://github.com/BonsaiDen/Atarashii
 Description: Twitter Client for the GNOME Desktop
