@@ -255,7 +255,12 @@ class AtarashiiActions(object):
         # GAI errors
         elif isinstance(error, socket.gaierror) or isinstance(error, URLError):
             msg = UNSET_ERROR
-            error_errno = ERR_URLLIB_FAILED
+            if hasattr(error, 'errno'):
+                error_errno = error.errno
+            
+            else:
+                error_errno = ERR_URLLIB_FAILED
+            
             error_code = 0
         
         # IO errors
@@ -281,7 +286,9 @@ class AtarashiiActions(object):
         # Catch errors due to missing network
         if error_errno in (ERR_URLLIB_FAILED, ERR_URLLIB_TIMEOUT):
             code = ERR_NETWORK_FAILED
-            if self.status(ST_LOGIN_SUCCESSFUL) or ERR_URLLIB_FAILED:
+            if self.status(ST_LOGIN_SUCCESSFUL) \
+               or error_errno = ERR_URLLIB_TIMEOUT:
+                
                 code = ERR_NETWORK_TWITTER_FAILED
                 self.gui.set_multi_button(True)
                 self.gui.tray.refresh_menu.set_sensitive(False)
