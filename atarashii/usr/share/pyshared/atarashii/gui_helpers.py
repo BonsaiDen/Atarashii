@@ -188,7 +188,6 @@ class GUIHelpers(object):
     # Kitten HackAttack for presenting the window to the user ------------------
     # --------------------------------------------------------------------------
     def force_present(self):
-        old_pos = self.get_position()
         pos = self.get_normalized_position()
         self.move(pos[0], pos[1])
         
@@ -202,7 +201,7 @@ class GUIHelpers(object):
         self.get_window().focus(True)
         self.activate_tries = 0
         gobject.timeout_add(5, self.check_active)
-
+    
     def check_active(self):
         if not self.is_active():
             self.activate_tries += 1

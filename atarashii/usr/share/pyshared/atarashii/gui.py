@@ -238,12 +238,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         self.is_shown = True
         gobject.idle_add(self.scroll_views)
-        
+    
     # Scroll the views when started in tray
     def scroll_views(self):
         if self.mode == MODE_TWEETS:
             self.html.loaded(None, None, True)
-    
+        
         elif self.mode == MODE_MESSAGES:
             self.message.loaded(None, None, True)
     

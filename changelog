@@ -1,3 +1,9 @@
+atarashii (0.99.20b-1) all;
+
+  * Quick fix for the broken 0.99.20a.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 11 Apr 2010 01:17:00 +0200
+
 atarashii (0.99.20a-1) all;
 
   * Fix handling of network errors.

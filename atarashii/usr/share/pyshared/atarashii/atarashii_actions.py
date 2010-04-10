@@ -287,7 +287,7 @@ class AtarashiiActions(object):
         if error_errno in (ERR_URLLIB_FAILED, ERR_URLLIB_TIMEOUT):
             code = ERR_NETWORK_FAILED
             if self.status(ST_LOGIN_SUCCESSFUL) \
-               or error_errno = ERR_URLLIB_TIMEOUT:
+               or error_errno == ERR_URLLIB_TIMEOUT:
                 
                 code = ERR_NETWORK_TWITTER_FAILED
                 self.gui.set_multi_button(True)
