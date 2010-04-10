@@ -17,6 +17,11 @@
 # Constants --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import sys
+import time
+import re
+
+# Startup time
+START_TIME = time.time()
 
 # Generic Stuff
 UNSET_TOOLTIP = ''       # Should be ''
@@ -30,6 +35,7 @@ UNSET_LABEL = ''         # Should be ''
 UNSET_TIMEOUT = -1       # Must be lower than 0
 UNSET_ERROR = ''         # Must be ''
 UNSET_SOUND = ''         # Must be ''
+UNSET_HOST = ''          # Must be ''
 
 # Rewteets
 RETWEET_NEW = 1          # Can be anything
@@ -62,7 +68,8 @@ BUTTON_REFRESH = 1
 BUTTON_READ = 2
 BUTTON_HISTORY = 3
 
-# Errors, should be below 0
+
+# Errors, should be below 0 ----------------------------------------------------
 ERR_TWEET_NOT_FOUND = -12
 ERR_MESSAGE_NOT_FOUND = -13
 ERR_ALREADY_RETWEETED = -2
@@ -129,4 +136,35 @@ ST_NETWORK_FAILED = 32768
 # All
 ST_ALL = ST_ALL_PENDING | ST_WAS_ALL | ST_WARNING_RATE | ST_LOGIN_ALL | \
          ST_NETWORK_FAILED
+
+
+# Shortening -------------------------------------------------------------------
+SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{35,})')
+SHORTS = {
+    'is.gd': 'http://is.gd/api.php?longurl=%s',
+    'tinyurl.com': 'http://tinyurl.com/api-create.php?url=%s',
+    'snipurl.com': 'http://snipr.com/site/snip?r=simple&link=%s'
+}
+
+SHORTS_LIST = ['is.gd', 'tinyurl.com', 'snipurl.com']
+
+
+# Escaping ---------------------------------------------------------------------
+STRIP = re.compile('<(.|\n)*?>')
+SPACES = re.compile('\s+')
+ENTITIES = {
+    '&': '&amp;',
+    '"': '&quot;',
+    '\'': '&apos;',
+    '>': '&gt;',
+    '<': '&lt;'
+}
+
+
+# Textbox ----------------------------------------------------------------------
+REPLY_REGEX = re.compile(ur'^[@\uFF20]([a-z0-9_]{1,20})\s.*',
+                            re.UNICODE | re.IGNORECASE)
+
+MESSAGE_REGEX = re.compile('d ([a-z0-9_]{1,20})\s.*',
+                            re.UNICODE | re.IGNORECASE)
 

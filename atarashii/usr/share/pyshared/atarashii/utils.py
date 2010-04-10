@@ -21,8 +21,10 @@ import gobject
 from __init__ import __version__ as VERSION
 from settings import CRASH_LOG_FILE
 
+from constants import START_TIME, UNSET_HOST, ENTITIES, STRIP, SHORT_REGEX, \
+                      SHORTS
+
 import sys
-import re
 import time
 import traceback
 import locale
@@ -45,8 +47,6 @@ finally:
 
 # Python error handling --------------------------------------------------------
 # ------------------------------------------------------------------------------
-START_TIME = time.time()
-
 def crash_exit():
     # Check if an uncatched error occured
     try:
@@ -75,27 +75,9 @@ def crash_exit():
     # Exit with specific error
     sys.exit(70) # os.EX_SOFTWARE
 
-sys.exitfunc = crash_exit
-
 
 # Escaping stuff ---------------------------------------------------------------
 # ------------------------------------------------------------------------------
-STRIP = re.compile('<(.|\n)*?>')
-SPACES = re.compile('\s+')
-ENTITIES = {
-    '&': '&amp;',
-    '"': '&quot;',
-    '\'': '&apos;',
-    '>': '&gt;',
-    '<': '&lt;'
-}
-
-REPLY_REGEX = re.compile(ur'^[@\uFF20]([a-z0-9_]{1,20})\s.*',
-                            re.UNICODE | re.IGNORECASE)
-
-MESSAGE_REGEX = re.compile('d ([a-z0-9_]{1,20})\s.*',
-                            re.UNICODE | re.IGNORECASE)
-
 def escape(text):
     return ''.join(ENTITIES.get(c, c) for c in text)
 
@@ -114,17 +96,6 @@ def strip_tags(text):
 
 # URL Shortener / Expander------------------------------------------------------
 # ------------------------------------------------------------------------------
-SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{35,})')
-SHORTS = {
-    'is.gd': 'http://is.gd/api.php?longurl=%s',
-    'tinyurl.com': 'http://tinyurl.com/api-create.php?url=%s',
-    'snipurl.com': 'http://snipr.com/site/snip?r=simple&link=%s'
-}
-
-SHORTS_LIST = ['is.gd', 'tinyurl.com', 'snipurl.com']
-UNSET_HOST = ''
-
-
 class URLShorter(threading.Thread):
     url_list = {}
     black_list = []

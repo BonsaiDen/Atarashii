@@ -25,7 +25,8 @@ import os
 
 from language import LANG as lang
 from dialog import Dialog, MessageDialog
-from utils import SHORTS_LIST, URLShorter, URLExpander
+from utils import URLShorter, URLExpander
+from constants import SHORTS_LIST
 from settings import THEME_SOUNDS, THEME_DIR
 
 from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING

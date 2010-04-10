@@ -47,7 +47,8 @@ import os
 gobject.threads_init()
 
 # Import the module to handle python exceptions
-from utils import SHORTS_LIST
+from utils import crash_exit
+sys.exitfunc = crash_exit
 
 import notify
 import gui
@@ -55,6 +56,7 @@ import settings
 import updater
 
 from language import LANG as lang
+from constants import SHORTS_LIST
 from atarashii_actions import AtarashiiActions
 
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \

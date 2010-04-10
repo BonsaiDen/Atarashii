@@ -16,7 +16,7 @@
 
 # HTML View / HTML -------------------------------------------------------------
 # ------------------------------------------------------------------------------
-from utils import SPACES
+from constants import SPACES
 
 from language import LANG as lang
 from constants import HTML_UNSET_ID, HTML_UNSET_TEXT, UNSET_USERNAME
