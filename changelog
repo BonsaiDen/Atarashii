@@ -1,3 +1,9 @@
+atarashii (0.99.20a-1) all;
+
+  * Fix handling of network errors.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 11 Apr 2010 01:06:00 +0200
+
 atarashii (0.99.20-1) all;
 
   * Fix for broken expanding of flic.kr links.
