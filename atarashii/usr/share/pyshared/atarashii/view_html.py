@@ -48,7 +48,11 @@ class ViewHTML(object):
                 break
         
         if self.new_items_id == HTML_UNSET_ID:
-            self.new_items_id = self.items[len(self.items) - 1][0].id
+            if len(self.items) > 0:
+                self.new_items_id = self.items[len(self.items) - 1][0].id
+            
+            else:
+                self.new_items_id = self.init_id
         
         #print self.new_items_id, self.init_id
 
@@ -90,7 +94,7 @@ class ViewHTML(object):
             self.renderitems.insert(0, '</div>')
         
         # Render
-        self.set_html(self.renderitems)
+        self.set_html(self.renderitems, True)
         
         # Update multi button
         if update_multi:
@@ -144,15 +148,24 @@ class ViewHTML(object):
         self.load_string(SPACES.sub(' ', data),
                          'text/html', 'UTF-8', 'file:///')
     
-    def set_html(self, renderitems):
+    def set_html(self, renderitems, rendered=False):
         self.gui.set_app_title()
-        if len(self.items) > 0:
-            self.render_html('''
-                <body ondragstart="return false">
-                    <div><div id="newcontainer">%s</div>
-                    <div class="loadmore"><a href="more:%d"><b>%s</b></a></div>
-                </body>''' % (''.join(renderitems),
-                                self.items[0][0].id, self.lang_load))
+        if rendered:
+            if len(self.items) > 0:
+                self.render_html('''
+                    <body ondragstart="return false">
+                        <div><div id="newcontainer">%s</div>
+                        <div class="loadmore">
+                        <a href="more:%d"><b>%s</b></a>
+                        </div>
+                    </body>''' % (''.join(renderitems),
+                                    self.items[0][0].id, self.lang_load))
+            
+            else:
+                self.render_html('''
+                    <body class="unloaded" ondragstart="return false">
+                        <div class="loading"><b>%s</b></div>
+                    </body>''' % self.lang_empty)
         
         elif self.main.status(ST_LOGIN_SUCCESSFUL):
             self.render_html('''

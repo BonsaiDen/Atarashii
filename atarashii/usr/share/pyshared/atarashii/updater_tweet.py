@@ -66,9 +66,11 @@ class UpdaterTweet(object):
                 updates = self.api.home_timeline(since_id = since_id,
                                                  count = max_count)
             
-                mentions = self.api.mentions(
-                                    since_id = updates[len(updates) - 1].id,
-                                    count = max_count)
+                if len(updates) > 0:
+                    since_id = updates[len(updates) - 1].id
+                
+                mentions = self.api.mentions(since_id = since_id,
+                                             count = max_count)
             
             else:
                 updates = self.api.home_timeline(
