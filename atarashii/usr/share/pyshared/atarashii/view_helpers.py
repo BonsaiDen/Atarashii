@@ -86,8 +86,6 @@ class ViewHelpers(object):
         if not self.gui.is_shown:
             return False
         
-        print 'scroll'
-        
         # Offset
         if len(self.items) > 0 and self.has_newitems \
            and not self.load_history:

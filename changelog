@@ -1,9 +1,10 @@
 atarashii (0.99.20-1) all;
 
   * Fix for broken expanding of flic.kr links.
+  * Fix for scrolling issues when starting minimized in tray.
   * More internal code cleanup.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 10 Apr 2010 21:42:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 10 Apr 2010 22:43:00 +0200
 
 atarashii (0.99.19-1) all;
 
