@@ -32,6 +32,95 @@ def get_next(lines, start):
     return token_indent
 
 
+def get_strings(data):
+    strings = []
+    mode = 0
+    esc = False
+    start = 0
+    string = ''
+    bigmode = 0
+    comment = False
+    e = 0
+    while e < len(data):
+        i = data[e]
+        
+        if i == '#' and mode == 0 and bigmode == 0:
+            comment = True
+        
+        if comment and i == "\n":
+            comment = False
+        
+        if comment:
+            e += 1
+            continue
+        
+        if e < len(data) - 3 and mode == 0:
+            tri = data[e:e+3]
+            if bigmode == 0 and tri == '"""':
+                string = ''
+                start = e
+                e += 3
+                bigmode = 1
+            
+            elif bigmode == 1 and tri == '"""':
+                strings.append((start, e + 2, string, True))
+                e += 3
+                bigmode = 0
+                continue
+            
+            elif bigmode == 0 and tri == "'''":
+                start = e
+                string = ''
+                e += 3
+                bigmode = 2
+            
+            elif bigmode == 2 and tri == "'''":
+                strings.append((start, e + 2, string, True))
+                e += 3
+                bigmode = 0
+                continue
+        
+        if bigmode != 0:
+            string += data[e]
+            e += 1
+            continue
+        
+        if esc is False:
+            if mode == 0 and i == '"':
+                start = e
+                string = ''
+                mode = 1
+            
+            elif mode == 1 and i == '"':
+                strings.append((start, e + 1, string + '"', False))
+                mode = 0
+            
+            elif mode == 0 and i == '\'':
+                start = e
+                string = ''
+                mode = 2
+            
+            elif mode == 2 and i == '\'':
+                strings.append((start, e + 1, string + '\'', False))
+                mode = 0
+            
+            string += i
+        
+        else:
+            string += i
+        
+        if i == '\\' and not esc:
+            esc = True
+        
+        else:
+            esc = False
+        
+        e += 1
+    
+    return strings
+
+
+
 def check(path, folders, excludes, flags):
     state = 0
     files = sorted(os.listdir(path))
@@ -62,7 +151,26 @@ def check(path, folders, excludes, flags):
         errors = ''
         in_def = False
         
-        lines = open(path + '/' + foo).read().split('\n')
+        
+        # get rid of string contents
+        data = open(path + '/' + foo).read()
+        strings = get_strings(data)
+        for es in strings:
+            start, end, string, big = es
+            ess = data[start + 1:end - 1]
+            
+            ress = ''
+            for ei in ess:
+                if ei != '\n':
+                    ress += '-'
+                
+                else:
+                    ress += '\n'
+            
+            data = data[:start + 1] + ress + data[end - 1:]
+        
+        
+        lines = data.split('\n')
         string = 0
         last_empty = True
         last_comment = False
@@ -70,11 +178,12 @@ def check(path, folders, excludes, flags):
         for l, d in enumerate(lines):
             f = d.strip()
             if string in (0, 1)  and string == 0:
-                if f.find("'''") != -1:
+                if f.find('\'\'\'') != -1:
+                    
                     f = f[3:]
                     string = 1
                 
-                if f.find("'''") != -1 and string == 1:
+                if f.find('\'\'\'') != -1 and string == 1:
                     string = 0
             
             if string in (0, 2)  and string == 0:
@@ -121,16 +230,10 @@ def check(path, folders, excludes, flags):
                or d.find('in xrange(0, len(') != -1 or d.find('in xrange(0,len(') != -1 or d.find('in xrange(len(') != -1:
                 errors += '%d: Use of "for ... in (x)range" instead of "enumerate"\n' % (l + 1)
             
-            if d.find('== True:') != -1 and d.find('if ') != -1 and d.find('or') == -1 and d.find('and') == -1:
-                errors += '%d: Use of "if x == True:" intead of "if x:"' % (l + 1)
-            
-            elif d.find('== True') != -1 and not 'B' in flags:
+            if d.find('== True') != -1 and not 'B' in flags:
                 errors += '%d: Testing for "True" without "is" operator\n' % (l + 1)
             
-            if d.find('== False:') != -1 and d.find('if ') != -1 and d.find('or') == -1 and d.find('and') == -1:
-                errors += '%d: Use of "if x == True:" intead of "if x:"' % (l + 1)
-            
-            elif d.find('== False') != -1 and not 'B' in flags:
+            if d.find('== False') != -1 and not 'B' in flags:
                 errors += '%d: Testing for "False" without "is" operator\n' % (l + 1)
             
             if not 'C' in flags:
@@ -167,7 +270,7 @@ def check(path, folders, excludes, flags):
                     
                     if var3 is None:
                         errors += '%d: Assignment of emtpy string instead of constant\n' % (l + 1)
-                
+            
             if d.strip().startswith('def '):
                 in_def = True
                 mdef = ''
@@ -217,7 +320,7 @@ def check(path, folders, excludes, flags):
             print '- %s/%s' % (path, foo)
             print errors
             state += 1
-        
+    
     return state
 
 if __name__ == '__main__':
