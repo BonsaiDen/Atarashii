@@ -133,7 +133,6 @@ class TextInput(gtk.TextView):
                 self.reset()
                 return True
     
-    
     def unfocus(self):
         if self.gui.mode == MODE_TWEETS:
             self.gui.html.focus_me()

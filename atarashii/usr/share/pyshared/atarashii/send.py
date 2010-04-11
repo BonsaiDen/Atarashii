@@ -122,7 +122,7 @@ class Edit(APICall):
     
     def on_error(self):
         gobject.idle_add(self.gui.html.remove, self.tweet_id)
-
+    
     def after_send(self):
         gobject.idle_add(self.gui.html.remove, self.tweet_id)
     
