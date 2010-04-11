@@ -29,13 +29,13 @@ try:
     sys.path.insert(0, PATH)
     import atarashii
     sys.path.pop(0)
-    
+
 except:
     if sys.path[0] == PATH:
         sys.path.pop(0)
     
     exit(75)
-    
+
 # Start Atarashii
 atarashii.debug(sys.path[0])
 exit(0)
