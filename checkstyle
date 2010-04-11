@@ -196,9 +196,13 @@ def check(path, folders, excludes, flags):
             
             if string == 0:
                 indent = len(d) - len(d.lstrip())
-                token_indent = get_next(lines, l + 1)
-                if indent != token_indent and d.strip() == '':
-                    errors += '%d: Invalid indentation of %d instead of %d\n' % (l + 1, indent, token_indent)
+                if not 'I' in flags:
+                    token_indent = get_next(lines, l + 1)
+                    if indent != token_indent and d.strip() == '':
+                        errors += '%d: Invalid indentation of %d instead of %d\n' % (l + 1, indent, token_indent)
+                
+                elif d.strip() == '' and d != '':
+                        errors += '%d: Invalid indentation of %d instead of 0\n' % (l + 1, indent)
             
             e = len(d.rstrip())
             if e != 0 and e != len(d.rstrip('\n')):
@@ -209,6 +213,12 @@ def check(path, folders, excludes, flags):
                    or d.find('",') != -1 or d.find(', "') != -1 or d.find('"\n') != -1 \
                    or d.find('["') != -1 or d.find('"]') != -1 or d.find('"""') != -1:
                     errors += '%d: Use of double quotes\n' % (l + 1)
+            
+            if 'S' in flags:
+                if d.find('\'\'') != -1 or d.find('(\'') != -1 or d.find('\')') != -1 \
+                   or d.find('\',') != -1 or d.find(', \'') != -1 or d.find('\'\n') != -1 \
+                   or d.find('[\'') != -1 or d.find('\']') != -1 or d.find('\'\'\'') != -1:
+                    errors += '%d: Use of single quotes\n' % (l + 1)
             
             if not 'O' in flags:
                 if d.startswith('class')  and d.find('(') == -1:
@@ -327,6 +337,18 @@ if __name__ == '__main__':
     if len(sys.argv) < 2:
         sys.argv = ['', '-r', os.getcwd() + '/atarashii', 'tweepy']
     
+    '''
+        -r = recursive
+        
+        -- options:
+        C = don't check for constants
+        O = don't check for old style classes
+        D = don't check for double quotes
+        S = check for single quotes
+        I = indentation should be stripped
+    
+    '''
+    
     sys.argv.pop(0)
     args = []
     rec = False
@@ -334,7 +356,7 @@ if __name__ == '__main__':
     for i in sys.argv:
         if i == '-r':
             rec = True
-        
+                    
         elif i.startswith('--'):
             flags = i[2:]
         
