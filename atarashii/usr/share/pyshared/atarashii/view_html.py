@@ -142,6 +142,9 @@ class ViewHTML(object):
         # Even removing the dom stuff per javascript doesn't help
         # I guess it's a problem with the html data not beeing freed somewhere
         # in the python c bindings
+        if self.load_history:
+            self.is_rendering_history = True
+        
         self.load_string(SPACES.sub(' ', data),
                          'text/html', 'UTF-8', 'file:///')
     
