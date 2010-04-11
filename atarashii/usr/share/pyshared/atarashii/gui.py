@@ -254,7 +254,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # GUI Switchers ------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def show_input(self, resize=True):
+    def show_input(self, resize=True, focus=False):
         self.progress.hide()
         self.progress_visible = False
         self.text_scroll.show()
@@ -267,6 +267,18 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.text.set_sensitive(True)
         self.set_multi_button(True)
         self.tabs.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL))
+        
+        # Focus current view
+        if focus:
+            if self.mode == MODE_MESSAGES:
+                self.message.focus_me()
+            
+            elif self.mode == MODE_TWEETS:
+                self.html.focus_me()
+            
+            # TODO implement search
+            else:
+                pass
     
     def progress_activity(self):
         self.progress.pulse()
