@@ -188,7 +188,7 @@ class HTML(view.HTMLView):
         if user is not None:
             if link in ('profile', 'avatar') \
                and user.lower() != self.main.username.lower():
-               
+                
                 reply = 'message:%s:%d:-1' % (user, self.get_sender(item).id)
                 self.add_menu_link(menu,
                                    lang.context_reply % menu_escape(user),
