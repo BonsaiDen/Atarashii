@@ -400,9 +400,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # Messages
         notify_message_list = []
         message_ids = []
+        message_view_ids = [i[0].id for i in self.message.items]
         for i in messages:
             img_file = self.get_image(i, True)
-            if not i.id in message_ids:
+            if not i.id in message_ids and not i.id in message_view_ids:
                 message_ids.append(i.id)
                 if i.sender.screen_name.lower() != username:
                     notify_message_list.append([lang.notification_message % \
@@ -422,11 +423,12 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         # Tweets
         notify_tweet_list = []
-        updates_ids = []
+        update_ids = []
+        html_view_ids = [i[0].id for i in self.html.items]
         for i in updates:
             img_file = self.get_image(i)
-            if not i.id in updates_ids:
-                updates_ids.append(i.id)
+            if not i.id in update_ids and not i.id in html_view_ids:
+                update_ids.append(i.id)
                 if i.user.screen_name.lower() != username:
                     if hasattr(i, 'retweeted_status'):
                         name = 'RT %s' % i.retweeted_status.user.screen_name
