@@ -14,7 +14,7 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
-# Sender Thread ----------------------------------------------------------------
+# API Call Threads -------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import gobject
 import threading
@@ -27,83 +27,111 @@ from constants import ST_SEND, ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE, \
 from constants import MODE_TWEETS, MODE_MESSAGES, UNSET_TEXT, UNSET_ID_NUM
 
 
-# Edit Tweets ------------------------------------------------------------------
+# Send/Edit base class ---------------------------------------------------------
 # ------------------------------------------------------------------------------
-class Edit(threading.Thread):
-    def __init__(self, main, tweet_id, text, reply):
+class APICall(threading.Thread):
+    def __init__(self, main, text):
         threading.Thread.__init__(self)
         self.gui = main.gui
         self.main = main
-        self.tweet_id = tweet_id
         self.text = text
-        self.reply = reply
         self.daemon = True
         self.start()
     
     def run(self):
-        # Delete the old tweet
+        if self.before():
+            try:
+                self.call()
+                
+                # Reset the GUI
+                self.main.unset('reply', 'retweet', 'edit', 'message')
+                gobject.idle_add(self.gui.text.set_text, UNSET_TEXT)
+                gobject.idle_add(self.gui.show_input, False, True)
+            
+            except (IOError, TweepError), error:
+                self.on_error()
+                gobject.idle_add(self.main.handle_error, error)
+            
+            self.main.unset_status(ST_SEND)
+            self.main.unset_status(ST_WAS_SEND)
+    
+    def after_send(self):
+        pass
+    
+    def send_tweet(self, text, reply_id):
+        if reply_id != UNSET_ID_NUM:
+            update = self.main.api.update_status(text,
+                                   in_reply_to_status_id = reply_id)
+        
+        else:
+            update = self.main.api.update_status(text)
+        
+        self.after_send()
+        self.gui.html.set_newest()
+        
+        imgfile = self.main.updater.get_image(update)
+        self.gui.html.update_list.append((update, imgfile))
+        gobject.idle_add(self.gui.html.push_updates)
+
+
+# Send Tweets/Messages ---------------------------------------------------------
+# ------------------------------------------------------------------------------
+class Send(APICall):
+    def before(self):
+        self.mode = self.main.gui.mode
+        self.main.set_status(ST_WAS_SEND)
+        return True
+    
+    def call(self):
+        if self.mode == MODE_TWEETS:
+            self.send_tweet(self.text, self.main.reply_id)
+        
+        elif self.mode == MODE_MESSAGES:
+            self.send_message(self.text)
+    
+    def send_message(self, text):
+        if self.main.message_id != UNSET_ID_NUM:
+            message = self.main.api.send_direct_message(text = text,
+                                    user_id = self.main.message_id)
+        
+        else:
+            message = self.main.api.send_direct_message(text = text,
+                                    screen_name = self.main.message_user)
+        
+        self.gui.message.set_newest()
+        imgfile = self.main.updater.get_image(message, True)
+        self.gui.message.update_list.append((message, imgfile))
+        gobject.idle_add(self.gui.message.push_updates)
+
+
+# Edit Tweets ------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class Edit(APICall):
+    def before(self):
+        self.tweet_id = self.main.edit_id
         if not self.delete():
             self.main.unset_status(ST_SEND)
             return False
         
-        # Send a new one!
-        self.main.set_status(ST_WAS_SEND)
-        try:
-            self.send_tweet(self.text)
-            
-            # Reset
-            self.main.unset('edit')
-            
-            # Reset Input
-            gobject.idle_add(self.gui.text.set_text, UNSET_TEXT)
-            gobject.idle_add(self.gui.show_input, False)
-            gobject.idle_add(self.gui.html.focus_me)
-        
-        # Show Error Message
-        except (IOError, TweepError), error:
-            gobject.idle_add(self.gui.html.remove, self.tweet_id)
-            gobject.idle_add(self.main.handle_error, error)
-        
-        self.main.unset_status(ST_SEND)
-        self.main.unset_status(ST_WAS_SEND)
-    
-    # Send a Tweet
-    def send_tweet(self, text):
-        # Reply
-        if self.main.edit_reply_id != UNSET_ID_NUM:
-            update = self.main.api.update_status(text,
-                                in_reply_to_status_id = self.main.edit_reply_id)
-            
-            self.gui.html.set_newest()
-            
-            # Remove old tweet and insert new one
-            gobject.idle_add(self.gui.html.remove, self.tweet_id)
-            self.insert_tweet(update)
-        
-        # Normal Tweet / Retweet
         else:
-            update = self.main.api.update_status(text)
-            self.gui.html.set_newest()
-            
-            # Remove old tweet and insert new one
-            gobject.idle_add(self.gui.html.remove, self.tweet_id)
-            self.insert_tweet(update)
+            self.main.set_status(ST_WAS_SEND)
+            return True
     
-    # Insert a tweet temporary into the timeline
-    def insert_tweet(self, update):
-        imgfile = self.main.updater.get_image(update)
-        self.gui.html.update_list.append((update, imgfile))
-        gobject.idle_add(self.gui.html.push_updates)
+    def call(self):
+        self.send_tweet(self.text, self.main.edit_reply_id)
     
-    # Delete a Tweet
+    def on_error(self):
+        gobject.idle_add(self.gui.html.remove, self.tweet_id)
+
+    def after_send(self):
+        gobject.idle_add(self.gui.html.remove, self.tweet_id)
+    
     def delete(self):
         self.main.set_status(ST_WAS_DELETE)
         try:
-            # Delete
             self.main.api.destroy_status(self.tweet_id)
             self.main.unset_status(ST_WAS_DELETE)
         
-        # Show error, but don't show the success message
         except (IOError, TweepError), error:
             gobject.idle_add(self.main.handle_error, error)
             return False
@@ -112,309 +140,170 @@ class Edit(threading.Thread):
         return True
 
 
-# Send Tweets/Messages ---------------------------------------------------------
+# Simple call base class -------------------------------------------------------
 # ------------------------------------------------------------------------------
-class Send(threading.Thread):
-    def __init__(self, main, mode, text):
+class SimpleAPICall(threading.Thread):
+    def __init__(self, main, *args):
         threading.Thread.__init__(self)
-        self.gui = main.gui
         self.main = main
-        self.mode = mode
-        self.text = text
+        self.args = args
         self.daemon = True
         self.start()
     
     def run(self):
-        self.main.set_status(ST_WAS_SEND)
+        self.before(self.main, *self.args)
         try:
-            if self.mode == MODE_TWEETS:
-                self.send_tweet(self.text)
-            
-            elif self.mode == MODE_MESSAGES:
-                self.send_message(self.text)
-            
-            else: # TODO implement search
-                pass
-            
-            # Reset GUI
-            gobject.idle_add(self.reset_gui)
+            self.call(self.main, *self.args)
+            self.on_success(self.main, *self.args)
         
-        # Show Error Message
         except (IOError, TweepError), error:
-            gobject.idle_add(self.main.handle_error, error)
+            self.error = error
+            self.on_error(self.main, *self.args)
+            print error
         
-        
-        self.main.unset_status(ST_SEND)
+        self.after(self.main, *self.args)
     
+    def before(self, *args):
+        pass
     
-    # Reset GUI ----------------------------------------------------------------
-    def reset_gui(self):
-        self.main.unset('reply', 'retweet', 'edit', 'message')
-        
-        # Reset Input
-        self.gui.text.set_text(UNSET_TEXT)
-        self.gui.show_input(False)
-        if self.gui.mode == MODE_MESSAGES:
-            self.gui.message.focus_me()
-        
-        elif self.gui.mode == MODE_TWEETS:
-            self.gui.html.focus_me()
-        
-        else: # TODO implement search
-            pass
-        
-        self.main.unset_status(ST_WAS_SEND)
+    def on_sucess(self, *args):
+        pass
     
-    # Send a Tweet
-    def send_tweet(self, text):
-        # Reply
-        if self.main.reply_id != UNSET_ID_NUM:
-            update = self.main.api.update_status(text,
-                                in_reply_to_status_id = self.main.reply_id)
-            
-            self.gui.html.set_newest()
-            self.insert_tweet(update)
-        
-        # Normal Tweet / Retweet
-        else:
-            update = self.main.api.update_status(text)
-            self.gui.html.set_newest()
-            self.insert_tweet(update)
+    def on_error(self, *args):
+        pass
     
-    # Insert a tweet temporary into the timeline
-    def insert_tweet(self, update):
-        imgfile = self.main.updater.get_image(update)
-        self.gui.html.update_list.append((update, imgfile))
-        gobject.idle_add(self.gui.html.push_updates)
-    
-    # Send a Direct Message
-    def send_message(self, text):
-        # Send Message
-        if self.main.message_id != UNSET_ID_NUM:
-            message = self.main.api.send_direct_message(text = text,
-                                        user_id = self.main.message_id)
-        
-        else:
-            message = self.main.api.send_direct_message(text = text,
-                                        screen_name = self.main.message_user)
-        
-        self.gui.message.set_newest()
-        
-        # Insert temporary message
-        imgfile = self.main.updater.get_image(message, True)
-        self.gui.message.update_list.append((message, imgfile))
-        gobject.idle_add(self.gui.message.push_updates)
+    def after(self, *args):
+        pass
 
 
 # New style Retweets -----------------------------------------------------------
 # ------------------------------------------------------------------------------
-class Retweet(threading.Thread):
-    def __init__(self, main, name, tweet_id):
-        threading.Thread.__init__(self)
-        self.gui = main.gui
-        self.main = main
-        self.name = name
-        self.tweet_id = tweet_id
-        self.daemon = True
-        self.start()
+class Retweet(SimpleAPICall):
+    def before(self, main, name, tweet_id):
+        main.set_status(ST_WAS_SEND)
+        main.set_status(ST_WAS_RETWEET)
     
-    def run(self):
-        self.main.set_status(ST_WAS_SEND)
-        self.main.set_status(ST_WAS_RETWEET)
-        try:
-            # Retweet
-            self.main.api.retweet(self.tweet_id)
-            
-            # Focus HTML
-            self.gui.show_input(False)
-            if self.gui.mode == MODE_MESSAGES:
-                self.gui.message.focus_me()
-            
-            elif self.gui.mode == MODE_TWEETS:
-                self.gui.html.focus_me()
-            
-            else: # TODO implement search
-                pass
-            
-            self.main.unset_status(ST_WAS_SEND)
-            gobject.idle_add(self.gui.show_retweet_info, self.name)
-        
-        except (IOError, TweepError), error:
-            gobject.idle_add(self.main.handle_error, error)
-        
-        self.main.unset_status(ST_SEND)
-        gobject.idle_add(self.gui.update_status, True)
+    def call(self, main, name, tweet_id):
+        main.api.retweet(tweet_id)
+    
+    def on_success(self, main, name, tweet_id):
+        main.unset_status(ST_WAS_SEND)
+        main.gui.show_input(False, True)
+        gobject.idle_add(main.gui.show_retweet_info, name)
+    
+    def on_error(self, main, name, tweet_id):
+        gobject.idle_add(main.handle_error, self.error)
+    
+    def after(self, main, name, tweet_id):
+        main.unset_status(ST_SEND)
+        gobject.idle_add(main.gui.update_status, True)
 
 
 # Deletes ----------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-class Delete(threading.Thread):
-    def __init__(self, main, tweet_id, message_id):
-        threading.Thread.__init__(self)
-        self.gui = main.gui
-        self.main = main
-        self.tweet_id = tweet_id
-        self.message_id = message_id
-        self.daemon = True
-        self.start()
+class Delete(SimpleAPICall):
+    def before(self, main, tweet_id, message_id):
+        main.set_status(ST_WAS_DELETE)
     
-    def run(self):
-        self.main.set_status(ST_WAS_DELETE)
-        try:
-            # Delete
-            if self.tweet_id != UNSET_ID_NUM:
-                self.main.api.destroy_status(self.tweet_id)
-            
-            elif self.message_id != UNSET_ID_NUM:
-                self.main.api.destroy_direct_message(self.message_id)
-            
-            # Focus HTML
-            self.gui.show_input(False)
-            if self.gui.mode == MODE_MESSAGES:
-                self.gui.message.focus_me()
-            
-            elif self.gui.mode == MODE_TWEETS:
-                self.gui.html.focus_me()
-            
-            else: # TODO implement search
-                pass
-            
-            self.main.unset_status(ST_WAS_DELETE)
-            
-            # Remove from view!
-            if self.tweet_id != UNSET_ID_NUM:
-                gobject.idle_add(self.gui.html.remove, self.tweet_id)
-            
-            elif self.message_id != UNSET_ID_NUM:
-                gobject.idle_add(self.gui.message.remove, self.message_id)
-            
-            # Show Info
-            gobject.idle_add(self.gui.show_delete_info,
-                             self.tweet_id, self.message_id)
-            
-            self.main.delete_tweet_id = UNSET_ID_NUM
-            self.main.delete_message_id = UNSET_ID_NUM
+    def call(self, main, tweet_id, message_id):
+        if tweet_id != UNSET_ID_NUM:
+            main.api.destroy_status(tweet_id)
         
-        except (IOError, TweepError), error:
-            gobject.idle_add(self.main.handle_error, error)
+        elif message_id != UNSET_ID_NUM:
+            main.api.destroy_direct_message(message_id)
+    
+    def on_success(self, main, tweet_id, message_id):
+        main.unset_status(ST_WAS_DELETE)
+        main.gui.show_input(False, True)
         
-        self.main.unset_status(ST_DELETE)
-        gobject.idle_add(self.gui.update_status, True)
+        if tweet_id != UNSET_ID_NUM:
+            gobject.idle_add(main.gui.html.remove, tweet_id)
+            main.delete_tweet_id = UNSET_ID_NUM
+        
+        elif message_id != UNSET_ID_NUM:
+            gobject.idle_add(main.gui.message.remove, message_id)
+            main.delete_message_id = UNSET_ID_NUM
+        
+        gobject.idle_add(main.gui.show_delete_info, tweet_id, message_id)
+    
+    def on_error(self, main, tweet_id, message_id):
+        gobject.idle_add(main.handle_error, self.error)
+    
+    def after(self, main, tweet_id, message_id):
+        main.unset_status(ST_DELETE)
+        gobject.idle_add(main.gui.update_status, True)
 
 
 # Favorites --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-class Favorite(threading.Thread):
-    def __init__(self, main, tweet_id, mode, name):
-        threading.Thread.__init__(self)
-        self.gui = main.gui
-        self.main = main
-        self.tweet_id = tweet_id
-        self.mode = mode
-        self.name = name
-        self.daemon = True
-        self.start()
+class Favorite(SimpleAPICall):
+    def call(self, main, tweet_id, mode, name):
+        if mode:
+            main.api.create_favorite(tweet_id)
+        
+        else:
+            main.api.destroy_favorite(tweet_id)
     
-    def run(self):
-        try:
-            # Create Favorite
-            if self.mode:
-                self.main.api.create_favorite(self.tweet_id)
-            
-            # Destroy it
-            else:
-                self.main.api.destroy_favorite(self.tweet_id)
-            
-            gobject.idle_add(self.gui.html.favorite, self.tweet_id, self.mode)
-        
-        except (IOError, TweepError), error:
-            print error
-            gobject.idle_add(self.gui.show_favorite_error, self.name, self.mode)
-        
-        del self.main.favorites_pending[self.tweet_id]
+    def on_success(self, main, tweet_id, mode, name):
+        gobject.idle_add(main.gui.html.favorite, tweet_id, mode)
+    
+    def on_error(self, main, tweet_id, mode, name):
+        gobject.idle_add(main.gui.show_favorite_error, mode, name)
+    
+    def after(self, main, tweet_id, mode, name):
+        del main.favorites_pending[tweet_id]
 
 
 # Friend information -----------------------------------------------------------
 # ------------------------------------------------------------------------------
-class Friends(threading.Thread):
-    def __init__(self, main, name, menu, callback):
-        threading.Thread.__init__(self)
-        self.main = main
-        self.name = name
+class Friends(SimpleAPICall):
+    def before(self, main, name, menu, callback):
         self.menu = menu
-        self.callback = callback
-        self.daemon = True
-        self.start()
     
-    def run(self):
-        try:
-            friend = self.main.api.show_friendship(
-                                   target_screen_name = self.name)
-        
-        except (IOError, TweepError), error:
-            print error
-            friend = None
-        
+    def call(self, main, name, menu, callback):
+        self.friend = self.main.api.show_friendship(target_screen_name = name)
+    
+    def on_success(self, main, name, menu, callback):
         if self.menu is not None:
-            gobject.idle_add(self.callback, self.menu, friend)
+            gobject.idle_add(callback, self.menu, self.friend)
 
 
 # Follow -----------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-class Follow(threading.Thread):
-    def __init__(self, main, user_id, name, mode):
-        threading.Thread.__init__(self)
-        self.main = main
-        self.gui = self.main.gui
-        self.user_id = user_id
-        self.name = name
-        self.mode = mode
-        self.daemon = True
-        self.start()
+class Follow(SimpleAPICall):
+    def call(self, main, user_id, name, mode):
+        if mode:
+            main.api.create_friendship(user_id = user_id)
+        
+        else:
+            main.api.destroy_friendship(user_id = user_id)
     
-    def run(self):
-        try:
-            if self.mode:
-                self.main.api.create_friendship(user_id = self.user_id)
-            
-            else:
-                self.main.api.destroy_friendship(user_id = self.user_id)
-            
-            gobject.idle_add(self.gui.show_follow_info, self.mode, self.name)
-        
-        except (IOError, TweepError), error:
-            print error
-            gobject.idle_add(self.gui.show_follow_error, self.mode, self.name)
-        
-        del self.main.follow_pending[self.name.lower()]
+    def on_success(self, main, user_id, name, mode):
+        gobject.idle_add(main.gui.show_follow_info, mode, name)
+    
+    def on_error(self, main, user_id, name, mode):
+        gobject.idle_add(main.gui.show_follow_error, mode, name)
+    
+    def after(self, main, user_id, name, mode):
+        del main.follow_pending[name.lower()]
 
 
-# Block -----------------------------------------------------------------------
+# Block ------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-class Block(threading.Thread):
-    def __init__(self, main, user_id, name, mode):
-        threading.Thread.__init__(self)
-        self.main = main
-        self.gui = self.main.gui
-        self.user_id = user_id
-        self.name = name
-        self.mode = mode
-        self.daemon = True
-        self.start()
+class Block(SimpleAPICall):
+    def call(self, main, user_id, name, mode):
+        if mode:
+            main.api.create_block(user_id = user_id)
+        
+        else:
+            main.api.destroy_block(user_id = user_id)
     
-    def run(self):
-        try:
-            if self.mode:
-                self.main.api.create_block(user_id = self.user_id)
-            
-            else:
-                self.main.api.destroy_block(user_id = self.user_id)
-            
-            gobject.idle_add(self.gui.show_block_info, self.mode, self.name)
-        
-        except (IOError, TweepError), error:
-            print error
-            gobject.idle_add(self.gui.show_block_error, self.mode, self.name)
-        
-        del self.main.block_pending[self.name.lower()]
+    def on_success(self, main, user_id, name, mode):
+        gobject.idle_add(main.gui.show_block_info, mode, name)
+    
+    def on_error(self, main, user_id, name, mode):
+        gobject.idle_add(main.gui.show_block_error, mode, name)
+    
+    def after(self, main, user_id, name, mode):
+        del main.block_pending[name.lower()]
 

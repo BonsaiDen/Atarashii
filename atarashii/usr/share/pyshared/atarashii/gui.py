@@ -560,7 +560,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                              lang.error_block % name if mode \
                              else lang.error_unblock % name, lang.error_title)
     
-    def show_favorite_error(self, name, mode):
+    def show_favorite_error(self, mode, name):
         dialog.MessageDialog(self, MESSAGE_ERROR,
                              lang.error_favorite_on % lang.name(name) \
                              if mode else lang.error_favorite_off \

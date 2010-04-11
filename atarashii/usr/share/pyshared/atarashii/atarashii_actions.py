@@ -149,10 +149,10 @@ class AtarashiiActions(object):
             self.gui.set_status(lang.status_send)
         
         if edit:
-            send.Edit(self, self.edit_id, text, self.edit_reply_id)
+            send.Edit(self, text)
         
         else:
-            send.Send(self, self.gui.mode, text)
+            send.Send(self, text)
     
     # New style Retweet
     def retweet(self, name, tweet_id, new_style=False):
