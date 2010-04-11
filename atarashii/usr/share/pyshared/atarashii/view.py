@@ -53,6 +53,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.connect('button-release-event', self.text.html_focus)
         self.connect('button-press-event', self.on_button)
         self.connect('populate-popup', self.on_popup)
+        
         self.friend_thread = None
         self.popup_open = False
         self.menu_no_fake_move = False
@@ -65,6 +66,11 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.last_scroll = 0
         self.connect('scroll-event', self.on_scroll)
         self.connect('key-release-event', self.on_key)
+        
+        # Fix scrolling
+        self.scroll = scroll
+        self.is_rendering_history = False
+        self.scroll.connect('expose-event', self.on_draw)
         
         # Better link tooltips
         self.last_hovered_link = HTML_UNSET_TEXT
@@ -83,7 +89,6 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.scrolled = True
         
         # Other Stuff
-        self.scroll = scroll
         self.set_maintains_back_forward_list(False)
         self.parser = twp.Parser()
         self.item_count = 20
@@ -219,6 +224,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         # Don't add items with the same ID twice
         if not found:
             if append:
+                self.history_count += 1
                 self.items.insert(0, item)
             
             else:
