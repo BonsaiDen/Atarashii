@@ -175,6 +175,10 @@ def check(path, folders, excludes, flags):
         last_empty = True
         last_comment = False
         last_def = False
+        last_class = False
+        last_decorator = False
+        empty_count = 0
+        
         for l, d in enumerate(lines):
             f = d.strip()
             if string in (0, 1)  and string == 0:
@@ -299,18 +303,38 @@ def check(path, folders, excludes, flags):
             if dd == 'return':
                 errors += '%d: Empty return statement\n' % (l + 1)
             
+            if dd.startswith('def ') and not last_empty and not last_class and not last_decorator:
+                errors += '%d: No newline infront of function/method definition\n' % (l + 1)
+            
+            if dd.startswith('class '):
+                if empty_count < 2:
+                    errors += '%d: Only %d newlines before class definition instead of 2\n' % (l + 1, empty_count)
+                
+                elif empty_count > 2:
+                    errors += '%d: %d newlines infront of class definition instead of 2\n' % (l + 1, empty_count)
+            
             if dd.startswith('else:') or dd.startswith('elif '):
                 if not last_empty:
-                    errors += '%d: No newline line before else/elif statement\n\n' % (l + 1)
+                    errors += '%d: No newline infront of else/elif statement\n' % (l + 1)
             
             if dd.startswith('#') and not last_comment and not last_empty and not last_def:
-                errors += '%d: No newline before comment\n' % (l + 1)
+                errors += '%d: No newline infront of comment\n' % (l + 1)
             
             last_def = dd.startswith('def ') or dd.startswith('try:') \
                        or dd.startswith('except ') or dd.startswith('except:')
             
-            last_empty = dd == '' or dd.startswith('#') or dd.endswith('\\')
             last_comment = dd.startswith('#')
+            last_class = dd.startswith('class')
+            last_decorator = dd.startswith('@')
+            
+            if dd == '':
+                empty_count += 1
+            
+            elif not last_comment:
+                empty_count = 0
+            
+            if not last_comment:
+                last_empty = dd == '' or dd.endswith('\\')
         
         count = -1
         for l in lines[::-1]:
@@ -332,6 +356,7 @@ def check(path, folders, excludes, flags):
             state += 1
     
     return state
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
@@ -356,7 +381,7 @@ if __name__ == '__main__':
     for i in sys.argv:
         if i == '-r':
             rec = True
-                    
+        
         elif i.startswith('--'):
             flags = i[2:]
         
