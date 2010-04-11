@@ -22,7 +22,7 @@ from __init__ import __version__ as VERSION
 from settings import CRASH_LOG_FILE
 
 from constants import START_TIME, UNSET_HOST, ENTITIES, STRIP, SHORT_REGEX, \
-                      SHORTS
+                      SHORTS, BASE58
 
 import sys
 import time
@@ -139,7 +139,7 @@ class URLShorter(threading.Thread):
             self.__class__.url_list[url] = short
             return short
         
-        except IOError:
+        except (IOError, ValueError):
             self.__class__.black_list.append(url)
             return url
     
@@ -152,6 +152,34 @@ class URLShorter(threading.Thread):
             video = urlparse.parse_qs(parsed_url.query).get('v', None)
             if video is not None:
                 return 'http://youtu.be/%s' % video[0]
+        
+        # Special handling of flickr links, those are base58 encoded
+        elif parsed_url.netloc.find('flickr.com') != -1:
+            url_parts = parsed_url.path.strip('/').split('/')
+            
+            # Find the last parsable number in the url, this should be the
+            # photo id
+            photo_id = -1
+            for i in url_parts[::-1]:
+                try:
+                    photo_id = long(i)
+                    break
+                
+                except ValueError:
+                    pass
+            
+            # Give up, we could not find the photo id
+            if photo_id == -1:
+                raise ValueError
+            
+            # Base58 encode the id
+            url = ''
+            while photo_id >= 58:
+                div, mod = divmod(photo_id, 58)
+                url = BASE58[mod] + url
+                photo_id = int(div)
+            
+            return 'http://flic.kr/p/%s' % BASE58[photo_id] + url
         
         # Handle everything else
         else:

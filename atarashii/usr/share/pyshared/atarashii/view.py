@@ -211,6 +211,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     
     def add(self, item, append=False):
         # Replace mentions by replies, sometimes the timeline might lag behind
+        # so we have to handle this
         found = False
         replaced = False
         for e, i in enumerate(self.items):

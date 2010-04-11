@@ -39,6 +39,9 @@ UNSET_SOUND = ''         # Must be ''
 UNSET_HOST = ''          # Must be ''
 USERNAME_CHARS = string.ascii_letters + '_1234567890'
 
+# Note the missing lowercase l, the uppercase I and the 0(zero)
+BASE58 = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
+
 # Rewteets
 RETWEET_NEW = 1          # Can be anything
 RETWEET_OLD = 2          # Can be anything
