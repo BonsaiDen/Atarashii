@@ -152,15 +152,14 @@ class URLShorter(threading.Thread):
             video = urlparse.parse_qs(parsed_url.query).get('v', None)
             if video is not None:
                 return 'http://youtu.be/%s' % video[0]
+            
+            else:
+                raise ValueError
         
         # Special handling of flickr links, those are base58 encoded
         elif parsed_url.netloc.find('flickr.com') != -1:
-            url_parts = parsed_url.path.strip('/').split('/')
-            
-            # Find the last parsable number in the url, this should be the
-            # photo id
             photo_id = -1
-            for i in url_parts[::-1]:
+            for i in parsed_url.path.strip('/').split('/')[::-1]:
                 try:
                     photo_id = long(i)
                     break
