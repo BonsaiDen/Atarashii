@@ -118,17 +118,15 @@ class ViewHelpers(object):
         self.has_newitems = False
         self.fake_move(self.mouse_position)
     
-    def on_draw(self, *args):        
+    def on_draw(self, *args):
         if self.is_rendering_history:
-            pos = self.scroll.get_vscrollbar().get_adjustment().get_value()
-            
-            if pos == 0.0:
+            if self.scroll.get_vscrollbar().get_adjustment().get_value() == 0.0:
                 return True
             
             else:
                 self.is_rendering_history = False
                 gobject.timeout_add(10, self.scroll.queue_draw)
-                return True    
+                return True
     
     # Fakeman! Roger Buster!
     # This fixes an issue where the reply/favorite links wouldn't disapear if
