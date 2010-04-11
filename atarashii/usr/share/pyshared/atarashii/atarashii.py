@@ -319,7 +319,7 @@ class Atarashii(AtarashiiActions):
             return icon
         
         else:
-            return os.path.join(self.debug_path, 'atarashii'+ icon)
+            return os.path.join(self.debug_path, 'atarashii' + icon)
     
     def get_resource(self, res):
         if self.debug_path is None:
