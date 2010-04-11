@@ -3,11 +3,11 @@ import os
 import sys
 import re
 
+DEFAULTS = ['', '-r', os.getcwd() + '/atarashii', 'tweepy']
+
 assign = re.compile('=\w')
 assign2 = re.compile('\w=')
-
-
-DEFAULTS = ['', '-r', os.getcwd() + '/atarashii', 'tweepy']
+number_regex = re.compile('(\-[0-9]+)')
 
 def get_next(lines, start):
     token_indent = 0
@@ -57,7 +57,7 @@ def get_strings(data):
             continue
         
         if e < len(data) - 3 and mode == 0:
-            tri = data[e:e+3]
+            tri = data[e:e + 3]
             if bigmode == 0 and tri == '"""':
                 string = ''
                 start = e
@@ -165,7 +165,7 @@ def check(path, folders, excludes, flags, checkstyle):
             ress = ''
             for ei in ess:
                 if ei != '\n':
-                    ress += '-'
+                    ress += '&'
                 
                 else:
                     ress += '\n'
@@ -253,6 +253,7 @@ def check(path, folders, excludes, flags, checkstyle):
             if d.find('== False') != -1 and not 'B' in flags:
                 errors += '%d: Testing for "False" without "is" operator\n' % (l + 1)
             
+            
             if not 'C' in flags and not checkstyle_con:
                 wp = d.find('= ""')
                 wp2 = d.find('= \'\'')
@@ -338,6 +339,25 @@ def check(path, folders, excludes, flags, checkstyle):
             
             if not last_comment:
                 last_empty = dd == '' or dd.endswith('\\')
+                
+                ld = d.replace('+=', '  ').replace('-=', '  ').replace('*=', '  ').replace('/=', '  ').replace('//', '  ').replace('**', '  ').replace(', *', '    ').replace('(*', '').replace('lambda *', '')
+                ld = number_regex.sub(lambda o: '', ld)
+                cpos = ld.rfind('#')
+                if cpos != -1:
+                    if cpos > ld.rfind('\'') and cpos > ld.rfind('"'):
+                        ld = dd[cpos:]
+                
+                if ld.count('+') != ld.count(' + '):
+                    errors += '%d: Missing spaces around "+" operator\n' % (l + 1)
+                
+                if ld.count('-') != ld.count(' - '):
+                    errors += '%d: Missing spaces around "-" operator\n' % (l + 1)
+                
+                if ld.count('*') != ld.count(' * '):
+                    errors += '%d: Missing spaces around "*" operator\n' % (l + 1)
+                
+                if ld.count('/') != ld.count(' / '):
+                    errors += '%d: Missing spaces around "/" operator\n' % (l + 1)
         
         count = -1
         for l in lines[::-1]:
