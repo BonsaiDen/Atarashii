@@ -170,6 +170,7 @@ class SettingsDialog(Dialog):
             button.set_sensitive(False)
         
         self.file_chooser = None
+        
         def select_file(button, snd):
             self.file_chooser = SoundChooser(self.dlg)
             self.file_chooser.open_file(get_sound(snd), snd, set_sound)
@@ -225,6 +226,7 @@ class SettingsDialog(Dialog):
         
         # Save -----------------------------------------------------------------
         oldusername = self.main.username
+        
         def save(*args):
             self.saved = True
             
