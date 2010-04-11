@@ -1,20 +1,23 @@
 atarashii (0.99.20c-1) all;
 
+  ~ No longer allow other characters than 'abcdefghijklmnopqrstuvwxyz_123456789'
+    in account names.
   * Fix for tweet notifications not beeing in the right order in some cases.
-
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 11 Apr 2010 02:14:00 +0200
+  * Internal cleanup of the api calling code.
+  
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 11 Apr 2010 21:22:00 +0200
 
 atarashii (0.99.20b-1) all;
 
   * Quick fix for the broken 0.99.20a.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 11 Apr 2010 01:17:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 11 Apr 2010 01:17:00 +0200
 
 atarashii (0.99.20a-1) all;
 
   * Fix handling of network errors.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 11 Apr 2010 01:06:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 11 Apr 2010 01:06:00 +0200
 
 atarashii (0.99.20-1) all;
 
