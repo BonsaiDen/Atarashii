@@ -95,6 +95,7 @@ class UpdaterTweet(object):
         self.refresh_now = False
         self.update_limit()
         updates = updates + mentions
+        updates.sort(key = lambda u: u.id, reverse = True)
         return updates
     
     # Tweet History
