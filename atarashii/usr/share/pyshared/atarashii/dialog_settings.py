@@ -26,7 +26,7 @@ import os
 from language import LANG as lang
 from dialog import Dialog, MessageDialog
 from utils import URLShorter, URLExpander
-from constants import SHORTS_LIST
+from constants import SHORTS_LIST, USERNAME_CHARS
 from settings import THEME_SOUNDS, THEME_DIR
 
 from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING
@@ -443,23 +443,26 @@ class AccountDialog(Dialog):
         self.callback = callback
         self.dlg.set_title(title)
         self.username = username
-        self.get('username').set_text(username)
-        self.get('username').grab_focus()
+        self.user.set_text(username)
+        self.user.grab_focus()
     
     def on_init(self):
+        self.user = self.get('username')
         self.close_button.set_label(lang.account_button)
         cancel_button = self.get('cancelbutton')
         cancel_button.set_label(lang.account_button_cancel)
         self.get('user').set_text(lang.account_username)
+        self.user.connect('changed', self.on_changed)
         
         def save(*args):
-            username = self.get('username').get_text().strip()
+            username = self.user.get_text().strip()
             if username == UNSET_USERNAME:
-                self.get('username').grab_focus()
+                user.grab_focus()
             
             elif username in self.parent.user_accounts \
                  and username != self.username:
-                self.get('username').grab_focus()
+                
+                user.grab_focus()
             
             else:
                 self.callback(username)
@@ -467,4 +470,8 @@ class AccountDialog(Dialog):
         
         self.close_button.connect('clicked', save)
         cancel_button.connect('clicked', self.on_close)
+    
+    def on_changed(self, *args):
+        text = self.user.get_text().strip()
+        self.user.set_text(''.join([i for i in text if i in USERNAME_CHARS]))
 

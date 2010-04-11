@@ -19,6 +19,7 @@
 import sys
 import time
 import re
+import string
 
 # Startup time
 START_TIME = time.time()
@@ -36,6 +37,7 @@ UNSET_TIMEOUT = -1       # Must be lower than 0
 UNSET_ERROR = ''         # Must be ''
 UNSET_SOUND = ''         # Must be ''
 UNSET_HOST = ''          # Must be ''
+USERNAME_CHARS = string.ascii_letters + '_1234567890'
 
 # Rewteets
 RETWEET_NEW = 1          # Can be anything
