@@ -54,6 +54,9 @@ class APICall(threading.Thread):
             self.main.unset_status(ST_SEND)
             self.main.unset_status(ST_WAS_SEND)
     
+    def on_error(self):
+        pass
+    
     def after_send(self):
         pass
     
