@@ -4,12 +4,11 @@ atarashii (0.99.20c-1) all;
   ~ No longer allow other characters than 'abcdefghijklmnopqrstuvwxyz_123456789'
     in account names.
   * Fix for scrolling issues when loading "more".
-  * Fix for issues with the tweet count in some cases after resetting the 
-    loaded history.
+  * Fix for wrong tweet counts in some cases when ressting the loaded history.
   * Fix for tweet notifications not beeing in the right order in some cases.
   * Internal cleanup of the api calling code.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 12 Apr 2010 01:38:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 12 Apr 2010 21:33:00 +0200
 
 atarashii (0.99.20b-1) all;
 
