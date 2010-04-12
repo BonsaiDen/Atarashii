@@ -37,9 +37,10 @@ UNSET_TIMEOUT = -1       # Must be lower than 0
 UNSET_ERROR = ''         # Must be ''
 UNSET_SOUND = ''         # Must be ''
 UNSET_HOST = ''          # Must be ''
+UNSET_URL = ''           # Must be ''
 USERNAME_CHARS = string.ascii_letters + '_1234567890'
 
-# Note the missing lowercase l, the uppercase I and the 0(zero)
+# Note the missing lowercase l, the uppercase I, the O and the 0(zero)
 BASE58 = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
 
 # Rewteets

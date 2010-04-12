@@ -21,10 +21,9 @@ import threading
 
 from utils import TweepError
 
+from constants import MODE_TWEETS, MODE_MESSAGES, UNSET_TEXT, UNSET_ID_NUM
 from constants import ST_SEND, ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE, \
                       ST_DELETE
-
-from constants import MODE_TWEETS, MODE_MESSAGES, UNSET_TEXT, UNSET_ID_NUM
 
 
 # Send/Edit base class ---------------------------------------------------------

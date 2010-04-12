@@ -22,7 +22,7 @@ from __init__ import __version__ as VERSION
 from settings import CRASH_LOG_FILE
 
 from constants import START_TIME, UNSET_HOST, ENTITIES, STRIP, SHORT_REGEX, \
-                      SHORTS, BASE58
+                      SHORTS, BASE58, UNSET_URL
 
 import sys
 import time
@@ -172,7 +172,7 @@ class URLShorter(threading.Thread):
                 raise ValueError
             
             # Base58 encode the id
-            url = ''
+            url = UNSET_URL
             while photo_id >= 58:
                 div, mod = divmod(photo_id, 58)
                 url = BASE58[mod] + url
