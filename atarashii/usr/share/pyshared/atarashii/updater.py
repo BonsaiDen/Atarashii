@@ -23,9 +23,10 @@ import os
 import gobject
 import calendar
 import socket
+import hashlib
 
 from language import LANG as lang
-from settings import HOME_DIR
+from settings import ATARASHII_DIR
 from utils import tweepy, TweepError
 from updater_message import UpdaterMessage
 from updater_tweet import UpdaterTweet
@@ -475,10 +476,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # Show login notification
         if last:
             gobject.idle_add(self.main.show_start_notifications)
-            
-            # Force Title Update
             gobject.idle_add(self.main.on_login_complete)
-    
     
     # Calculate refresh interval based on rate limit information
     def update_limit(self):
@@ -510,34 +508,23 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             self.main.unset_status(ST_WARNING_RATE)
     
     def get_image(self, item, message=False):
-        if message:
-            url = item.sender.profile_image_url
-            user_id = item.sender.id
-            name = item.sender.screen_name
+        user = item.sender if message else item.retweeted_status.user \
+               if hasattr(item, 'retweeted_status') else item.user
         
-        else:
-            if hasattr(item, 'retweeted_status'):
-                url = item.retweeted_status.user.profile_image_url
-                user_id = item.retweeted_status.user.id
-                name = item.retweeted_status.user.screen_name
-            
-            else:
-                url = item.user.profile_image_url
-                user_id = item.user.id
-                name = item.user.screen_name
+        url = user.profile_image_url \
+              if not self.main.settings.is_true('unicorns', False) \
+              else 'http://unicornify.appspot.com/avatar/%s?s=128' \
+              % hashlib.md5(str(user.id)).hexdigest()
         
-        image = url[url.rfind('/') + 1:]
-        img_dir = os.path.join(HOME_DIR, '.atarashii')
-        if not os.path.exists(img_dir):
-            os.mkdir(img_dir)
+        img = os.path.join(ATARASHII_DIR, str(user.id) + '_' \
+                           + url[url.rfind('/') + 1:].split('?')[0])
         
-        img_file = os.path.join(img_dir, str(user_id) + '_' + image)
-        if not os.path.exists(img_file):
-            urllib.urlretrieve(url, img_file)
+        if not os.path.exists(img):
+            urllib.urlretrieve(url, img)
         
-        # Check for user picture!
-        if name.lower() == self.main.username.lower():
-            self.main.set_user_picture(img_file)
+        # Check for user picture
+        if user.screen_name.lower() == self.main.username.lower():
+            self.main.set_user_picture(img)
         
-        return img_file
+        return img
 
