@@ -118,9 +118,20 @@ class ViewHelpers(object):
         self.has_newitems = False
         self.fake_move(self.mouse_position)
     
+    def on_scroll(self, view, event):
+        # FIXME sometimes this still doesn't remove the menu
+        self.current_scroll = self.scroll.get_vscrollbar().get_value()
+        gobject.timeout_add(10, self.fake_move, self.mouse_position)
+    
+    def fix_scroll(self):
+        if self.scroll_to != -1 and self.gui.mode == self.mode_type:
+            self.scroll.get_vscrollbar().set_value(self.scroll_to)
+            gobject.timeout_add(25, self.check_offset)
+            self.scroll_to = -1
+    
     def on_draw(self, *args):
         if self.is_rendering_history:
-            if self.scroll.get_vscrollbar().get_adjustment().get_value() == 0.0:
+            if self.scroll.get_vscrollbar().get_value() == 0.0:
                 return True
             
             else:
@@ -159,17 +170,6 @@ class ViewHelpers(object):
             self.mouse_position = (event.x, event.y)
         
         self.fake_mouse = False
-    
-    def on_scroll(self, view, event):
-        # FIXME sometimes this still doesn't remove the menu
-        self.current_scroll = self.scroll.get_vscrollbar().get_value()
-        gobject.timeout_add(10, self.fake_move, self.mouse_position)
-    
-    def fix_scroll(self):
-        if self.scroll_to != -1 and self.gui.mode == self.mode_type:
-            self.scroll.get_vscrollbar().set_value(self.scroll_to)
-            gobject.timeout_add(25, self.check_offset)
-            self.scroll_to = -1
     
     def on_key(self, view, event):
         # FIXME 65360 = Begin, it seems that the constant is broken, at least
