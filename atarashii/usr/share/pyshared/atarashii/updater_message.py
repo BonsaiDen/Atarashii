@@ -107,7 +107,7 @@ class UpdaterMessage(object):
         
         self.message.load_history_id = HTML_UNSET_ID
         self.main.unset_status(ST_HISTORY | ST_NETWORK_FAILED)
-                
+        
         def update_view():
             self.message.push_updates()
             self.gui.show_input()
