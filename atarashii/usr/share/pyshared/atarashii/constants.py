@@ -19,7 +19,6 @@
 import sys
 import time
 import re
-import string
 
 # Startup time
 START_TIME = time.time()
@@ -38,7 +37,9 @@ UNSET_ERROR = ''         # Must be ''
 UNSET_SOUND = ''         # Must be ''
 UNSET_HOST = ''          # Must be ''
 UNSET_URL = ''           # Must be ''
-USERNAME_CHARS = string.ascii_letters + '_1234567890'
+USERNAME_CHARS = 'abcdefghijklmnopqrstuvwxyz' \
+                 + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' \
+                 + '_1234567890'
 
 # Note the missing lowercase l, the uppercase I, the O and the 0(zero)
 BASE58 = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
