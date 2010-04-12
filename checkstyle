@@ -3,7 +3,7 @@ import os
 import sys
 import re
 
-DEFAULTS = ['', '-r', os.getcwd() + '/atarashii', 'tweepy']
+DEFAULTS = ['', '-r', '--P', os.getcwd() + '/atarashii', 'tweepy']
 
 assign = re.compile('=\w')
 assign2 = re.compile('\w=')
@@ -253,6 +253,8 @@ def check(path, folders, excludes, flags, checkstyle):
             if d.find('== False') != -1 and not 'B' in flags:
                 errors += '%d: Testing for "False" without "is" operator\n' % (l + 1)
             
+            if d.strip().startswith('print ') and 'P' in flags:
+                errors += '%d: print statement\n' % (l + 1)
             
             if not 'C' in flags and not checkstyle_con:
                 wp = d.find('= ""')
