@@ -19,6 +19,7 @@
 import os
 import urllib
 import time
+import locale
 
 from constants import UNSET_SETTING, UNSET_ID_NUM
 
@@ -38,6 +39,20 @@ CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
 CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')
 ERROR_LOG_FILE = os.path.join(ATARASHII_DIR, 'error.log')
 LOGOUT_FILE = os.path.join(ATARASHII_DIR, 'logout')
+
+
+# Log errors to ~/.atarashii/error.log
+# Needs to be defined here because of the sound imports below
+# (sound.py imports log_error)
+def log_error(error):
+    locale.setlocale(locale.LC_TIME, 'C')
+    with open(ERROR_LOG_FILE, 'ab') as f:
+        f.write('%s %s\n' \
+                % (time.strftime('%a %b %d %H:%M:%S +0000 %Y', time.gmtime()),
+                   error))
+    
+    locale.setlocale(locale.LC_TIME, '')
+
 
 # Theme sounds
 from sounds import get_sound_files, get_sound_dirs
@@ -81,7 +96,7 @@ class Settings(object):
                         self.values[urllib.unquote(name)] = value
                 
                 except ValueError, error:
-                    print error
+                    log_error('%s' % error)
         
         except IOError:
             self.values = {}
@@ -176,7 +191,7 @@ class Settings(object):
             self['autostart'] = mode
         
         except IOError:
-            print 'Could not set autostart'
+            log_error('Could not set autostart')
     
     def check_autostart(self):
         if os.path.exists(DESKTOP_FILE):
@@ -191,7 +206,7 @@ class Settings(object):
                     self['autostart'] = True
             
             except (OSError, IOError):
-                print 'Could not check autostart'
+                log_error('Could not check autostart')
                 self['autostart'] = False
         
         else:
@@ -206,7 +221,7 @@ class Settings(object):
             with open(CRASH_FILE, 'rb') as f:
                 self['crash_reason'] = f.read().strip()
             
-            print 'ERROR: Atarashii crashed!'
+            log_error('Atarashii crashed')
     
     
     # Avatar Cache Handling ----------------------------------------------------
@@ -220,7 +235,7 @@ class Settings(object):
                         os.unlink(cache_file)
                     
                     except (OSError, IOError):
-                        print 'Could not delete file %s' % cache_file
+                        log_error('Could not delete file %s' % cache_file)
 
 
 # Create Crashfile -------------------------------------------------------------
@@ -235,5 +250,5 @@ def crash_file(mode, data=None):
             os.unlink(CRASH_FILE)
     
     except (OSError, IOError):
-        print 'IO on crashfile failed'
+        log_error('IO on crashfile failed')
 

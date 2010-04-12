@@ -25,7 +25,6 @@ import gnome.ui
 import os
 import sys
 import calendar
-import locale
 import time
 import math
 import socket
@@ -34,7 +33,7 @@ from urllib2 import URLError
 import send
 
 from language import LANG as lang
-from settings import LOGOUT_FILE, ERROR_LOG_FILE
+from settings import LOGOUT_FILE, log_error
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR, UNSET_USERNAME
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
@@ -341,20 +340,8 @@ class AtarashiiActions(object):
         self.gui.show_error(code, error_code, error_errno, rate_error)
         
         # Log the error
-        self.log_error(code, error_errno)
-    
-    
-    # Log errors to ~/.atarashii/error.log -------------------------------------
-    # --------------------------------------------------------------------------
-    def log_error(self, code, error_errno):
         if error_errno is None:
             error_errno = 0
         
-        locale.setlocale(locale.LC_TIME, 'C')
-        with open(ERROR_LOG_FILE, 'ab') as f:
-            f.write('%s %s %d\n' \
-                    % (time.strftime('%a %b %d %H:%M:%S +0000 %Y',
-                       time.gmtime()), ERR_MAPPING[code], error_errno))
-        
-        locale.setlocale(locale.LC_TIME, '')
+        log_error('%s %d' % (ERR_MAPPING[code], error_errno))
 

@@ -21,6 +21,8 @@ import os
 import threading
 import subprocess
 
+from settings import log_error
+
 
 def get_sound_theme(theme_name=None):
     if theme_name is None:
@@ -108,7 +110,7 @@ class Sound(threading.Thread):
                 try:
                     if player is not None:
                         player.kill()
-                        print 'Sound Zombieeeees!'
+                        log_error('Sound zombie')
                 
                 except OSError:
                     pass
@@ -116,10 +118,10 @@ class Sound(threading.Thread):
                 player = subprocess.Popen(['play', '-q', self.sound])
                 code = player.wait()
                 if code != 0:
-                    print 'sound failed!', code
+                    log_error('Sound failed with %d' % code)
             
             except OSError, error:
-                print 'Failed to play sound', error
+                log_error('Failed to play sound %s' % error)
             
             tries += 1
 
