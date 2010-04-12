@@ -161,7 +161,6 @@ class SimpleAPICall(threading.Thread):
         except (IOError, TweepError), error:
             self.error = error
             self.on_error(self.main, *self.args)
-            print error
         
         self.after(self.main, *self.args)
     
