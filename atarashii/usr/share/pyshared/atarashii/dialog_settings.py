@@ -457,12 +457,12 @@ class AccountDialog(Dialog):
         def save(*args):
             username = self.user.get_text().strip()
             if username == UNSET_USERNAME:
-                user.grab_focus()
+                self.user.grab_focus()
             
             elif username in self.parent.user_accounts \
                  and username != self.username:
                 
-                user.grab_focus()
+                self.user.grab_focus()
             
             else:
                 self.callback(username)
