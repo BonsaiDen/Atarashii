@@ -424,7 +424,7 @@ LANG = {
         
         'html_avatar_tooltip':
             '<span size="large"><b>%s</b></span>\n<b>%d</b> Tweets\n'
-            '<b>%d</b> Follower\nFollowing <b>%d</b>',
+            '<b>%d</b> Followers\nFollowing <b>%d</b>',
         
         'html_expanded_tooltip': '<b>%s</b> redirects to:\n%s',
         
