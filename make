@@ -33,9 +33,7 @@ def getFileMD5(file):
     return md5.hexdigest()
 
 def getStringMD5(string):
-    md5 = hashlib.md5()
-    md5.update(string)
-    return md5.hexdigest()
+    return hashlib.md5(string).hexdigest()
 
 def update_init_file(commits, sha):
     init_file = os.path.join(sys.path[0], 'atarashii/usr/share/pyshared/atarashii/__init__.py')
