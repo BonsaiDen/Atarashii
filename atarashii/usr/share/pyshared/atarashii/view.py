@@ -229,6 +229,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             if append:
                 if not replaced:
                     self.history_count += 1
+                    self.load_history = True
+                    self.history_loaded = True
                 
                 self.items.insert(0, item)
             
