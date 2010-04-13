@@ -155,10 +155,11 @@ SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{35,})')
 SHORTS = {
     'is.gd': 'http://is.gd/api.php?longurl=%s',
     'tinyurl.com': 'http://tinyurl.com/api-create.php?url=%s',
-    'snipurl.com': 'http://snipr.com/site/snip?r=simple&link=%s'
+    'snipurl.com': 'http://snipr.com/site/snip?r=simple&link=%s',
+    'u.nu': 'http://u.nu/unu-api-simple?url=%s'
 }
 
-SHORTS_LIST = ['is.gd', 'tinyurl.com', 'snipurl.com']
+SHORTS_LIST = ['is.gd', 'u.nu', 'tinyurl.com', 'snipurl.com']
 
 
 # Escaping ---------------------------------------------------------------------
