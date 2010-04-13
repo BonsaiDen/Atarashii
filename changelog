@@ -1,4 +1,4 @@
-atarashii (0.99.20c-1) all;
+atarashii (0.99.21-1) all;
   
   + New multi reply/message feature. When holding down SHIFT while submitting,
     a identical new reply/message will be started afterwards.
@@ -16,7 +16,7 @@ atarashii (0.99.20c-1) all;
   * Fix for tweet notifications not beeing in the right order in some cases.
   * Internal cleanup of the api calling code.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 13 Apr 2010 23:33:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 14 Apr 2010 00:26:00 +0200
 
 atarashii (0.99.20b-1) all;
 
