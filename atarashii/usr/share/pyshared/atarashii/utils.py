@@ -135,7 +135,10 @@ class URLShorter(threading.Thread):
             return self.__class__.url_list[url]
         
         try:
-            short = self.try_shorten(url, api)
+            short = self.try_shorten(url, api).strip()
+            if not short.lower().startswith('http://'):
+                raise ValueError
+            
             self.__class__.url_list[url] = short
             return short
         
