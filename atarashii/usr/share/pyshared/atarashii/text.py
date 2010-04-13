@@ -132,6 +132,28 @@ class TextInput(gtk.TextView):
             if event.state & gtk.gdk.CONTROL_MASK == gtk.gdk.CONTROL_MASK:
                 self.reset()
                 return True
+        
+        if (self.main.reply_user != UNSET_TEXT \
+           or self.main.message_user != UNSET_TEXT) \
+           and event.keyval == gtk.keysyms.Return \
+           and event.state & gtk.gdk.SHIFT_MASK == gtk.gdk.SHIFT_MASK:
+            
+            self.submit(self, True)
+            return True
+        
+        if event.keyval == gtk.keysyms.Return \
+           and event.state & gtk.gdk.CONTROL_MASK == gtk.gdk.CONTROL_MASK:
+            
+            spaces = self.get_text().strip().count(' ')
+            if self.gui.mode == MODE_TWEETS:
+                if spaces > 0:
+                    return False
+            
+            elif self.gui.mode == MODE_MESSAGES:
+                if spaces > 1:
+                    return False
+            
+            return True
     
     def unfocus(self):
         if self.gui.mode == MODE_TWEETS:
@@ -143,7 +165,7 @@ class TextInput(gtk.TextView):
     
     # Events -------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def submit(self, *args):
+    def submit(self, textbox, multi=False):
         text = self.get_text().lstrip()
         if len(text) <= 140 + self.message_len and text.strip() != UNSET_TEXT:
             if self.gui.mode == MODE_MESSAGES:
@@ -154,7 +176,9 @@ class TextInput(gtk.TextView):
                     if ctext[2:].find(' ') == -1 \
                        or self.main.message_user == UNSET_TEXT:
                         
+                        self.is_changing = True
                         self.set_text(text.lstrip())
+                        self.is_changing = False
                         return False
                 
                 if self.main.message_user == UNSET_TEXT:
@@ -162,7 +186,7 @@ class TextInput(gtk.TextView):
                 
                 ctext = ctext[2:]
                 ctext = ctext[len(self.main.message_user):].strip()
-                self.main.send(ctext)
+                self.main.send(ctext, multi)
             
             elif self.gui.mode == MODE_TWEETS:
                 
@@ -183,10 +207,12 @@ class TextInput(gtk.TextView):
                     if ctext.find(' ') == -1 \
                        or self.main.reply_user == UNSET_TEXT:
                         
+                        self.is_changing = True
                         self.set_text(text.lstrip())
+                        self.is_changing = False
                         return False
                 
-                self.main.send(ctext)
+                self.main.send(ctext, multi)
             
             # TODO implement search field submit
             else:
@@ -312,7 +338,6 @@ class TextInput(gtk.TextView):
                 else:
                     self.message_to_send = self.get_text()
         
-        
         # Strip left
         if self.get_text()[0:1] == ' ':
             ctext = self.get_text().lstrip()
@@ -341,7 +366,7 @@ class TextInput(gtk.TextView):
     
     # Reply / Retweet / Message / Edit -----------------------------------------
     # --------------------------------------------------------------------------
-    def reply(self):
+    def reply(self, multi=False):
         text = self.init_change()
         
         # Cancel Retweet
@@ -360,8 +385,8 @@ class TextInput(gtk.TextView):
             if space == -1:
                 space = len(text)
             
-            text = ('%s%s ' % (lang.tweet_at,
-                               self.main.reply_user)) + text[space + 1:]
+            text = ('%s%s ' % (lang.tweet_at,  self.main.reply_user)) \
+                   + (text[space + 1:] if not multi else '')
         
         else:
             text = ('%s%s ' % (lang.tweet_at, self.main.reply_user)) + text
@@ -382,12 +407,13 @@ class TextInput(gtk.TextView):
                                          self.main.retweet_text))
     
     # Message
-    def message(self):
+    def message(self, multi=False):
         text = self.init_change()
         msg = MESSAGE_REGEX.match(text)
         if msg is not None:
             space = 2 + len(msg.group(1))
-            text = ('d %s ' % self.main.message_user) + text[space + 1:]
+            text = ('d %s ' % self.main.message_user) \
+                   + (text[space + 1:] if not multi else '')
         
         else:
             text = ('d %s ' % self.main.message_user) + text
