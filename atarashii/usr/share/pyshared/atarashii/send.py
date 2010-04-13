@@ -29,11 +29,12 @@ from constants import ST_SEND, ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE, \
 # Send/Edit base class ---------------------------------------------------------
 # ------------------------------------------------------------------------------
 class APICall(threading.Thread):
-    def __init__(self, main, text):
+    def __init__(self, main, text, multi=False):
         threading.Thread.__init__(self)
         self.gui = main.gui
         self.main = main
         self.text = text
+        self.multi = multi
         self.daemon = True
         self.start()
     
@@ -43,9 +44,18 @@ class APICall(threading.Thread):
                 self.call()
                 
                 # Reset the GUI
-                self.main.unset('reply', 'retweet', 'edit', 'message')
-                gobject.idle_add(self.gui.text.set_text, UNSET_TEXT)
-                gobject.idle_add(self.gui.show_input, False, True)
+                if not self.multi:
+                    self.main.unset('reply', 'retweet', 'edit', 'message')
+                    gobject.idle_add(self.gui.text.set_text, UNSET_TEXT)
+                    gobject.idle_add(self.gui.show_input, False, True)
+                
+                elif self.main.reply_user != UNSET_TEXT:
+                    gobject.idle_add(self.gui.show_input, False, True)
+                    gobject.idle_add(self.gui.text.reply, True)
+                
+                elif self.main.message_user != UNSET_TEXT:
+                    gobject.idle_add(self.gui.show_input, False, True)
+                    gobject.idle_add(self.gui.text.message, True)
             
             except (IOError, TweepError), error:
                 self.on_error()

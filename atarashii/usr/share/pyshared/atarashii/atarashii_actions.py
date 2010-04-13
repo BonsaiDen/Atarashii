@@ -110,7 +110,7 @@ class AtarashiiActions(object):
     
     # Sending ------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def send(self, text):
+    def send(self, text, multi=False):
         if self.any_status(ST_SEND, ST_DELETE):
             return False
         
@@ -151,7 +151,7 @@ class AtarashiiActions(object):
             send.Edit(self, text)
         
         else:
-            send.Send(self, text)
+            send.Send(self, text, multi)
     
     # New style Retweet
     def retweet(self, name, tweet_id, new_style=False):
