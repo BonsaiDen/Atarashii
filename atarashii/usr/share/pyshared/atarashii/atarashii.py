@@ -13,12 +13,8 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-# TODO add multireply via shift/ctrl, replyid is from the first selected tweet
-# TODO make longer replies easier, either split them and add @user to each of
-#      them, or use ctrl+enter to send and start a new reply to the same tweet
-# TODO fixup tooltips not getting removed when switching workspaces
-# TODO fix tooltip flickering during updating. Maybe an issues with the loading
-#      state???
+
+# TODO fix tooltip flickering during updating. No idea what the reason is...
 
 
 # Atarashii --------------------------------------------------------------------
