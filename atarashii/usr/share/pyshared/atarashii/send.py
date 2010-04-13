@@ -23,7 +23,7 @@ from utils import TweepError
 
 from constants import MODE_TWEETS, MODE_MESSAGES, UNSET_TEXT, UNSET_ID_NUM
 from constants import ST_SEND, ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE, \
-                      ST_DELETE
+                      ST_DELETE, ST_NETWORK_FAILED
 
 
 # Send/Edit base class ---------------------------------------------------------
@@ -39,6 +39,7 @@ class APICall(threading.Thread):
         self.start()
     
     def run(self):
+        self.main.unset_status(ST_NETWORK_FAILED)
         if self.before():
             try:
                 self.call()
