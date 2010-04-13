@@ -31,8 +31,9 @@
                     <property name="left_padding">4</property>
                     <property name="right_padding">4</property>
                     <child>
-                      <object class="GtkHBox" id="hbox2">
+                      <object class="GtkVBox" id="vbox3">
                         <property name="visible">True</property>
+                        <property name="orientation">vertical</property>
                         <property name="spacing">4</property>
                         <child>
                           <object class="GtkScrolledWindow" id="treewindow">
@@ -50,10 +51,8 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkVBox" id="vbox3">
-                            <property name="width_request">100</property>
+                          <object class="GtkHBox" id="hbox8">
                             <property name="visible">True</property>
-                            <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkButton" id="add">
                                 <property name="label" translatable="yes">Add</property>
@@ -62,7 +61,6 @@
                                 <property name="receives_default">True</property>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
                                 <property name="position">0</property>
                               </packing>
                             </child>
@@ -74,7 +72,6 @@
                                 <property name="receives_default">True</property>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
                                 <property name="position">1</property>
                               </packing>
                             </child>
@@ -86,7 +83,6 @@
                                 <property name="receives_default">True</property>
                               </object>
                               <packing>
-                                <property name="expand">False</property>
                                 <property name="position">2</property>
                               </packing>
                             </child>
