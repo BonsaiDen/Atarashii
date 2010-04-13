@@ -77,9 +77,9 @@ BUTTON_HISTORY = 3
 
 # Sizes
 FONT_DEFAULT = 10
-FONT_SIZES = (9, 10, 11, 12)
+FONT_SIZES = [9, 10, 11, 12, 16]
 AVATAR_DEFAULT = 32
-AVATAR_SIZES = (24, 32, 40, 48)
+AVATAR_SIZES = [24, 32, 40, 48, 64, 96]
 
 # Errors, should be below 0 ----------------------------------------------------
 ERR_TWEET_NOT_FOUND = -12

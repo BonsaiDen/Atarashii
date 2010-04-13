@@ -219,10 +219,12 @@ class SettingsDialog(Dialog):
         
         
         # Sizes ----------------------------------------------------------------
+        self.get('fontsize').set_label(lang.settings_font_size)
         self.fonts = self.create_boxlist('fontbox', FONT_SIZES,
                                     self.settings.get('fontsize', FONT_DEFAULT),
                                     self.update_css)
         
+        self.get('avatarsize').set_label(lang.settings_avatar_size)
         self.avatars = self.create_boxlist('avatarbox', AVATAR_SIZES,
                                       self.settings.get('avatarsize',
                                                         AVATAR_DEFAULT),
@@ -326,6 +328,11 @@ class SettingsDialog(Dialog):
         item.pack_start(cell, True)
         item.add_attribute(cell, 'text', 0)
         item.set_model(item_list)
+        
+        if not default in values:
+            values.append(default)
+        
+        values.sort()
         for i, k in enumerate(values):
             item_list.append((k,))
             if k == default:
