@@ -333,6 +333,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         elif not self.refresh_now:
             self.message_counter += 1
         
+        # Hide the Network Error Warning
+        if self.main.status(ST_NETWORK_FAILED):
+            gobject.idle_add(self.gui.warning_button.hide)
+        
         self.main.unset_status(ST_NETWORK_FAILED)
         
         # Update Views
