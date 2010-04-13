@@ -256,6 +256,10 @@ LANG = {
             'Dieser Tweet wurde bereits von Ihnen retweeted.',
         
         'error_user_not_found': 'Der Benutzer <b>%s</b> existiert nicht.',
+        'error_user_not_follow':
+            'Sie können keine Nachrichten an Benutzer schicken die ihnen nicht '
+            'followen.',
+        
         'error_duplicate': 'Sie haben dies bereits getweetet.',
         'error_tweet_not_found': 'Dieser Tweet wurde bereits gelöscht.',
         'error_message_not_found': 'Diese Nachricht wurde bereits gelöscht.',
@@ -621,6 +625,9 @@ LANG = {
             'You\'ve already retweeted this Tweet.',
         
         'error_user_not_found': 'The user <b>%s</b> does not exist.',
+        'error_user_not_follow':
+            'You cannot send messages to users that don\' follow you.',
+        
         'error_duplicate': 'You\'ve already tweeted this.',
         'error_tweet_not_found': 'This Tweet has already been deleted.',
         'error_message_not_found': 'This Message has already been deleted.',

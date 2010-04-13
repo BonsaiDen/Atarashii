@@ -49,7 +49,7 @@ from constants import ERR_TWEET_NOT_FOUND, ERR_MESSAGE_NOT_FOUND, \
                       ERR_ALREADY_RETWEETED, ERR_TWEET_DUPLICATED, \
                       ERR_USER_NOT_FOUND, ERR_RATE_RECONNECT, \
                       ERR_RATE_LIMIT, ERR_NETWORK_FAILED, \
-                      ERR_NETWORK_TWITTER_FAILED
+                      ERR_NETWORK_TWITTER_FAILED, ERR_USER_NOT_FOLLOW
 
 from constants import HT_400_BAD_REQUEST, HT_401_UNAUTHORIZED, \
                       HT_404_NOT_FOUND, HT_500_INTERNAL_SERVER_ERROR, \
@@ -614,6 +614,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 ERR_NETWORK_FAILED : lang.error_network,
                 ERR_USER_NOT_FOUND : lang.error_user_not_found \
                                        % self.main.message_user,
+                
+                ERR_USER_NOT_FOLLOW : lang.error_user_not_follow,
                 
                 ERR_ALREADY_RETWEETED : lang.error_already_retweeted,
                 ERR_RATE_RECONNECT : rate_error,

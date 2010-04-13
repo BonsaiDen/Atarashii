@@ -45,7 +45,7 @@ from constants import ERR_TWEET_NOT_FOUND, ERR_MESSAGE_NOT_FOUND, \
                       ERR_USER_NOT_FOUND, ERR_RATE_RECONNECT, \
                       ERR_RATE_LIMIT, ERR_NETWORK_FAILED, \
                       ERR_NETWORK_TWITTER_FAILED, ERR_URLLIB_FAILED, \
-                      ERR_URLLIB_TIMEOUT, ERR_MAPPING
+                      ERR_URLLIB_TIMEOUT, ERR_USER_NOT_FOLLOW, ERR_MAPPING
 
 from constants import HT_400_BAD_REQUEST, HT_401_UNAUTHORIZED, \
                       HT_403_FORBIDDEN, HT_404_NOT_FOUND, \
@@ -309,6 +309,9 @@ class AtarashiiActions(object):
             
             elif msg.lower().startswith('status is a duplicate'):
                 code = ERR_TWEET_DUPLICATED
+            
+            elif msg.lower().startswith('you cannot send messages'):
+                code = ERR_USER_NOT_FOLLOW
             
             else:
                 code = error_code
