@@ -185,7 +185,7 @@ class ViewHTML(object):
     # The big magic spacer inserted... trust me it's really magic that this
     # thin does work at all...
     def insert_spacer(self, item, user, highlight, mentioned,
-                      next_highlight=False, force=False):
+                      next_highlight=False, force=False, message=False):
         
         spacer = 'foo'
         if item.id > self.new_items_id:
@@ -197,7 +197,7 @@ class ViewHTML(object):
                         spacer = '10' # Middle Dark Gray
                     
                     else:
-                        spacer = '5' # Yellow
+                        spacer = '14' if message else '5' # Green/Yellow
                 
                 elif highlight and self.last_highlight:
                     spacer = '13' # Middle Dark Blue
@@ -224,7 +224,7 @@ class ViewHTML(object):
                         spacer = '1' # Dark Gray
                     
                     else:
-                        spacer = '5' # Yellow
+                        spacer = '14' if message else '5' # Green/Yellow
                 
                 # Just more normal tweets
                 else:
@@ -250,7 +250,7 @@ class ViewHTML(object):
                         spacer = '11' # Middle Normal Gray
                     
                     else:
-                        spacer = '8' # Yellow
+                        spacer = '15' if message else '8' # Green / Yellow
                 
                 elif highlight and self.last_highlight:
                     spacer = '12' # Middle Normal Blue
@@ -277,7 +277,7 @@ class ViewHTML(object):
                         spacer = '0' # Normal Gray
                     
                     else:
-                        spacer = '8' # Yellow
+                        spacer = '15' if message else '8' # Green / Yellow
                 
                 # Just more normal tweets
                 else:

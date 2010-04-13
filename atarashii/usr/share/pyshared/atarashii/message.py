@@ -87,7 +87,7 @@ class HTML(view.HTMLView):
             force = self.last_recipient != item.recipient_screen_name
             self.renderitems.insert(0,
                         self.insert_spacer(item, user, False, mentioned,
-                        next_highlight, force = force))
+                        next_highlight, force = force, message = True))
         
         self.last_mentioned = mentioned
         self.last_name = user.screen_name
@@ -114,8 +114,8 @@ class HTML(view.HTMLView):
             mode = lang.message_to
             name = item.recipient_screen_name
             reply = 'display: none;'
-            cls = 'mentionedold' if item.id <= self.new_items_id \
-                   else 'mentioned'
+            cls = 'messageold' if item.id <= self.new_items_id \
+                   else 'message'
             
             username = item.recipient_screen_name
             user_realname = item.recipient.name.strip()

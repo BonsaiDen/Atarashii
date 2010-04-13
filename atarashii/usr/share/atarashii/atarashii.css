@@ -150,7 +150,8 @@ a:active, a:hover, a, .protected {
 	background: #d8e4ed;
 }
 
-.tweet, .oldtweet, .highlight, .highlightold, .mentioned, .mentionedold {
+.tweet, .oldtweet, .highlight, .highlightold, .mentioned, .mentionedold,
+.message, .messageold {
 	padding-left: 6px;
 	padding-right: 2px;
 }
@@ -173,6 +174,14 @@ a:active, a:hover, a, .protected {
 
 .mentionedold {
 	background: #ffffc2;
+}
+
+.message {
+	background: #c8f2c8;
+}
+
+.messageold {
+	background: #dbf6db;
 }
 
 .time, .time a, .time a:hover, .reply, .reply a, .reply a:hover {
@@ -330,5 +339,13 @@ a:active, a:hover, a, .protected {
 
 .spacer13 {
     border-bottom: 2px solid #b7cbdf;
+}
+
+.spacer14 {
+    border-bottom: 2px solid #c8f2c8;
+}
+
+.spacer15 {
+    border-bottom: 2px solid #dbf6db;
 }
 

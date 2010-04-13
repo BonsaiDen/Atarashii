@@ -5,15 +5,18 @@ atarashii (0.99.20c-1) all;
   + You can now configure the font and avatar sizes of the timelines in via the
     preferences.
   + Automatically shorten flickr.com photo urls to flic.kr urls.
+  ~ Direct Messages that you've sent now have a light green background insteaf
+    of the yellow one that was also used by mentions.
   ~ No longer allow other characters than 'abcdefghijklmnopqrstuvwxyz_123456789'
     in account names.
-  * Multiple small fixes to the textbox
+  * Multiple small fixes to the textbox.
+  * Improved handling of direct messages errors.
   * Fix for scrolling issues when loading "more".
   * Fix for wrong tweet counts in some cases when ressting the loaded history.
   * Fix for tweet notifications not beeing in the right order in some cases.
   * Internal cleanup of the api calling code.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 13 Apr 2010 19:11:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 13 Apr 2010 23:33:00 +0200
 
 atarashii (0.99.20b-1) all;
 
