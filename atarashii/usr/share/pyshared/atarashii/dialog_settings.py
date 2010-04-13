@@ -331,8 +331,8 @@ class SettingsDialog(Dialog):
         
         if not default in values:
             values.append(default)
+            values.sort()
         
-        values.sort()
         for i, k in enumerate(values):
             item_list.append((k,))
             if k == default:
