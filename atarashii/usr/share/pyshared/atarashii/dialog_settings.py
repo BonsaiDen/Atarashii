@@ -277,9 +277,7 @@ class SettingsDialog(Dialog):
             self.gui.tray.update_account_menu()
             self.on_close()
         
-        if self.main.status(ST_UPDATE) \
-           and not self.main.status(ST_LOGIN_COMPLETE):
-            
+        if not self.main.status(ST_LOGIN_COMPLETE):
             active = False
         
         elif self.main.status(ST_CONNECT):

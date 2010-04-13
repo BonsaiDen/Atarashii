@@ -92,10 +92,9 @@ class TrayIcon(gtk.StatusIcon):
                                        self.gui.on_read_all)
         
         # Settings
-        self.settings_menu = self.add_menu(lang.menu_settings,
-                                           gtk.STOCK_PREFERENCES, 'p',
-                                           lambda *args:
-                                           self.gui.on_settings(None, True))
+        self.add_menu(lang.menu_settings, gtk.STOCK_PREFERENCES, 'p',
+                                          lambda *args:
+                                          self.gui.on_settings(None, True))
         
         # About
         self.add_menu(lang.menu_about, gtk.STOCK_ABOUT, None,
@@ -178,7 +177,6 @@ class TrayIcon(gtk.StatusIcon):
         if self.gui.settings_dialog is not None:
             self.gui.settings_dialog.activate(mode)
         
-        self.settings_menu.set_sensitive(mode)
         if len(self.account_menu.get_children()) == 0:
             self.account_menu_item.set_sensitive(False)
             mode = False
