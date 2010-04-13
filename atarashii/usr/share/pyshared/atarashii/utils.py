@@ -159,7 +159,7 @@ class URLShorter(threading.Thread):
             else:
                 raise ValueError
         
-        # Special handling of flickr links, those are base58 encoded
+        # Special handling of flickr links, those will be base58 encoded
         elif parsed_url.netloc.find('flickr.com') != -1:
             photo_id = -1
             for i in parsed_url.path.strip('/').split('/')[::-1]:
