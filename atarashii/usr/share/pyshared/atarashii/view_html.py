@@ -17,7 +17,7 @@
 # HTML View / HTML -------------------------------------------------------------
 # ------------------------------------------------------------------------------
 from constants import SPACES
-from settings import CSS_FILE
+
 from language import LANG as lang
 from constants import HTML_UNSET_ID, HTML_UNSET_TEXT, UNSET_USERNAME
 from constants import ST_NETWORK_FAILED, ST_LOGIN_SUCCESSFUL
@@ -99,6 +99,15 @@ class ViewHTML(object):
     
     
     # HTML Helpers -------------------------------------------------------------
+    def update_css(self):
+        try:
+            self.execute_script('''
+                 document.getElementsByTagName('link')[0].href='%s'
+                 ''' % self.main.settings.css_file)
+        
+        except Exception:
+            pass
+    
     def start(self):
         self.scroll.get_vscrollbar().set_value(0)
         self.offset_count = 0
@@ -136,7 +145,7 @@ class ViewHTML(object):
         <link rel="stylesheet" type="text/css" media="screen" href="file://%s"/>
         </head>
         %s
-        </html>''' % (CSS_FILE, html)
+        </html>''' % (self.main.settings.css_file, html)
         
         # FIXME This memory leaks EXTREMLY hard!
         # Even removing the dom stuff per javascript doesn't help
@@ -288,6 +297,6 @@ class ViewHTML(object):
     
     def avatar_html(self, user, num, img):
         return '''<a href="avatar:%d:http://twitter.com/%s">
-                  <img width="32" src="file://%s" title="avatar" /></a>''' % (
-                                      num, user.screen_name, img)
+                  <img class="avatarimage" src="file://%s" title="avatar"/>
+                  </a>''' % (num, user.screen_name, img)
 

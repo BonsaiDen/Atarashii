@@ -21,7 +21,7 @@ import urllib
 import time
 import locale
 
-from constants import UNSET_SETTING, UNSET_ID_NUM
+from constants import UNSET_SETTING, UNSET_ID_NUM, FONT_DEFAULT, AVATAR_DEFAULT
 
 # File Paths
 HOME_DIR = os.path.expanduser('~')
@@ -39,7 +39,6 @@ CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
 CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')
 ERROR_LOG_FILE = os.path.join(ATARASHII_DIR, 'error.log')
 LOGOUT_FILE = os.path.join(ATARASHII_DIR, 'logout')
-CSS_FILE = os.path.join(ATARASHII_DIR, 'atarashii.css')
 
 # Log errors to ~/.atarashii/error.log
 # Needs to be defined here because of the sound imports below
@@ -65,26 +64,62 @@ class Settings(object):
         if not os.path.exists(ATARASHII_DIR):
             os.mkdir(ATARASHII_DIR)
         
-        self.main = main        
+        self.main = main
         self.values = {}
         self.load()
         self.save_count = 0
         self.has_changed = False
+        self.css_file = None
+        self.css_count = 0
         self.css()
     
     
     # CSS ----------------------------------------------------------------------
-    def css(self):
+    def css(self, font=None, avatar=None):
+        # Delete old css files
+        for i in os.listdir(ATARASHII_DIR):
+            css_file = os.path.join(ATARASHII_DIR, i)
+            if css_file.lower().endswith('.css'):
+                os.unlink(css_file)
+        
+        self.css_file = os.path.join(ATARASHII_DIR,
+                                'atarashii_%s.css' % self.css_count)
+        
+        self.css_count += 1
+        
+        # Avatar
+        if avatar is None:
+            avatar_size = self.get('avatarsize', AVATAR_DEFAULT)
+        
+        else:
+            avatar_size = avatar
+        
+        # Font
+        if font is None:
+            font_size = self.get('fontsize', FONT_DEFAULT)
+        
+        else:
+            font_size = font
+        
         with open(self.main.get_resource('atarashii.css'), 'rb') as f:
             css_data = f.read()
-            with open(CSS_FILE, 'wb') as cf:
-                cf.write('/* THIS FILE HAS BEEN AUTOMATICALLY GENERATED '
+            with open(self.css_file, 'wb') as csf:
+                csf.write('/* THIS FILE HAS BEEN AUTOMATICALLY GENERATED '
                          'AND WILL BE OVERRIDEN ON STARTUP */\n\n')
                 
                 css_data = css_data.replace('{RESOURCES}',
                                             self.main.get_resource(''))
                 
-                cf.write(css_data)
+                css_data = css_data.replace('{AVATAR32}', str(avatar_size))
+                css_data = css_data.replace('{AVATAR34}', str(avatar_size + 2))
+                css_data = css_data.replace('{AVATAR38}', str(avatar_size + 6))
+                
+                css_data = css_data.replace('{FONT9}', str(font_size - 1))
+                css_data = css_data.replace('{FONT10}', str(font_size))
+                css_data = css_data.replace('{FONT11}', str(font_size + 1))
+                css_data = css_data.replace('{FONT12}', str(font_size + 2))
+                css_data = css_data.replace('{FONT14}', str(font_size + 4))
+                csf.write(css_data)
     
     
     # Load ---------------------------------------------------------------------

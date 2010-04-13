@@ -173,13 +173,21 @@
                           </packing>
                         </child>
                         <child>
+                          <object class="GtkLabel" id="fill1">
+                            <property name="visible">True</property>
+                          </object>
+                          <packing>
+                            <property name="position">4</property>
+                          </packing>
+                        </child>
+                        <child>
                           <object class="GtkHBox" id="hbox1">
                             <property name="visible">True</property>
                             <property name="homogeneous">True</property>
                             <child>
                               <object class="GtkLabel" id="shortener">
                                 <property name="visible">True</property>
-                                <property name="xalign">0.89999997615814209</property>
+                                <property name="xalign">1</property>
                                 <property name="ypad">4</property>
                                 <property name="label" translatable="yes">URL Shortener:</property>
                               </object>
@@ -198,15 +206,63 @@
                           </object>
                           <packing>
                             <property name="expand">False</property>
-                            <property name="position">4</property>
+                            <property name="position">5</property>
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="fill1">
+                          <object class="GtkHBox" id="hbox6">
                             <property name="visible">True</property>
+                            <property name="homogeneous">True</property>
+                            <child>
+                              <object class="GtkLabel" id="fontsize">
+                                <property name="visible">True</property>
+                                <property name="xalign">1</property>
+                                <property name="ypad">4</property>
+                                <property name="label" translatable="yes">Timeline Schriftgr&#xF6;&#xDF;e:</property>
+                              </object>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkComboBox" id="fontbox">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
                           </object>
                           <packing>
-                            <property name="position">5</property>
+                            <property name="position">6</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkHBox" id="hbox7">
+                            <property name="visible">True</property>
+                            <property name="homogeneous">True</property>
+                            <child>
+                              <object class="GtkLabel" id="avatarsize">
+                                <property name="visible">True</property>
+                                <property name="xalign">1</property>
+                                <property name="ypad">4</property>
+                                <property name="label" translatable="yes">Avatargr&#xF6;&#xDF;e:</property>
+                              </object>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkComboBox" id="avatarbox">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="position">7</property>
                           </packing>
                         </child>
                       </object>
@@ -260,6 +316,7 @@
                             <property name="draw_indicator">True</property>
                           </object>
                           <packing>
+                            <property name="expand">False</property>
                             <property name="position">1</property>
                           </packing>
                         </child>
@@ -274,7 +331,7 @@
                                 <child>
                                   <object class="GtkLabel" id="snd_tweets">
                                     <property name="visible">True</property>
-                                    <property name="xalign">0.89999997615814209</property>
+                                    <property name="xalign">1</property>
                                     <property name="label" translatable="yes">Tweets:</property>
                                   </object>
                                   <packing>
@@ -284,7 +341,7 @@
                                 <child>
                                   <object class="GtkLabel" id="snd_reply">
                                     <property name="visible">True</property>
-                                    <property name="xalign">0.89999997615814209</property>
+                                    <property name="xalign">1</property>
                                     <property name="label" translatable="yes">Replies:</property>
                                   </object>
                                   <packing>
@@ -294,7 +351,7 @@
                                 <child>
                                   <object class="GtkLabel" id="snd_messages">
                                     <property name="visible">True</property>
-                                    <property name="xalign">0.89999997615814209</property>
+                                    <property name="xalign">1</property>
                                     <property name="label" translatable="yes">Messages:</property>
                                   </object>
                                   <packing>
@@ -444,7 +501,16 @@
                             </child>
                           </object>
                           <packing>
+                            <property name="expand">False</property>
                             <property name="position">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="fill2">
+                            <property name="visible">True</property>
+                          </object>
+                          <packing>
+                            <property name="position">3</property>
                           </packing>
                         </child>
                       </object>

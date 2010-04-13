@@ -75,6 +75,11 @@ BUTTON_REFRESH = 1
 BUTTON_READ = 2
 BUTTON_HISTORY = 3
 
+# Sizes
+FONT_DEFAULT = 10
+FONT_SIZES = (9, 10, 11, 12)
+AVATAR_DEFAULT = 32
+AVATAR_SIZES = (24, 32, 40, 48)
 
 # Errors, should be below 0 ----------------------------------------------------
 ERR_TWEET_NOT_FOUND = -12

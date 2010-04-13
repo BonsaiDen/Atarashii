@@ -26,7 +26,9 @@ import os
 from language import LANG as lang
 from dialog import Dialog, MessageDialog
 from utils import URLShorter, URLExpander
-from constants import SHORTS_LIST, USERNAME_CHARS
+from constants import SHORTS_LIST, USERNAME_CHARS, FONT_DEFAULT, FONT_SIZES, \
+                      AVATAR_DEFAULT, AVATAR_SIZES
+
 from settings import THEME_SOUNDS, THEME_DIR
 
 from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING
@@ -211,18 +213,21 @@ class SettingsDialog(Dialog):
         
         
         # Shortener ------------------------------------------------------------
-        shorts = self.get('shorts')
-        shorts_list = gtk.ListStore(str)
-        cell = gtk.CellRendererText()
-        shorts.pack_start(cell, True)
-        shorts.add_attribute(cell, 'text', 0)
-        shorts.set_model(shorts_list)
-        for i, k in enumerate(SHORTS_LIST):
-            shorts_list.append((k,))
-            if k == self.settings['shortener']:
-                shorts.set_active(i)
-        
         self.get('shortener').set_label(lang.settings_shortener)
+        shorts = self.create_boxlist('shorts', SHORTS_LIST,
+                                     self.settings['shortener'])
+        
+        
+        # Sizes ----------------------------------------------------------------
+        self.fonts = self.create_boxlist('fontbox', FONT_SIZES,
+                                    self.settings.get('fontsize', FONT_DEFAULT),
+                                    self.update_css)
+        
+        self.avatars = self.create_boxlist('avatarbox', AVATAR_SIZES,
+                                      self.settings.get('avatarsize',
+                                                        AVATAR_DEFAULT),
+                                                        self.update_css)
+        
         
         # Save -----------------------------------------------------------------
         oldusername = self.main.username
@@ -244,6 +249,10 @@ class SettingsDialog(Dialog):
                 URLShorter.reset()
                 URLExpander.reset()
             
+            self.settings['fontsize'] = FONT_SIZES[self.fonts.get_active()]
+            self.settings['avatarsize'] = AVATAR_SIZES[
+                                          self.avatars.get_active()]
+            
             self.settings.set_autostart(autostart.get_active())
             self.gui.show_in_taskbar(taskbar.get_active())
             
@@ -255,6 +264,11 @@ class SettingsDialog(Dialog):
                or not oldusername in self.main.settings.get_accounts():
                 
                 self.main.logout()
+            
+            # Render view if needed
+            self.update_css()
+            gobject.idle_add(self.gui.html.update_css)
+            gobject.idle_add(self.gui.message.update_css)
             
             # Save Settings
             self.main.save_settings(False)
@@ -285,10 +299,42 @@ class SettingsDialog(Dialog):
         if not self.saved:
             if self.get_drop_active() == -1:
                 self.main.logout()
+            
+            self.settings.css()
+            gobject.idle_add(self.gui.html.update_css)
+            gobject.idle_add(self.gui.message.update_css)
         
         self.__class__.instance = None
         self.gui.settings_dialog = None
         self.dlg.hide()
+    
+    
+    # CSS ----------------------------------------------------------------------
+    def update_css(self, *args):
+        self.settings.css(FONT_SIZES[self.fonts.get_active()],
+                          AVATAR_SIZES[self.avatars.get_active()])
+        
+        gobject.idle_add(self.gui.html.update_css)
+        gobject.idle_add(self.gui.message.update_css)
+    
+    
+    # Generate listboxes -------------------------------------------------------
+    def create_boxlist(self, item, values, default, callback=None):
+        item = self.get(item)
+        item_list = gtk.ListStore(str)
+        cell = gtk.CellRendererText()
+        item.pack_start(cell, True)
+        item.add_attribute(cell, 'text', 0)
+        item.set_model(item_list)
+        for i, k in enumerate(values):
+            item_list.append((k,))
+            if k == default:
+                item.set_active(i)
+        
+        if callback is not None:
+            item.connect('changed', callback)
+        
+        return item
     
     # Generate Account List ----------------------------------------------------
     def get_drop_active(self):

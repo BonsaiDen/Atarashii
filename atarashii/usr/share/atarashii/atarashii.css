@@ -1,7 +1,7 @@
 /* General setup ---------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 body {
-	font: 10px sans-serif;
+	font: {FONT10}px sans-serif;
 	overflow-x: hidden;
 	-webkit-user-select: none; /* Disable user selection of EVERYTHING!!! */
 	cursor: default;
@@ -50,14 +50,14 @@ a {
 }
 
 .loadmore a, .doreply a, .doreply a:hover {
-	font-size: 12px;
+	font-size: {FONT12}px;
 }
 
 
 /* Loading Screens -------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 .loading {
-	font-size: 14px;
+	font-size: {FONT14}px;
 	margin-top: 10px;
 	color: #5b5b5b;
 }
@@ -71,7 +71,7 @@ a {
     padding-top: 32px;
     padding-left: 8px;
     padding-right: 8px;
-    font-size: 11px;
+    font-size: {FONT11}px;
     font-weight: bold;
 }
 
@@ -79,7 +79,7 @@ a {
     padding-top: 2px;
     padding-left: 12px;
     padding-right: 12px;
-    font-size: 9px;
+    font-size: {FONT9}px;
     font-weight: bold;
 }
 
@@ -115,15 +115,19 @@ a:active, a:hover, a, .protected {
 	float: left;
 }
 
+.avatarimage {
+    width: {AVATAR32}px;
+}
+
 .inner-text {
 	word-wrap: break-word;
 	padding-top: 5px;
 	margin-right: 20px;
-	min-height: 34px;
+	min-height: {AVATAR34}px;
 }
 
 .inner-text, .text {
-	margin-left: 38px;
+	margin-left: {AVATAR38}px;
 }
 
 .protected {
@@ -176,7 +180,7 @@ a:active, a:hover, a, .protected {
 }
 
 .time, .reply {
-	font-size: 9px;
+	font-size: {FONT9}px;
 }
 
 .time {
