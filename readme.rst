@@ -41,9 +41,6 @@ After that just install the created Debian-Package.
 If you want to hack on **Atarashii** you can just clone the repo and then run 
 ``./debug`` to start Atarashii.
 
-    Due to hardlinks in the CSS file the favorite/reply icons won't work until 
-    **Atarashii** has been installed with one of the above methods.
-
     Watch out if you clone the ``next`` branch, sometimes changes that get 
     pushed up their can break stuff.
 

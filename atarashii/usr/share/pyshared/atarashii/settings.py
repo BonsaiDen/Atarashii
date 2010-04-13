@@ -39,7 +39,7 @@ CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
 CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')
 ERROR_LOG_FILE = os.path.join(ATARASHII_DIR, 'error.log')
 LOGOUT_FILE = os.path.join(ATARASHII_DIR, 'logout')
-
+CSS_FILE = os.path.join(ATARASHII_DIR, 'atarashii.css')
 
 # Log errors to ~/.atarashii/error.log
 # Needs to be defined here because of the sound imports below
@@ -61,15 +61,30 @@ THEME_DIR = get_sound_dirs()[0]
 
 
 class Settings(object):
-    def __init__(self):
+    def __init__(self, main):
         if not os.path.exists(ATARASHII_DIR):
             os.mkdir(ATARASHII_DIR)
         
-        # Record running time
+        self.main = main        
         self.values = {}
         self.load()
         self.save_count = 0
         self.has_changed = False
+        self.css()
+    
+    
+    # CSS ----------------------------------------------------------------------
+    def css(self):
+        with open(self.main.get_resource('atarashii.css'), 'rb') as f:
+            css_data = f.read()
+            with open(CSS_FILE, 'wb') as cf:
+                cf.write('/* THIS FILE HAS BEEN AUTOMATICALLY GENERATED '
+                         'AND WILL BE OVERRIDEN ON STARTUP */\n\n')
+                
+                css_data = css_data.replace('{RESOURCES}',
+                                            self.main.get_resource(''))
+                
+                cf.write(css_data)
     
     
     # Load ---------------------------------------------------------------------
@@ -168,7 +183,6 @@ class Settings(object):
     
     
     # Manage Autostart ---------------------------------------------------------
-    # --------------------------------------------------------------------------
     def set_autostart(self, mode):
         # Create/Delete .desktop file
         try:
@@ -214,7 +228,6 @@ class Settings(object):
     
     
     # Crash Handling -----------------------------------------------------------
-    # --------------------------------------------------------------------------
     def check_crash(self):
         self['crashed'] = os.path.exists(CRASH_FILE)
         if self['crashed']:
@@ -225,7 +238,6 @@ class Settings(object):
     
     
     # Avatar Cache Handling ----------------------------------------------------
-    # --------------------------------------------------------------------------
     def check_cache(self):
         for i in os.listdir(ATARASHII_DIR):
             cache_file = os.path.join(ATARASHII_DIR, i)

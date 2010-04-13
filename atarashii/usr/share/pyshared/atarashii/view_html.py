@@ -17,7 +17,7 @@
 # HTML View / HTML -------------------------------------------------------------
 # ------------------------------------------------------------------------------
 from constants import SPACES
-
+from settings import CSS_FILE
 from language import LANG as lang
 from constants import HTML_UNSET_ID, HTML_UNSET_TEXT, UNSET_USERNAME
 from constants import ST_NETWORK_FAILED, ST_LOGIN_SUCCESSFUL
@@ -136,7 +136,7 @@ class ViewHTML(object):
         <link rel="stylesheet" type="text/css" media="screen" href="file://%s"/>
         </head>
         %s
-        </html>''' % (self.main.get_resource('atarashii.css'), html)
+        </html>''' % (CSS_FILE, html)
         
         # FIXME This memory leaks EXTREMLY hard!
         # Even removing the dom stuff per javascript doesn't help

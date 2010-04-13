@@ -75,7 +75,7 @@ class Atarashii(AtarashiiActions):
         self.debug_path = debug_path
         
         # Load Settings
-        self.settings = settings.Settings()
+        self.settings = settings.Settings(self)
         
         # API
         self.api = None
