@@ -20,7 +20,7 @@ import dbus
 
 import sounds
 
-from settings import THEME_SOUNDS
+from settings import THEME_SOUNDS, log_error
 
 
 class Notifier(object):
@@ -28,7 +28,9 @@ class Notifier(object):
         self.settings = main.settings
         self.last_id = -1
         self.items = []
-        
+        self.init_dbus()
+    
+    def init_dbus(self):
         try:
             obj = dbus.SessionBus().get_object('org.freedesktop.Notifications',
                                                '/org/freedesktop/Notifications')
@@ -59,9 +61,15 @@ class Notifier(object):
     def show(self, item_id, *args):
         if (item_id == -1 or item_id == self.last_id) and len(self.items) > 0:
             item = self.items.pop(0)
-            self.last_id = self.notify.Notify('Atarashii', 0, item[2],
-                                              item[0],  item[1], (),
-                                              {'urgency': dbus.Byte(2)}, -1)
+            try:
+                self.last_id = self.send(item)
+            
+            # In very strange cases the dbus might go aways while we're running
+            # so lets try to get it again
+            except dbus.exceptions.DBusException:
+                log_error('DBUS error')
+                self.init_dbus()
+                self.last_id = self.send(item)
             
             # Play the sound
             if self.settings.is_true('sound'):
@@ -72,6 +80,10 @@ class Notifier(object):
                 
                 elif self.settings['sound_' + item[3]] not in ('None', ''):
                     sounds.Sound(self.settings['sound_' + item[3]])
+    
+    def send(self, item):
+        return self.notify.Notify('Atarashii', 0, item[2], item[0], item[1],
+                                  (), {'urgency': dbus.Byte(2)}, -1)
     
     # Try to close the last notification, this might get ignored on newer
     # version of the notification dbus thingy
