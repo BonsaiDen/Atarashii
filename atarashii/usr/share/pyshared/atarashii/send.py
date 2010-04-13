@@ -56,13 +56,14 @@ class APICall(threading.Thread):
                 elif self.main.message_user != UNSET_TEXT:
                     gobject.idle_add(self.gui.show_input, False, True)
                     gobject.idle_add(self.gui.text.message, True)
+                
+                self.main.unset_status(ST_WAS_SEND)
             
             except (IOError, TweepError), error:
                 self.on_error()
                 gobject.idle_add(self.main.handle_error, error)
             
             self.main.unset_status(ST_SEND)
-            self.main.unset_status(ST_WAS_SEND)
     
     def on_error(self):
         pass
