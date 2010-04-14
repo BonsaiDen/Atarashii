@@ -153,6 +153,10 @@ class URLShorter(threading.Thread):
         if parsed_url.netloc.find('youtube.com') != -1 \
            and parsed_url.path == '/watch':
             video = urlparse.parse_qs(parsed_url.query).get('v', None)
+            if video is None:
+                video = urlparse.parse_qs(
+                                 parsed_url.fragment.strip('!')).get('v', None)
+            
             if video is not None:
                 return 'http://youtu.be/%s' % video[0]
             
