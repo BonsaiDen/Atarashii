@@ -98,8 +98,7 @@ class HTML(view.HTMLView):
         self.is_new_avatar(num)
         if (num < len(self.items) - 1 \
            and (user.screen_name != self.items[num + 1][0].sender.screen_name \
-           or item.recipient_screen_name \
-           != self.items[num + 1][0].recipient_screen_name or self.new_avatar))\
+           or self.new_avatar))\
            or num == len(self.items) - 1 or self.new_timeline:
             
             avatar = self.avatar_html(user, num, img)
