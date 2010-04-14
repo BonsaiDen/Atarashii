@@ -321,6 +321,26 @@ Homepage: http://github.com/BonsaiDen/Atarashii
 Package: atarashii
 Priority: optional
 Section: misc
+Installed-Size: 515
+Maintainer: Ivo Wetzel <ivo.wetzel@googlemail.com>
+Architecture: all
+Version: 0.99.21b-1
+Depends: python (>= 2.6), python-webkit, python-gtk2, python-gobject, python-dbus, python-gnome2, python-gconf, sox
+Filename: ./atarashii_0.99.21b-1_all.deb
+Size: 112918
+MD5sum: 4709686eab546cefc3aa3db45dc54d74
+SHA1: 8f0d10dcb9f0bc0d8a25b2e7f13727627f5dbc4b
+SHA256: 1f393b2f2867dbaf3d96b0768cfb7c68d4f6ad60ad735271cc8370bf2beb9e9d
+Description: Twitter Client for the GNOME Desktop
+ Atarashii is a Twitter Client specifically designed for the 
+ GNOME Desktop. It uses GTK+ and webkit to archive a slim and functional design.
+ The code itself is written in Python and uses the corresponding Python bindings
+ for the GTK+ libraries.
+Homepage: http://github.com/BonsaiDen/Atarashii
+
+Package: atarashii
+Priority: optional
+Section: misc
 Installed-Size: 503
 Maintainer: Ivo Wetzel <ivo.wetzel@googlemail.com>
 Architecture: all
