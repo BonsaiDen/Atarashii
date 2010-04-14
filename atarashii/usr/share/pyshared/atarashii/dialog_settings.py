@@ -262,14 +262,14 @@ class SettingsDialog(Dialog):
             # Save GUI Mode
             self.main.save_mode()
             
+            # Update CSS
+            self.settings.css()
+            
             # Set new Username
             if self.get_drop_active() == -1 \
                or not oldusername in self.main.settings.get_accounts():
                 
                 self.main.logout()
-            
-            # Render view if needed
-            self.save_css()
             
             # Save Settings
             self.main.save_settings(False)
@@ -301,7 +301,13 @@ class SettingsDialog(Dialog):
             if self.get_drop_active() == -1:
                 self.main.logout()
             
-            self.save_css()
+            if FONT_SIZES[self.fonts.get_active()] != self.old_font_size \
+               or AVATAR_SIZES[self.avatars.get_active()] \
+                  != self.old_avatar_size:
+                
+                self.settings.css()
+                gobject.idle_add(self.gui.html.update_css)
+                gobject.idle_add(self.gui.message.update_css)
         
         self.__class__.instance = None
         self.gui.settings_dialog = None
@@ -316,13 +322,6 @@ class SettingsDialog(Dialog):
         gobject.idle_add(self.gui.html.update_css)
         gobject.idle_add(self.gui.message.update_css)
     
-    def save_css(self):
-        if FONT_SIZES[self.fonts.get_active()] != self.old_font_size \
-           or AVATAR_SIZES[self.avatars.get_active()] != self.old_avatar_size:
-            
-            self.settings.css()
-            gobject.idle_add(self.gui.html.update_css)
-            gobject.idle_add(self.gui.message.update_css)
     
     # Generate listboxes -------------------------------------------------------
     def create_boxlist(self, item, values, default, callback=None):
