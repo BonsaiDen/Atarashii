@@ -1,3 +1,9 @@
+atarashii (0.99.21b-1) all;
+  
+  * Another fix for view flicker when saving the preferences.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 14 Apr 2010 19:38:00 +0200
+
 atarashii (0.99.21a-1) all;
   
   * Fix for account list not getting enabled in some cases.
