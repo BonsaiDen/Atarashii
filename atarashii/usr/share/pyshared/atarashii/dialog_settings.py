@@ -220,15 +220,16 @@ class SettingsDialog(Dialog):
         
         # Sizes ----------------------------------------------------------------
         self.get('fontsize').set_label(lang.settings_font_size)
+        self.old_font_size = self.settings.get('fontsize', FONT_DEFAULT)
         self.fonts = self.create_boxlist('fontbox', FONT_SIZES,
-                                    self.settings.get('fontsize', FONT_DEFAULT),
+                                    self.old_font_size,
                                     self.update_css)
         
         self.get('avatarsize').set_label(lang.settings_avatar_size)
+        self.old_avatar_size = self.settings.get('avatarsize', AVATAR_DEFAULT)
         self.avatars = self.create_boxlist('avatarbox', AVATAR_SIZES,
-                                      self.settings.get('avatarsize',
-                                                        AVATAR_DEFAULT),
-                                                        self.update_css)
+                                           self.old_avatar_size,
+                                           self.update_css)
         
         
         # Save -----------------------------------------------------------------
@@ -268,16 +269,16 @@ class SettingsDialog(Dialog):
                 self.main.logout()
             
             # Render view if needed
-            self.update_css()
-            gobject.idle_add(self.gui.html.update_css)
-            gobject.idle_add(self.gui.message.update_css)
+            self.save_css()
             
             # Save Settings
             self.main.save_settings(False)
             self.gui.tray.update_account_menu()
             self.on_close()
         
-        if not self.main.status(ST_LOGIN_COMPLETE):
+        if not self.main.status(ST_LOGIN_COMPLETE) \
+           and self.main.username != UNSET_USERNAME:
+            
             active = False
         
         elif self.main.status(ST_CONNECT):
@@ -300,9 +301,7 @@ class SettingsDialog(Dialog):
             if self.get_drop_active() == -1:
                 self.main.logout()
             
-            self.settings.css()
-            gobject.idle_add(self.gui.html.update_css)
-            gobject.idle_add(self.gui.message.update_css)
+            self.save_css()
         
         self.__class__.instance = None
         self.gui.settings_dialog = None
@@ -317,6 +316,13 @@ class SettingsDialog(Dialog):
         gobject.idle_add(self.gui.html.update_css)
         gobject.idle_add(self.gui.message.update_css)
     
+    def save_css(self):
+        if FONT_SIZES[self.fonts.get_active()] != self.old_font_size \
+           or AVATAR_SIZES[self.avatars.get_active()] != self.old_avatar_size:
+            
+            self.settings.css()
+            gobject.idle_add(self.gui.html.update_css)
+            gobject.idle_add(self.gui.message.update_css)
     
     # Generate listboxes -------------------------------------------------------
     def create_boxlist(self, item, values, default, callback=None):

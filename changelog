@@ -1,3 +1,10 @@
+atarashii (0.99.21a-1) all;
+  
+  * Fix for account list not getting enabled in some cases.
+  * Fix for flickering views when saving the settings.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 14 Apr 2010 19:25:00 +0200
+
 atarashii (0.99.21-1) all;
   
   + New multi reply/message feature. When holding down SHIFT while submitting,
