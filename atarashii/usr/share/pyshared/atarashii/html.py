@@ -249,7 +249,7 @@ class HTML(view.HTMLView):
                                    self.context_link, reply)
             
             self.add_menu_separator(menu)
-            message = 'message:%s:-1:-1' % user
+            message = 'message:%s:%d:-1' % (user, self.get_user(item).id)
             self.add_menu_link(menu, lang.context_message % menu_escape(user),
                                self.context_link, message)
         
