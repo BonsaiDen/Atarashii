@@ -2,8 +2,11 @@ atarashii (0.99.21b-1) all;
   
   + Add support for the upcoming new youtube url format in the shortener.
   * Another fix for view flicker when saving the preferences.
+  * Fix for strange "User does not exists" messages when trying to send a DM
+    by selecting "send message" in the tweet view.
+  * Fix wrongly added avatars of the user in the message view.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 14 Apr 2010 20:18:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 15 Apr 2010 00:16:00 +0200
 
 atarashii (0.99.21a-1) all;
   
