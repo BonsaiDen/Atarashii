@@ -1,8 +1,9 @@
 atarashii (0.99.21b-1) all;
   
+  + Add support for the upcoming new youtube url format in the shortener.
   * Another fix for view flicker when saving the preferences.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 14 Apr 2010 19:38:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 14 Apr 2010 20:18:00 +0200
 
 atarashii (0.99.21a-1) all;
   
