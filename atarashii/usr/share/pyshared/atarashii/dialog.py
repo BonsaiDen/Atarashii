@@ -267,7 +267,10 @@ class ButtonDialog(object):
         self.title = title
         self.template = template
     
-    def hide(self):
+    def hide(self, timeout=UNSET_TIMEOUT):
+        if timeout != UNSET_TIMEOUT:
+            self.timer = gobject.timeout_add(timeout, self.hide)
+        
         if self.dialog is not None:
             self.dialog.destroy()
             self.dialog = None

@@ -335,7 +335,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         # Hide the Network Error Warning
         if self.main.status(ST_NETWORK_FAILED):
-            gobject.idle_add(self.gui.warning_button.hide)
+            gobject.idle_add(self.gui.warning_button.hide, 5000)
         
         self.main.unset_status(ST_NETWORK_FAILED)
         
