@@ -8,7 +8,7 @@ atarashii (0.99.21c-1) all;
   * View do now update even on network errors to reduce the lag on the time and 
     date information.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 15 Apr 2010 21:41:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 15 Apr 2010 22:11:00 +0200
 
 atarashii (0.99.21b-1) all;
   

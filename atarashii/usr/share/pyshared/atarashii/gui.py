@@ -279,7 +279,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             # TODO implement search
             else:
                 pass
-    
+        
         # Refocus textbox if needed
         elif self.text.has_typed:
             self.text.focus()
