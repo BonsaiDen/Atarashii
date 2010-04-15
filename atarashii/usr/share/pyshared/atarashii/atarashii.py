@@ -361,6 +361,6 @@ class Atarashii(AtarashiiActions):
             
             elif key == 'message':
                 self.message_user = UNSET_TEXT
-                self.message_id = UNSET_ID_NUM
+                self.message_user_id = UNSET_ID_NUM
                 self.message_text = UNSET_TEXT
 

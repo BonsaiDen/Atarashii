@@ -313,7 +313,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                 self.gui.set_mode(MODE_MESSAGES)
             
             self.main.message_user, mid, num = uri.split(':')[1:]
-            self.main.message_id = long(mid)
+            self.main.message_user_id = long(mid)
             num = int(num)
             
             if extra is not None:

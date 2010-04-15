@@ -249,14 +249,14 @@ class TextInput(gtk.TextView):
             if msg is not None:
                 self.message_len = len('d %s ' % msg.group(1))
                 
-                if self.main.message_id == UNSET_ID_NUM:
+                if self.main.message_user_id == UNSET_ID_NUM:
                     self.main.message_user = msg.group(1)
                 
                 else:
                     if msg.group(1) != self.main.message_user:
                         self.main.message_text = UNSET_TEXT
                         self.main.message_user = msg.group(1)
-                        self.main.message_id = UNSET_ID_NUM
+                        self.main.message_user_id = UNSET_ID_NUM
                 
                 # Remove space between username and text
                 check = text[self.message_len:]
@@ -270,7 +270,7 @@ class TextInput(gtk.TextView):
                     
                     gobject.idle_add(self.clear_text, check, pos - length)
             
-            elif self.main.message_id == UNSET_ID_NUM:
+            elif self.main.message_user_id == UNSET_ID_NUM:
                 self.main.message_user = UNSET_TEXT
             
             # Remove whitespace between 'd' and username

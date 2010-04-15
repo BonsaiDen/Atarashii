@@ -104,9 +104,9 @@ class Send(APICall):
             self.send_message(self.text)
     
     def send_message(self, text):
-        if self.main.message_id != UNSET_ID_NUM:
+        if self.main.message_user_id != UNSET_ID_NUM:
             message = self.main.api.send_direct_message(text = text,
-                                    user_id = self.main.message_id)
+                                    user_id = self.main.message_user_id)
         
         else:
             message = self.main.api.send_direct_message(text = text,
