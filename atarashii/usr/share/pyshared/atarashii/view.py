@@ -291,8 +291,10 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Replies
         elif uri.startswith('reply:') or uri.startswith('qreply:'):
-            self.main.reply_user, self.main.reply_id, num = uri.split(':')[1:]
+            self.main.reply_user, rid, num = uri.split(':')[1:]
+            self.main.reply_id = long(rid)
             num = int(num)
+            
             if extra is not None:
                 self.main.reply_text = unescape(self.get_text(extra))
             
@@ -310,10 +312,10 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             if self.gui != MODE_MESSAGES:
                 self.gui.set_mode(MODE_MESSAGES)
             
-            self.main.message_user, \
-            self.main.message_id, num = uri.split(':')[1:]
-            
+            self.main.message_user, mid, num = uri.split(':')[1:]
+            self.main.message_id = long(mid)
             num = int(num)
+            
             if extra is not None:
                 self.main.message_text = unescape(self.get_text(extra))
             
