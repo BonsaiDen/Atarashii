@@ -270,6 +270,7 @@ class ButtonDialog(object):
     def hide(self, timeout=UNSET_TIMEOUT):
         if timeout != UNSET_TIMEOUT:
             self.timer = gobject.timeout_add(timeout, self.hide)
+            return False
         
         if self.dialog is not None:
             self.dialog.destroy()
