@@ -269,7 +269,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.tabs.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL))
         
         # Focus current view
-        if focus:
+        if focus and not self.text.has_typed:
             if self.mode == MODE_MESSAGES:
                 self.message.focus_me()
             
@@ -279,6 +279,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             # TODO implement search
             else:
                 pass
+    
+        # Refocus textbox if needed
+        elif self.text.has_typed:
+            self.text.focus()
+            gobject.idle_add(self.text.grab_focus)
     
     def progress_activity(self):
         self.progress.pulse()
