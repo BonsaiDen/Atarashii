@@ -291,6 +291,10 @@ class AtarashiiActions(object):
                 code = ERR_NETWORK_TWITTER_FAILED
                 self.gui.set_multi_button(True)
                 self.gui.tray.refresh_menu.set_sensitive(False)
+                
+                # Refresh Views
+                gobject.idle_add(self.gui.html.render)
+                gobject.idle_add(self.gui.message.render)
         
         # Catch common Twitter errors
         elif error_code in (HT_400_BAD_REQUEST, HT_401_UNAUTHORIZED,
