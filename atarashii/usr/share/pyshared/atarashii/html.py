@@ -21,8 +21,8 @@ import view
 from language import LANG as lang
 from utils import menu_escape
 
-from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, MODE_TWEETS, \
-                      HTML_UNSET_ID, HTML_UNSET_TEXT
+from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, UNSET_ID_NUM, \
+                      MODE_TWEETS, HTML_UNSET_ID, HTML_UNSET_TEXT
 
 
 class HTML(view.HTMLView):
@@ -239,17 +239,19 @@ class HTML(view.HTMLView):
         # User Options
         if user is not None:
             if link in ('profile', 'avatar'):
-                reply = 'reply:%s:%d:-1' % (user, item_id)
+                reply = 'reply:%s:%d:%d' % (user, item_id, HTML_UNSET_ID)
                 self.add_menu_link(menu, lang.context_reply % menu_escape(user),
                                    self.context_link, reply, item)
             
             else:
-                reply = 'reply:%s:-1:-1' % user
+                reply = 'reply:%s:%d:%d' % (user, UNSET_ID_NUM, HTML_UNSET_ID)
                 self.add_menu_link(menu, lang.context_tweet % menu_escape(user),
                                    self.context_link, reply)
             
             self.add_menu_separator(menu)
-            message = 'message:%s:%d:-1' % (user, self.get_user(item).id)
+            message = 'message:%s:%d:%d' % (user, self.get_user(item).id,
+                                            HTML_UNSET_ID)
+            
             self.add_menu_link(menu, lang.context_message % menu_escape(user),
                                self.context_link, message)
         

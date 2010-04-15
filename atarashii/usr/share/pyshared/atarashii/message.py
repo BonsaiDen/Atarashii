@@ -21,7 +21,8 @@ import view
 from language import LANG as lang
 from utils import menu_escape
 
-from constants import UNSET_TEXT, MODE_MESSAGES, HTML_UNSET_ID, HTML_UNSET_TEXT
+from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, HTML_UNSET_ID, \
+                      HTML_UNSET_TEXT
 
 
 class HTML(view.HTMLView):
@@ -188,7 +189,9 @@ class HTML(view.HTMLView):
             if link in ('profile', 'avatar') \
                and user.lower() != self.main.username.lower():
                 
-                reply = 'message:%s:%d:-1' % (user, self.get_sender(item).id)
+                reply = 'message:%s:%d:%d' % (user, self.get_sender(item).id,
+                                              HTML_UNSET_ID)
+                
                 self.add_menu_link(menu,
                                    lang.context_reply % menu_escape(user),
                                    self.context_link, reply, item)
@@ -196,13 +199,15 @@ class HTML(view.HTMLView):
             elif link == 'rprofile' \
                  and user.lower() != self.main.username.lower():
                 
-                reply = 'message:%s:%d:-1' % (user, self.get_recipient(item).id)
+                reply = 'message:%s:%d:%d' % (user, self.get_recipient(item).id,
+                                              HTML_UNSET_ID)
+                
                 self.add_menu_link(menu,
                                    lang.context_message % menu_escape(user),
                                    self.context_link, reply, item)
             
             elif link == 'user':
-                reply = 'message:%s:-1:-1' % user
+                reply = 'message:%s:%d:%d' % (user, UNSET_ID_NUM, HTML_UNSET_ID)
                 self.add_menu_link(menu,
                                    lang.context_message % menu_escape(user),
                                    self.context_link, reply)
