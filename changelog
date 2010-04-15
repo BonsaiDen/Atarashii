@@ -2,11 +2,13 @@ atarashii (0.99.21c-1) all;
   
   ~ Added a timeout of 5 seconds on network error popups before they disappear 
     automatically on a succeeded refresh.
+  * The textbox now gets focussed after a new style retweet/delete when text 
+    has been typed into it.
   * Fixed a int to string comparsion.
   * View do now update even on network errors to reduce the lag on the time and 
     date information.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 15 Apr 2010 00:16:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 15 Apr 2010 21:41:00 +0200
 
 atarashii (0.99.21b-1) all;
   
