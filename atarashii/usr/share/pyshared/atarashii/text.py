@@ -273,6 +273,14 @@ class TextInput(gtk.TextView):
             elif self.main.message_id == UNSET_ID_NUM:
                 self.main.message_user = UNSET_TEXT
             
+            # Remove whitespace between 'd' and username
+            elif len(text) > 3 and text[2].strip(' \n\t\r\v') == '':
+                pos = self.get_buffer().get_iter_at_mark(
+                                    self.get_buffer().get_insert()).get_offset()
+                
+                text = 'd ' + text[1:].lstrip()
+                gobject.idle_add(self.clear_text, text, pos - 1)
+            
             # check for 'd user' and switch to messaging
             at_user = REPLY_REGEX.match(text)
             if at_user is not None:
