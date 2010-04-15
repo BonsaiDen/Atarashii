@@ -34,7 +34,7 @@ DBUS_PATH = '/org/bonsaiden/Atarashii'
 class AtarashiiObject(dbus.service.Object):
     def __init__(self):
         self.main = None
-        self.unique = False
+        self.is_unique = False
         
         self.session = dbus.SessionBus()
         self.obj = self.session.get_object(DESK_NAME, DESK_PATH)
@@ -49,7 +49,7 @@ class AtarashiiObject(dbus.service.Object):
             atarashii.present()
         
         else:
-            self.unique = True
+            self.is_unique = True
             bus_name = dbus.service.BusName(DBUS_NAME, bus = self.session)
             dbus.service.Object.__init__(self, bus_name, DBUS_PATH)
     

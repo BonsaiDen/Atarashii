@@ -28,7 +28,7 @@ import sys
 
 # Make sure there is only one instance of Atarashii
 DBUS_INSTANCE = bus.AtarashiiObject()
-if not DBUS_INSTANCE.unique:
+if not DBUS_INSTANCE.is_unique:
     gtk.gdk.notify_startup_complete()
     sys.exit(69) # os.EX_UNAVAILABLE
 
