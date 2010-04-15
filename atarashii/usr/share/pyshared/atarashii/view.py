@@ -282,7 +282,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         # Load history
         if uri.startswith('more:'):
             if not self.main.status(ST_HISTORY):
-                self.load_history_id = int(uri.split(':')[1]) - 1
+                self.load_history_id = long(uri.split(':')[1]) - 1
                 if self.load_history_id != HTML_UNSET_ID:
                     self.main.set_status(ST_HISTORY)
                     self.gui.show_progress()
@@ -296,7 +296,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             if extra is not None:
                 self.main.reply_text = unescape(self.get_text(extra))
             
-            elif num != -1:
+            elif num != HTML_UNSET_ID:
                 self.main.reply_text = unescape(self.get_text(num))
             
             else:
@@ -317,7 +317,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             if extra is not None:
                 self.main.message_text = unescape(self.get_text(extra))
             
-            elif num != -1:
+            elif num != HTML_UNSET_ID:
                 self.main.message_text = unescape(self.get_text(num))
             
             else:
@@ -345,9 +345,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         # Delete
         elif uri.startswith('delete:'):
             dtype, item_id = uri.split(':')[1:]
-            item_id = int(item_id)
+            item_id = long(item_id)
             text = unescape(self.get_text(extra))
-            
             
             def delete_tweet():
                 self.main.delete(tweet_id = item_id)
@@ -371,12 +370,12 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         # Favorite
         elif uri.startswith('fav:'):
             name, item_id = uri.split(':')[1:]
-            gobject.idle_add(self.main.favorite, int(item_id), True, name)
+            gobject.idle_add(self.main.favorite, long(item_id), True, name)
         
         # Un-Favorite
         elif uri.startswith('unfav:'):
             name, item_id, = uri.split(':')[1:]
-            gobject.idle_add(self.main.favorite, int(item_id), False, name)
+            gobject.idle_add(self.main.favorite, long(item_id), False, name)
         
         # Edit
         elif uri.startswith('edit:'):
