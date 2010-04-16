@@ -80,6 +80,8 @@ FONT_DEFAULT = 10
 FONT_SIZES = [9, 10, 11, 12, 16]
 AVATAR_DEFAULT = 32
 AVATAR_SIZES = [24, 32, 40, 48, 64, 96]
+THEME_DEFAULT = 'fuji_blue_default'
+
 
 # Errors, should be below 0 ----------------------------------------------------
 ERR_TWEET_NOT_FOUND = -12

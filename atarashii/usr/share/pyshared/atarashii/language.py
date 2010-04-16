@@ -152,6 +152,7 @@ LANG = {
         'settings_tab_general': 'Allgemein',
         'settings_tab_accounts': 'Accounts',
         'settings_tab_notifications': 'Benachrichtigungen',
+        'settings_tab_theme': 'Thema',
         'settings_notifications_enable': 'Aktivieren',
         'settings_notifications_sound': 'Sounds abspielen',
         'settings_file_tweets': 'Tweets:',
@@ -168,6 +169,7 @@ LANG = {
         'settings_shortener': 'URL-Kürzer:',
         'settings_avatar_size': 'Avatargröße:',
         'settings_font_size': 'Schriftgröße:',
+        'settings_color_theme': 'Farbschema:',
         'settings_add': 'Erstellen',
         'settings_edit': 'Bearbeiten',
         'settings_delete': 'Löschen',
@@ -525,6 +527,7 @@ LANG = {
         'settings_tab_general': 'General',
         'settings_tab_accounts': 'Accounts',
         'settings_tab_notifications': 'Notifications',
+        'settings_tab_theme': 'Theme',
         'settings_notifications_enable': 'Enable',
         'settings_notifications_sound': 'Play sounds',
         'settings_file_tweets': 'Tweets:',
@@ -539,8 +542,9 @@ LANG = {
         'settings_taskbar': 'Show Atarashii in the Taskbar',
         'settings_info_sound': 'Play info sounds',
         'settings_shortener': 'URL-Shortener:',
-        'settings_avatar_size': 'Avatarsize:',
-        'settings_font_size': 'Fontsize:',
+        'settings_avatar_size': 'Avatar size:',
+        'settings_font_size': 'Font size:',
+        'settings_color_theme': 'Color scheme:',
         'settings_add': 'Add',
         'settings_edit': 'Edit',
         'settings_delete': 'Delete',
@@ -773,5 +777,6 @@ class Language(object):
             setattr(self, key, value)
 
 # Select Language
-LANG = Language(locale.getdefaultlocale()[0])
+LANG_NAME = locale.getdefaultlocale()[0]
+LANG = Language(LANG_NAME)
 

@@ -23,11 +23,12 @@ import gobject
 
 import os
 
-from language import LANG as lang
+from language import LANG as lang, LANG_NAME
 from dialog import Dialog, MessageDialog
 from utils import URLShorter, URLExpander
+from themes import COLOR_THEMES
 from constants import SHORTS_LIST, USERNAME_CHARS, FONT_DEFAULT, FONT_SIZES, \
-                      AVATAR_DEFAULT, AVATAR_SIZES
+                      AVATAR_DEFAULT, AVATAR_SIZES, THEME_DEFAULT
 
 from settings import THEME_SOUNDS, THEME_DIR
 
@@ -70,6 +71,7 @@ class SettingsDialog(Dialog):
         self.get('users').set_label(lang.settings_tab_accounts)
         self.get('general').set_label(lang.settings_tab_general)
         self.get('notifications').set_label(lang.settings_tab_notifications)
+        self.get('theme').set_label(lang.settings_tab_theme)
         
         
         # Accounts -------------------------------------------------------------
@@ -232,6 +234,18 @@ class SettingsDialog(Dialog):
                                            self.update_css)
         
         
+        # Theme ----------------------------------------------------------------
+        self.get('colortheme').set_label(lang.settings_color_theme)
+        self.old_color_theme = self.settings.get('color_theme', THEME_DEFAULT)
+        self.color_ids = sorted(COLOR_THEMES.keys())
+        self.color_names = [COLOR_THEMES[i]['title_' + LANG_NAME] \
+                            for i in self.color_ids]
+        
+        self.themes = self.create_boxlist('colorthemebox', self.color_names,
+                self.color_names[self.color_ids.index(self.old_color_theme)],
+                self.update_css)
+        
+        
         # Save -----------------------------------------------------------------
         oldusername = self.main.username
         
@@ -255,6 +269,9 @@ class SettingsDialog(Dialog):
             self.settings['fontsize'] = FONT_SIZES[self.fonts.get_active()]
             self.settings['avatarsize'] = AVATAR_SIZES[
                                           self.avatars.get_active()]
+            
+            self.settings['color_theme'] = self.color_ids[
+                                           self.themes.get_active()]
             
             self.settings.set_autostart(autostart.get_active())
             self.gui.show_in_taskbar(taskbar.get_active())
@@ -303,7 +320,9 @@ class SettingsDialog(Dialog):
             
             if FONT_SIZES[self.fonts.get_active()] != self.old_font_size \
                or AVATAR_SIZES[self.avatars.get_active()] \
-                  != self.old_avatar_size:
+                  != self.old_avatar_size \
+               or self.color_ids[self.themes.get_active()] \
+                  != self.old_color_theme: 
                 
                 self.settings.css()
                 gobject.idle_add(self.gui.html.update_css)
@@ -317,7 +336,8 @@ class SettingsDialog(Dialog):
     # CSS ----------------------------------------------------------------------
     def update_css(self, *args):
         self.settings.css(FONT_SIZES[self.fonts.get_active()],
-                          AVATAR_SIZES[self.avatars.get_active()])
+                          AVATAR_SIZES[self.avatars.get_active()],
+                          self.color_ids[self.themes.get_active()])
         
         gobject.idle_add(self.gui.html.update_css)
         gobject.idle_add(self.gui.message.update_css)

@@ -197,7 +197,7 @@ class ViewHTML(object):
                         spacer = 'middle_dark_gray'
                     
                     else:
-                        spacer = 'green' if message else 'yellow'
+                        spacer = 'message' if message else 'mention'
                 
                 elif highlight and self.last_highlight:
                     spacer = 'dark_blue'
@@ -224,7 +224,7 @@ class ViewHTML(object):
                         spacer = 'dark_gray'
                     
                     else:
-                        spacer = 'green' if message else 'yellow'
+                        spacer = 'message' if message else 'mention'
                 
                 # Just more normal tweets
                 else:
@@ -250,7 +250,7 @@ class ViewHTML(object):
                         spacer = 'middle_normal_gray'
                     
                     else:
-                        spacer = 'light_green' if message else 'light_yellow'
+                        spacer = 'message_old' if message else 'mention_old'
                 
                 elif highlight and self.last_highlight:
                     spacer = 'middle_normal_blue'
@@ -277,7 +277,7 @@ class ViewHTML(object):
                         spacer = 'normal_gray'
                     
                     else:
-                        spacer = 'light_green' if message else 'light_yellow'
+                        spacer = 'message_old' if message else 'mention_old'
                 
                 # Just more normal tweets
                 else:
@@ -291,7 +291,7 @@ class ViewHTML(object):
                         spacer = 'middle_normal_gray'
                     
                     else:
-                        spacer = 'white'
+                        spacer = 'tweet_old'
         
         return '<div class="spacer_%s"></div>' % spacer
     

@@ -21,7 +21,10 @@ import urllib
 import time
 import locale
 
-from constants import UNSET_SETTING, UNSET_ID_NUM, FONT_DEFAULT, AVATAR_DEFAULT
+from constants import UNSET_SETTING, UNSET_ID_NUM, FONT_DEFAULT, \
+                      AVATAR_DEFAULT, THEME_DEFAULT
+
+from themes import COLOR_THEMES
 
 # File Paths
 HOME_DIR = os.path.expanduser('~')
@@ -75,7 +78,7 @@ class Settings(object):
     
     
     # CSS ----------------------------------------------------------------------
-    def css(self, font=None, avatar=None):
+    def css(self, font=None, avatar=None, color_theme=None):
         # Delete old css files
         for i in os.listdir(ATARASHII_DIR):
             css_file = os.path.join(ATARASHII_DIR, i)
@@ -101,6 +104,13 @@ class Settings(object):
         else:
             font_size = font
         
+        # Theme
+        if not self['color_theme'] in COLOR_THEMES:
+            self['color_theme'] = THEME_DEFAULT
+        
+        if color_theme is None:
+            color_theme = self['color_theme']
+        
         with open(self.main.get_resource('atarashii.css'), 'rb') as f:
             css_data = f.read()
             with open(self.css_file, 'wb') as csf:
@@ -119,6 +129,11 @@ class Settings(object):
                 css_data = css_data.replace('{FONT11}', str(font_size + 1))
                 css_data = css_data.replace('{FONT12}', str(font_size + 2))
                 css_data = css_data.replace('{FONT14}', str(font_size + 4))
+                
+                colors = COLOR_THEMES[color_theme]['colors']
+                for key, value in colors.iteritems():
+                    css_data = css_data.replace('{%s}' % key, value)
+                
                 csf.write(css_data)
     
     

@@ -29,7 +29,7 @@ a {
 ------------------------------------------------------------------------------*/
 .loadmore {
 	padding-top: 4px;
-	border-top: 2px solid #d2d2d2;
+	border-top: 2px solid #{LOADMORE};
 }
 
 .loadmore, .inner-text, .avatar {
@@ -59,7 +59,7 @@ a {
 .loading {
 	font-size: {FONT14}px;
 	margin-top: 10px;
-	color: #5b5b5b;
+	color: #{LOADING};
 }
 
 .loadingtext {
@@ -84,7 +84,7 @@ a {
 }
 
 .unloaded {
-	background: #dbdbdb;
+	background: #{BACKGROUND};
 }
 
 .unloaded, .time, .reply {
@@ -95,7 +95,7 @@ a {
 /* Links -----------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 a:active, a:hover, a {
-	color: #004363;
+	color: #{LINKS};
 }
 
 a:active, a:hover, a, .protected {
@@ -147,7 +147,7 @@ a:active, a:hover, a, .protected {
 }
 
 .tweet {
-	background: #d8e4ed;
+	background: #{TWEET};
 }
 
 .tweet, .oldtweet, .highlight, .highlightold, .mentioned, .mentionedold,
@@ -157,35 +157,35 @@ a:active, a:hover, a, .protected {
 }
 
 .oldtweet {
-	background: #ffffff;
+	background: #{TWEET_OLD};
 }
 
 .highlight {
-	background: #c9deed;
+	background: #{HIGHLIGHT};
 }
 
 .highlightold {
-	background: #e4e9ed;
+	background: #{HIGHLIGHT_OLD};
 }
 
 .mentioned {
-	background: #ffffab;
+	background: #{MENTION};
 }
 
 .mentionedold {
-	background: #ffffc2;
+	background: #{MENTION_OLD};
 }
 
 .message {
-	background: #c8f2c8;
+	background: #{MESSAGE};
 }
 
 .messageold {
-	background: #dbf6db;
+	background: #{MESSAGE_OLD};
 }
 
 .time, .time a, .time a:hover, .reply, .reply a, .reply a:hover {
-	color: #555;
+	color: #{TIME};
 }
 
 .time, .reply {
@@ -283,58 +283,58 @@ a:active, a:hover, a, .protected {
 /* Sapcers ---------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 .spacer_normal_gray {
-	border-bottom: 2px solid #d9d9d9;
+	border-bottom: 2px solid #{SPACER};
 }
 
 .spacer_dark_gray {
-	border-bottom: 2px solid #beced0;
+	border-bottom: 2px solid #{SPACER_DARK};
 }
 
 .spacer_middle_dark_gray {
-    border-bottom: 2px solid #bed1d8;
+    border-bottom: 2px solid #{SPACER_MIDDLE_DARK};
 }
 
 .spacer_middle_normal_gray {
-    border-bottom: 2px solid #dbdddf;
+    border-bottom: 2px solid #{SPACER_MIDDLE};
 }
 
-.spacer_white {
-	border-bottom: 2px solid #ffffff;
+.spacer_tweet_old {
+	border-bottom: 2px solid #{TWEET_OLD};
 }
 
 .spacer_normal_blue {
-	border-bottom: 2px solid #d8e4ed;
+	border-bottom: 2px solid #{TWEET};
 }
 
 .spacer_dark_blue {
-    border-bottom: 2px solid #b7cbdf;
+    border-bottom: 2px solid #{HIGHLIGHT_DARK};
 }
 
 .spacer_middle_dark_blue {
-	border-bottom: 2px solid #c9deed;
+	border-bottom: 2px solid #{HIGHLIGHT};
 }
 
 .spacer_middle_normal_blue {
-    border-bottom: 2px solid #c7d3df;
+    border-bottom: 2px solid #{HIGHLIGHT_MIDDLE};
 }
 
 .spacer_light_blue {
-	border-bottom: 2px solid #e4e9ed;
+	border-bottom: 2px solid #{HIGHLIGHT_OLD};
 }
 
-.spacer_yellow {
-	border-bottom: 2px solid #ffffab;
+.spacer_mention {
+	border-bottom: 2px solid #{MENTION};
 }
 
-.spacer_light_yellow {
-	border-bottom: 2px solid #ffffc2;
+.spacer_mention_old {
+	border-bottom: 2px solid #{MENTION_OLD};
 }
 
-.spacer_green {
-    border-bottom: 2px solid #c8f2c8;
+.spacer_message {
+    border-bottom: 2px solid #{MESSAGE};
 }
 
-.spacer_light_green {
-    border-bottom: 2px solid #dbf6db;
+.spacer_message_old {
+    border-bottom: 2px solid #{MESSAGE_OLD};
 }
 
