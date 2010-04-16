@@ -238,8 +238,13 @@ class SettingsDialog(Dialog):
         self.get('colortheme').set_label(lang.settings_color_theme)
         self.old_color_theme = self.settings.get('color_theme', THEME_DEFAULT)
         self.color_ids = sorted(COLOR_THEMES.keys())
-        self.color_names = [COLOR_THEMES[i]['title_' + LANG_NAME] \
-                            for i in self.color_ids]
+        self.color_names = []
+        for i in self.color_ids:
+            key = 'title_' + LANG_NAME
+            name = COLOR_THEMES[i][key] if key in COLOR_THEMES[i] \
+                   else COLOR_THEMES[i]['title_en_US']
+            
+            self.color_names.append(name)
         
         self.themes = self.create_boxlist('colorthemebox', self.color_names,
                 self.color_names[self.color_ids.index(self.old_color_theme)],
