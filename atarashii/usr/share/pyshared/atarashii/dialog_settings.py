@@ -314,6 +314,7 @@ class SettingsDialog(Dialog):
         self.close_button.connect('clicked', save)
         cancel_button.connect('clicked', self.on_close)
         gobject.idle_add(self.drop.grab_focus)
+        self.dlg.set_size_request(-1, -1)
     
     def on_close(self, *args):
         if self.file_chooser is not None:
