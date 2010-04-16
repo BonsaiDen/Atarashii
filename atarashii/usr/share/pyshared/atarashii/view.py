@@ -24,7 +24,7 @@ import gobject
 import webkit
 import webbrowser
 
-import twp
+import ttp
 
 from utils import unescape
 from view_menu import ViewMenu
@@ -90,7 +90,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Other Stuff
         self.set_maintains_back_forward_list(False)
-        self.parser = twp.Parser()
+        self.parser = ttp.Parser()
         self.item_count = HTML_UNSET_ID
         
         self.lang_loading = HTML_UNSET_TEXT
