@@ -1,3 +1,9 @@
+atarashii (0.99.2-1) all;
+  
+  + Added support for color themes.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 16 Apr 2010 23:10:00 +0200
+
 atarashii (0.99.21d-1) all;
   
   * Quickfix for an issues with the warning popup timeout.
