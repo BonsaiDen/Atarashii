@@ -35,7 +35,7 @@ COLOR_THEMES = {
             'HIGHLIGHT': 'c9deed',
             'HIGHLIGHT_OLD': 'e4e9ed',
             'HIGHLIGHT_DARK': 'b7cbdf',
-            'HIGHLIGHT_MIDDLE': 'c7d3df', 
+            'HIGHLIGHT_MIDDLE': 'c7d3df',
             
             'MESSAGE': 'c8f2c8',
             'MESSAGE_OLD': 'dbf6db',

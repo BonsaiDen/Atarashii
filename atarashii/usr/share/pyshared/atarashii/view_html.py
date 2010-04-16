@@ -187,7 +187,7 @@ class ViewHTML(object):
     def insert_spacer(self, item, user, highlight, mentioned,
                       next_highlight=False, force=False, message=False):
         
-        spacer = ''
+        spacer = 'foo'
         if item.id > self.new_items_id:
             
             # Name change

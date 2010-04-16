@@ -327,7 +327,7 @@ class SettingsDialog(Dialog):
                or AVATAR_SIZES[self.avatars.get_active()] \
                   != self.old_avatar_size \
                or self.color_ids[self.themes.get_active()] \
-                  != self.old_color_theme: 
+                  != self.old_color_theme:
                 
                 self.settings.css()
                 gobject.idle_add(self.gui.html.update_css)
