@@ -249,7 +249,7 @@
               </packing>
             </child>
             <child>
-              <object class="GtkHBox" id="hbox3">
+              <object class="GtkHBox" id="tabsbox">
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkVBox" id="vbox3">

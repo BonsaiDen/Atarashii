@@ -171,6 +171,11 @@ class Atarashii(AtarashiiActions):
         # Set Mode
         self.gui.set_mode(self.settings['mode_' + self.username])
         
+        # Status
+        self.unset_status(ST_LOGIN_SUCCESSFUL | ST_LOGIN_COMPLETE | ST_SEND | \
+                          ST_RECONNECT | ST_UPDATE | ST_LOGIN_ERROR \
+                          | ST_LOGIN_COMPLETE | ST_LOGIN_ERROR)
+        
         # Progress
         self.gui.hide_all(False)
         self.gui.show_progress()
@@ -178,11 +183,6 @@ class Atarashii(AtarashiiActions):
         # Connect
         if self.reconnect_timeout is not None:
             gobject.source_remove(self.reconnect_timeout)
-        
-        # Status
-        self.unset_status(ST_LOGIN_SUCCESSFUL | ST_LOGIN_COMPLETE | ST_SEND | \
-                          ST_RECONNECT | ST_UPDATE | ST_LOGIN_ERROR \
-                          | ST_LOGIN_COMPLETE | ST_LOGIN_ERROR)
         
         self.set_status(ST_CONNECT)
         self.reconnect_timeout = None

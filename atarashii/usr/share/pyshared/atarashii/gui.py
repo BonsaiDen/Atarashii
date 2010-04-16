@@ -114,6 +114,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.message.splash()
         
         # Tabs
+        self.tabsbox = gtb.get_object('tabsbox')
         self.tabs = gtb.get_object('pages')
         self.tab_tweets = gtb.get_object('tab_tweets')
         self.tab_messages = gtb.get_object('tab_messages')
@@ -266,6 +267,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         self.text.set_sensitive(True)
         self.set_multi_button(True)
+        if self.main.status(ST_LOGIN_SUCCESSFUL):        
+            self.tabsbox.show()
+            
         self.tabs.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL))
         
         # Focus current view
@@ -315,6 +319,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         if progress:
             self.progress.hide()
             self.progress_visible = False
+        
+        if not self.main.status(ST_LOGIN_SUCCESSFUL):
+            self.tabsbox.hide()
         
         self.text_scroll.hide()
         self.set_multi_button(False, None, False, True)
