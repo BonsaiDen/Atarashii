@@ -187,58 +187,58 @@ class ViewHTML(object):
     def insert_spacer(self, item, user, highlight, mentioned,
                       next_highlight=False, force=False, message=False):
         
-        spacer = 'foo'
+        spacer = ''
         if item.id > self.new_items_id:
             
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if mentioned:
                     if not self.last_mentioned:
-                        spacer = '10' # Middle Dark Gray
+                        spacer = 'middle_dark_gray'
                     
                     else:
-                        spacer = '14' if message else '5' # Green/Yellow
+                        spacer = 'green' if message else 'yellow'
                 
                 elif highlight and self.last_highlight:
-                    spacer = '13' # Middle Dark Blue
+                    spacer = 'dark_blue'
                 
                 elif highlight or self.last_highlight:
-                    spacer = '10' # Middle Dark Gray
+                    spacer = 'middle_dark_gray'
                 
                 else:
-                    spacer = '1' # Dark Gray
+                    spacer = 'dark_gray'
             
             else:
                 
                 # More @username
                 if highlight:
                     if not self.last_highlight:
-                        spacer = '10' # Middle Dark Gray
+                        spacer = 'middle_dark_gray'
                     
                     else:
-                        spacer = '6' # Normal/Dark Blue
+                        spacer = 'middle_dark_blue'
                 
                 # More mentions
                 elif mentioned:
                     if not self.last_mentioned:
-                        spacer = '1' # Dark Gray
+                        spacer = 'dark_gray'
                     
                     else:
-                        spacer = '14' if message else '5' # Green/Yellow
+                        spacer = 'green' if message else 'yellow'
                 
                 # Just more normal tweets
                 else:
                     if next_highlight and self.last_highlight:
-                        spacer = '1' #Dark Gray
+                        spacer = 'dark_gray'
                     
                     elif next and self.last_mentioned:
-                        spacer = '1' # Dark Gray
+                        spacer = 'dark_gray'
                     
                     elif self.last_highlight:
-                        spacer = '10' # Middle Dark Gray
+                        spacer = 'middle_dark_gray'
                     
                     else:
-                        spacer = '4' # Dark/Normal Blue
+                        spacer = 'normal_blue'
         
         # Old Tweets
         else:
@@ -247,53 +247,53 @@ class ViewHTML(object):
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if mentioned:
                     if not self.last_mentioned:
-                        spacer = '11' # Middle Normal Gray
+                        spacer = 'middle_normal_gray'
                     
                     else:
-                        spacer = '15' if message else '8' # Green / Yellow
+                        spacer = 'light_green' if message else 'light_yellow'
                 
                 elif highlight and self.last_highlight:
-                    spacer = '12' # Middle Normal Blue
+                    spacer = 'middle_normal_blue'
                 
                 elif highlight or self.last_highlight:
-                    spacer = '11' # Middle Normal Gray
+                    spacer = 'middle_normal_gray'
                 
                 else:
-                    spacer = '0' # Normal Gray
+                    spacer = 'normal_gray'
             
             else:
                 
                 # More @username
                 if highlight:
                     if not self.last_highlight:
-                        spacer = '11' # Middle Normal Gray
+                        spacer = 'middle_normal_gray'
                     
                     else:
-                        spacer = '7' # White/Light Blue
+                        spacer = 'light_blue'
                 
                 # More mentions
                 elif mentioned:
                     if not self.last_mentioned:
-                        spacer = '0' # Normal Gray
+                        spacer = 'normal_gray'
                     
                     else:
-                        spacer = '15' if message else '8' # Green / Yellow
+                        spacer = 'light_green' if message else 'light_yellow'
                 
                 # Just more normal tweets
                 else:
                     if next_highlight and self.last_highlight:
-                        spacer = '0' # Normal Gray
+                        spacer = 'normal_gray'
                     
                     elif next and self.last_mentioned:
-                        spacer = '1' # Dark Gray
+                        spacer = 'dark_gray'
                     
                     elif self.last_highlight:
-                        spacer = '11' # Middle Normal Gray
+                        spacer = 'middle_normal_gray'
                     
                     else:
-                        spacer = '2' # Light Blue/White
+                        spacer = 'white'
         
-        return '<div class="spacer%s"></div>' % spacer
+        return '<div class="spacer_%s"></div>' % spacer
     
     def avatar_html(self, user, num, img):
         return '''<a href="avatar:%d:http://twitter.com/%s">

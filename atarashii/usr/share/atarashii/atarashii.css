@@ -252,7 +252,6 @@ a:active, a:hover, a, .protected {
 	background: url("{RESOURCES}fav.png");
 }
 
-
 .highlightold .undofav a, .highlight .undofav a,
 .oldtweet .undofav a, .tweet .undofav a,
 .mentioned .undofav a, .mentionedold .undofav a {
@@ -261,11 +260,9 @@ a:active, a:hover, a, .protected {
  	background-position: -12px 0px;
 }
 
-
 .dofav a, .undofav a {
 	margin-top: 4px;
 }
-
 
 .highlightold:hover .blocker, .highlight:hover .blocker,
 .oldtweet:hover .blocker, .tweet:hover .blocker,
@@ -285,67 +282,59 @@ a:active, a:hover, a, .protected {
 
 /* Sapcers ---------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
-.spacerfoo {
-	border-bottom: 2px solid #f00;
-}
-
-.spacer0 {
+.spacer_normal_gray {
 	border-bottom: 2px solid #d9d9d9;
 }
 
-.spacer1 {
+.spacer_dark_gray {
 	border-bottom: 2px solid #beced0;
 }
 
-.spacer3 {
-	border-bottom: 2px solid #cdd8df;
-}
-
-.spacer2 {
-	border-bottom: 2px solid #ffffff;
-}
-
-.spacer4 {
-	border-bottom: 2px solid #d8e4ed;
-}
-
-.spacer5 {
-	border-bottom: 2px solid #ffffab;
-}
-
-.spacer6 {
-	border-bottom: 2px solid #c9deed;
-}
-
-.spacer7 {
-	border-bottom: 2px solid #e4e9ed;
-}
-
-.spacer8 {
-	border-bottom: 2px solid #ffffc2;
-}
-
-.spacer10 {
+.spacer_middle_dark_gray {
     border-bottom: 2px solid #bed1d8;
 }
 
-.spacer11 {
+.spacer_middle_normal_gray {
     border-bottom: 2px solid #dbdddf;
 }
 
-.spacer12 {
-    border-bottom: 2px solid #c7d3df;
+.spacer_white {
+	border-bottom: 2px solid #ffffff;
 }
 
-.spacer13 {
+.spacer_normal_blue {
+	border-bottom: 2px solid #d8e4ed;
+}
+
+.spacer_dark_blue {
     border-bottom: 2px solid #b7cbdf;
 }
 
-.spacer14 {
+.spacer_middle_dark_blue {
+	border-bottom: 2px solid #c9deed;
+}
+
+.spacer_middle_normal_blue {
+    border-bottom: 2px solid #c7d3df;
+}
+
+.spacer_light_blue {
+	border-bottom: 2px solid #e4e9ed;
+}
+
+.spacer_yellow {
+	border-bottom: 2px solid #ffffab;
+}
+
+.spacer_light_yellow {
+	border-bottom: 2px solid #ffffc2;
+}
+
+.spacer_green {
     border-bottom: 2px solid #c8f2c8;
 }
 
-.spacer15 {
+.spacer_light_green {
     border-bottom: 2px solid #dbf6db;
 }
 
