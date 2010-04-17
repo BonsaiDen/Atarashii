@@ -178,6 +178,9 @@ class HTML(view.HTMLView):
         
         
         # HTML Snippet ---------------------------------------------------------
+        text_class = 'inner-text' if avatar == HTML_UNSET_TEXT \
+                     else 'inner-text-avatar'
+        
         html = '''
         <div class="viewitem %s" id="%d"><div class="avatar">%s</div>
         <div class="actions">
@@ -187,7 +190,7 @@ class HTML(view.HTMLView):
                 (lang.html_reply % user.screen_name) + \
                 '''"> </a></div>''' + favorite + '''
         </div>
-        <div class="inner-text">
+        <div class="''' + text_class + '''">
             <div><span class="name">''' + \
                 ('<b>RT</b> ' if retweeted else '') + \
                 '''<b><a href="profile:%d:http://twitter.com/%s" title="''' + \

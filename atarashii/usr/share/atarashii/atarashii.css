@@ -32,7 +32,7 @@ a {
 	border-top: 2px solid #{LOADMORE};
 }
 
-.loadmore, .inner-text, .avatar {
+.loadmore, .inner-text, .inner-text-avatar, .avatar {
 	padding-bottom: 4px;
 }
 
@@ -40,8 +40,8 @@ a {
 	text-align: center;
 }
 
-.loadmore a, .inner-text a, .name a, .time a, .reply a, .doreply a,
-.doreply a:hover, .doretweet a, .doretweet a:hover {
+.loadmore a, .inner-text a, .inner-text-avatar a, .name a, .time a, .reply a,
+.doreply a, .doreply a:hover, .doretweet a, .doretweet a:hover {
 	text-decoration: none;
 }
 
@@ -102,8 +102,8 @@ a:active, a:hover, a, .protected {
 	cursor: pointer;
 }
 
-.loadmore a:hover, .name a:hover, .inner-text a:hover, .time a:hover,
-.reply a:hover {
+.loadmore a:hover, .name a:hover, .inner-text-avatar a:hover,
+.inner-text a:hover, .time a:hover,.reply a:hover {
 	text-decoration: underline;
 }
 
@@ -119,14 +119,17 @@ a:active, a:hover, a, .protected {
     width: {AVATAR32}px;
 }
 
-.inner-text {
+.inner-text, .inner-text-avatar {
 	word-wrap: break-word;
 	padding-top: 5px;
 	margin-right: 20px;
+}
+
+.inner-text-avatar {
 	min-height: {AVATAR34}px;
 }
 
-.inner-text, .text {
+.inner-text, .inner-text-avatar, .text {
 	margin-left: {AVATAR38}px;
 }
 

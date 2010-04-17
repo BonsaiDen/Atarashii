@@ -5,8 +5,11 @@ atarashii (0.99.22-1) all;
     username or avatar. You can still get to the users page at Twitter.com by
     using the context menu.
   ~ Tabs are now hidden while logged out or logging in.
+  * Fix for url expanding problems with WordPress.
+  * Removed the minimal height on tweets which don't have an avatar, this
+    reduces the wasted space with bigger avatars.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 17 Apr 2010 03:41:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 17 Apr 2010 04:11:00 +0200
 
 atarashii (0.99.21d-1) all;
   
