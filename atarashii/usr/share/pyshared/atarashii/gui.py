@@ -381,6 +381,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             details.append(lang.profile_description % escape(user.description))
         
         self.profile_bio.set_label('\n'.join(details))
+        if len(details) == 0:
+            self.profile_bio.hide()
+        
+        else:
+            self.profile_bio.show()
+        
         self.profile_box.show()
     
     def hide_profile(self, *args):
