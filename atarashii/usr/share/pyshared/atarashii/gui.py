@@ -364,9 +364,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         url = ('<a href="http://twitter.com/%s">'
                + lang.profile_link + '</a>') % user.screen_name
         
-        self.profile_name.set_label(lang.profile_name \
-                                    % (lang.name(user.screen_name), url))
-        
+        self.profile_name.set_label(lang.profile_name % (user.screen_name, url))
         self.profile_info.set_label(lang.profile_info \
                                     % (user.name, user.statuses_count,
                                        user.followers_count,
