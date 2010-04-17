@@ -91,7 +91,8 @@ LANG = {
         
         # Profile
         'profile_loading': '%s Profil wird geladen...',
-        'profile_name': '<b>%s Profil</b>',
+        'profile_link': 'Auf Twitter.com',
+        'profile_name': '<b>%s Profil</b>(%s)',
         'profile_info':
             '<b><span size="large">%s</span></b>\n'
             '<b>%d</b> Tweets\n<b>%d</b> Follower\nFollowing <b>%d</b>',
@@ -477,7 +478,8 @@ LANG = {
         
         # Profile
         'profile_loading': 'Loading %s profile...',
-        'profile_name': '<b>%s profile</b>',
+        'profile_link': 'On Twitter.com',
+        'profile_name': '<b>%s profile</b>(%s)',
         'profile_info':
             '<b><span size="large">%s</span></b>\n'
             '<b>%d</b> Tweets\n<b>%d</b> Followers\nFollowing <b>%d</b>',

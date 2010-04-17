@@ -360,8 +360,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         img_file = self.main.updater.get_image(None, False, user)
         self.profile_image.set_from_file(img_file)
         
+        
+        url = ('<a href="http://twitter.com/%s">'
+               + lang.profile_link + '</a>') % user.screen_name
+        
         self.profile_name.set_label(lang.profile_name \
-                                    % lang.name(user.screen_name))
+                                    % (lang.name(user.screen_name), url))
         
         self.profile_info.set_label(lang.profile_info \
                                     % (user.name, user.statuses_count,
