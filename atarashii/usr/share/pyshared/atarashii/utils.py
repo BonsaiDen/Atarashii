@@ -239,11 +239,12 @@ class URLExpander(threading.Thread):
                         # Work around locations without hosts
                         # Who the hell would return something like that?
                         # Flickr does with 'flic.kr' links
-                        if current_url.startswith('/'):
+                        # Wordpress does this too
+                        if not current_url.startswith('http:'):
                             if not last_host.startswith('http'):
                                 last_host = 'http://' + last_host
                             
-                            current_url = last_host + current_url
+                            current_url = last_host.rstrip('/') + '/' + current_url.lstrip('/')
                         
                         hops += 1
             
