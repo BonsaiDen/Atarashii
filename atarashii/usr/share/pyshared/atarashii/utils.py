@@ -244,7 +244,8 @@ class URLExpander(threading.Thread):
                             if not last_host.startswith('http'):
                                 last_host = 'http://' + last_host
                             
-                            current_url = last_host.rstrip('/') + '/' + current_url.lstrip('/')
+                            current_url = last_host.rstrip('/') \
+                                          + '/' + current_url.lstrip('/')
                         
                         hops += 1
             

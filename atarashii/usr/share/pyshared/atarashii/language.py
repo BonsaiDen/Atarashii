@@ -271,8 +271,8 @@ LANG = {
         
         'error_user_not_found': 'Der Benutzer <b>%s</b> existiert nicht.',
         'error_user_not_follow':
-            'Sie können keine Nachrichten an Benutzer schicken die ihnen nicht '
-            'followen.',
+            'Sie können keine Nachrichten an Benutzer schicken die ihnen nicht'
+            ' followen.',
         
         'error_duplicate': 'Sie haben dies bereits getweetet.',
         'error_tweet_not_found': 'Dieser Tweet wurde bereits gelöscht.',

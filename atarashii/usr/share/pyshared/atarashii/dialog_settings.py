@@ -33,7 +33,7 @@ from constants import SHORTS_LIST, USERNAME_CHARS, FONT_DEFAULT, FONT_SIZES, \
 from settings import THEME_SOUNDS, THEME_DIR
 
 from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING
-from constants import ST_CONNECT, ST_UPDATE, ST_LOGIN_COMPLETE
+from constants import ST_CONNECT, ST_LOGIN_COMPLETE
 from constants import MESSAGE_QUESTION
 
 
