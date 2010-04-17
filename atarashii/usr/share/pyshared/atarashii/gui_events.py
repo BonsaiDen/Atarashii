@@ -47,6 +47,12 @@ class GUIEventHandler(object):
             self.minimized = event.new_window_state & \
                                 gtk.gdk.WINDOW_STATE_ICONIFIED
     
+    def resize_event(self, window, request):
+        size = (request[2], request[3])
+        if size != self.current_size:
+            self.profile_bio.set_size_request(size[0] - 16, -1)
+            self.current_size = size
+    
     
     # Handlers -----------------------------------------------------------------
     # --------------------------------------------------------------------------

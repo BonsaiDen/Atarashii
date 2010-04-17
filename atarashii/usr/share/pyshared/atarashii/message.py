@@ -118,7 +118,6 @@ class HTML(view.HTMLView):
                    else 'message'
             
             username = item.recipient_screen_name
-            user_realname = item.recipient.name.strip()
             toid = item.recipient.id
             ltype = 'rprofile'
         
@@ -128,7 +127,6 @@ class HTML(view.HTMLView):
             reply = HTML_UNSET_TEXT
             toid = user.id
             username = user.screen_name
-            user_realname = user.name.strip()
             ltype = 'profile'
         
         
@@ -146,7 +144,7 @@ class HTML(view.HTMLView):
             <div>
                 <span class="name"><b>''' + mode \
                 + ''' <a href="''' + ltype \
-                + ''':http://twitter.com/%s" title="''' \
+                + ''':%d:http://twitter.com/%s" title="''' \
                 + lang.html_profile \
                 + '''">%s</a></b></span>''' \
                 + self.is_protected(user) \
@@ -166,8 +164,9 @@ class HTML(view.HTMLView):
                 user.screen_name, toid, num,
                 
                 # Text
+                num,
                 username,
-                user_realname,
+                lang.name(username),
                 name,
                 formatted.html,
                 

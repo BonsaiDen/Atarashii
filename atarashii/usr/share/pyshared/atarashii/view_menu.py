@@ -177,9 +177,10 @@ class ViewMenu(object):
                 # Profile
                 if link in ('user', 'profile', 'rprofile', 'avatar'):
                     user = full[full.rfind('/') + 1:]
+                    url = full[full.find('http://'):]
                     self.add_menu_link(menu,
                                        lang.context_profile % menu_escape(user),
-                                       self.context_link, full)
+                                       self.context_link, url)
                 
                 else:
                     user = None

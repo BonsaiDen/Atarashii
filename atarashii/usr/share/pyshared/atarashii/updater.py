@@ -511,9 +511,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         else:
             self.main.unset_status(ST_WARNING_RATE)
     
-    def get_image(self, item, message=False):
-        user = item.sender if message else item.retweeted_status.user \
-               if hasattr(item, 'retweeted_status') else item.user
+    def get_image(self, item, message=False, user=None):
+        if user is None:
+            user = item.sender if message else item.retweeted_status.user \
+                   if hasattr(item, 'retweeted_status') else item.user
         
         url = user.profile_image_url \
               if not self.main.settings.is_true('unicorns', False) \

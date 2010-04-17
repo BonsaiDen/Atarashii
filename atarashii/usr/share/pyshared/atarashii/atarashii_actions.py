@@ -206,6 +206,20 @@ class AtarashiiActions(object):
         self.block_pending[name.lower()] = True
         send.Block(self, user_id, name, mode)
     
+    # Show profile
+    def profile(self, name):
+        if self.profile_current_user.lower() == name.lower():
+            return False
+        
+        self.gui.hide_profile()
+        self.profile_pending = True
+        self.gui.load_button.show(lang.profile_loading % lang.name(name), None)
+        send.Profile(self, name, self.gui.show_profile)
+    
+    def stop_profile(self, *args):
+        self.profile_pending = False
+        self.gui.load_button.hide()
+    
     
     # Reconnect ----------------------------------------------------------------
     # --------------------------------------------------------------------------

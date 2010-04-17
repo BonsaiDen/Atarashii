@@ -248,13 +248,22 @@ class MessageDialog(gtk.MessageDialog):
 # Button Dialog ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class ButtonDialog(object):
-    def __init__(self, gui, dtype, template, title):
+    def __init__(self, gui, dtype, template, title,
+                 passive=False, callback=None):
+        
         self.gui = gui
         self.box = gui.gtb.get_object(dtype)
         self.button = gui.gtb.get_object(dtype + '_button')
         self.label = gui.gtb.get_object(dtype + '_label')
         self.image = gui.gtb.get_object(dtype + '_image')
-        self.button.connect('clicked', self.show_dialog)
+        
+        self.passive = passive
+        if self.passive:
+            self.button.connect('clicked', callback)
+        
+        else:
+            self.button.connect('clicked', self.show_dialog)
+        
         self.button.set_tooltip_text(lang.button_open)
         self.dtype = dtype
         self.dialog = None
@@ -262,7 +271,6 @@ class ButtonDialog(object):
         self.information = UNSET_TEXT
         self.time = UNSET_TIMEOUT
         self.timer = None
-        
         self.default_title = title
         self.title = title
         self.template = template
@@ -282,7 +290,7 @@ class ButtonDialog(object):
         
         self.box.hide()
     
-    def show(self, button, info, title=None, timeout=UNSET_TIMEOUT):
+    def show(self, button_label, info, title=None, timeout=UNSET_TIMEOUT):
         self.information = info
         if self.dialog is not None:
             self.dialog.destroy()
@@ -298,11 +306,11 @@ class ButtonDialog(object):
         
         self.time = time.time()
         self.box.show()
-        self.label.set_markup(button)
+        self.label.set_markup(button_label)
         
         # Play sound
         if self.gui.main.settings.is_true('infosound', True) \
-           and info is None:
+           and info is None and not self.passive:
             
             if self.dtype == 'warning':
                 sound = 'dialog-warning'

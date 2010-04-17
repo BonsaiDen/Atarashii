@@ -190,7 +190,7 @@ class HTML(view.HTMLView):
         <div class="inner-text">
             <div><span class="name">''' + \
                 ('<b>RT</b> ' if retweeted else '') + \
-                '''<b><a href="profile:http://twitter.com/%s" title="''' + \
+                '''<b><a href="profile:%d:http://twitter.com/%s" title="''' + \
                 lang.html_profile + '''">%s</a></b></span>''' + \
                 self.is_protected(user) + '''%s</div>
             <div class="time">
@@ -215,8 +215,9 @@ class HTML(view.HTMLView):
                 user.screen_name, tweet.id,
                 
                 # Text
+                num,
                 user.screen_name,
-                user.name.strip(),
+                lang.name(user.screen_name),
                 user.screen_name,
                 formatted.html,
                 

@@ -281,6 +281,16 @@ class Friends(SimpleAPICall):
             gobject.idle_add(callback, self.menu, self.friend)
 
 
+# Profile ----------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class Profile(SimpleAPICall):
+    def call(self, main, name, callback):
+        self.user = self.main.api.get_user(screen_name = name)
+    
+    def on_success(self, main, name, callback):
+        gobject.idle_add(callback, self.user)
+
+
 # Follow -----------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Follow(SimpleAPICall):

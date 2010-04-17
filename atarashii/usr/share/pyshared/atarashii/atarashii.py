@@ -115,6 +115,8 @@ class Atarashii(AtarashiiActions):
         self.favorites_pending = {}
         self.follow_pending = {}
         self.block_pending = {}
+        self.profile_pending = False
+        self.profile_current_user = UNSET_USERNAME
         
         # Current Username
         self.username = self.settings['username'] or UNSET_USERNAME

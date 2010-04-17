@@ -61,7 +61,7 @@ LANG = {
         
         'html_expanded_tooltip': '<b>%s</b> verweist auf:\n%s',
         
-        'html_profile': '%s auf Twitter.com',
+        'html_profile': '%s Profil betrachten',
         'html_at': '%s auf Twitter.com',
         'html_reply': '%s antworten',
         'html_retweet': '%s retweeten',
@@ -88,6 +88,17 @@ LANG = {
         'html_day': 'vor %d Tagen',
         'html_yesterday': 'von Gestern',
         'html_exact': 'vom %d.%m.%Y',
+        
+        # Profile
+        'profile_loading': '%s Profil wird geladen...',
+        'profile_name': '<b>%s Profil</b>',
+        'profile_info':
+            '<b><span size="large">%s</span></b>\n'
+            '<b>%d</b> Tweets\n<b>%d</b> Follower\nFollowing <b>%d</b>',
+        
+        'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
+        'profile_location': '<b>Ort:</b> %s',
+        'profile_description': '<b>Bio:</b> %s',
         
         # Messages
         'message_loading': 'Nachrichten werden geladen...',
@@ -436,7 +447,7 @@ LANG = {
         
         'html_expanded_tooltip': '<b>%s</b> redirects to:\n%s',
         
-        'html_profile': '%s at Twitter.com',
+        'html_profile': 'View %s profile',
         'html_at': '%s at Twitter.com',
         'html_reply': 'Reply to %s',
         'html_retweet': 'Retweet %s',
@@ -463,6 +474,17 @@ LANG = {
         'html_day': '%d days ago',
         'html_yesterday': 'from yesterday',
         'html_exact': 'from %m.%d.%Y',
+        
+        # Profile
+        'profile_loading': 'Loading %s profile...',
+        'profile_name': '<b>%s profile</b>',
+        'profile_info':
+            '<b><span size="large">%s</span></b>\n'
+            '<b>%d</b> Tweets\n<b>%d</b> Followers\nFollowing <b>%d</b>',
+        
+        'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
+        'profile_location': '<b>Location:</b> %s',
+        'profile_description': '<b>Bio:</b> %s',
         
         # Messages
         'message_loading': 'Loading messages...',

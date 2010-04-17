@@ -32,6 +32,7 @@ import text
 import dialog
 
 from language import LANG as lang
+from utils import escape
 from gui_events import GUIEventHandler
 from gui_helpers import GUIHelpers
 
@@ -142,6 +143,22 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.info_button = dialog.ButtonDialog(self, 'info',
                                                lang.info_template,
                                                lang.info_title)
+        
+        # Loading Button
+        self.load_button = dialog.ButtonDialog(self, 'load', '', '',
+                                               True, self.main.stop_profile)
+        
+        # Fix a few resize problems
+        self.current_size = (0, 0)
+        self.connect('size-allocate', self.resize_event)
+        
+        # Profile
+        self.profile_box = gtb.get_object('profilebox')
+        self.profile_bio = gtb.get_object('profilebio')
+        self.profile_info = gtb.get_object('profileinfo')
+        self.profile_image = gtb.get_object('profileimage')
+        self.profile_name = gtb.get_object('profilename')
+        gtb.get_object('profileclose').connect('clicked', self.hide_profile)
         
         
         # Restore Position & Size ----------------------------------------------
@@ -267,9 +284,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         self.text.set_sensitive(True)
         self.set_multi_button(True)
-        if self.main.status(ST_LOGIN_SUCCESSFUL):        
+        if self.main.status(ST_LOGIN_SUCCESSFUL):
             self.tabsbox.show()
-            
+        
         self.tabs.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL))
         
         # Focus current view
@@ -328,6 +345,47 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.tabs.set_sensitive(False)
         self.warning_button.hide()
         self.error_button.hide()
+    
+    
+    # Profile ------------------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def show_profile(self, user):
+        if not self.main.profile_pending:
+            return False
+        
+        self.main.profile_current_user = user.screen_name
+        self.load_button.hide()
+        
+        # Image / Name / Tweets
+        img_file = self.main.updater.get_image(None, False, user)
+        self.profile_image.set_from_file(img_file)
+        
+        self.profile_name.set_label(lang.profile_name \
+                                    % lang.name(user.screen_name))
+        
+        self.profile_info.set_label(lang.profile_info \
+                                    % (user.name, user.statuses_count,
+                                       user.followers_count,
+                                       user.friends_count))
+        
+        # Detailed information
+        details = []
+        if user.url is not None and user.url.strip() != '':
+            details.append(lang.profile_website % (escape(user.url),
+                                                   escape(user.url)))
+        
+        if user.location is not None and user.location.strip() != '':
+            details.append(lang.profile_location % escape(user.location))
+        
+        if user.description is not None and user.description.strip() != '':
+            details.append(lang.profile_description % escape(user.description))
+        
+        self.profile_bio.set_label('\n'.join(details))
+        self.profile_box.show()
+    
+    def hide_profile(self, *args):
+        self.main.profile_current_user = UNSET_USERNAME
+        self.profile_box.hide()
     
     
     # Refresh / Read / History Button ------------------------------------------

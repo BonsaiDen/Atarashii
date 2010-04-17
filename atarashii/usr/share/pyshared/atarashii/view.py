@@ -376,7 +376,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Un-Favorite
         elif uri.startswith('unfav:'):
-            name, item_id, = uri.split(':')[1:]
+            name, item_id = uri.split(':')[1:]
             gobject.idle_add(self.main.favorite, long(item_id), False, name)
         
         # Edit
@@ -387,6 +387,17 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             self.main.edit_id = self.get_id(extra)
             self.text.edit()
             self.text.html_focus()
+        
+        # Profile
+        elif uri.startswith('avatar:') or uri.startswith('profile'):
+            num = int(uri.split(':')[1])
+            gobject.idle_add(self.main.profile, self.get_screen_name(num))
+        
+        # Message Profile
+        elif uri.startswith('rprofile'):
+            num = int(uri.split(':')[1])
+            gobject.idle_add(self.main.profile,
+                             self.get_recipient(num).screen_name)
         
         # Regular links
         else:

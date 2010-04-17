@@ -1,8 +1,12 @@
 atarashii (0.99.22-1) all;
   
   + Added support for color themes.
+  + Added a simple view for user profiles, this will open when clicking on a
+    username or avatar. You can still get to the users page at Twitter.com by
+    using the context menu.
+  ~ Tabs are now hidden while logged out or logging in.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 16 Apr 2010 23:10:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 17 Apr 2010 03:41:00 +0200
 
 atarashii (0.99.21d-1) all;
   
