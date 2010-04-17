@@ -32,7 +32,7 @@ COLOR_THEMES = {
             'SPACER_TWEET_HIGHLIGHT': 'bed1d8',
             'SPACER_TWEET_HIGHLIGHT_OLD': 'dbdddf',
             
-            'HIGHLIGHT': 'c9deed',
+            'HIGHLIGHT': 'c5dced',
             'HIGHLIGHT_OLD': 'e4e9ed',
             'SPACER_HIGHLIGHT': 'b7cbdf',
             'SPACER_HIGHLIGHT_OLD': 'c7d3df',
