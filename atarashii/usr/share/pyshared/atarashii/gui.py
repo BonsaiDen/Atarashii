@@ -358,8 +358,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Image / Name / Tweets
         img_file = self.main.updater.get_image(None, False, user)
-        self.profile_image.set_from_file(img_file)
-        
+        buf = gtk.gdk.pixbuf_new_from_file_at_size(img_file, 48, 48)
+        self.profile_image.set_from_pixbuf(buf)
         
         url = ('<a href="http://twitter.com/%s">'
                + lang.profile_link + '</a>') % user.screen_name
