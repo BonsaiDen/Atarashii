@@ -393,6 +393,10 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             num = int(uri.split(':')[1])
             gobject.idle_add(self.main.profile, self.get_screen_name(num))
         
+        # User
+        elif uri.startswith('user'):
+            gobject.idle_add(self.main.profile, uri.split(':')[1])
+        
         # Message Profile
         elif uri.startswith('rprofile'):
             num = int(uri.split(':')[1])

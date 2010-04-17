@@ -62,7 +62,7 @@ LANG = {
         'html_expanded_tooltip': '<b>%s</b> verweist auf:\n%s',
         
         'html_profile': '%s Profil betrachten',
-        'html_at': '%s auf Twitter.com',
+        'html_at': '%s Profil betrachten',
         'html_reply': '%s antworten',
         'html_retweet': '%s retweeten',
         'html_favorite': 'Favorisieren!',
@@ -448,7 +448,7 @@ LANG = {
         'html_expanded_tooltip': '<b>%s</b> redirects to:\n%s',
         
         'html_profile': 'View %s profile',
-        'html_at': '%s at Twitter.com',
+        'html_at': 'View %s profile',
         'html_reply': 'Reply to %s',
         'html_retweet': 'Retweet %s',
         'html_favorite': 'Favorite!',

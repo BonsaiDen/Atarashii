@@ -248,9 +248,9 @@ class Parser(object):
                 % (urllib.quote('#' + text.encode('utf-8')), text, tag, text)
     
     def format_username(self, at_char, user):
-        return ('<a href="user:http://twitter.com/%s" title="' \
+        return ('<a href="user:%s:http://twitter.com/%s" title="' \
                  + lang.html_at + '">%s%s</a>') \
-                 % (user, user, at_char, user)
+                 % (user, user, lang.name(user), at_char, user)
     
     def format_list(self, at_char, user, list_name):
         '''Return formatted HTML for a list.'''
