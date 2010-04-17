@@ -58,6 +58,11 @@ class APICall(threading.Thread):
                     gobject.idle_add(self.gui.show_input, False, True)
                     gobject.idle_add(self.gui.text.message, True)
                 
+                else:
+                    gobject.idle_add(self.gui.text.set_text, UNSET_TEXT)
+                    gobject.idle_add(self.gui.show_input, False, True)
+                    gobject.idle_add(self.gui.text.grab_focus)
+                
                 self.main.unset_status(ST_WAS_SEND)
             
             except (IOError, TweepError), error:

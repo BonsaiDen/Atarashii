@@ -134,7 +134,8 @@ class TextInput(gtk.TextView):
                 return True
         
         if (self.main.reply_user != UNSET_TEXT \
-           or self.main.message_user != UNSET_TEXT) \
+           or self.main.message_user != UNSET_TEXT \
+           or self.gui.mode == MODE_TWEETS) \
            and event.keyval == gtk.keysyms.Return \
            and event.state & gtk.gdk.SHIFT_MASK == gtk.gdk.SHIFT_MASK:
             
@@ -144,7 +145,12 @@ class TextInput(gtk.TextView):
         if event.keyval == gtk.keysyms.Return \
            and event.state & gtk.gdk.CONTROL_MASK == gtk.gdk.CONTROL_MASK:
             
-            spaces = self.get_text().strip().count(' ')
+            
+            text = self.get_text().strip()
+            if not text[0] in u'@\uFF20d':
+                return False
+            
+            spaces = text.count(' ')
             if self.gui.mode == MODE_TWEETS:
                 if spaces > 0:
                     return False
