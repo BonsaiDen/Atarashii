@@ -27,15 +27,15 @@ COLOR_THEMES = {
             'TWEET': 'd8e4ed',
             'TWEET_OLD': 'ffffff',
             
-            'SPACER': 'd9d9d9',
-            'SPACER_DARK': 'beced0',
-            'SPACER_MIDDLE_DARK': 'bed1d8',
-            'SPACER_MIDDLE': 'dbdddf',
+            'SPACER_TWEET_OLD': 'd9d9d9',
+            'SPACER_TWEET': 'beced0',
+            'SPACER_TWEET_HIGHLIGHT': 'bed1d8',
+            'SPACER_TWEET_HIGHLIGHT_OLD': 'dbdddf',
             
             'HIGHLIGHT': 'c9deed',
             'HIGHLIGHT_OLD': 'e4e9ed',
-            'HIGHLIGHT_DARK': 'b7cbdf',
-            'HIGHLIGHT_MIDDLE': 'c7d3df',
+            'SPACER_HIGHLIGHT': 'b7cbdf',
+            'SPACER_HIGHLIGHT_OLD': 'c7d3df',
             
             'MESSAGE': 'c8f2c8',
             'MESSAGE_OLD': 'dbf6db',

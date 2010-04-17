@@ -285,43 +285,47 @@ a:active, a:hover, a, .protected {
 
 /* Sapcers ---------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
-.spacer_normal_gray {
-	border-bottom: 2px solid #{SPACER};
-}
-
-.spacer_dark_gray {
-	border-bottom: 2px solid #{SPACER_DARK};
-}
-
-.spacer_middle_dark_gray {
-    border-bottom: 2px solid #{SPACER_MIDDLE_DARK};
-}
-
-.spacer_middle_normal_gray {
-    border-bottom: 2px solid #{SPACER_MIDDLE};
+.spacer_foo {
+	border-bottom: 2px solid #ff0000;
 }
 
 .spacer_tweet_old {
+	border-bottom: 2px solid #{SPACER_TWEET_OLD};
+}
+
+.spacer_tweet {
+	border-bottom: 2px solid #{SPACER_TWEET};
+}
+
+.spacer_tweet_highlight {
+    border-bottom: 2px solid #{SPACER_TWEET_HIGHLIGHT};
+}
+
+.spacer_tweet_highlight_old {
+    border-bottom: 2px solid #{SPACER_TWEET_HIGHLIGHT_OLD};
+}
+
+.spacer_in_tweet_old {
 	border-bottom: 2px solid #{TWEET_OLD};
 }
 
-.spacer_normal_blue {
+.spacer_in_tweet {
 	border-bottom: 2px solid #{TWEET};
 }
 
-.spacer_dark_blue {
-    border-bottom: 2px solid #{HIGHLIGHT_DARK};
+.spacer_in_highlight {
+    border-bottom: 2px solid #{HIGHLIGHT};
 }
 
-.spacer_middle_dark_blue {
-	border-bottom: 2px solid #{HIGHLIGHT};
+.spacer_highlight {
+	border-bottom: 2px solid #{SPACER_HIGHLIGHT};
 }
 
-.spacer_middle_normal_blue {
-    border-bottom: 2px solid #{HIGHLIGHT_MIDDLE};
+.spacer_highlight_old {
+    border-bottom: 2px solid #{SPACER_HIGHLIGHT_OLD};
 }
 
-.spacer_light_blue {
+.spacer_in_highlight_old {
 	border-bottom: 2px solid #{HIGHLIGHT_OLD};
 }
 

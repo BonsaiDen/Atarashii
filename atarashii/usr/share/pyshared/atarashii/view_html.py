@@ -194,34 +194,34 @@ class ViewHTML(object):
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if mentioned:
                     if not self.last_mentioned:
-                        spacer = 'middle_dark_gray'
+                        spacer = 'tweet_highlight'
                     
                     else:
                         spacer = 'message' if message else 'mention'
                 
                 elif highlight and self.last_highlight:
-                    spacer = 'dark_blue'
+                    spacer = 'highlight'
                 
                 elif highlight or self.last_highlight:
-                    spacer = 'middle_dark_gray'
+                    spacer = 'tweet_highlight'
                 
                 else:
-                    spacer = 'dark_gray'
+                    spacer = 'tweet'
             
             else:
                 
                 # More @username
                 if highlight:
                     if not self.last_highlight:
-                        spacer = 'middle_dark_gray'
+                        spacer = 'tweet_highlight'
                     
                     else:
-                        spacer = 'middle_dark_blue'
+                        spacer = 'in_highlight'
                 
                 # More mentions
                 elif mentioned:
                     if not self.last_mentioned:
-                        spacer = 'dark_gray'
+                        spacer = 'tweet'
                     
                     else:
                         spacer = 'message' if message else 'mention'
@@ -229,16 +229,16 @@ class ViewHTML(object):
                 # Just more normal tweets
                 else:
                     if next_highlight and self.last_highlight:
-                        spacer = 'dark_gray'
+                        spacer = 'tweet'
                     
                     elif next and self.last_mentioned:
-                        spacer = 'dark_gray'
+                        spacer = 'tweet'
                     
                     elif self.last_highlight:
-                        spacer = 'middle_dark_gray'
+                        spacer = 'tweet_highlight'
                     
                     else:
-                        spacer = 'normal_blue'
+                        spacer = 'in_tweet'
         
         # Old Tweets
         else:
@@ -247,34 +247,34 @@ class ViewHTML(object):
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if mentioned:
                     if not self.last_mentioned:
-                        spacer = 'middle_normal_gray'
+                        spacer = 'tweet_highlight_old'
                     
                     else:
                         spacer = 'message_old' if message else 'mention_old'
                 
                 elif highlight and self.last_highlight:
-                    spacer = 'middle_normal_blue'
+                    spacer = 'highlight_old'
                 
                 elif highlight or self.last_highlight:
-                    spacer = 'middle_normal_gray'
+                    spacer = 'tweet_highlight_old'
                 
                 else:
-                    spacer = 'normal_gray'
+                    spacer = 'tweet_old'
             
             else:
                 
                 # More @username
                 if highlight:
                     if not self.last_highlight:
-                        spacer = 'middle_normal_gray'
+                        spacer = 'tweet_highlight_old'
                     
                     else:
-                        spacer = 'light_blue'
+                        spacer = 'in_highlight_old'
                 
                 # More mentions
                 elif mentioned:
                     if not self.last_mentioned:
-                        spacer = 'normal_gray'
+                        spacer = 'tweet_old'
                     
                     else:
                         spacer = 'message_old' if message else 'mention_old'
@@ -282,16 +282,16 @@ class ViewHTML(object):
                 # Just more normal tweets
                 else:
                     if next_highlight and self.last_highlight:
-                        spacer = 'normal_gray'
+                        spacer = 'tweet_old'
                     
                     elif next and self.last_mentioned:
-                        spacer = 'dark_gray'
+                        spacer = 'tweet'
                     
                     elif self.last_highlight:
-                        spacer = 'middle_normal_gray'
+                        spacer = 'tweet_highlight_old'
                     
                     else:
-                        spacer = 'tweet_old'
+                        spacer = 'in_tweet_old'
         
         return '<div class="spacer_%s"></div>' % spacer
     
