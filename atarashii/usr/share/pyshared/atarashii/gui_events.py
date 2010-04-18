@@ -127,6 +127,7 @@ class GUIEventHandler(object):
             self.tabs.set_current_page(1)
             self.html_scroll.hide()
             self.message_scroll.show()
+            self.text.has_typed = False
             self.message.focus_me()
             self.message.fix_scroll()
             self.set_multi_button(True)
@@ -141,6 +142,7 @@ class GUIEventHandler(object):
             self.tabs.set_current_page(0)
             self.message_scroll.hide()
             self.html_scroll.show()
+            self.text.has_typed = False
             self.html.focus_me()
             self.html.fix_scroll()
             self.set_multi_button(True)
