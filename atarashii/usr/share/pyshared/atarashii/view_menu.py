@@ -188,7 +188,7 @@ class ViewMenu(object):
                 self.create_menu(menu, item, item_id, link, full, user)
                 
                 # Follow / Block
-                if link in ('profile', 'avatar') \
+                if link in ('profile', 'avatar', 'user') \
                    and user.lower() != self.main.username.lower() \
                    and not user.lower() in self.main.follow_pending \
                    and not user.lower() in self.main.block_pending:
