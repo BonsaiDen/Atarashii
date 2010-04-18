@@ -90,7 +90,7 @@ LANG = {
         'html_exact': 'vom %d.%m.%Y',
         
         # Profile
-        'profile_loading': '%s Profil wird geladen...',
+        'profile_loading': '<b>%s</b> Profil wird geladen...',
         'profile_link': 'Auf Twitter.com',
         'profile_name': '<b>%s</b> (%s)',
         'profile_info':
@@ -223,16 +223,16 @@ LANG = {
         'retweet_button': 'Retweet erfolgreich',
         
         # Follow Dialogs
-        'follow_button': '%s wird nun gefollowed',
-        'unfollow_button': '%s wird nicht mehr gefollowed',
-        'error_follow': '%s konnte nicht gefollowed werden.',
-        'error_unfollow': '%s konnte nicht unfollowed werden.',
+        'follow_button': '<b>%s</b> wird nun gefollowed',
+        'unfollow_button': '<b>%s</b> wird nicht mehr gefollowed',
+        'error_follow': '<b>%s</b> konnte nicht gefollowed werden.',
+        'error_unfollow': '<b>%s</b> konnte nicht unfollowed werden.',
         
         # Block Dialogs
-        'block_button': '%s wird nun geblockt',
-        'unblock_button': '%s wird nicht mehr geblockt',
-        'error_block': '%s konnte nicht geblockt werden.',
-        'error_unblock': '%s konnte nicht entblockt werden.',
+        'block_button': '<b>%s</b> wird nun geblockt',
+        'unblock_button': '<b>%s</b> wird nicht mehr geblockt',
+        'error_block': '<b>%s</b> konnte nicht geblockt werden.',
+        'error_unblock': '<b>%s</b> konnte nicht entblockt werden.',
         
         # Delete Dialogs
         'delete_title': 'Löschen bestätigen',
@@ -477,7 +477,7 @@ LANG = {
         'html_exact': 'from %m.%d.%Y',
         
         # Profile
-        'profile_loading': 'Loading %s profile...',
+        'profile_loading': 'Loading <b>%s</b> profile...',
         'profile_link': 'On Twitter.com',
         'profile_name': '<b>%s</b> (%s)',
         'profile_info':
@@ -608,16 +608,16 @@ LANG = {
         'retweet_button': 'Retweet successful',
         
         # Follow Dialogs
-        'follow_button': 'You now follow %s',
-        'unfollow_button': 'You no longer follow %s',
-        'error_follow': 'Could not follow %s.',
-        'error_unfollow': 'Could not unfollow %s.',
+        'follow_button': 'You now follow <b>%s</b>',
+        'unfollow_button': 'You no longer follow <b>%s</b>',
+        'error_follow': 'Could not follow <b>%s</b>.',
+        'error_unfollow': 'Could not unfollow <b>%s</b>.',
         
         # Block Dialogs
-        'block_button': '%s has been blocked',
-        'unblock_button': '%s has been unblocked',
-        'error_block': 'Could not block %s.',
-        'error_unblock': 'Could not unblock %s.',
+        'block_button': '<b>%s</b> has been blocked',
+        'unblock_button': '<b>%s</b> has been unblocked',
+        'error_block': 'Could not block <b>%s</b>.',
+        'error_unblock': 'Could not unblock <b>%s</b>.',
         
         # Delete Dialogs
         'delete_title': 'Confirm delete',
