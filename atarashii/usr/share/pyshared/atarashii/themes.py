@@ -42,6 +42,7 @@ COLOR_THEMES = {
             
             'MENTION': 'ffffab',
             'MENTION_OLD': 'ffffc2',
+            'SPACER_MENTION': 'fcf095',
             
             'LINKS': '004363',
             'LOADMORE': 'd2d2d2',

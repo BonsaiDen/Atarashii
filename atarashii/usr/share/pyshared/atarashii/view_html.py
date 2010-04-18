@@ -197,7 +197,7 @@ class ViewHTML(object):
                         spacer = 'tweet_highlight'
                     
                     else:
-                        spacer = 'message' if message else 'mention'
+                        spacer = 'message' if message else 'spacer_mention'
                 
                 elif highlight and self.last_highlight:
                     spacer = 'highlight'
@@ -210,21 +210,21 @@ class ViewHTML(object):
             
             else:
                 
-                # More @username
-                if highlight:
-                    if not self.last_highlight:
-                        spacer = 'tweet_highlight'
-                    
-                    else:
-                        spacer = 'in_highlight'
-                
                 # More mentions
-                elif mentioned:
+                if mentioned:
                     if not self.last_mentioned:
                         spacer = 'tweet'
                     
                     else:
                         spacer = 'message' if message else 'mention'
+                
+                # More @username
+                elif highlight:
+                    if not self.last_highlight:
+                        spacer = 'tweet_highlight'
+                    
+                    else:
+                        spacer = 'in_highlight'
                 
                 # Just more normal tweets
                 else:
@@ -263,21 +263,21 @@ class ViewHTML(object):
             
             else:
                 
+                # More mentions
+                if mentioned:
+                    if not self.last_mentioned:
+                        spacer = 'tweet_old'
+                    
+                    else:
+                        spacer = 'message_old' if message else 'mention_old'    
+                
                 # More @username
-                if highlight:
+                elif highlight:
                     if not self.last_highlight:
                         spacer = 'tweet_highlight_old'
                     
                     else:
                         spacer = 'in_highlight_old'
-                
-                # More mentions
-                elif mentioned:
-                    if not self.last_mentioned:
-                        spacer = 'tweet_old'
-                    
-                    else:
-                        spacer = 'message_old' if message else 'mention_old'
                 
                 # Just more normal tweets
                 else:
