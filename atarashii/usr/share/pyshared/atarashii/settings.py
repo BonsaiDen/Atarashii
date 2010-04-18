@@ -118,7 +118,8 @@ class Settings(object):
                          'AND WILL BE OVERRIDEN ON STARTUP */\n\n')
                 
                 css_data = css_data.replace('{RESOURCES}',
-                                            self.main.get_resource(''))
+                                            self.main.get_resource('') \
+                                            + '/themes/' + color_theme + '/')
                 
                 css_data = css_data.replace('{AVATAR32}', str(avatar_size))
                 css_data = css_data.replace('{AVATAR34}', str(avatar_size + 2))

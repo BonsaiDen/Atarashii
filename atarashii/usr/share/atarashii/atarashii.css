@@ -134,7 +134,7 @@ a:active, a:hover, a, .protected {
 }
 
 .protected {
-	background: url("{RESOURCES}lock.png") no-repeat 0 1px;
+	background: url("{RESOURCES}protected.png") no-repeat 0 1px;
 	display: inline-block;
 	margin-right: 3px;
 	width: 7px;
@@ -220,7 +220,7 @@ a:active, a:hover, a, .protected {
 .oldtweet:hover .doreply a, .tweet:hover .doreply a,
 .mentioned:hover .doreply a, .mentionedold:hover .doreply a {
     display: block;
-	background: url("{RESOURCES}at.png");
+	background: url("{RESOURCES}reply.png");
 }
 
 .highlightold:hover .doreply a:hover, .highlight:hover .doreply a:hover,
@@ -236,7 +236,7 @@ a:active, a:hover, a, .protected {
 .oldtweet:hover .doretweet a, .tweet:hover .doretweet a,
 .mentioned:hover .doretweet a, .mentionedold:hover .doretweet a {
     display: block;
-	background: url("{RESOURCES}rt.png");
+	background: url("{RESOURCES}respond.png");
 }
 
 .highlightold:hover .doretweet a:hover, .highlight:hover .doretweet a:hover,
@@ -252,14 +252,14 @@ a:active, a:hover, a, .protected {
 .oldtweet:hover .dofav a, .tweet:hover .dofav a,
 .mentioned:hover .dofav a, .mentionedold:hover .dofav a {
     display: block;
-	background: url("{RESOURCES}fav.png");
+	background: url("{RESOURCES}favorite.png");
 }
 
 .highlightold .undofav a, .highlight .undofav a,
 .oldtweet .undofav a, .tweet .undofav a,
 .mentioned .undofav a, .mentionedold .undofav a {
     display: block;
-	background: url("{RESOURCES}fav.png");
+	background: url("{RESOURCES}favorite.png");
  	background-position: -12px 0px;
 }
 
