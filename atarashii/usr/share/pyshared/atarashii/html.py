@@ -252,12 +252,19 @@ class HTML(view.HTMLView):
                 self.add_menu_link(menu, lang.context_tweet % menu_escape(user),
                                    self.context_link, reply)
             
-            self.add_menu_separator(menu)
-            message = 'message:%s:%d:%d' % (user, self.get_user(item).id,
-                                            HTML_UNSET_ID)
-            
-            self.add_menu_link(menu, lang.context_message % menu_escape(user),
-                               self.context_link, message)
+            # Message
+            if user.lower() != self.main.username.lower():
+                self.add_menu_separator(menu)
+                if link == 'user':
+                    user_id = UNSET_ID_NUM
+                
+                else:
+                    user_id = self.get_user(item).id
+                
+                message = 'message:%s:%d:%d' % (user, user_id, HTML_UNSET_ID)
+                self.add_menu_link(menu, lang.context_message \
+                                   % menu_escape(user), self.context_link,
+                                   message)
         
         # Source
         elif link == 'source':
