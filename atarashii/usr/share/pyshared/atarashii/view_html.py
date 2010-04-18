@@ -250,7 +250,8 @@ class ViewHTML(object):
                         spacer = 'tweet_highlight_old'
                     
                     else:
-                        spacer = 'message_old' if message else 'mention_old'
+                        spacer = 'message_old' if message \
+                                               else 'spacer_mention_old'
                 
                 elif highlight and self.last_highlight:
                     spacer = 'highlight_old'
