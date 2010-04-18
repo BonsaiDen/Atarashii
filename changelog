@@ -1,5 +1,5 @@
 atarashii (0.99.22-1) all;
-  
+
   + Added support for color themes.
   + Added a simple view for user profiles, this will open when clicking on a
     username or avatar. You can still get to the users page at Twitter.com by
@@ -14,16 +14,16 @@ atarashii (0.99.22-1) all;
   * Removed the minimal height on tweets which don't have an avatar, this
     reduces the wasted space with bigger avatars.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 18 Apr 2010 03:14:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 18 Apr 2010 23:54:00 +0200
 
 atarashii (0.99.21d-1) all;
-  
+
   * Quickfix for an issues with the warning popup timeout.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 15 Apr 2010 22:19:00 +0200
 
 atarashii (0.99.21c-1) all;
-  
+
   ~ Added a timeout of 5 seconds on network error popups before they disappear 
     automatically on a succeeded refresh.
   * The textbox now gets focussed after a new style retweet/delete when text 
@@ -35,7 +35,7 @@ atarashii (0.99.21c-1) all;
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 15 Apr 2010 22:11:00 +0200
 
 atarashii (0.99.21b-1) all;
-  
+
   + Add support for the upcoming new youtube url format in the shortener.
   * Another fix for view flicker when saving the preferences.
   * Fix for strange "User does not exists" messages when trying to send a DM
@@ -45,14 +45,14 @@ atarashii (0.99.21b-1) all;
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Thu, 15 Apr 2010 00:16:00 +0200
 
 atarashii (0.99.21a-1) all;
-  
+
   * Fix for account list not getting enabled in some cases.
   * Fix for flickering views when saving the settings.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 14 Apr 2010 19:25:00 +0200
 
 atarashii (0.99.21-1) all;
-  
+
   + New multi reply/message feature. When holding down SHIFT while submitting,
     a identical new reply/message will be started afterwards.
   + You can now configure the font and avatar sizes of the timelines in via the
