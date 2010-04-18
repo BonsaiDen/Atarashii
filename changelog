@@ -8,6 +8,7 @@ atarashii (0.99.22-1) all;
   ~ Tabs are now hidden while logged out or logging in.
   ~ Don't include "send message" in context menus for the currently logged in 
     user.
+  * Fixes to the colors of spacers between mentions.
   * Fix for message sending from @username context menus.
   * Fix for url expanding problems with WordPress.
   * Removed the minimal height on tweets which don't have an avatar, this

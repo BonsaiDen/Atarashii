@@ -345,6 +345,10 @@ a:active, a:hover, a, .protected {
 	border-bottom: 2px solid #{SPACER_MENTION_OLD};
 }
 
+.spacer_spacer_mention_new {
+	border-bottom: 2px solid #{SPACER_MENTION_NEW};
+}
+
 .spacer_message {
     border-bottom: 2px solid #{MESSAGE};
 }
