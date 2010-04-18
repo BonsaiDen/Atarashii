@@ -248,6 +248,26 @@ class GUIHelpers(object):
         col = gtk.gdk.color_parse('#' + ''.join([hex(i)[2:] for i in col3]))
         self.multi_container.modify_bg(gtk.STATE_NORMAL, col)
     
+    # This does nothing! Really nothing will happen if you type THAT in!!
+    def is_text_mode(self):
+        if self.text.get_text().lstrip() != 'ohlookcolorfulrainbows!':
+            return True
+        
+        toggled = self.main.settings.is_true('unicorns', False)
+        self.main.settings['unicorns'] = not toggled
+        self.text.set_text(UNSET_TEXT)
+        for i in self.html.items:
+            i[1] = self.main.updater.get_image(i[0])
+        
+        for i in self.message.items:
+            i[1] = self.main.updater.get_image(i[0], True)
+        
+        gobject.idle_add(self.html.render)
+        gobject.idle_add(self.message.render)
+        gobject.idle_add(self.text.unfocus)
+        if not toggled:
+            self.info_button.show('Oh look! Unicorns!', None, None, 5000)
+    
     # Toggle visibility of taskbar entry
     def show_in_taskbar(self, mode):
         self.main.settings['taskbar'] = mode

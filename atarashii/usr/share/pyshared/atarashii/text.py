@@ -173,7 +173,9 @@ class TextInput(gtk.TextView):
     # --------------------------------------------------------------------------
     def submit(self, textbox, multi=False):
         text = self.get_text().lstrip()
-        if len(text) <= 140 + self.message_len and text.strip() != UNSET_TEXT:
+        if len(text) <= 140 + self.message_len and text.strip() != UNSET_TEXT \
+           and self.gui.is_text_mode():
+            
             if self.gui.mode == MODE_MESSAGES:
                 
                 # Prevent message to be send without text
