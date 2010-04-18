@@ -192,7 +192,15 @@ class ViewHTML(object):
             
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
-                if mentioned:
+                if message and (mentioned or self.last_mentioned):
+                    if not self.last_mentioned or not mentioned:
+                        spacer = 'tweet_highlight' 
+                    
+                    else:
+                        spacer = 'message' if message \
+                                               else 'spacer_mention'
+                
+                elif (mentioned or self.last_mentioned) and not highlight:
                     if not self.last_mentioned:
                         spacer = 'spacer_message_new' if message \
                                                       else 'spacer_mention_new'
@@ -214,7 +222,7 @@ class ViewHTML(object):
                 # More mentions
                 if mentioned:
                     if not self.last_mentioned:
-                        spacer = 'tweet'
+                        spacer = 'tweet' if message else 'mention'
                     
                     else:
                         spacer = 'message' if message else 'mention'
@@ -246,13 +254,17 @@ class ViewHTML(object):
             
             # Name change
             if self.last_name != user.screen_name or self.new_timeline or force:
-                if mentioned:
-                    if not self.last_mentioned:
-                        spacer = 'tweet_highlight_old'
+                if message and (mentioned or self.last_mentioned):
+                    if not self.last_mentioned or not mentioned:
+                        spacer = 'tweet_highlight_old' 
                     
                     else:
                         spacer = 'message_old' if message \
                                                else 'spacer_mention_old'
+                
+                elif (mentioned or self.last_mentioned) and not highlight:
+                    spacer = 'message_old' if message \
+                                           else 'spacer_mention_old'
                 
                 elif highlight and self.last_highlight:
                     spacer = 'highlight_old'
@@ -268,7 +280,7 @@ class ViewHTML(object):
                 # More mentions
                 if mentioned:
                     if not self.last_mentioned:
-                        spacer = 'tweet_old'
+                        spacer = 'tweet_old' if message else 'mention_old'
                     
                     else:
                         spacer = 'message_old' if message else 'mention_old'

@@ -102,6 +102,9 @@ class HTML(view.HTMLView):
                     [i.lower() for i in formatted.users]
         
         mentioned = hasattr(tweet, 'is_mentioned') and tweet.is_mentioned
+        if mentioned:
+            highlight = False
+        
         if num > 0:
             self.renderitems.insert(0,
                         self.insert_spacer(item, user, highlight, mentioned))
