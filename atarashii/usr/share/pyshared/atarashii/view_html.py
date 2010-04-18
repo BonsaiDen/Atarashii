@@ -194,7 +194,7 @@ class ViewHTML(object):
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if message and (mentioned or self.last_mentioned):
                     if not self.last_mentioned or not mentioned:
-                        spacer = 'tweet_highlight' 
+                        spacer = 'tweet_highlight'
                     
                     else:
                         spacer = 'message' if message \
@@ -256,7 +256,7 @@ class ViewHTML(object):
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if message and (mentioned or self.last_mentioned):
                     if not self.last_mentioned or not mentioned:
-                        spacer = 'tweet_highlight_old' 
+                        spacer = 'tweet_highlight_old'
                     
                     else:
                         spacer = 'message_old' if message \
