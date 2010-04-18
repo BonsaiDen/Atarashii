@@ -49,7 +49,7 @@ class UpdaterTweet(object):
         updates.reverse()
         for i in updates:
             if i is not None:
-                self.html.update_list.append((i, self.get_image(i)))
+                self.html.update_list.append([i, self.get_image(i)])
         
         gobject.idle_add(self.do_render, self.html, init, last)
         return True

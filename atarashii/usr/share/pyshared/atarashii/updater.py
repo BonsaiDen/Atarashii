@@ -415,7 +415,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                                         i.sender.screen_name, i.text, img_file,
                                         'messages'])
             
-            self.message.update_list.append((i, img_file))
+            self.message.update_list.append([i, img_file])
         
         count = len(notify_message_list)
         if count > 0:
@@ -450,7 +450,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                     
                     notify_tweet_list.append([name, text, img_file, e])
             
-            self.html.update_list.append((i, img_file))
+            self.html.update_list.append([i, img_file])
         
         count = len(notify_tweet_list)
         if count > 0:
