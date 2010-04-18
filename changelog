@@ -8,7 +8,7 @@ atarashii (0.99.22-1) all;
   ~ Tabs are now hidden while logged out or logging in.
   ~ Don't include "send message" in context menus for the currently logged in 
     user.
-  * Fix message sending from @username context menus.
+  * Fix for message sending from @username context menus.
   * Fix for url expanding problems with WordPress.
   * Removed the minimal height on tweets which don't have an avatar, this
     reduces the wasted space with bigger avatars.
@@ -64,7 +64,7 @@ atarashii (0.99.21-1) all;
   * Multiple small fixes to the textbox.
   * Improved handling of direct messages errors.
   * Fix for scrolling issues when loading "more".
-  * Fix for wrong tweet counts in some cases when ressting the loaded history.
+  * Fix for wrong tweet counts in some cases when resetting the loaded history.
   * Fix for tweet notifications not beeing in the right order in some cases.
   * Internal cleanup of the api calling code.
 
