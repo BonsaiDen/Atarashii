@@ -22,6 +22,7 @@ COLOR_THEMES = {
         'title_en_US': 'Fuji blue(default)',
         
         'colors':  {
+            
             # Background color of the loading screens
             'BACKGROUND': 'dbdbdb',
             
@@ -65,13 +66,13 @@ COLOR_THEMES = {
             # Color of old messages(sent) and spacers between them
             'MESSAGE_OLD': 'dbf6db',
             
-            # Spacer between a message you send that starts the new timeline 
+            # Spacer between a message you send that starts the new timeline
             # and an old message
             'SPACER_MESSAGE_NEW': 'a3d1a3',
             
             # Color of new mentions and spacers between them
             # (if from the same user)
-            'MENTION': 'ffffab', 
+            'MENTION': 'ffffab',
             
             # Color of old mentions and spacers between them
             # (if from the same user)
@@ -83,7 +84,7 @@ COLOR_THEMES = {
             # Spacer between old mentions from different users
             'SPACER_MENTION_OLD': 'faf194',
             
-            # Spacer between a mention that starts the new timeline and an 
+            # Spacer between a mention that starts the new timeline and an
             # old tweet
             'SPACER_MENTION_NEW': 'eadc75',
             

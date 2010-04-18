@@ -271,7 +271,7 @@ class ViewHTML(object):
                         spacer = 'tweet_old'
                     
                     else:
-                        spacer = 'message_old' if message else 'mention_old'    
+                        spacer = 'message_old' if message else 'mention_old'
                 
                 # More @username
                 elif highlight:
