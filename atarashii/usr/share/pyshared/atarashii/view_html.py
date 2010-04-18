@@ -194,7 +194,8 @@ class ViewHTML(object):
             if self.last_name != user.screen_name or self.new_timeline or force:
                 if mentioned:
                     if not self.last_mentioned:
-                        spacer = 'spacer_mention_new'
+                        spacer = 'spacer_message_new' if message \
+                                                      else 'spacer_mention_new'
                     
                     else:
                         spacer = 'message' if message else 'spacer_mention'

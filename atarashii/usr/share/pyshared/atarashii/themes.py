@@ -59,11 +59,15 @@ COLOR_THEMES = {
             # Spacer between two old highlighted tweets from different users
             'SPACER_HIGHLIGHT_OLD': 'c7d3df',
             
-            # Color of new messages(received) and spacers between them
+            # Color of new messages(sent) and spacers between them
             'MESSAGE': 'c8f2c8',
             
-            # Color of old messages(received) and spacers between them
+            # Color of old messages(sent) and spacers between them
             'MESSAGE_OLD': 'dbf6db',
+            
+            # Spacer between a message you send that starts the new timeline 
+            # and an old message
+            'SPACER_MESSAGE_NEW': 'a3d1a3',
             
             # Color of new mentions and spacers between them
             # (if from the same user)
@@ -79,7 +83,7 @@ COLOR_THEMES = {
             # Spacer between old mentions from different users
             'SPACER_MENTION_OLD': 'faf194',
             
-            # Spacer between a message that starts the new timeline and an 
+            # Spacer between a mention that starts the new timeline and an 
             # old tweet
             'SPACER_MENTION_NEW': 'eadc75',
             

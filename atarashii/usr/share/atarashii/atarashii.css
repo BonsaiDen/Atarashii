@@ -357,3 +357,7 @@ a:active, a:hover, a, .protected {
     border-bottom: 2px solid #{MESSAGE_OLD};
 }
 
+.spacer_spacer_message_new {
+	border-bottom: 2px solid #{SPACER_MESSAGE_NEW};
+}
+
