@@ -89,7 +89,7 @@ class APICall(threading.Thread):
         self.gui.html.set_newest()
         
         imgfile = self.main.updater.get_image(update)
-        self.gui.html.update_list.append((update, imgfile))
+        self.gui.html.update_list.append([update, imgfile])
         gobject.idle_add(self.gui.html.push_updates)
 
 
@@ -119,7 +119,7 @@ class Send(APICall):
         
         self.gui.message.set_newest()
         imgfile = self.main.updater.get_image(message, True)
-        self.gui.message.update_list.append((message, imgfile))
+        self.gui.message.update_list.append([message, imgfile])
         gobject.idle_add(self.gui.message.push_updates)
 
 
