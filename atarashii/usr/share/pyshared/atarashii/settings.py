@@ -117,9 +117,10 @@ class Settings(object):
                 csf.write('/* THIS FILE HAS BEEN AUTOMATICALLY GENERATED '
                          'AND WILL BE OVERRIDEN ON STARTUP */\n\n')
                 
-                css_data = css_data.replace('{RESOURCES}',
-                                            self.main.get_resource('') \
-                                            + '/themes/' + color_theme + '/')
+                path = os.path.join(self.main.get_resource(''), 'themes',
+                                    color_theme) + '/'
+                
+                css_data = css_data.replace('{RESOURCES}', path)
                 
                 css_data = css_data.replace('{AVATAR32}', str(avatar_size))
                 css_data = css_data.replace('{AVATAR34}', str(avatar_size + 2))

@@ -109,7 +109,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     # Login --------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def login(self):
-        # xAuth Login, yes the app stuff is here, were else should it go?
+        # xAuth Login, yes the app stuff is here, where else should it go?
         # Why should anyone else use the Atarashii App for posting from HIS
         # client? :D
         auth = tweepy.OAuthHandler('PYuZHIEoIGnNNSJb7nIY0Q',

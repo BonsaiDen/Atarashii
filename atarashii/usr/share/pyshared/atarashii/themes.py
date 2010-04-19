@@ -78,7 +78,7 @@ COLOR_THEMES = {
             # (if from the same user)
             'MENTION_OLD': 'ffffc2',
             
-            # Spacer between new mentions from differen users
+            # Spacer between new mentions from different users
             'SPACER_MENTION': 'f7e97c',
             
             # Spacer between old mentions from different users

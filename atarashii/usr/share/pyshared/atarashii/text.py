@@ -128,11 +128,13 @@ class TextInput(gtk.TextView):
             self.unfocus()
             return False
         
+        # CRTL + S stops any input
         if event.keyval == gtk.keysyms.s:
             if event.state & gtk.gdk.CONTROL_MASK == gtk.gdk.CONTROL_MASK:
                 self.reset()
                 return True
         
+        # Shift + Return will start a new tweet/message right after submission
         if (self.main.reply_user != UNSET_TEXT \
            or self.main.message_user != UNSET_TEXT \
            or self.gui.mode == MODE_TWEETS) \
@@ -142,9 +144,9 @@ class TextInput(gtk.TextView):
             self.submit(self, True)
             return True
         
+        # Take care of misplaced newlines
         if event.keyval == gtk.keysyms.Return \
            and event.state & gtk.gdk.CONTROL_MASK == gtk.gdk.CONTROL_MASK:
-            
             
             text = self.get_text().strip()
             if not text[0] in u'@\uFF20d':
@@ -204,8 +206,9 @@ class TextInput(gtk.TextView):
                     if self.main.edit_text.lower() == text.lower().strip():
                         return False
                 
-                # Prevent submitting a direct message which won't return a tweet
-                # since twitter thinks that you wanted to send a DM
+                # Prevent submitting something that looks like a message and \
+                # therefore won't return a tweet since twitter thinks that you 
+                # wanted to send a DM
                 ctext = text.strip()
                 if text.lstrip()[0:2] == 'd ' or ctext == 'd':
                     return False
@@ -260,11 +263,10 @@ class TextInput(gtk.TextView):
                 if self.main.message_user_id == UNSET_ID_NUM:
                     self.main.message_user = msg.group(1)
                 
-                else:
-                    if msg.group(1) != self.main.message_user:
-                        self.main.message_text = UNSET_TEXT
-                        self.main.message_user = msg.group(1)
-                        self.main.message_user_id = UNSET_ID_NUM
+                elif msg.group(1) != self.main.message_user:
+                    self.main.message_text = UNSET_TEXT
+                    self.main.message_user = msg.group(1)
+                    self.main.message_user_id = UNSET_ID_NUM
                 
                 # Remove space between username and text
                 check = text[self.message_len:]
@@ -289,7 +291,7 @@ class TextInput(gtk.TextView):
                 text = 'd ' + text[1:].lstrip()
                 gobject.idle_add(self.clear_text, text, pos - 1)
             
-            # check for 'd user' and switch to messaging
+            # check for '@user' and switch to tweeting
             at_user = REPLY_REGEX.match(text)
             if at_user is not None:
                 if self.gui.load_state():
@@ -326,11 +328,10 @@ class TextInput(gtk.TextView):
                 if self.main.reply_id == UNSET_ID_NUM:
                     self.main.reply_user = at_user.group(1)
                 
-                else:
-                    if at_user.group(1) != self.main.reply_user:
-                        self.main.reply_text = UNSET_TEXT
-                        self.main.reply_user = at_user.group(1)
-                        self.main.reply_id = UNSET_ID_NUM
+                elif at_user.group(1) != self.main.reply_user:
+                    self.main.reply_text = UNSET_TEXT
+                    self.main.reply_user = at_user.group(1)
+                    self.main.reply_id = UNSET_ID_NUM
                 
                 # Remove space between username and text
                 check = text[at_len:]
