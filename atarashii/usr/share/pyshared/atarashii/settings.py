@@ -32,6 +32,7 @@ DESKTOP_FILE = os.path.join(HOME_DIR, '.config',
                             'autostart', 'atarashii.desktop')
 
 AUTOSTART_DIR = os.path.join(HOME_DIR, '.config', 'autostart')
+CACHE_DIR = os.path.join(HOME_DIR, '.cache', 'atarashii')
 
 ATARASHII_DIR = os.path.join(HOME_DIR, '.atarashii')
 CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
@@ -66,6 +67,9 @@ class Settings(object):
     def __init__(self, main):
         if not os.path.exists(ATARASHII_DIR):
             os.mkdir(ATARASHII_DIR)
+        
+        if not os.path.exists(CACHE_DIR):
+            os.mkdir(CACHE_DIR)
         
         self.main = main
         self.values = {}
@@ -291,8 +295,8 @@ class Settings(object):
     
     # Avatar Cache Handling ----------------------------------------------------
     def check_cache(self):
-        for i in os.listdir(ATARASHII_DIR):
-            cache_file = os.path.join(ATARASHII_DIR, i)
+        for i in os.listdir(CACHE_DIR):
+            cache_file = os.path.join(CACHE_DIR, i)
             if cache_file[-4:].lower() in ('jpeg', '.jpg', '.png', '.gif'):
                 if time.time() - os.stat(cache_file).st_mtime > CACHE_TIMEOUT:
                     try:

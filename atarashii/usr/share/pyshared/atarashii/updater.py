@@ -26,7 +26,7 @@ import socket
 import hashlib
 
 from language import LANG as lang
-from settings import ATARASHII_DIR
+from settings import CACHE_DIR
 from utils import tweepy, TweepError
 from updater_message import UpdaterMessage
 from updater_tweet import UpdaterTweet
@@ -525,7 +525,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
               else 'http://unicornify.appspot.com/avatar/%s?s=128' \
               % hashlib.md5(str(user.id)).hexdigest()
         
-        img = os.path.join(ATARASHII_DIR, str(user.id) + '_' \
+        img = os.path.join(CACHE_DIR, str(user.id) + '_' \
                            + url[url.rfind('/') + 1:].split('?')[0])
         
         if not os.path.exists(img):
