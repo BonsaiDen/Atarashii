@@ -270,11 +270,11 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
            + self.main.refresh_timeout or self.refresh_now \
            or self.refresh_messages:
             
-            self.refresh_messages = False
-            self.refresh_now = False
             self.main.set_status(ST_UPDATE)
             gobject.idle_add(self.gui.set_multi_button, False, None, True, True)
             self.update()
+            self.refresh_messages = False
+            self.refresh_now = False
             return True
     
     def end_update(self):

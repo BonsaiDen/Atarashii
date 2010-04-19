@@ -92,7 +92,6 @@ class UpdaterTweet(object):
         for i in mentions:
             i.is_mentioned = True
         
-        self.refresh_now = False
         self.update_limit()
         updates = updates + mentions
         updates.sort(key = lambda u: u.id, reverse = True)

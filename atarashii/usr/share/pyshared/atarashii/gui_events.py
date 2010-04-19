@@ -90,7 +90,7 @@ class GUIEventHandler(object):
         if self.mode == MODE_MESSAGES:
             self.main.updater.unwait(messages = True)
         
-        else:
+        elif self.mode == MODE_TWEETS:
             self.main.updater.unwait(tweets = True)
     
     def on_refresh_all(self, button, menu=None):

@@ -80,7 +80,6 @@ class UpdaterMessage(object):
             messages += self.api.sent_direct_messages(
                                  count = self.main.load_message_count // 2)
         
-        self.refresh_messages = False
         messages.sort(key = lambda m: m.id, reverse = True)
         self.update_limit()
         return messages
