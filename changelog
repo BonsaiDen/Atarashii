@@ -2,8 +2,10 @@ atarashii (0.99.22a-1) all;
 
   * Fix for strange behavior of the refresh button.
   * Fix for cached .gif avatars not getting deleted when they timed out.
+  * Fix for random bug which caused the multi button to stay disabled after an
+    update.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 19 Apr 2010 05:24:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 19 Apr 2010 16:39:00 +0200
 
 atarashii (0.99.22-1) all;
 
