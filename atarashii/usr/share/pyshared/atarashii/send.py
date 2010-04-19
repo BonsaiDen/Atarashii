@@ -295,6 +295,10 @@ class Profile(SimpleAPICall):
     def on_success(self, main, name, callback):
         gobject.idle_add(callback, self.user)
 
+    def on_error(self, main, name, callback):
+        gobject.idle_add(main.stop_profile)
+        gobject.idle_add(main.gui.show_profile_error, name)
+
 
 # Follow -----------------------------------------------------------------------
 # ------------------------------------------------------------------------------

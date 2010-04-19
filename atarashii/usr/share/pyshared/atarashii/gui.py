@@ -628,6 +628,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                              lang.error_follow % name if mode \
                              else lang.error_unfollow % name, lang.error_title)
     
+    def show_profile_error(self, name):
+        dialog.MessageDialog(self, MESSAGE_ERROR,
+                             lang.profile_error % lang.name(name),
+                             lang.error_title)
+    
     def show_block_info(self, mode, name):
         self.info_button.show(lang.block_button % name if mode \
                               else lang.unblock_button % name,

@@ -100,6 +100,9 @@ LANG = {
         'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
         'profile_location': '<b>Ort:</b> %s',
         'profile_description': '<b>Bio:</b> %s',
+        'profile_error':
+            '<b>%s</b> Profil konnte nicht geladen werden, der Benutzer '
+            'existiert nicht.',
         
         # Messages
         'message_loading': 'Nachrichten werden geladen...',
@@ -487,6 +490,8 @@ LANG = {
         'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
         'profile_location': '<b>Location:</b> %s',
         'profile_description': '<b>Bio:</b> %s',
+        'profile_error':
+            'Could not load <b>%s</b> profile, the user does not exist.',
         
         # Messages
         'message_loading': 'Loading messages...',
