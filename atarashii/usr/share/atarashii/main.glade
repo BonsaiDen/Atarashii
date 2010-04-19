@@ -299,7 +299,8 @@
                                     <child>
                                       <object class="GtkImage" id="profileimage">
                                         <property name="visible">True</property>
-                                        <property name="pixel_size">72</property>
+                                        <property name="pixel_size">48</property>
+                                        <property name="icon_name">bonsaiden-atarashii</property>
                                       </object>
                                       <packing>
                                         <property name="position">0</property>
@@ -386,19 +387,29 @@ Following &lt;b&gt;1337&lt;/b&gt;</property>
                                 <property name="yalign">0</property>
                                 <property name="xpad">4</property>
                                 <property name="ypad">2</property>
-                                <property name="label" translatable="yes">&lt;b&gt;Website:&lt;/b&gt;
-&lt;a href="http://www.github.com/BonsaiDen"&gt;http://www.github.com/BonsaiDen&lt;/a&gt;
-
-&lt;b&gt;Biografie:&lt;/b&gt;
-Ubuntu User / Twitter Client Developer / Nintendo Fan.</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Biografie:&lt;/b&gt;
+Bunch of coffeine addicted kittens!</property>
                                 <property name="use_markup">True</property>
                                 <property name="wrap">True</property>
                                 <property name="wrap_mode">word-char</property>
-                                <property name="width_chars">30</property>
                                 <property name="track_visited_links">False</property>
                               </object>
                               <packing>
                                 <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="profilestatus">
+                                <property name="visible">True</property>
+                                <property name="xalign">0</property>
+                                <property name="xpad">4</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Status:&lt;/b&gt; Wird &lt;b&gt;gefollowed&lt;/b&gt; und &lt;b&gt;followed&lt;/b&gt;.</property>
+                                <property name="use_markup">True</property>
+                                <property name="wrap">True</property>
+                                <property name="wrap_mode">word-char</property>
+                              </object>
+                              <packing>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                           </object>
@@ -408,7 +419,7 @@ Ubuntu User / Twitter Client Developer / Nintendo Fan.</property>
                     <child type="label">
                       <object class="GtkLabel" id="profilename">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">&lt;b&gt;CodingKittens Profile&lt;/b&gt;</property>
+                        <property name="label" translatable="yes">&lt;b&gt;CodingKittens profile&lt;/b&gt;</property>
                         <property name="use_markup">True</property>
                         <property name="track_visited_links">False</property>
                       </object>

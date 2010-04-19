@@ -158,6 +158,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.profile_info = gtb.get_object('profileinfo')
         self.profile_image = gtb.get_object('profileimage')
         self.profile_name = gtb.get_object('profilename')
+        self.profile_status = gtb.get_object('profilestatus')
         gtb.get_object('profileclose').connect('clicked', self.hide_profile)
         
         
@@ -349,7 +350,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Profile ------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def show_profile(self, user):
+    def show_profile(self, user, friend):
         if not self.main.profile_pending:
             return False
         
@@ -383,11 +384,35 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             details.append(lang.profile_description % escape(user.description))
         
         self.profile_bio.set_label('\n'.join(details))
+        
         if len(details) == 0:
             self.profile_bio.hide()
         
         else:
-            self.profile_bio.show()
+            self.profile_bio.show() 
+        
+        # Status
+        if friend[0].following and friend[0].followed_by:
+            status = lang.profile_status_both
+        
+        elif friend[0].following:
+            status = lang.profile_status_following
+        
+        elif friend[0].followed_by:
+            status = lang.profile_status_followed
+        
+        elif friend[0].blocking:
+            status = lang.profile_status_blocked
+        
+        else:
+            status = None
+        
+        if status != None:
+            self.profile_status.set_label(status)
+            self.profile_status.show()
+        
+        else:
+            self.profile_status.hide()
         
         self.profile_box.show()
     

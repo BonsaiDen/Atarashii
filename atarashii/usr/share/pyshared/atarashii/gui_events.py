@@ -51,6 +51,7 @@ class GUIEventHandler(object):
         size = (request[2], request[3])
         if size != self.current_size:
             self.profile_bio.set_size_request(size[0] - 16, -1)
+            self.profile_status.set_size_request(size[0] - 16, -1)
             self.current_size = size
     
     

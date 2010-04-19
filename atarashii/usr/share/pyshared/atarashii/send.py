@@ -291,9 +291,10 @@ class Friends(SimpleAPICall):
 class Profile(SimpleAPICall):
     def call(self, main, name, callback):
         self.user = self.main.api.get_user(screen_name = name)
+        self.friend = self.main.api.show_friendship(target_screen_name = name)
     
     def on_success(self, main, name, callback):
-        gobject.idle_add(callback, self.user)
+        gobject.idle_add(callback, self.user, self.friend)
 
     def on_error(self, main, name, callback):
         gobject.idle_add(main.stop_profile)

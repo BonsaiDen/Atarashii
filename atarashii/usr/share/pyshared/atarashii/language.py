@@ -100,6 +100,18 @@ LANG = {
         'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
         'profile_location': '<b>Ort:</b> %s',
         'profile_description': '<b>Bio:</b> %s',
+        'profile_status_both':
+            '<b>Status:</b> Wird <b>gefollowed</b> und <b>followed</b>.',
+        
+        'profile_status_following':
+            '<b>Status:</b> Wird <b>gefollowed</b>.',
+        
+        'profile_status_followed':
+            '<b>Status:</b> <b>Followed</b>.',
+        
+        'profile_status_blocked':
+            '<b>Status:</b> Wird <b>geblockt</b>.',
+        
         'profile_error':
             '<b>%s</b> Profil konnte nicht geladen werden, der Benutzer '
             'existiert nicht.',
@@ -490,6 +502,18 @@ LANG = {
         'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
         'profile_location': '<b>Location:</b> %s',
         'profile_description': '<b>Bio:</b> %s',
+        'profile_status_both':
+            '<b>Status:</b> <b>Followed</b> by you and <b>follows</b> you.',
+        
+        'profile_status_following':
+            '<b>Status:</b> <b>Followed</b> by you.',
+        
+        'profile_status_followed':
+            '<b>Status:</b> <b>Follows</b> you.',
+        
+        'profile_status_blocked':
+            '<b>Status:</b> Has been <b>blocked</b> by you.',
+        
         'profile_error':
             'Could not load <b>%s</b> profile, the user does not exist.',
         
