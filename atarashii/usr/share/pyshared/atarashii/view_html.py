@@ -58,7 +58,7 @@ class ViewHTML(object):
         self.last_highlight = False
         self.last_mentioned = False
         
-        # Reset the user object associated to the avatar tooltip
+        # Reset the user object associated with the avatar tooltip
         self.tooltip_user = None
         
         # Do the rendering!
@@ -181,7 +181,7 @@ class ViewHTML(object):
                 </body>''' % self.lang_empty)
     
     # The big magic spacer inserted... trust me it's really magic that this
-    # thin does work at all...
+    # thing does work at all...
     def insert_spacer(self, item, user, highlight, mentioned,
                       next_highlight=False, force=False, message=False):
         
@@ -238,9 +238,6 @@ class ViewHTML(object):
                     if next_highlight and self.last_highlight:
                         spacer = 'tweet'
                     
-                    elif next and self.last_mentioned:
-                        spacer = 'tweet'
-                    
                     elif self.last_highlight:
                         spacer = 'tweet_highlight'
                     
@@ -295,9 +292,6 @@ class ViewHTML(object):
                 else:
                     if next_highlight and self.last_highlight:
                         spacer = 'tweet_old'
-                    
-                    elif next and self.last_mentioned:
-                        spacer = 'tweet'
                     
                     elif self.last_highlight:
                         spacer = 'tweet_highlight_old'
