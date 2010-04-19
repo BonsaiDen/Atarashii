@@ -32,7 +32,7 @@ echo "Starting Atarashii..."
 while [ $RESTART -lt $MAX ]
 do
     # Start
-    ./debug.py
+    ./debug.py $1
     
     # Varas
     let CODE=$?

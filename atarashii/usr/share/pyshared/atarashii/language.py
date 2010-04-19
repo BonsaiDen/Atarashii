@@ -19,6 +19,26 @@
 # Translations -----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import locale
+import sys
+
+
+class Language(object):
+    def __init__(self, code):
+        if code in LANG:
+            stuff = LANG[code]
+        
+        else:
+            stuff = LANG['en_US']
+        
+        # command line option to switch to english
+        if '-e' in sys.argv:
+            stuff = LANG['en_US']
+        
+        # set instance attributes
+        for key, value in stuff.iteritems():
+            setattr(self, key, value)
+
+
 LANG = {
     
     # German -------------------------------------------------------------------
@@ -101,16 +121,17 @@ LANG = {
         'profile_location': '<b>Ort:</b> %s',
         'profile_description': '<b>Bio:</b> %s',
         'profile_status_both':
-            '<b>Status:</b> Wird <b>gefollowed</b> und <b>followed</b>.',
+            '<b>Status:</b> Wird von Ihnen <b>gefollowed</b> und '
+            '<b>followed</b> Ihnen.',
         
         'profile_status_following':
-            '<b>Status:</b> Wird <b>gefollowed</b>.',
+            '<b>Status:</b> Wird von Ihnen <b>gefollowed</b>.',
         
         'profile_status_followed':
-            '<b>Status:</b> <b>Followed</b>.',
+            '<b>Status:</b> <b>Followed</b> Ihnen.',
         
         'profile_status_blocked':
-            '<b>Status:</b> Wird <b>geblockt</b>.',
+            '<b>Status:</b> Wird von Ihnen <b>geblockt</b>.',
         
         'profile_error':
             '<b>%s</b> Profil konnte nicht geladen werden, der Benutzer '
@@ -503,13 +524,14 @@ LANG = {
         'profile_location': '<b>Location:</b> %s',
         'profile_description': '<b>Bio:</b> %s',
         'profile_status_both':
-            '<b>Status:</b> <b>Followed</b> by you and <b>follows</b> you.',
+            '<b>Status:</b> <b>Followed</b> by you and is <b>following</b> '
+            'you.',
         
         'profile_status_following':
             '<b>Status:</b> <b>Followed</b> by you.',
         
         'profile_status_followed':
-            '<b>Status:</b> <b>Follows</b> you.',
+            '<b>Status:</b> Is <b>following</b> you.',
         
         'profile_status_blocked':
             '<b>Status:</b> Has been <b>blocked</b> by you.',
@@ -815,19 +837,6 @@ LANG = {
         'context_friend_unblock': 'Unblock %s'
     }
 }
-
-
-class Language(object):
-    def __init__(self, code):
-        if code in LANG:
-            stuff = LANG[code]
-        
-        else:
-            stuff = LANG['en_US']
-        
-        # set instance fields
-        for key, value in stuff.iteritems():
-            setattr(self, key, value)
 
 # Select Language
 LANG_NAME = locale.getdefaultlocale()[0]
