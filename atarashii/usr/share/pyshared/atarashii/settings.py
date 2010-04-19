@@ -21,10 +21,10 @@ import urllib
 import time
 import locale
 
+from themes import COLOR_THEMES
 from constants import UNSET_SETTING, UNSET_ID_NUM, FONT_DEFAULT, \
                       AVATAR_DEFAULT, THEME_DEFAULT
 
-from themes import COLOR_THEMES
 
 # File Paths
 HOME_DIR = os.path.expanduser('~')
@@ -293,7 +293,7 @@ class Settings(object):
     def check_cache(self):
         for i in os.listdir(ATARASHII_DIR):
             cache_file = os.path.join(ATARASHII_DIR, i)
-            if cache_file[-4:].lower() in ('jpeg', '.jpg', '.png', 'gif'):
+            if cache_file[-4:].lower() in ('jpeg', '.jpg', '.png', '.gif'):
                 if time.time() - os.stat(cache_file).st_mtime > CACHE_TIMEOUT:
                     try:
                         os.unlink(cache_file)
