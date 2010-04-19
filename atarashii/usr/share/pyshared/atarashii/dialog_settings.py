@@ -26,7 +26,6 @@ import os
 from language import LANG as lang, LANG_NAME
 from dialog import Dialog, MessageDialog
 from utils import URLShorter, URLExpander
-from themes import COLOR_THEMES
 from constants import SHORTS_LIST, USERNAME_CHARS, FONT_DEFAULT, FONT_SIZES, \
                       AVATAR_DEFAULT, AVATAR_SIZES, THEME_DEFAULT
 
@@ -237,12 +236,13 @@ class SettingsDialog(Dialog):
         # Theme ----------------------------------------------------------------
         self.get('colortheme').set_label(lang.settings_color_theme)
         self.old_color_theme = self.settings.get('color_theme', THEME_DEFAULT)
-        self.color_ids = sorted(COLOR_THEMES.keys())
+        self.color_ids = sorted(self.settings.color_themes.keys())
         self.color_names = []
         for i in self.color_ids:
             key = 'title_' + LANG_NAME
-            name = COLOR_THEMES[i][key] if key in COLOR_THEMES[i] \
-                   else COLOR_THEMES[i]['title_en_US']
+            name = self.settings.color_themes[i][key] \
+                   if key in self.settings.color_themes[i] \
+                   else self.settings.color_themes[i]['title_en_US']
             
             self.color_names.append(name)
         

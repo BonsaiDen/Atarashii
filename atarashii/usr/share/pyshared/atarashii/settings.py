@@ -20,8 +20,8 @@ import os
 import urllib
 import time
 import locale
+import json
 
-from themes import COLOR_THEMES
 from constants import UNSET_SETTING, UNSET_ID_NUM, FONT_DEFAULT, \
                       AVATAR_DEFAULT, THEME_DEFAULT
 
@@ -76,71 +76,13 @@ class Settings(object):
         self.load()
         self.save_count = 0
         self.has_changed = False
+        
+        # Theme and CSS
+        self.color_themes = {}
+        self.load_color_themes()
         self.css_file = None
         self.css_count = 0
         self.css()
-    
-    
-    # CSS ----------------------------------------------------------------------
-    def css(self, font=None, avatar=None, color_theme=None):
-        # Delete old css files
-        for i in os.listdir(ATARASHII_DIR):
-            css_file = os.path.join(ATARASHII_DIR, i)
-            if css_file.lower().endswith('.css'):
-                os.unlink(css_file)
-        
-        self.css_file = os.path.join(ATARASHII_DIR,
-                                'atarashii_%s.css' % self.css_count)
-        
-        self.css_count += 1
-        
-        # Avatar
-        if avatar is None:
-            avatar_size = self.get('avatarsize', AVATAR_DEFAULT)
-        
-        else:
-            avatar_size = avatar
-        
-        # Font
-        if font is None:
-            font_size = self.get('fontsize', FONT_DEFAULT)
-        
-        else:
-            font_size = font
-        
-        # Theme
-        if not self['color_theme'] in COLOR_THEMES:
-            self['color_theme'] = THEME_DEFAULT
-        
-        if color_theme is None:
-            color_theme = self['color_theme']
-        
-        with open(self.main.get_resource('atarashii.css'), 'rb') as f:
-            css_data = f.read()
-            with open(self.css_file, 'wb') as csf:
-                csf.write('/* THIS FILE HAS BEEN AUTOMATICALLY GENERATED '
-                         'AND WILL BE OVERRIDEN ON STARTUP */\n\n')
-                
-                path = os.path.join(self.main.get_resource(''), 'themes',
-                                    color_theme) + '/'
-                
-                css_data = css_data.replace('{RESOURCES}', path)
-                
-                css_data = css_data.replace('{AVATAR32}', str(avatar_size))
-                css_data = css_data.replace('{AVATAR34}', str(avatar_size + 2))
-                css_data = css_data.replace('{AVATAR38}', str(avatar_size + 6))
-                
-                css_data = css_data.replace('{FONT9}', str(font_size - 1))
-                css_data = css_data.replace('{FONT10}', str(font_size))
-                css_data = css_data.replace('{FONT11}', str(font_size + 1))
-                css_data = css_data.replace('{FONT12}', str(font_size + 2))
-                css_data = css_data.replace('{FONT14}', str(font_size + 4))
-                
-                colors = COLOR_THEMES[color_theme]['colors']
-                for key, value in colors.iteritems():
-                    css_data = css_data.replace('{%s}' % key, value)
-                
-                csf.write(css_data)
     
     
     # Load ---------------------------------------------------------------------
@@ -236,6 +178,94 @@ class Settings(object):
     
     def get_accounts(self):
         return sorted([i[8:] for i in self.values if i.startswith('account_')])
+    
+    
+    
+    # CSS ----------------------------------------------------------------------
+    def css(self, font=None, avatar=None, color_theme=None):
+        # Delete old css files
+        for i in os.listdir(ATARASHII_DIR):
+            css_file = os.path.join(ATARASHII_DIR, i)
+            if css_file.lower().endswith('.css'):
+                os.unlink(css_file)
+        
+        self.css_file = os.path.join(ATARASHII_DIR,
+                                'atarashii_%s.css' % self.css_count)
+        
+        self.css_count += 1
+        
+        # Avatar
+        if avatar is None:
+            avatar_size = self.get('avatarsize', AVATAR_DEFAULT)
+        
+        else:
+            avatar_size = avatar
+        
+        # Font
+        if font is None:
+            font_size = self.get('fontsize', FONT_DEFAULT)
+        
+        else:
+            font_size = font
+        
+        # Theme
+        if color_theme is not None:
+            self.load_color_themes()
+        
+        if not self['color_theme'] in self.color_themes:
+            self['color_theme'] = THEME_DEFAULT
+        
+        if color_theme is None:
+            color_theme = self['color_theme']
+        
+        with open(self.main.get_resource('atarashii.css'), 'rb') as f:
+            css_data = f.read()
+            with open(self.css_file, 'wb') as csf:
+                csf.write('/* THIS FILE HAS BEEN AUTOMATICALLY GENERATED '
+                         'AND WILL BE OVERRIDEN ON STARTUP */\n\n')
+                
+                path = os.path.join(self.main.get_resource(''), 'themes',
+                                    color_theme) + '/'
+                
+                css_data = css_data.replace('{RESOURCES}', path)
+                
+                css_data = css_data.replace('{AVATAR32}', str(avatar_size))
+                css_data = css_data.replace('{AVATAR34}', str(avatar_size + 2))
+                css_data = css_data.replace('{AVATAR38}', str(avatar_size + 6))
+                
+                css_data = css_data.replace('{FONT9}', str(font_size - 1))
+                css_data = css_data.replace('{FONT10}', str(font_size))
+                css_data = css_data.replace('{FONT11}', str(font_size + 1))
+                css_data = css_data.replace('{FONT12}', str(font_size + 2))
+                css_data = css_data.replace('{FONT14}', str(font_size + 4))
+                
+                colors = self.color_themes[color_theme]['colors']
+                for key, value in colors.iteritems():
+                    css_data = css_data.replace('{%s}' % key, value)
+                
+                csf.write(css_data)
+    
+    
+    # Load themes --------------------------------------------------------------
+    def load_color_themes(self):
+        self.color_themes = {}
+        path = os.path.join(self.main.get_resource(''), 'themes')
+        for theme_name in sorted(os.listdir(path)):
+            theme = os.path.join(path, theme_name)    
+            if os.path.isdir(theme):
+                theme_file = os.path.join(theme, 'theme.py')
+                if os.path.exists(theme_file):
+                    self.read_theme(theme_name, theme_file)
+    
+    def read_theme(self, name, theme_file):
+        with open(theme_file, 'rb') as f:
+            lines = [e.strip() for e in f if not e.strip().startswith('#')]
+            try:
+                self.color_themes[name] = json.loads(
+                                          ''.join(lines).replace('\'', '"'))
+            
+            except (TypeError, ValueError):
+                log_error('Invalid theme description for "%s"' % name) 
     
     
     # Manage Autostart ---------------------------------------------------------
