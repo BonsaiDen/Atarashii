@@ -2,6 +2,8 @@ atarashii (0.99.22b-1) all;
 
   + Added following and block information to profiles.
   ~ Avatars are now beeing cached under ~/.cache/atarashii.
+  ~ Internal changes on how themes are loaded, this mainly aims at simpler theme
+    creation.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 19 Apr 2010 22:15:00 +0200
 

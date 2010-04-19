@@ -1,5 +1,9 @@
-# This file is NOT beeing parsed as a python file
-# It's read stripped of the comments and then loaded as json
+# This file is NOT beeing parsed as a python file!!!
+# It's read, stripped of the comments and then loaded as json on the first start
+# and each time a theme is selected in the preferences dialog.
+
+# ONLY user strings in here. No numbers and NEVER(!) python code, or it will
+# break... and the kittens will make you cry! How? Better don't ask...
 {
     'title_de_DE': 'Fuji Blau(Standard)',
     'title_en_US': 'Fuji blue(default)',
