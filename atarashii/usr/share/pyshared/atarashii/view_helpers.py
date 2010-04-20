@@ -55,10 +55,6 @@ class ViewHelpers(object):
     
     # Scrolling ----------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def get_height(self):
-        size = self.get_allocation()
-        return size[3] - size[0]
-    
     def get_offset(self):
         try:
             self.execute_script(
@@ -106,7 +102,7 @@ class ViewHelpers(object):
         
         # scroll to first new tweet
         elif self.first_load or (offset > 0 and self.position == 0):
-            height = self.get_height()
+            height = self.gui.get_view_height()
             if offset > height:
                 self.scroll_to = offset - height
                 self.fix_scroll()
@@ -187,7 +183,7 @@ class ViewHelpers(object):
     
     def check_offset(self):
         offset = self.get_offset()
-        height = self.get_height()
+        height = self.gui.get_view_height()
         if offset > height:
             self.check_scroll(offset - height)
     

@@ -184,6 +184,16 @@ class GUIHelpers(object):
         else:
             return True
     
+    def get_view_height(self):
+        if self.mode == MODE_TWEETS:
+            view = self.html
+        
+        elif self.mode == MODE_MESSAGES:
+            view = self.message
+        
+        size = view.get_allocation()
+        return size[3] - size[0]
+    
     
     # Kitten HackAttack for presenting the window to the user ------------------
     # --------------------------------------------------------------------------
