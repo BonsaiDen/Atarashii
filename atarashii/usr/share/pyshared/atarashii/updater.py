@@ -293,10 +293,11 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     # Update -------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def update(self):
+        both = self.refresh_messages and self.refresh_now
         
         # Tweets
         updates = []
-        if not self.refresh_messages:
+        if not self.refresh_messages or both:
             try:
                 updates = self.try_get_items(self.get_updates,
                                              self.html.last_id)
@@ -314,8 +315,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         # Messages
         messages = []
-        if (self.message_counter > 1 or self.refresh_messages) \
-           and not self.refresh_now:
+        if ((self.message_counter > 1 or self.refresh_messages) \
+           and not self.refresh_now) or both:
             
             try:
                 messages = self.try_get_items(self.get_messages,
