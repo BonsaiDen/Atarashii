@@ -56,6 +56,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         self.do_init = False
         self.refresh_now = False
         self.refresh_messages = False
+        self.refresh_images = False
         
         self.load_history_id = HTML_UNSET_ID
         self.load_history_message_id = HTML_UNSET_ID
@@ -83,6 +84,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         self.do_init = False
         self.started = False
         self.refresh_now = False
+        self.refresh_messages = False
+        self.refresh_images = False
         self.main.refresh_time = UNSET_TIMEOUT
         self.main.refresh_timeout = UNSET_TIMEOUT
         self.html.load_history_id = HTML_UNSET_ID
@@ -232,6 +235,9 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             if self.do_init:
                 self.init()
             
+            elif self.refresh_images:
+                self.reload_images()
+            
             elif self.started:
                 if self.finish:
                     self.finish = False
@@ -250,7 +256,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             gobject.timeout_add(1000, self.unwait)
             self.wait.wait()
     
-    def unwait(self, init=False, tweets=False, messages=False):
+    def unwait(self, init=False, tweets=False, messages=False, images=False):
         if init:
             self.do_init = True
         
@@ -259,6 +265,9 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         if messages:
             self.refresh_messages = True
+        
+        if images:
+            self.refresh_images = True
         
         self.wait.set()
     
@@ -516,6 +525,9 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         else:
             self.main.unset_status(ST_WARNING_RATE)
     
+    
+    # Image methods ------------------------------------------------------------
+    # --------------------------------------------------------------------------
     def get_image(self, item, message=False, user=None):
         if user is None:
             user = item.sender if message else item.retweeted_status.user \
@@ -537,4 +549,15 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             self.main.set_user_picture(img, item.created_at)
         
         return img
+    
+    def reload_images(self):
+        for i in self.html.items:
+            i[1] = self.get_image(i[0])
+        
+        for i in self.message.items:
+            i[1] = self.get_image(i[0], True)
+        
+        gobject.idle_add(self.html.render)
+        gobject.idle_add(self.message.render)
+        gobject.idle_add(self.gui.set_app_title)
 

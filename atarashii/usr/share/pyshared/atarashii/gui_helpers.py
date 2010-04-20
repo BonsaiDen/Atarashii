@@ -28,7 +28,7 @@ from constants import ST_SEND, ST_CONNECT, ST_LOGIN_SUCCESSFUL, \
                       ST_LOGIN_COMPLETE, ST_UPDATE
 
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADED, UNSET_TEXT, \
-                      UNSET_LABEL, MESSAGE_ERROR, UNSET_USERNAME
+                      UNSET_LABEL, MESSAGE_ERROR, UNSET_USERNAME, UNSET_TIMEOUT
 
 
 class GUIHelpers(object):
@@ -265,15 +265,9 @@ class GUIHelpers(object):
         
         toggled = self.main.settings.is_true('unicorns', False)
         self.main.settings['unicorns'] = not toggled
+        self.main.user_picture_time_delta = UNSET_TIMEOUT
+        self.main.updater.unwait(images=True)
         self.text.set_text(UNSET_TEXT)
-        for i in self.html.items:
-            i[1] = self.main.updater.get_image(i[0])
-        
-        for i in self.message.items:
-            i[1] = self.main.updater.get_image(i[0], True)
-        
-        gobject.idle_add(self.html.render)
-        gobject.idle_add(self.message.render)
         gobject.idle_add(self.text.unfocus)
         if not toggled:
             self.info_button.show('Oh look! Unicorns!', None, None, 5000)
