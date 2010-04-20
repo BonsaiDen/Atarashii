@@ -1,3 +1,10 @@
+atarashii (0.99.22c-1) all;
+
+  * Always use the latest tweet/message as the reference for the current user
+    picture.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 21 Apr 2010 01:13:00 +0200
+
 atarashii (0.99.22b-1) all;
 
   + Added following and block information to profiles.
