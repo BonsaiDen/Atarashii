@@ -45,10 +45,10 @@ import gui
 import settings
 import updater
 
-from constants import SHORTS_LIST
 from atarashii_actions import AtarashiiActions
 from language import LANG as lang
 
+from constants import SHORTS_LIST
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_UPDATE,ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, \
                       ST_NONE, ST_SEND, ST_DELETE, ST_LOGIN_COMPLETE
