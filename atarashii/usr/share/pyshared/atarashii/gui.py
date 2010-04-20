@@ -31,10 +31,10 @@ import tray
 import text
 import dialog
 
-from language import LANG as lang
 from utils import escape
 from gui_events import GUIEventHandler
 from gui_helpers import GUIHelpers
+from language import LANG as lang
 
 from constants import CRASH_LOG_FILE
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \

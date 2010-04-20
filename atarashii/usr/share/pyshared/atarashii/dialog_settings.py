@@ -23,10 +23,10 @@ import gobject
 
 import os
 
-from language import LANG as lang, LANG_NAME
 from dialog import Dialog, MessageDialog
 from utils import URLShorter, URLExpander
 from sounds import THEME_SOUNDS, THEME_DIR
+from language import LANG as lang, LANG_NAME
 
 from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING
 from constants import ST_CONNECT, ST_LOGIN_COMPLETE

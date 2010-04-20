@@ -32,8 +32,8 @@ from urllib2 import URLError
 
 import send
 
-from language import LANG as lang
 from errors import log_error
+from language import LANG as lang
 
 from constants import LOGOUT_FILE
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR, UNSET_USERNAME
