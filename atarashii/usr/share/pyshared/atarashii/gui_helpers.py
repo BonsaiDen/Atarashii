@@ -249,7 +249,7 @@ class GUIHelpers(object):
         col2 = (col2[0:4], col2[4:8], col2[8:12])
         col3 = [0, 0, 0]
         
-        # Aplhalend the two colors since there is no way to get the lighter
+        # Aplhablend the two colors since there is no way to get the lighter
         # border color of the scrollbar
         for i in xrange(3):
             col3[i] = int(int((1 - 0.5) * int(col2[i], 16) \
