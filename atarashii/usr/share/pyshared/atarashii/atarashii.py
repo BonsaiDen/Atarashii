@@ -112,7 +112,8 @@ class Atarashii(AtarashiiActions):
         self.profile_pending = False
         self.profile_current_user = UNSET_USERNAME
         
-        # Current Username
+        # User stuff
+        self.user_picture_time_delta = UNSET_TIMEOUT
         self.username = self.settings['username'] or UNSET_USERNAME
         
         # Notifier
@@ -291,8 +292,15 @@ class Atarashii(AtarashiiActions):
         
         self.notifier.add(info)
     
-    def set_user_picture(self, img):
-        self.settings['picture_' + self.username] = img
+    def set_user_picture(self, img, date):
+        delta = long(calendar.timegm(time.gmtime())) \
+                - long(calendar.timegm(date.timetuple()))
+        
+        if delta < self.user_picture_time_delta \
+           or self.user_picture_time_delta == UNSET_TIMEOUT:
+            
+            self.user_picture_time_delta = delta
+            self.settings['picture_' + self.username] = img
     
     def get_user_picture(self):
         img = self.settings['picture_' + self.username]
