@@ -20,15 +20,10 @@ import dbus
 import dbus.service
 import gobject
 
+from constants import DESK_NAME, DESK_PATH, DBUS_NAME, DBUS_PATH
+
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default = True)
-
-# DBUS stuff
-DESK_NAME = 'org.freedesktop.DBus'
-DESK_PATH = '/org/freedesktop/DBus'
-
-DBUS_NAME = 'org.bonsaiden.Atarashii'
-DBUS_PATH = '/org/bonsaiden/Atarashii'
 
 
 class AtarashiiObject(dbus.service.Object):

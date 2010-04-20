@@ -20,10 +20,12 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 
-import bus
 import sys
+import errors
+sys.exitfunc = errors.crash_exit
 
 # Make sure there is only one instance of Atarashii
+import bus
 DBUS_INSTANCE = bus.AtarashiiObject()
 if not DBUS_INSTANCE.is_unique:
     gtk.gdk.notify_startup_complete()
@@ -32,16 +34,11 @@ if not DBUS_INSTANCE.is_unique:
 
 # Main Application -------------------------------------------------------------
 import gobject
+gobject.threads_init()
 
 import time
 import calendar
 import os
-
-gobject.threads_init()
-
-# Import the module to handle python exceptions
-import errors
-sys.exitfunc = errors.crash_exit
 
 import notify
 import gui

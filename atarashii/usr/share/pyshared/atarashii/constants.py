@@ -85,6 +85,13 @@ AVATAR_DEFAULT = 32
 AVATAR_SIZES = [24, 32, 40, 48, 64, 96]
 THEME_DEFAULT = 'fuji_blue_default'
 
+# DBUS stuff
+DESK_NAME = 'org.freedesktop.DBus'
+DESK_PATH = '/org/freedesktop/DBus'
+
+DBUS_NAME = 'org.bonsaiden.Atarashii'
+DBUS_PATH = '/org/bonsaiden/Atarashii'
+
 
 # Errors, should be below 0 ----------------------------------------------------
 ERR_TWEET_NOT_FOUND = -12
