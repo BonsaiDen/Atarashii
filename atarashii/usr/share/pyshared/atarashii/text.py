@@ -447,6 +447,9 @@ class TextInput(gtk.TextView):
             self.grab_focus()
             self.set_text('')
             self.is_changing = False
+        
+        elif self.gui.mode == MODE_TWEETS:
+            self.grab_focus()
     
     def start_message(self, *args):
         if not self.has_typed:
@@ -455,6 +458,9 @@ class TextInput(gtk.TextView):
             self.grab_focus()
             self.set_text('d ')
             self.is_changing = False
+        
+        elif self.gui.mode == MODE_MESSAGES:
+            self.grab_focus()
     
     
     # Helpers ------------------------------------------------------------------

@@ -197,7 +197,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.is_shown = False
         self.progress_visible = False
         
-        
         # Set Message/Tweet Mode
         self.set_mode(self.mode)
         self.set_app_title()
@@ -212,6 +211,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         acc.connect_group(gtk.keysyms.d, gtk.gdk.CONTROL_MASK,
                           0, self.text.start_message)
+        
+        acc.connect_group(gtk.keysyms.t, gtk.gdk.MOD1_MASK,
+                          0, lambda *args: self.on_tabs(None, None, 0))
+        
+        acc.connect_group(gtk.keysyms.d, gtk.gdk.MOD1_MASK,
+                          0, lambda *args: self.on_tabs(None, None, 1))
         
         # Show GUI
         if not main.settings.is_true('tray', False) \
