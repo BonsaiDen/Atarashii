@@ -19,48 +19,14 @@
 import os
 import urllib
 import time
-import locale
 import json
 
+from errors import log_error, crash_file
 from constants import UNSET_SETTING, UNSET_ID_NUM, FONT_DEFAULT, \
                       AVATAR_DEFAULT, THEME_DEFAULT
 
-
-# File Paths
-HOME_DIR = os.path.expanduser('~')
-DESKTOP_FILE = os.path.join(HOME_DIR, '.config',
-                            'autostart', 'atarashii.desktop')
-
-AUTOSTART_DIR = os.path.join(HOME_DIR, '.config', 'autostart')
-CACHE_DIR = os.path.join(HOME_DIR, '.cache', 'atarashii')
-
-ATARASHII_DIR = os.path.join(HOME_DIR, '.atarashii')
-CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
-
-CONFIG_FILE = os.path.join(ATARASHII_DIR, 'atarashii.conf')
-COPY_FILE = '/usr/share/applications/atarashii.desktop'
-CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
-CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')
-ERROR_LOG_FILE = os.path.join(ATARASHII_DIR, 'error.log')
-LOGOUT_FILE = os.path.join(ATARASHII_DIR, 'logout')
-
-# Log errors to ~/.atarashii/error.log
-# Needs to be defined here because of the sound imports below
-# (sound.py imports log_error)
-def log_error(error):
-    locale.setlocale(locale.LC_TIME, 'C')
-    with open(ERROR_LOG_FILE, 'ab') as f:
-        f.write('%s %s\n' \
-                % (time.strftime('%a %b %d %H:%M:%S +0000 %Y', time.gmtime()),
-                   error))
-    
-    locale.setlocale(locale.LC_TIME, '')
-
-
-# Theme sounds
-from sounds import get_sound_files, get_sound_dirs
-THEME_SOUNDS = get_sound_files()
-THEME_DIR = get_sound_dirs()[0]
+from constants import ATARASHII_DIR, CACHE_DIR, CONFIG_FILE, CRASH_FILE, \
+                      DESKTOP_FILE, CACHE_TIMEOUT, AUTOSTART_DIR, COPY_FILE
 
 
 class Settings(object):
@@ -190,7 +156,7 @@ class Settings(object):
                 os.unlink(css_file)
         
         self.css_file = os.path.join(ATARASHII_DIR,
-                                'atarashii_%s.css' % self.css_count)
+                                     'atarashii_%s.css' % self.css_count)
         
         self.css_count += 1
         
@@ -251,7 +217,7 @@ class Settings(object):
         self.color_themes = {}
         path = os.path.join(self.main.get_resource(''), 'themes')
         for theme_name in sorted(os.listdir(path)):
-            theme = os.path.join(path, theme_name)    
+            theme = os.path.join(path, theme_name)
             if os.path.isdir(theme):
                 theme_file = os.path.join(theme, 'theme.py')
                 if os.path.exists(theme_file):
@@ -265,7 +231,7 @@ class Settings(object):
                                           ''.join(lines).replace('\'', '"'))
             
             except (TypeError, ValueError):
-                log_error('Invalid theme description for "%s"' % name) 
+                log_error('Invalid theme description for "%s"' % name)
     
     
     # Manage Autostart ---------------------------------------------------------
@@ -334,19 +300,4 @@ class Settings(object):
                     
                     except (OSError, IOError):
                         log_error('Could not delete file %s' % cache_file)
-
-
-# Create Crashfile -------------------------------------------------------------
-# ------------------------------------------------------------------------------
-def crash_file(mode, data=None):
-    try:
-        if mode:
-            with open(CRASH_FILE, 'wb') as f:
-                f.write(str(data))
-        
-        elif os.path.exists(CRASH_FILE):
-            os.unlink(CRASH_FILE)
-    
-    except (OSError, IOError):
-        log_error('IO on crashfile failed')
 

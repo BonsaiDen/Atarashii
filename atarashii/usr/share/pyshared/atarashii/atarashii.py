@@ -14,9 +14,6 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 
-# TODO fix tooltip flickering during updating. No idea what the reason is...
-
-
 # Atarashii --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 import pygtk
@@ -43,8 +40,8 @@ import os
 gobject.threads_init()
 
 # Import the module to handle python exceptions
-from utils import crash_exit
-sys.exitfunc = crash_exit
+import errors
+sys.exitfunc = errors.crash_exit
 
 import notify
 import gui

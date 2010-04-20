@@ -33,8 +33,9 @@ from urllib2 import URLError
 import send
 
 from language import LANG as lang
-from settings import LOGOUT_FILE, log_error
+from errors import log_error
 
+from constants import LOGOUT_FILE
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR, UNSET_USERNAME
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \

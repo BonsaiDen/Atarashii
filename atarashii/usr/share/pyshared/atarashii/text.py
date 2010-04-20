@@ -207,7 +207,7 @@ class TextInput(gtk.TextView):
                         return False
                 
                 # Prevent submitting something that looks like a message and \
-                # therefore won't return a tweet since twitter thinks that you 
+                # therefore won't return a tweet since twitter thinks that you
                 # wanted to send a DM
                 ctext = text.strip()
                 if text.lstrip()[0:2] == 'd ' or ctext == 'd':

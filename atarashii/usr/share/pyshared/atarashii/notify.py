@@ -18,14 +18,13 @@
 # ------------------------------------------------------------------------------
 import dbus
 
-import sounds
-
-from settings import THEME_SOUNDS, log_error
+from sounds import play_sound
+from errors import log_error
 
 
 class Notifier(object):
     def __init__(self, main):
-        self.settings = main.settings
+        self.main = main
         self.last_id = -1
         self.items = []
         self.init_dbus()
@@ -65,21 +64,14 @@ class Notifier(object):
                 self.last_id = self.send(item)
             
             # In very strange cases the dbus might go aways while we're running
-            # so lets try to get it again
+            # so lets try to grab it again
             except dbus.exceptions.DBusException:
                 log_error('DBUS error')
                 self.init_dbus()
                 self.last_id = self.send(item)
             
             # Play the sound
-            if self.settings.is_true('sound'):
-                if item[3].startswith('theme:'):
-                    sound = item[3].split(':')[1]
-                    if sound in THEME_SOUNDS:
-                        sounds.Sound(THEME_SOUNDS[sound])
-                
-                elif self.settings['sound_' + item[3]] not in ('None', ''):
-                    sounds.Sound(self.settings['sound_' + item[3]])
+            play_sound(self.main, item[3])
     
     def send(self, item):
         return self.notify.Notify('Atarashii', 0, item[2], item[0], item[1],

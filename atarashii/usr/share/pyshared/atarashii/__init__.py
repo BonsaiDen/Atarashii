@@ -36,6 +36,6 @@ def debug(path=None):
     Atarashii(__version__ , __secret__, __kittens__, True, path).start()
 
 def crash(error):
-    from settings import crash_file
+    from errors import crash_file
     crash_file(True, error)
 

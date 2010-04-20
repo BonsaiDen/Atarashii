@@ -23,9 +23,7 @@ import gobject
 
 import time
 
-import sounds
-
-from settings import THEME_SOUNDS
+from sounds import play_sound
 from language import LANG as lang
 
 from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \
@@ -251,6 +249,7 @@ class ButtonDialog(object):
     def __init__(self, gui, dtype, template, title,
                  passive=False, callback=None):
         
+        # TODO Cleanup!
         self.gui = gui
         self.box = gui.gtb.get_object(dtype)
         self.button = gui.gtb.get_object(dtype + '_button')
@@ -274,6 +273,7 @@ class ButtonDialog(object):
         self.default_title = title
         self.title = title
         self.template = template
+        self.is_visible = False
     
     def hide(self, timeout=UNSET_TIMEOUT):
         if timeout != UNSET_TIMEOUT:
@@ -288,6 +288,7 @@ class ButtonDialog(object):
             gobject.source_remove(self.timer)
             self.timer = None
         
+        self.is_visible = False
         self.box.hide()
     
     def show(self, button_label, info, title=None, timeout=UNSET_TIMEOUT):
@@ -306,23 +307,14 @@ class ButtonDialog(object):
         
         self.time = time.time()
         self.box.show()
+        self.is_visible = True
         self.label.set_markup(button_label)
         
         # Play sound
         if self.gui.main.settings.is_true('infosound', True) \
            and info is None and not self.passive:
             
-            if self.dtype == 'warning':
-                sound = 'dialog-warning'
-            
-            elif self.dtype == 'error':
-                sound = 'dialog-error'
-            
-            elif self.dtype == 'info':
-                sound = 'dialog-information'
-            
-            if sound in THEME_SOUNDS:
-                sounds.Sound(THEME_SOUNDS[sound])
+            play_sound(self.gui.main, 'theme:dialog-%s' % self.dtype)
         
         # Show GUI if not shown so the user does notices the message
         if not self.gui.is_shown:
@@ -346,7 +338,7 @@ class ButtonDialog(object):
             itype = MESSAGE_ERROR
             msg = time.strftime(self.template, date) + self.information
         
-        elif self.dtype == 'info':
+        elif self.dtype == 'information':
             itype = MESSAGE_INFO
             msg = self.information
         

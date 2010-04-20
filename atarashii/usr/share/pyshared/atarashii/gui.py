@@ -36,6 +36,7 @@ from utils import escape
 from gui_events import GUIEventHandler
 from gui_helpers import GUIHelpers
 
+from constants import CRASH_LOG_FILE
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_DELETE, ST_UPDATE, ST_SEND, ST_RECONNECT, ST_HISTORY, \
                       ST_LOGIN_COMPLETE, ST_NETWORK_FAILED
@@ -140,7 +141,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                                                 lang.error_title)
         
         # Info Button
-        self.info_button = dialog.ButtonDialog(self, 'info',
+        self.info_button = dialog.ButtonDialog(self, 'information',
                                                lang.info_template,
                                                lang.info_title)
         
@@ -389,7 +390,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.profile_bio.hide()
         
         else:
-            self.profile_bio.show() 
+            self.profile_bio.show()
         
         # Status
         if friend[0].following and friend[0].followed_by:
@@ -407,7 +408,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         else:
             status = None
         
-        if status != None:
+        if status is not None:
             self.profile_status.set_label(status)
             self.profile_status.show()
         
@@ -679,7 +680,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Python error, link to the traceback file
         if code == '70': #str(EX_SOFTWARE)
-            from settings import CRASH_LOG_FILE
             info = lang.error_crashed_python % CRASH_LOG_FILE
             title = lang.error_crashed__python_title
         
@@ -777,8 +777,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 info = lang.warning_overload
                 button = lang.warning_button_overload
                 self.notifcation(MESSAGE_WARNING, lang.tray_warning_overload)
+                self.warning_button.show(button, info)
             
-            # twitter/network lost/network failed
+            # twitter lost / network lost / network failed
             else:
                 if code == ERR_NETWORK_TWITTER_FAILED:
                     if self.main.status(ST_LOGIN_COMPLETE):
@@ -794,8 +795,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 if not self.main.status(ST_NETWORK_FAILED):
                     self.notifcation(MESSAGE_WARNING, lang.tray_warning_network)
                     self.main.set_status(ST_NETWORK_FAILED)
+                
+                # Don't override send errors and other stuff with 'unimportant'
+                # network warnings
+                if not self.warning_button.is_visible:
+                    self.warning_button.show(button, info)
             
-            self.warning_button.show(button, info)
             return True
         
         # Show Error Button

@@ -21,7 +21,7 @@ import os
 import threading
 import subprocess
 
-from settings import log_error
+from errors import log_error
 
 
 def get_sound_theme(theme_name=None):
@@ -86,9 +86,24 @@ def get_sound_files():
     
     return sound_files
 
+# Constants
+THEME_SOUNDS = get_sound_files()
+THEME_DIR = get_sound_dirs()[0]
 
-# Sound Player Thread ----------------------------------------------------------
+
+# Sound Player Factory and Thread ----------------------------------------------
 # ------------------------------------------------------------------------------
+def play_sound(main, sound):
+    if main.settings.is_true('sound'):
+        if sound.startswith('theme:'):
+            sound = sound.split(':')[1]
+            if sound in THEME_SOUNDS:
+                Sound(THEME_SOUNDS[sound])
+        
+        elif main.settings['sound_' + sound] not in ('None', ''):
+            Sound(main.settings['sound_' + sound])
+
+
 class Sound(threading.Thread):
     def __init__(self, sound):
         threading.Thread.__init__(self)

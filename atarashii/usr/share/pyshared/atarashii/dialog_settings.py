@@ -26,14 +26,13 @@ import os
 from language import LANG as lang, LANG_NAME
 from dialog import Dialog, MessageDialog
 from utils import URLShorter, URLExpander
-from constants import SHORTS_LIST, USERNAME_CHARS, FONT_DEFAULT, FONT_SIZES, \
-                      AVATAR_DEFAULT, AVATAR_SIZES, THEME_DEFAULT
-
-from settings import THEME_SOUNDS, THEME_DIR
+from sounds import THEME_SOUNDS, THEME_DIR
 
 from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING
 from constants import ST_CONNECT, ST_LOGIN_COMPLETE
 from constants import MESSAGE_QUESTION
+from constants import SHORTS_LIST, USERNAME_CHARS, FONT_DEFAULT, FONT_SIZES, \
+                      AVATAR_DEFAULT, AVATAR_SIZES, THEME_DEFAULT
 
 
 class SettingsDialog(Dialog):

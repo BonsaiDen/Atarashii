@@ -18,16 +18,11 @@
 # ------------------------------------------------------------------------------
 import gobject
 
-from __init__ import __version__ as VERSION
-from settings import CRASH_LOG_FILE
-
-from constants import START_TIME, UNSET_HOST, ENTITIES, STRIP, SHORT_REGEX, \
+from constants import UNSET_HOST, ENTITIES, STRIP, SHORT_REGEX, \
                       SHORTS, BASE58, UNSET_URL
 
 import sys
 import time
-import traceback
-import locale
 import urllib2
 import urlparse
 import httplib
@@ -43,37 +38,6 @@ try:
 
 finally:
     sys.path.pop(0)
-
-
-# Python error handling --------------------------------------------------------
-# ------------------------------------------------------------------------------
-def crash_exit():
-    # Check if an uncatched error occured
-    try:
-        if sys.last_traceback is None:
-            return False
-    
-    except AttributeError:
-        return False
-    
-    # Set date format to english
-    locale.setlocale(locale.LC_TIME, 'C')
-    
-    # Save the crashlog
-    trace = traceback.extract_tb(sys.last_traceback)
-    with open(CRASH_LOG_FILE, 'ab') as f:
-        error = '''Atarashii %s\nStarted at %s\nCrashed at %s\nTraceback:\n''' \
-                % (VERSION,
-                   time.strftime('%a %b %d %H:%M:%S +0000 %Y',
-                   time.gmtime(START_TIME)),
-                   
-                   time.strftime('%a %b %d %H:%M:%S +0000 %Y',
-                   time.gmtime()))
-        
-        f.write(error + '\n'.join(traceback.format_list(trace)) + '\n')
-    
-    # Exit with specific error
-    sys.exit(70) # os.EX_SOFTWARE
 
 
 # Escaping stuff ---------------------------------------------------------------

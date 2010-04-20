@@ -19,6 +19,7 @@
 import sys
 import time
 import re
+import os
 
 # Startup time
 START_TIME = time.time()
@@ -40,6 +41,8 @@ UNSET_URL = ''           # Must be ''
 USERNAME_CHARS = 'abcdefghijklmnopqrstuvwxyz' \
                  + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' \
                  + '_1234567890'
+
+CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
 
 # Note the missing lowercase l, the uppercase I, the O and the 0(zero)
 BASE58 = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
@@ -183,4 +186,22 @@ REPLY_REGEX = re.compile(ur'^[@\uFF20]([a-z0-9_]{1,20})\s.*',
 
 MESSAGE_REGEX = re.compile('d ([a-z0-9_]{1,20})\s.*',
                             re.UNICODE | re.IGNORECASE)
+
+
+# Paths ------------------------------------------------------------------------
+HOME_DIR = os.path.expanduser('~')
+DESKTOP_FILE = os.path.join(HOME_DIR, '.config',
+                            'autostart', 'atarashii.desktop')
+
+AUTOSTART_DIR = os.path.join(HOME_DIR, '.config', 'autostart')
+CACHE_DIR = os.path.join(HOME_DIR, '.cache', 'atarashii')
+
+ATARASHII_DIR = os.path.join(HOME_DIR, '.atarashii')
+
+CONFIG_FILE = os.path.join(ATARASHII_DIR, 'atarashii.conf')
+COPY_FILE = '/usr/share/applications/atarashii.desktop'
+CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
+CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')
+ERROR_LOG_FILE = os.path.join(ATARASHII_DIR, 'error.log')
+LOGOUT_FILE = os.path.join(ATARASHII_DIR, 'logout')
 
