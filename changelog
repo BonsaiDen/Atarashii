@@ -1,5 +1,6 @@
 atarashii (0.99.22c-1) all;
 
+  + Added ALT+T and ALT+D accelerators for switching between tweet/message view.
   * Always use the latest tweet/message as the reference for the current user
     picture.
 
