@@ -4,8 +4,11 @@ atarashii (0.99.22b-1) all;
   ~ Avatars are now beeing cached under ~/.cache/atarashii.
   ~ Internal changes on how themes are loaded, this mainly aims at simpler theme
     creation.
+  * Fix for broken refreshing via the tray menu.
+  * Fix for sometimes broken scrolling the views.
+  * Some medium internal cleanup.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 19 Apr 2010 22:15:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 20 Apr 2010 22:54:00 +0200
 
 atarashii (0.99.22a-1) all;
 
