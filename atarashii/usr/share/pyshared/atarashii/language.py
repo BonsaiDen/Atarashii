@@ -24,17 +24,9 @@ import sys
 
 class Language(object):
     def __init__(self, code):
-        if code in LANG:
-            stuff = LANG[code]
+        stuff = LANG[code] if code in LANG and not '-e' in sys.argv \
+                           else LANG['en_US']
         
-        else:
-            stuff = LANG['en_US']
-        
-        # command line option to switch to english
-        if '-e' in sys.argv:
-            stuff = LANG['en_US']
-        
-        # set instance attributes
         for key, value in stuff.iteritems():
             setattr(self, key, value)
 
