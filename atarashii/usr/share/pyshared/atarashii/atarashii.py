@@ -292,7 +292,7 @@ class Atarashii(AtarashiiActions):
         self.notifier.add(info)
     
     def set_user_picture(self, img, date):
-        date = calendar.timegm(date.timetuple())
+        date = calendar.timegm(date)
         if date >= self.settings['picture_time_' + self.username]:
             self.settings['picture_time_' + self.username] = date
             self.settings['picture_' + self.username] = img

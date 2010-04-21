@@ -547,7 +547,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         # Check for user picture
         if user.screen_name.lower() == self.main.username.lower():
-            self.main.set_user_picture(img, item.created_at)
+            date = item.created_at.timetuple() if item is not None \
+                                               else time.gmtime()
+            
+            self.main.set_user_picture(img, date)
         
         return img
     
