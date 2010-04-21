@@ -6,8 +6,10 @@ atarashii (0.99.22c-1) all;
   ~ Replace -e with -l [langcode].
   ~ Instead of replacing the whole Atarashii tray icon with the error/warning
     icon, it now just gets overlayed by it.
+  ~ Newlines are now respected in tweets and messages.
   * Always use the latest tweet/message as the reference for the current users
     picture.
+  * Fix for a bug with a textbox check and zero length strings.
   * Fix broken "retweeted by" links.
   * Fixed missing username in some error tooltips.
 
