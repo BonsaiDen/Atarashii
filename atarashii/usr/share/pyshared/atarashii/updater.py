@@ -236,6 +236,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 self.init()
             
             elif self.refresh_images:
+                self.refresh_images = False
                 self.reload_images()
             
             elif self.started:
