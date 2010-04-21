@@ -83,11 +83,11 @@ class HTML(view.HTMLView):
             retweeted = True
             
             # Retweet Info
-            retweet = '<a href="user:http://twitter.com/%s" title="''' \
+            retweet = '<a href="user:%s:http://twitter.com/%s" title="''' \
                       + (self.relative_time(item.created_at)) + '">' \
                       + lang.html_in_retweet + '</a>'
             
-            retweet = retweet % (item.user.screen_name,
+            retweet = retweet % (item.user.screen_name, item.user.screen_name,
                                     item.user.screen_name)
         
         else:

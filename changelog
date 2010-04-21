@@ -5,9 +5,10 @@ atarashii (0.99.22c-1) all;
     icon, it now just gets overlayed by it.
   * Always use the latest tweet/message as the reference for the current users
     picture.
+  * Fix broken "retweeted by" links.
   * Fixed missing username in some error tooltips.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 21 Apr 2010 19:51:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 21 Apr 2010 20:49:00 +0200
 
 atarashii (0.99.22b-1) all;
 
