@@ -301,6 +301,14 @@ class ViewHTML(object):
         
         return '<div class="spacer_%s"></div>' % spacer
     
+    # Avatar
+    def get_avatar(self, has_avatar, user, num, img):
+        if has_avatar:
+            return self.avatar_html(user, num, img), 'inner-text-avatar'
+        
+        else:
+            return HTML_UNSET_TEXT, 'inner-text'
+        
     def avatar_html(self, user, num, img):
         return '''<a href="avatar:%d:http://twitter.com/%s">
                   <img class="avatarimage" src="file://%s" title="avatar"/>

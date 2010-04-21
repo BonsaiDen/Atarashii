@@ -27,10 +27,8 @@ from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, UNSET_ID_NUM, \
 
 class HTML(view.HTMLView):
     def __init__(self, main, gui):
-        self.main = main
-        self.gui = gui
         view.HTMLView.__init__(self, main, gui,
-                               self.gui.html_scroll, MODE_TWEETS)
+                               gui.html_scroll, MODE_TWEETS)
         
         self.item_count = self.main.load_tweet_count
         
@@ -127,15 +125,12 @@ class HTML(view.HTMLView):
         
         # Avatar ---------------------------------------------------------------
         self.is_new_avatar(num)
-        if (num < len(self.items) - 1 \
-           and (user.screen_name != self.get_screen_name(num + 1) \
-           or self.new_avatar)  ) or num == len(self.items) - 1 \
-           or self.new_timeline:
-            
-            avatar = self.avatar_html(user, num, img)
+        has_avatar = (num < len(self.items) - 1 \
+                     and (user.screen_name != self.get_screen_name(num + 1) \
+                     or self.new_avatar)) \
+                     or num == len(self.items) - 1 or self.new_timeline
         
-        else:
-            avatar = HTML_UNSET_TEXT
+        avatar, text_class = self.get_avatar(has_avatar, user, num, img)   
         
         
         # Background -----------------------------------------------------------
@@ -181,9 +176,6 @@ class HTML(view.HTMLView):
         
         
         # HTML Snippet ---------------------------------------------------------
-        text_class = 'inner-text' if avatar == HTML_UNSET_TEXT \
-                     else 'inner-text-avatar'
-        
         html = '''
         <div class="viewitem %s" id="%d"><div class="avatar">%s</div>
         <div class="actions">
