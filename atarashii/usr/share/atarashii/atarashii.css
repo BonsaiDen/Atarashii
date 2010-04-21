@@ -123,6 +123,7 @@ a:active, a:hover, a, .protected {
 	word-wrap: break-word;
 	padding-top: 5px;
 	margin-right: 20px;
+	min-height: 28px;
 }
 
 .inner-text-avatar {
