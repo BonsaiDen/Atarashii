@@ -17,7 +17,6 @@
 # Exit on error!
 set -e
 
-
 # Remove icon
 ICON_FILE="/usr/share/icons/atarashii.png"
 ICON="`which xdg-icon-resource 2> /dev/null`"
@@ -26,10 +25,12 @@ if [ -x "$ICON" ]; then
     echo "Removed icon!"
 fi
 
+
 # Remove repository ------------------------------------------------------------
 # ------------------------------------------------------------------------------
 REPO_FILE=/etc/apt/sources.list.d/atarashii.list
 AUTOSTART_FILE=~/.config/autostart/atarashii.desktop
+CACHE_DIR=~/.cache/atarashii
 
 action="$1"
 
@@ -39,6 +40,16 @@ if [ "$action" != "purge" ] ; then
     exit 0
 fi
 
+# Remove the avatar cache dir
+echo "Removing avatar cache..."
+if [ -e $CACHE_DIR ]; then
+    echo "Directory found! Removing..."
+    rm -r $CACHE_DIR
+    echo "Done!"
+else
+    echo "Directory not found. Doing nothing."
+fi
+
 # Remove the autostart file
 echo "Removing autostart file..."
 if [ -e $AUTOSTART_FILE ]; then
@@ -46,7 +57,7 @@ if [ -e $AUTOSTART_FILE ]; then
     rm $AUTOSTART_FILE
     echo "Done!"
 else
-    echo "File not found doing nothing."
+    echo "File not found. Doing nothing."
 fi
 
 # Remove repo file
@@ -56,6 +67,6 @@ if [ -e $REPO_FILE ]; then
     rm $REPO_FILE
     echo "Done!"
 else
-    echo "File not found doing nothing."
+    echo "File not found. Doing nothing."
 fi
 
