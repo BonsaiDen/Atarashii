@@ -225,7 +225,7 @@ class HTML(view.HTMLView):
                 user.screen_name,
                 lang.name(user.screen_name),
                 user.screen_name,
-                formatted.html,
+                formatted.html.replace('\n', '<br/>'),
                 
                 # Time
                 user.screen_name,

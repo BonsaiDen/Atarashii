@@ -171,7 +171,7 @@ class HTML(view.HTMLView):
                 username,
                 lang.name(username),
                 name,
-                formatted.html,
+                formatted.html.replace('\n', '<br/>'),
                 
                 # Time
                 self.relative_time(item.created_at))
