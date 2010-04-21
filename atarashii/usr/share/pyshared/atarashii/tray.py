@@ -230,9 +230,36 @@ class TrayIcon(gtk.StatusIcon):
                               % (lang.tray_title, status)
         
         self.tooltip_icon = icon
-        self.tooltip_changed = True
-        self.set_from_stock(self.tooltip_icon)
+        self.tooltip_buf = self.render_stock_overlay(icon)
         self.tooltip_special_icon = True
+        self.set_from_pixbuf(self.tooltip_buf)
+        self.tooltip_changed = True
+    
+    def render_stock_overlay(self, stock):
+        window = self.gui.window
+        
+        # Get icons
+        pixbuf = self.gui.render_icon(stock, gtk.ICON_SIZE_DIALOG)
+        size = int(pixbuf.get_width() * 1.6)
+        bg = gtk.gdk.pixbuf_new_from_file_at_size(self.main.get_image(),
+                                                  size, size)
+        
+        # Create a pixmap and clear it
+        pixmap = gtk.gdk.Pixmap(window, size, size)
+        gc = self.gui.get_style().bg_gc[gtk.STATE_NORMAL]
+        pixmap.draw_rectangle(gc, True, 0, 0, size, size)
+        
+        # Draw the icons
+        pixmap.draw_pixbuf(None, bg, 0, 0, 0, 0)
+        pixmap.draw_pixbuf(None, pixbuf, 0, 0, size - pixbuf.get_width(),
+                                               size - pixbuf.get_height())
+        
+        # Convert the thing back to a pixbuf
+        buf = gtk.gdk.Pixbuf(gtk.gdk.COLORSPACE_RGB, True, 8, size, size)
+        buf.get_from_drawable(pixmap, window.get_colormap(), 0, 0, 0, 0,
+                              size, size)
+        
+        return buf
     
     
     # Events -------------------------------------------------------------------
