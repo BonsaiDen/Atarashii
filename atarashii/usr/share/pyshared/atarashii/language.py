@@ -144,10 +144,10 @@ LANG = {
         'notification_message': 'Nachricht von %s',
         'notification_index': '%s (%d von %d)', # 'Message (3 of 4)'
         'notification_login': '%s wurde angemeldet',
-        'notification_login_tweet': '%d neuer Tweet',
-        'notification_login_message': '%d neue Nachricht',
-        'notification_login_tweets': '%d neue Tweets',
-        'notification_login_messages': '%d neue Nachrichten',
+        'notification_login_tweet': '%d ungelesener Tweet',
+        'notification_login_message': '%d ungelesene Nachricht',
+        'notification_login_tweets': '%d ungelesene Tweets',
+        'notification_login_messages': '%d ungelesene Nachrichten',
         
         # Textbox
         'text_entry': 'Was passiert gerade?',
@@ -400,10 +400,10 @@ LANG = {
         'tray_logged_out': 'Nicht verbunden.',
         'tray_logged_in': 'Angemeldet als <b>%s</b>.',
         
-        'tray_tweet': '<b>%d</b> neuer Tweet',
-        'tray_message': '<b>%d</b> neue Nachricht',
-        'tray_tweets': '<b>%d</b> neue Tweets',
-        'tray_messages': '<b>%d</b> neue Nachrichten' ,
+        'tray_tweet': '<b>%d</b> ungelesener Tweet',
+        'tray_message': '<b>%d</b> ungelesene Nachricht',
+        'tray_tweets': '<b>%d</b> ungelesene Tweets',
+        'tray_messages': '<b>%d</b> ungelesene Nachrichten' ,
         
         # These are shown in the notifications, tags get removed
         'tray_error_login': 'Anmeldung als <b>%s</b> fehlgeschlagen.',
@@ -546,10 +546,10 @@ LANG = {
         'notification_message': 'Message from %s',
         'notification_index': '%s (%d of %d)',
         'notification_login': '%s has logged in',
-        'notification_login_tweet': '%d new Tweet',
-        'notification_login_message': '%d new Message',
-        'notification_login_tweets': '%d new Tweets',
-        'notification_login_messages': '%d new Messages',
+        'notification_login_tweet': '%d unread Tweet',
+        'notification_login_message': '%d unread Message',
+        'notification_login_tweets': '%d unread Tweets',
+        'notification_login_messages': '%d unread Messages',
         
         # Textbox
         'text_entry': 'What\'s happening?',
@@ -793,10 +793,10 @@ LANG = {
         'tray_logged_out': 'Not connected.',
         'tray_logged_in': 'Logged in as <b>%s</b>.',
         
-        'tray_tweet': '<b>%d</b> new Tweet',
-        'tray_message': '<b>%d</b> new Message',
-        'tray_tweets': '<b>%d</b> new Tweets',
-        'tray_messages': '<b>%d</b> new Messages',
+        'tray_tweet': '<b>%d</b> unread Tweet',
+        'tray_message': '<b>%d</b> unread Message',
+        'tray_tweets': '<b>%d</b> unread Tweets',
+        'tray_messages': '<b>%d</b> unread Messages',
         
         # These are shown in the notifications, tags get removed
         'tray_error_login': 'Login as <b>%s</b> failed.',
