@@ -749,13 +749,16 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                     HT_401_UNAUTHORIZED):
             
             msg = {
-                ERR_NETWORK_FAILED : (lang.tray_error_login \
-                                        % self.main.username) + '\n' \
+                ERR_NETWORK_FAILED: (lang.tray_error_login \
+                                        % self.main.last_username) + '\n' \
                                         + lang.tray_warning_network,
                 
-                ERR_RATE_RECONNECT : lang.tray_error_rate,
-                HT_404_NOT_FOUND : lang.tray_error_login % self.main.username,
-                HT_401_UNAUTHORIZED : lang.tray_error_login % self.main.username
+                ERR_RATE_RECONNECT: lang.tray_error_rate,
+                HT_404_NOT_FOUND:
+                    lang.tray_error_login % self.main.last_username,
+                
+                HT_401_UNAUTHORIZED:
+                    lang.tray_error_login % self.main.last_username
             }[code]
             
             self.tray.set_tooltip_error(
@@ -775,7 +778,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         elif code in (ERR_NETWORK_TWITTER_FAILED, ERR_NETWORK_FAILED,
                       HT_503_SERVICE_UNAVAILABLE):
             
-            msg = lang.tray_logged_in % self.main.username + '\n'
+            msg = lang.tray_logged_in % self.main.last_username + '\n'
             
             # overload warning
             if code == HT_503_SERVICE_UNAVAILABLE:
@@ -812,7 +815,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         elif code in (HT_500_INTERNAL_SERVER_ERROR, HT_502_BAD_GATEWAY,
                       ERR_RATE_LIMIT):
             
-            msg = lang.tray_logged_in % self.main.username + '\n'
+            msg = lang.tray_logged_in % self.main.last_username + '\n'
             if code != ERR_RATE_LIMIT:
                 
                 # internal twitter error

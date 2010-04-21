@@ -114,6 +114,7 @@ class Atarashii(AtarashiiActions):
         
         # User stuff
         self.username = self.settings['username'] or UNSET_USERNAME
+        self.last_username = self.username
         
         # Notifier
         self.notifier = notify.Notifier(self)
@@ -162,6 +163,7 @@ class Atarashii(AtarashiiActions):
         if change_user is not None:
             self.gui.text.reset()
             self.username = change_user
+            self.last_username = self.username
             self.settings['username'] = change_user
         
         # Set Mode
@@ -216,6 +218,7 @@ class Atarashii(AtarashiiActions):
         self.refresh_time = calendar.timegm(time.gmtime())
     
     def on_login_failed(self, error=None):
+        self.last_username = self.username
         self.username = UNSET_USERNAME
         self.settings['username'] = UNSET_USERNAME
         self.gui.tray.update_account_menu()
