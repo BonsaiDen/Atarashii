@@ -34,7 +34,7 @@ do
     # Start
     ./debug.py $1 $2
     
-    # Varas
+    # Vars
     let CODE=$?
     let RESTART=RESTART+1
     
