@@ -243,16 +243,16 @@ class TrayIcon(gtk.StatusIcon):
         # Get icons
         pixbuf = self.gui.render_icon(stock, gtk.ICON_SIZE_DIALOG)
         size = int(pixbuf.get_width() * 1.6)
-        bg = gtk.gdk.pixbuf_new_from_file_at_size(self.main.get_image(),
-                                                  size, size)
+        icon = gtk.gdk.pixbuf_new_from_file_at_size(self.main.get_image(),
+                                                    size, size)
         
         # Create a pixmap and clear it
         pixmap = gtk.gdk.Pixmap(window, size, size)
-        gc = self.gui.get_style().bg_gc[gtk.STATE_NORMAL]
-        pixmap.draw_rectangle(gc, True, 0, 0, size, size)
+        context = self.gui.get_style().bg_gc[gtk.STATE_NORMAL]
+        pixmap.draw_rectangle(context, True, 0, 0, size, size)
         
         # Draw the icons
-        pixmap.draw_pixbuf(None, bg, 0, 0, 0, 0)
+        pixmap.draw_pixbuf(None, icon, 0, 0, 0, 0)
         pixmap.draw_pixbuf(None, pixbuf, 0, 0, size - pixbuf.get_width(),
                                                size - pixbuf.get_height())
         
