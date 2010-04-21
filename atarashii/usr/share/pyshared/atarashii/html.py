@@ -130,7 +130,7 @@ class HTML(view.HTMLView):
                      or self.new_avatar)) \
                      or num == len(self.items) - 1 or self.new_timeline
         
-        avatar, text_class = self.get_avatar(has_avatar, user, num, img)   
+        avatar, text_class = self.get_avatar(has_avatar, user, num, img)
         
         
         # Background -----------------------------------------------------------

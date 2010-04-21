@@ -308,7 +308,7 @@ class ViewHTML(object):
         
         else:
             return HTML_UNSET_TEXT, 'inner-text'
-        
+    
     def avatar_html(self, user, num, img):
         return '''<a href="avatar:%d:http://twitter.com/%s">
                   <img class="avatarimage" src="file://%s" title="avatar"/>
