@@ -249,30 +249,30 @@ class ButtonDialog(object):
     def __init__(self, gui, dtype, template, title,
                  passive=False, callback=None):
         
-        # TODO Cleanup!
         self.gui = gui
+        self.dialog = None
+        self.dtype = dtype
+        self.passive = passive
+        
+        # GUI
         self.box = gui.gtb.get_object(dtype)
         self.button = gui.gtb.get_object(dtype + '_button')
         self.label = gui.gtb.get_object(dtype + '_label')
         self.image = gui.gtb.get_object(dtype + '_image')
-        
-        self.passive = passive
-        if self.passive:
-            self.button.connect('clicked', callback)
-        
-        else:
-            self.button.connect('clicked', self.show_dialog)
-        
         self.button.set_tooltip_text(lang.button_open)
-        self.dtype = dtype
-        self.dialog = None
-        self.shown = False
+        self.button.connect('clicked', callback if self.passive \
+                                                else self.show_dialog)
+        
+        # Text
         self.information = UNSET_TEXT
-        self.time = UNSET_TIMEOUT
-        self.timer = None
         self.default_title = title
         self.title = title
         self.template = template
+        
+        self.time = UNSET_TIMEOUT
+        self.timer = None
+        
+        self.shown = False
         self.is_visible = False
     
     def hide(self, timeout=UNSET_TIMEOUT):
