@@ -149,7 +149,7 @@ class TextInput(gtk.TextView):
            and event.state & gtk.gdk.CONTROL_MASK == gtk.gdk.CONTROL_MASK:
             
             text = self.get_text().strip()
-            if not text[0] in u'@\uFF20d':
+            if len(text) > 0 and not text[0] in u'@\uFF20d':
                 return False
             
             spaces = text.count(' ')
