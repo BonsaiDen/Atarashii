@@ -24,9 +24,13 @@ import sys
 
 class Language(object):
     def __init__(self, code):
-        stuff = LANG[code] if code in LANG and not '-e' in sys.argv \
-                           else LANG['en_US']
+        try:
+            code = sys.argv[sys.argv.index('-l') + 1]
         
+        except ValueError:
+            pass
+        
+        stuff = LANG[code] if code in LANG else LANG['en']
         for key, value in stuff.iteritems():
             setattr(self, key, value)
 
@@ -35,7 +39,7 @@ LANG = {
     
     # German -------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    'de_DE': {
+    'de': {
         
         # Title
         'title': 'Atarashii',
@@ -438,7 +442,7 @@ LANG = {
     
     # English ------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    'en_US': {
+    'en': {
         
         # Title
         'title': 'Atarashii',
@@ -831,6 +835,6 @@ LANG = {
 }
 
 # Select Language
-LANG_NAME = locale.getdefaultlocale()[0]
+LANG_NAME = locale.getdefaultlocale()[0][0:2]
 LANG = Language(LANG_NAME)
 

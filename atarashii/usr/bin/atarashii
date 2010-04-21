@@ -32,7 +32,7 @@ echo "Starting Atarashii..."
 while [ $RESTART -lt $MAX ]
 do
     # Start
-    atarashiigui $1
+    atarashiigui $1 $2
     
     # Varas
     let CODE=$?
