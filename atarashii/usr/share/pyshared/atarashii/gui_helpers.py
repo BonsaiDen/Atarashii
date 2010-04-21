@@ -90,7 +90,7 @@ class GUIHelpers(object):
             self.info_label.set_markup(info % escape(label_text))
     
     # App Title ----------------------------------------------------------------
-    def set_app_title(self):
+    def set_app_title(self, view_mode=False):
         if self.main.username == UNSET_USERNAME \
            or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
             
@@ -116,9 +116,10 @@ class GUIHelpers(object):
                                       self.html.count, self.message.count)
         
         elif self.main.status(ST_CONNECT):
-            self.tray.set_tooltip(lang.tray_logging_in % self.main.username)
+            self.tray.set_tooltip(lang.tray_logging_in % self.main.username,
+                                  self.html.count, self.message.count)
         
-        else:
+        elif not view_mode:
             self.tray.set_tooltip(lang.tray_logged_out)
         
         # Set Tabs

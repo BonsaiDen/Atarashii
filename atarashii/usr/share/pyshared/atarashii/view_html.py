@@ -156,7 +156,7 @@ class ViewHTML(object):
                          'text/html', 'UTF-8', 'file:///')
     
     def set_html(self, renderitems, rendered=False):
-        self.gui.set_app_title()
+        self.gui.set_app_title(True)
         if rendered:
             if len(self.items) > 0:
                 self.render_html('''

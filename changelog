@@ -1,6 +1,8 @@
 atarashii (0.99.22c-1) all;
 
   + Added ALT+T and ALT+D accelerators for switching between tweet/message view.
+  + Added the green check mark to the tray icon if unread tweets or messages
+    exist.
   ~ Instead of replacing the whole Atarashii tray icon with the error/warning
     icon, it now just gets overlayed by it.
   * Always use the latest tweet/message as the reference for the current users

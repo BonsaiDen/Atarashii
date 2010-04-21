@@ -219,9 +219,11 @@ class TrayIcon(gtk.StatusIcon):
             self.tooltip_buf = gtk.gdk.pixbuf_new_from_file_at_size(img, 48, 48)
             self.tooltip_img_file = img
         
-        if self.tooltip_special_icon:
+        if twt + msg > 0:
+            self.set_from_pixbuf(self.render_stock_overlay(gtk.STOCK_OK))
+        
+        else:
             self.set_from_file(self.main.get_image())
-            self.tooltip_special_icon = False
         
         self.tooltip_changed = True
     
