@@ -36,6 +36,7 @@ CACHE_DIR = os.path.join(HOME_DIR, '.cache', 'atarashii')
 ATARASHII_DIR = os.path.join(HOME_DIR, '.atarashii')
 
 CONFIG_FILE = os.path.join(ATARASHII_DIR, 'atarashii.conf')
+USERLIST_FILE = os.path.join(ATARASHII_DIR, 'usernames.list')
 COPY_FILE = '/usr/share/applications/atarashii.desktop'
 CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
 CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')

@@ -1,3 +1,9 @@
+atarashii (0.99.23a-1) all;
+
+  + Added auto completion for usernames when starting a new message or tweet.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 22 Apr 2010 12:41:00 +0200
+
 atarashii (0.99.23-1) all;
 
   + Added ALT+T and ALT+D accelerators for switching between tweet/message view.

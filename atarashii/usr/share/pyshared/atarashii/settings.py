@@ -27,7 +27,8 @@ from constants import UNSET_SETTING, UNSET_ID_NUM, FONT_DEFAULT, \
                       AVATAR_DEFAULT, THEME_DEFAULT
 
 from constants import ATARASHII_DIR, CACHE_DIR, CONFIG_FILE, CRASH_FILE, \
-                      DESKTOP_FILE, CACHE_TIMEOUT, AUTOSTART_DIR, COPY_FILE
+                      DESKTOP_FILE, CACHE_TIMEOUT, AUTOSTART_DIR, COPY_FILE, \
+                      USERLIST_FILE
 
 
 class Settings(object):
@@ -40,8 +41,10 @@ class Settings(object):
         
         self.main = main
         self.values = {}
+        self.user_list = []
         self.load()
         self.save_count = 0
+        self.users_changed = False
         self.has_changed = False
         
         # Theme and CSS
@@ -81,6 +84,15 @@ class Settings(object):
         except IOError:
             self.values = {}
         
+        # Users
+        try:
+            with open(USERLIST_FILE, 'rb') as f:
+                self.user_list = [i.strip() for i in f.read().split(',')]
+                self.user_list.sort(key=len)
+        
+        except IOError:
+            self.user_list = []
+        
         # Check crash
         self.check_crash()
         crash_file(False)
@@ -88,6 +100,12 @@ class Settings(object):
     
     # Save ---------------------------------------------------------------------
     def save(self):
+        if self.users_changed:
+            with open(USERLIST_FILE, 'wb') as f:
+                f.write(','.join(self.user_list))
+            
+            self.users_changed = False
+        
         if not self.has_changed:
             return False
         
@@ -146,6 +164,27 @@ class Settings(object):
     def get_accounts(self):
         return sorted([i[8:] for i in self.values if i.startswith('account_')])
     
+    def add_user(self, item):
+        if hasattr(item, 'user'):
+            self.add_username(item.user.screen_name)
+            
+            if hasattr(item, 'retweeted_status'):
+                self.add_username(self.retweeted_status.user.screen_name)
+            
+            if item.in_reply_to_screen_name:
+                self.add_username(item.in_reply_to_screen_name)
+        
+        elif hasattr(item, 'sender'):
+            self.add_username(item.sender.screen_name)
+        
+        if hasattr(item, 'recipient'):
+            self.add_username(item.recipient.screen_name)
+    
+    def add_username(self, name):
+        if not name.lower() in [i.lower() for i in self.user_list]:
+            self.user_list.append(name)
+            self.user_list.sort(key=len)
+            self.users_changed = True
     
     
     # CSS ----------------------------------------------------------------------

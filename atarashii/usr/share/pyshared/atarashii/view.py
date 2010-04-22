@@ -210,6 +210,9 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.render()
     
     def add(self, item, append=False):
+        # Add usernames to auto complete list
+        self.main.settings.add_user(item[0])
+        
         # Replace mentions by replies, sometimes the timeline might lag behind
         # so we have to handle this
         found = False

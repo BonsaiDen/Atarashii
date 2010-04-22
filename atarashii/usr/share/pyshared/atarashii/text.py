@@ -53,6 +53,11 @@ class TextInput(gtk.TextView):
         self.message_len = 0
         self.message_to_send = None
         self.tweet_to_send = None
+        self.auto_complete_name = UNSET_TEXT
+        
+        # Auto complete stuff
+        self.auto_complete = False
+        self.backspace = False
         
         # Colors
         self.default_bg = self.get_style().base[gtk.STATE_NORMAL]
@@ -77,6 +82,8 @@ class TextInput(gtk.TextView):
         self.connect('paste-clipboard', self.paste)
         self.get_buffer().connect('changed', self.changed)
         self.get_buffer().connect('insert-text', self.insert)
+        self.connect('move-cursor', self.move_cursor)
+        self.connect('button-press-event', self.move_cursor)
     
     
     # Focus Events -------------------------------------------------------------
@@ -123,10 +130,49 @@ class TextInput(gtk.TextView):
             self.change_contents = False
     
     def check_keys(self, text, event, *args):
+        self.backspace = False
+        
+        # Cancel auto complete via move
+        i = gtk.keysyms
+        if event.keyval in (i.Up, i.Down, i.Right, i.Left, i.Page_Up,
+                            i.Page_Down, i.End, i.Begin, 65360, i.KP_Up,
+                            i.KP_Down, i.KP_Left, i.KP_Right, i.KP_Page_Up,
+                            i.KP_Page_Down, i.KP_End, i.KP_Begin) \
+                        and self.auto_complete:
+            
+            self.remove_auto_complete()
+            return False
+        
+        if event.keyval == gtk.keysyms.space:
+            self.remove_auto_complete()
+            return False
+        
         # Escape cancels the input
         if event.keyval == gtk.keysyms.Escape:
+            self.remove_auto_complete()
             self.unfocus()
             return False
+        
+        # Cancel auto complete with backsapce
+        auto = self.auto_complete
+        self.auto_complete = False
+        if event.keyval == gtk.keysyms.BackSpace:
+            self.backspace = True
+            return False
+        
+        # Finish auto complete with return or tab
+        if event.keyval in (gtk.keysyms.Return, gtk.keysyms.Tab) and auto:
+            text = self.get_text()
+            if not ' ' in text:
+                text += ' '
+                self.is_changing = True
+                self.set_text(text)
+                self.is_changing = False
+            
+            end = self.get_buffer().get_iter_at_offset(len(text) + 1)
+            self.get_buffer().move_mark(self.get_buffer().get_insert(), end)
+            self.get_buffer().select_range(end, end)
+            return True
         
         # CRTL + S stops any input
         if event.keyval == gtk.keysyms.s:
@@ -284,7 +330,7 @@ class TextInput(gtk.TextView):
                 self.main.message_user = UNSET_TEXT
             
             # Remove whitespace between 'd' and username
-            elif len(text) > 3 and text[2].strip(' \n\t\r\v') == '':
+            elif len(text) > 3 and text[2].strip(' \n\t\r\v') == UNSET_TEXT:
                 pos = self.get_buffer().get_iter_at_mark(
                                     self.get_buffer().get_insert()).get_offset()
                 
@@ -306,9 +352,7 @@ class TextInput(gtk.TextView):
             self.message_len = 0
             
             # Cancel reply mode
-            if not text.strip()[0:1] in u'@\uFF20' \
-               and not self.is_changing:
-                
+            if not text.strip()[0:1] in u'@\uFF20' and not self.is_changing:
                 self.main.unset('reply')
             
             # Remove spaces only
@@ -337,6 +381,9 @@ class TextInput(gtk.TextView):
                 check = text[at_len:]
                 length = len(check) - len(check.lstrip())
                 if length > 0:
+                    if check == UNSET_TEXT:
+                        check = ' '
+                    
                     pos = self.get_buffer().get_iter_at_mark(
                                     self.get_buffer().get_insert()).get_offset()
                     
@@ -360,6 +407,9 @@ class TextInput(gtk.TextView):
             ctext = self.get_text().lstrip()
             gobject.idle_add(self.clear_text, ctext)
         
+        # Auto completion
+        self.check_auto_complete()
+        
         # Resize
         self.resize()
         self.is_typing = len(text) > 0
@@ -379,6 +429,80 @@ class TextInput(gtk.TextView):
             self.gui.update_status()
         
         self.check_color(len(text))
+    
+    
+    # Auto completion of usernames ---------------------------------------------
+    # --------------------------------------------------------------------------
+    def move_cursor(self, *args):
+        self.remove_auto_complete()
+    
+    def check_auto_complete(self):
+        if self.is_changing or self.backspace:
+            return False
+        
+        ins = self.get_buffer().get_insert()
+        end = self.get_buffer().get_iter_at_mark(ins)
+        
+        # Extract @user and 'd user'
+        start = self.get_buffer().get_iter_at_offset(0)
+        user_text = unicode(self.get_buffer().get_text(start, end)).lstrip()
+        auto = False
+        offset = 0
+        if len(user_text) > 2:
+            if user_text[0:2] == 'd ':
+                user_text = user_text[2:]
+                if len(user_text) > 1 and not ' ' in user_text:
+                    auto = True
+                    offset = 2
+            
+            elif user_text[0] in u'@\uFF20' and not ' ' in user_text:
+                user_text = user_text[1:]
+                auto = True
+                offset = 1
+        
+        if auto:
+            name = None
+            for i in self.main.settings.user_list:
+                if i.lower().startswith(user_text.lower()):
+                    name = i
+                    break
+            
+            # Suggest a username
+            if name is not None:
+                all_text = self.get_text()
+                end = end.get_offset()
+                off = offset + len(self.auto_complete_name) + 1 \
+                      if self.auto_complete else end
+                
+                self.auto_complete_name = name
+                
+                self.is_changing = True
+                self.set_text(all_text[0:offset] + name + \
+                              ' ' + all_text[off:].lstrip())
+                
+                self.is_changing = False
+                
+                # Set auto complete
+                self.auto_complete = True
+                auto_start = end
+                auto_end = end + len(name) - end + offset
+                
+                # Move cursor and selection
+                start = self.get_buffer().get_iter_at_offset(auto_start)
+                self.get_buffer().move_mark(ins, start)
+                end = self.get_buffer().get_iter_at_offset(auto_end)
+                self.get_buffer().select_range(start, end)
+            
+            else:  
+                self.remove_auto_complete()
+    
+    def remove_auto_complete(self):
+        self.auto_complete_name = UNSET_TEXT
+        if self.auto_complete:
+            self.is_changing = True
+            self.get_buffer().delete(*self.get_buffer().get_selection_bounds())
+            self.is_changing = False
+            self.auto_complete = False
     
     
     # Reply / Retweet / Message / Edit -----------------------------------------
@@ -403,7 +527,7 @@ class TextInput(gtk.TextView):
                 space = len(text)
             
             text = ('%s%s ' % (lang.tweet_at,  self.main.reply_user)) \
-                   + (text[space + 1:] if not multi else '')
+                   + (text[space + 1:] if not multi else UNSET_TEXT)
         
         else:
             text = ('%s%s ' % (lang.tweet_at, self.main.reply_user)) + text
@@ -430,7 +554,7 @@ class TextInput(gtk.TextView):
         if msg is not None:
             space = 2 + len(msg.group(1))
             text = ('d %s ' % self.main.message_user) \
-                   + (text[space + 1:] if not multi else '')
+                   + (text[space + 1:] if not multi else UNSET_TEXT)
         
         else:
             text = ('d %s ' % self.main.message_user) + text
@@ -445,7 +569,7 @@ class TextInput(gtk.TextView):
             self.gui.set_mode(MODE_TWEETS)
             self.is_changing = True
             self.grab_focus()
-            self.set_text('')
+            self.set_text(UNSET_TEXT)
             self.is_changing = False
         
         elif self.gui.mode == MODE_TWEETS:
@@ -473,10 +597,14 @@ class TextInput(gtk.TextView):
         self.get_buffer().set_text(text)
     
     def clear_text(self, text, pos=0):
+        self.auto_complete = False
         self.is_shortening = False
         self.is_changing = True
         self.set_text(text)
         self.is_changing = False
+        if len(text.strip()) == pos:
+            pos = len(text)
+        
         self.get_buffer().place_cursor(
                           self.get_buffer().get_iter_at_offset(pos))
     
@@ -486,7 +614,8 @@ class TextInput(gtk.TextView):
             self.set_text(text)
     
     def reset(self):
-        self.set_text('')
+        self.set_text(UNSET_TEXT)
+        self.auto_complete = False
         self.is_shortening = False
         self.has_focus = False
         self.loose_focus()
@@ -577,7 +706,7 @@ class TextInput(gtk.TextView):
         
         # Get Font Height
         font = self.create_pango_context().get_font_description()
-        layout = self.create_pango_layout('')
+        layout = self.create_pango_layout(UNSET_TEXT)
         layout.set_markup('WTF?!')
         layout.set_font_description(font)
         text_size = layout.get_pixel_size()[1]
