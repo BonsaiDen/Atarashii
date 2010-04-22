@@ -59,6 +59,7 @@ class TextInput(gtk.TextView):
         self.user_offset = 0
         self.user_complete = False
         self.auto_complete = False
+        self.auto_typed = UNSET_TEXT
         self.backspace = False
         
         # Colors
@@ -171,6 +172,7 @@ class TextInput(gtk.TextView):
                 self.set_text(text)
                 self.is_changing = False
             
+            self.auto_typed = UNSET_TEXT
             if not self.user_complete:
                 end = self.get_buffer().get_iter_at_offset(len(text) + 1)
             
@@ -489,6 +491,14 @@ class TextInput(gtk.TextView):
                     name = i
                     break
             
+            # Store originial typing
+            diff = len(user_text) - len(self.auto_typed)
+            if diff >= 0 or len(self.auto_typed) == 0:
+                self.auto_typed += user_text[len(user_text) - diff:]
+            
+            else:
+                self.auto_typed = self.auto_typed[:-(diff)]
+            
             # Suggest a username
             if name is not None:
                 all_text = self.get_text()
@@ -499,7 +509,7 @@ class TextInput(gtk.TextView):
                 self.auto_complete_name = name
                 
                 self.is_changing = True
-                pre = all_text[0:offset] + name 
+                pre = all_text[0:offset] + name
                 self.set_text(pre + ' ' + all_text[off:].lstrip())
                 
                 self.user_offset = len(pre) + 1
@@ -516,17 +526,29 @@ class TextInput(gtk.TextView):
                 end = self.get_buffer().get_iter_at_offset(auto_end)
                 self.get_buffer().select_range(start, end)
             
-            else:  
+            else:
                 self.remove_auto_complete()
     
     def remove_auto_complete(self):
-        self.auto_complete_name = UNSET_TEXT
         if self.auto_complete:
             self.is_changing = True
+            
+            # Replace text with the one that was originally typed
+            text = self.get_text()
             self.get_buffer().delete(*self.get_buffer().get_selection_bounds())
+            pos = (self.user_offset - len(self.auto_complete_name)) - 1
+            pre = text[:pos] + self.auto_typed
+            dec = 1 if self.backspace else 0
+            self.set_text(pre + text[self.user_offset - dec:])
+            end = self.get_buffer().get_iter_at_offset(len(pre))
+            self.get_buffer().move_mark(self.get_buffer().get_insert(), end)
+            self.get_buffer().select_range(end, end)
+            
             self.is_changing = False
             self.auto_complete = False
-    
+        
+        self.auto_typed = UNSET_TEXT
+        self.auto_complete_name = UNSET_TEXT
     
     # Reply / Retweet / Message / Edit -----------------------------------------
     # --------------------------------------------------------------------------
