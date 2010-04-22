@@ -23,8 +23,8 @@ import gobject
 
 import send
 
-from language import LANG as lang
 from utils import URLExpander, escape, menu_escape
+from language import LANG as lang
 
 
 # This is the hacked part of Atarashii, getting this menu to work is quite a

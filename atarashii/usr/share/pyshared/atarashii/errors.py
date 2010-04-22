@@ -9,11 +9,11 @@ import traceback
 import time
 
 from __init__ import __version__ as VERSION
+
 from constants import CRASH_LOG_FILE, ERROR_LOG_FILE, CRASH_FILE, START_TIME
 
-
+# Catch python errors which crash Atarashii
 def crash_exit():
-    # Check if an uncatched error occured
     try:
         if sys.last_traceback is None:
             return False

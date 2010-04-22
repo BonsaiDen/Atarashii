@@ -21,9 +21,9 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-from language import LANG as lang
 from constants import REPLY_REGEX, MESSAGE_REGEX
 from utils import URLShorter
+from language import LANG as lang
 
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE

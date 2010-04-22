@@ -21,9 +21,10 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-from language import LANG as lang
-from constants import UNSET_TOOLTIP, UNSET_USERNAME
 from utils import menu_escape
+from language import LANG as lang
+
+from constants import UNSET_TOOLTIP, UNSET_USERNAME
 
 
 class TrayIcon(gtk.StatusIcon):

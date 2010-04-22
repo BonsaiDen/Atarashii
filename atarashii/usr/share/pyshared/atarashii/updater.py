@@ -25,11 +25,12 @@ import calendar
 import socket
 import hashlib
 
-from language import LANG as lang
-from settings import CACHE_DIR
-from utils import tweepy, TweepError
+
 from updater_message import UpdaterMessage
 from updater_tweet import UpdaterTweet
+from settings import CACHE_DIR
+from utils import tweepy, TweepError
+from language import LANG as lang
 
 from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_UNSET_ID, \

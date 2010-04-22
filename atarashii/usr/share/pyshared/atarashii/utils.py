@@ -18,15 +18,15 @@
 # ------------------------------------------------------------------------------
 import gobject
 
-from constants import UNSET_HOST, ENTITIES, STRIP, SHORT_REGEX, \
-                      SHORTS, BASE58, UNSET_URL
-
 import sys
 import time
 import urllib2
 import urlparse
 import httplib
 import threading
+
+from constants import UNSET_HOST, ENTITIES, STRIP, SHORT_REGEX, SHORTS, \
+                      BASE58, UNSET_URL
 
 
 # Tweepy Wrapper ---------------------------------------------------------------

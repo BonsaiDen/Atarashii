@@ -18,8 +18,8 @@
 # ------------------------------------------------------------------------------
 import view
 
-from language import LANG as lang
 from utils import menu_escape
+from language import LANG as lang
 
 from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, UNSET_ID_NUM, \
                       MODE_TWEETS, HTML_UNSET_ID, HTML_UNSET_TEXT

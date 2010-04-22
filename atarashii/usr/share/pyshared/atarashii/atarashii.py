@@ -58,8 +58,7 @@ from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
 
 
 class Atarashii(AtarashiiActions):
-    def __init__(self, version, secret, kittens,
-                 debug=False, debug_path=None):
+    def __init__(self, version, secret, kittens, debug=False, debug_path=None):
         
         # Setup
         self.version = version
@@ -145,6 +144,7 @@ class Atarashii(AtarashiiActions):
         # We need a username!
         if self.username == UNSET_USERNAME \
            and (change_user is None or change_user == UNSET_TEXT):
+            
             self.gui.set_app_title()
             return False
         
@@ -171,8 +171,8 @@ class Atarashii(AtarashiiActions):
         
         # Status
         self.unset_status(ST_LOGIN_SUCCESSFUL | ST_LOGIN_COMPLETE | ST_SEND | \
-                          ST_RECONNECT | ST_UPDATE | ST_LOGIN_ERROR \
-                          | ST_LOGIN_COMPLETE | ST_LOGIN_ERROR)
+                          ST_RECONNECT | ST_UPDATE | ST_LOGIN_ERROR | \
+                          ST_LOGIN_COMPLETE | ST_LOGIN_ERROR)
         
         # Progress
         self.gui.hide_all(False)

@@ -22,6 +22,7 @@ import time
 import json
 
 from errors import log_error, crash_file
+
 from constants import UNSET_SETTING, UNSET_ID_NUM, FONT_DEFAULT, \
                       AVATAR_DEFAULT, THEME_DEFAULT
 

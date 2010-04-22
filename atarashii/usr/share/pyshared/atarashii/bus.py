@@ -16,14 +16,14 @@
 
 # DBUS Integration -------------------------------------------------------------
 # ------------------------------------------------------------------------------
-import dbus
-import dbus.service
 import gobject
 
-from constants import DESK_NAME, DESK_PATH, DBUS_NAME, DBUS_PATH
-
+import dbus
+import dbus.service
 from dbus.mainloop.glib import DBusGMainLoop
 DBusGMainLoop(set_as_default = True)
+
+from constants import DESK_NAME, DESK_PATH, DBUS_NAME, DBUS_PATH
 
 
 class AtarashiiObject(dbus.service.Object):
@@ -51,7 +51,7 @@ class AtarashiiObject(dbus.service.Object):
     def set_main(self, main):
         self.main = main
     
-    # DBUS interface -----------------------------------------------------------
+    # DBUS interface
     @dbus.service.method(DBUS_NAME)
     def present(self):
         if self.main is not None:

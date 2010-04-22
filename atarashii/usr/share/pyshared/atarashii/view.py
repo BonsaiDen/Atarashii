@@ -26,10 +26,10 @@ import webbrowser
 
 import ttp
 
-from utils import unescape
 from view_menu import ViewMenu
 from view_helpers import ViewHelpers
 from view_html import ViewHTML
+from utils import unescape
 
 from constants import ST_HISTORY, ST_NETWORK_FAILED
 from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \

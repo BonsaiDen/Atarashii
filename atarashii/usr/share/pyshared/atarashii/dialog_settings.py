@@ -24,8 +24,8 @@ import gobject
 import os
 
 from dialog import Dialog, MessageDialog
-from utils import URLShorter, URLExpander
 from sounds import THEME_SOUNDS, THEME_DIR
+from utils import URLShorter, URLExpander
 from language import LANG as lang, LANG_NAME
 
 from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING
