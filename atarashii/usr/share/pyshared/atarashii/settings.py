@@ -187,6 +187,7 @@ class Settings(object):
             self.users_changed = True
     
     def sort_users(self):
+        
         def like(i, e):
             for c in xrange(len(e)):
                 if not i.lower().startswith(e.lower()[:c]):
