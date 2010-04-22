@@ -83,5 +83,9 @@ class Notifier(object):
         if self.last_id == -1:
             return False
         
-        self.notify.CloseNotification(self.last_id)
+        try:
+            self.notify.CloseNotification(self.last_id)
+        
+        except dbus.exceptions.DBusException:
+            log_error('DBUS error while closing')
 
