@@ -21,10 +21,37 @@ import time
 import re
 import os
 
-# Startup time
+
+# Time / Paths / DBUS ----------------------------------------------------------
+# ------------------------------------------------------------------------------
 START_TIME = time.time()
 
-# Generic Stuff
+HOME_DIR = os.path.expanduser('~')
+DESKTOP_FILE = os.path.join(HOME_DIR, '.config',
+                            'autostart', 'atarashii.desktop')
+
+AUTOSTART_DIR = os.path.join(HOME_DIR, '.config', 'autostart')
+CACHE_DIR = os.path.join(HOME_DIR, '.cache', 'atarashii')
+
+ATARASHII_DIR = os.path.join(HOME_DIR, '.atarashii')
+
+CONFIG_FILE = os.path.join(ATARASHII_DIR, 'atarashii.conf')
+COPY_FILE = '/usr/share/applications/atarashii.desktop'
+CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
+CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')
+ERROR_LOG_FILE = os.path.join(ATARASHII_DIR, 'error.log')
+LOGOUT_FILE = os.path.join(ATARASHII_DIR, 'logout')
+
+# DBUS
+DESK_NAME = 'org.freedesktop.DBus'
+DESK_PATH = '/org/freedesktop/DBus'
+
+DBUS_NAME = 'org.bonsaiden.Atarashii'
+DBUS_PATH = '/org/bonsaiden/Atarashii'
+
+
+# Generic Stuff ----------------------------------------------------------------
+# ------------------------------------------------------------------------------
 UNSET_TOOLTIP = ''       # Should be ''
 UNSET_PASSWORD = ''      # Must be ''
 UNSET_RESOURCE = ''      # Should be ''
@@ -38,20 +65,31 @@ UNSET_ERROR = ''         # Must be ''
 UNSET_SOUND = ''         # Must be ''
 UNSET_HOST = ''          # Must be ''
 UNSET_URL = ''           # Must be ''
+
 USERNAME_CHARS = 'abcdefghijklmnopqrstuvwxyz' \
                  + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' \
                  + '_1234567890'
 
 CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
 
-# Note the missing lowercase l, the uppercase I, the O and the 0(zero)
-BASE58 = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
-
 # Rewteets
 RETWEET_NEW = 1          # Can be anything
 RETWEET_OLD = 2          # Can be anything
 
-# Modes
+# Message Dialogs, can be anything
+MESSAGE_ERROR = 1
+MESSAGE_WARNING = 2
+MESSAGE_QUESTION = 3
+MESSAGE_INFO = 4
+
+# Buttons, can be anything
+BUTTON_REFRESH = 1
+BUTTON_READ = 2
+BUTTON_HISTORY = 3
+
+
+# Views ------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 MODE_TWEETS = 0          # Can be anything
 MODE_MESSAGES = 1        # Can be anything
 MODE_SEARCH = 2          # Can be anything, currently unused
@@ -67,17 +105,6 @@ HTML_STATE_START = 1     # Can be anything
 HTML_STATE_SPLASH = 2    # Can be anything
 HTML_STATE_RENDER = 3    # Can be anything
 
-# Message Dialogs, can be anything
-MESSAGE_ERROR = 1
-MESSAGE_WARNING = 2
-MESSAGE_QUESTION = 3
-MESSAGE_INFO = 4
-
-# Buttons, can be anything
-BUTTON_REFRESH = 1
-BUTTON_READ = 2
-BUTTON_HISTORY = 3
-
 # Sizes
 FONT_DEFAULT = 10
 FONT_SIZES = [9, 10, 11, 12, 16]
@@ -85,15 +112,9 @@ AVATAR_DEFAULT = 32
 AVATAR_SIZES = [24, 32, 40, 48, 64, 96]
 THEME_DEFAULT = 'fuji_blue_default'
 
-# DBUS stuff
-DESK_NAME = 'org.freedesktop.DBus'
-DESK_PATH = '/org/freedesktop/DBus'
-
-DBUS_NAME = 'org.bonsaiden.Atarashii'
-DBUS_PATH = '/org/bonsaiden/Atarashii'
-
 
 # Errors, should be below 0 ----------------------------------------------------
+# ------------------------------------------------------------------------------
 ERR_TWEET_NOT_FOUND = -12
 ERR_MESSAGE_NOT_FOUND = -13
 ERR_ALREADY_RETWEETED = -2
@@ -129,6 +150,7 @@ for i in ERR_NAMES:
 
 
 # Status Flags -----------------------------------------------------------------
+# ------------------------------------------------------------------------------
 ST_NONE = 0
 ST_CONNECT = 1
 ST_RECONNECT = 2
@@ -163,7 +185,8 @@ ST_ALL = ST_ALL_PENDING | ST_WAS_ALL | ST_WARNING_RATE | ST_LOGIN_ALL | \
          ST_NETWORK_FAILED
 
 
-# Shortening -------------------------------------------------------------------
+# Shortening / Escaping / Textbox ----------------------------------------------
+# ------------------------------------------------------------------------------
 SHORT_REGEX = re.compile(r'((https?://|www\.)[^\s]{35,})')
 SHORTS = {
     'is.gd': 'http://is.gd/api.php?longurl=%s',
@@ -174,8 +197,10 @@ SHORTS = {
 
 SHORTS_LIST = ['is.gd', 'u.nu', 'tinyurl.com', 'snipurl.com']
 
+# Note the missing lowercase l, the uppercase I, the O and the 0(zero)
+BASE58 = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
 
-# Escaping ---------------------------------------------------------------------
+# Escaping
 STRIP = re.compile('<(.|\n)*?>')
 SPACES = re.compile('\s+')
 ENTITIES = {
@@ -186,29 +211,10 @@ ENTITIES = {
     '<': '&lt;'
 }
 
-
-# Textbox ----------------------------------------------------------------------
+# Textbox
 REPLY_REGEX = re.compile(ur'^[@\uFF20]([a-z0-9_]{1,20})\s.*',
                             re.UNICODE | re.IGNORECASE)
 
 MESSAGE_REGEX = re.compile('d ([a-z0-9_]{1,20})\s.*',
                             re.UNICODE | re.IGNORECASE)
-
-
-# Paths ------------------------------------------------------------------------
-HOME_DIR = os.path.expanduser('~')
-DESKTOP_FILE = os.path.join(HOME_DIR, '.config',
-                            'autostart', 'atarashii.desktop')
-
-AUTOSTART_DIR = os.path.join(HOME_DIR, '.config', 'autostart')
-CACHE_DIR = os.path.join(HOME_DIR, '.cache', 'atarashii')
-
-ATARASHII_DIR = os.path.join(HOME_DIR, '.atarashii')
-
-CONFIG_FILE = os.path.join(ATARASHII_DIR, 'atarashii.conf')
-COPY_FILE = '/usr/share/applications/atarashii.desktop'
-CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
-CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')
-ERROR_LOG_FILE = os.path.join(ATARASHII_DIR, 'error.log')
-LOGOUT_FILE = os.path.join(ATARASHII_DIR, 'logout')
 
