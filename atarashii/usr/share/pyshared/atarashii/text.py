@@ -535,7 +535,11 @@ class TextInput(gtk.TextView):
             
             # Replace text with the one that was originally typed
             text = self.get_text()
-            self.get_buffer().delete(*self.get_buffer().get_selection_bounds())
+            
+            select = self.get_buffer().get_selection_bounds()
+            if len(select) > 0:
+                self.get_buffer().delete(*select)     
+                   
             pos = (self.user_offset - len(self.auto_complete_name)) - 1
             pre = text[:pos] + self.auto_typed
             dec = 1 if self.backspace else 0
@@ -549,6 +553,7 @@ class TextInput(gtk.TextView):
         
         self.auto_typed = UNSET_TEXT
         self.auto_complete_name = UNSET_TEXT
+    
     
     # Reply / Retweet / Message / Edit -----------------------------------------
     # --------------------------------------------------------------------------
