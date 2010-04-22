@@ -169,7 +169,7 @@ class Settings(object):
             self.add_username(item.user.screen_name)
             
             if hasattr(item, 'retweeted_status'):
-                self.add_username(self.retweeted_status.user.screen_name)
+                self.add_username(item.retweeted_status.user.screen_name)
             
             if item.in_reply_to_screen_name:
                 self.add_username(item.in_reply_to_screen_name)
