@@ -715,20 +715,20 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             self.main.delete_message_id = UNSET_ID_NUM
             
             description = {
-                ERR_MESSAGE_NOT_FOUND : lang.error_message_not_found,
-                ERR_TWEET_NOT_FOUND : lang.error_tweet_not_found,
-                ERR_TWEET_DUPLICATED : lang.error_duplicate,
-                ERR_NETWORK_TWITTER_FAILED : lang.error_network_timeout,
-                ERR_NETWORK_FAILED : lang.error_network,
-                ERR_USER_NOT_FOUND : lang.error_user_not_found \
+                ERR_MESSAGE_NOT_FOUND: lang.error_message_not_found,
+                ERR_TWEET_NOT_FOUND: lang.error_tweet_not_found,
+                ERR_TWEET_DUPLICATED: lang.error_duplicate,
+                ERR_NETWORK_TWITTER_FAILED: lang.error_network_timeout,
+                ERR_NETWORK_FAILED: lang.error_network,
+                ERR_USER_NOT_FOUND: lang.error_user_not_found \
                                        % self.main.message_user,
                 
-                ERR_USER_NOT_FOLLOW : lang.error_user_not_follow,
+                ERR_USER_NOT_FOLLOW: lang.error_user_not_follow,
                 
-                ERR_ALREADY_RETWEETED : lang.error_already_retweeted,
-                ERR_RATE_RECONNECT : rate_error,
-                HT_401_UNAUTHORIZED : lang.error_login % self.main.last_username,
-                HT_404_NOT_FOUND : lang.error_login % self.main.last_username
+                ERR_ALREADY_RETWEETED: lang.error_already_retweeted,
+                ERR_RATE_RECONNECT: rate_error,
+                HT_401_UNAUTHORIZED: lang.error_login % self.main.last_username,
+                HT_404_NOT_FOUND: lang.error_login % self.main.last_username
             }[code]
             dialog.MessageDialog(self, MESSAGE_WARNING \
                                  if code == ERR_NETWORK_FAILED \
