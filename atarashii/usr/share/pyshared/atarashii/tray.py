@@ -47,6 +47,7 @@ class TrayIcon(gtk.StatusIcon):
         self.tooltip_special_icon = False
         
         # Create Tray Icon
+        self.fake_window = None
         gtk.StatusIcon.__init__(self)
         self.set_from_file(self.main.get_image())
         self.set_visible(True)
@@ -232,23 +233,34 @@ class TrayIcon(gtk.StatusIcon):
                               % (lang.tray_title, status)
         
         self.tooltip_icon = icon
-        self.tooltip_buf = self.render_stock_overlay(icon)
         self.tooltip_special_icon = True
-        self.set_from_pixbuf(self.tooltip_buf)
+        self.set_from_pixbuf(self.render_stock_overlay(icon))
         self.tooltip_changed = True
     
     def render_stock_overlay(self, stock):
-        window = self.gui.window
-        
         # Get icons
         pixbuf = self.gui.render_icon(stock, gtk.ICON_SIZE_DIALOG)
         size = int(pixbuf.get_width() * 1.6)
         icon = gtk.gdk.pixbuf_new_from_file_at_size(self.main.get_image(),
-                                                    size, size)
+                                                 size, size)
+        
+        # If the GUI isn't visible we need to create a fake window for colors
+        # and stuff
+        window = self.gui.window
+        if window is None:
+            if not self.fake_window:
+                self.fake_window = gtk.Window()
+                self.fake_window.show()
+                self.fake_window.hide()
+            
+            context = self.fake_window.get_style().bg_gc[gtk.STATE_NORMAL]
+            window = self.fake_window.window
+        
+        else:
+            context = self.gui.get_style().bg_gc[gtk.STATE_NORMAL]
         
         # Create a pixmap and clear it
         pixmap = gtk.gdk.Pixmap(window, size, size)
-        context = self.gui.get_style().bg_gc[gtk.STATE_NORMAL]
         pixmap.draw_rectangle(context, True, 0, 0, size, size)
         
         # Draw the icons
