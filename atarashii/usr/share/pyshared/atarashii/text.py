@@ -158,10 +158,17 @@ class TextInput(gtk.TextView):
         
         # Cancel auto complete with backsapce
         auto = self.auto_complete
-        self.auto_complete = False
         if event.keyval == gtk.keysyms.BackSpace:
             self.backspace = True
-            return False
+            if auto:
+                self.remove_auto_complete()
+                return True
+            
+            else:
+                self.auto_complete = False
+                return False
+        
+        self.auto_complete = False
         
         # Finish auto complete with return or tab
         if event.keyval in (gtk.keysyms.Return, gtk.keysyms.Tab) and auto:
@@ -490,7 +497,7 @@ class TextInput(gtk.TextView):
                 if i.lower().startswith(user_text.lower()):
                     name = i
                     break
-            
+                        
             # Store originial typing
             diff = len(user_text) - len(self.auto_typed)
             if diff >= 0 or len(self.auto_typed) == 0:
@@ -500,7 +507,7 @@ class TextInput(gtk.TextView):
                 self.auto_typed = self.auto_typed[:-(diff)]
             
             # Suggest a username
-            if name is not None:
+            if name is not None and len(name) > len(user_text):
                 all_text = self.get_text()
                 end = end.get_offset()
                 off = offset + len(self.auto_complete_name) + 1 \
