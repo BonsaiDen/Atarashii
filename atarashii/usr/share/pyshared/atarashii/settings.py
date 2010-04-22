@@ -88,7 +88,7 @@ class Settings(object):
         try:
             with open(USERLIST_FILE, 'rb') as f:
                 self.user_list = [i.strip() for i in f.read().split(',')]
-                self.user_list.sort(key=len)
+                self.sort_users()
         
         except IOError:
             self.user_list = []
@@ -183,9 +183,25 @@ class Settings(object):
     def add_username(self, name):
         if not name.lower() in [i.lower() for i in self.user_list]:
             self.user_list.append(name)
-            self.user_list.sort(key=len)
+            self.sort_users()
             self.users_changed = True
     
+    def sort_users(self):
+        def like(i, e):
+            for c in xrange(len(e)):
+                if not i.lower().startswith(e.lower()[:c]):
+                    return c
+        
+        self.user_list.sort(key=len)
+        users = self.user_list
+        for i in xrange(len(users)):
+            for e in xrange(i + 1, len(users)):
+                if like(users[i], users[e]) > 1:
+                    if users[i] > users[e]:
+                        users[e], users[i] = users[i], users[e]
+                    
+                    else:
+                        users[i], users[e] = users[e], users[i]
     
     # CSS ----------------------------------------------------------------------
     def css(self, font=None, avatar=None, color_theme=None):
