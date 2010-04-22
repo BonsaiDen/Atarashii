@@ -25,7 +25,8 @@ from utils import escape, strip_tags
 from language import LANG as lang
 
 from constants import ST_SEND, ST_CONNECT, ST_LOGIN_SUCCESSFUL, \
-                      ST_LOGIN_COMPLETE, ST_UPDATE
+                      ST_LOGIN_COMPLETE, ST_UPDATE, ST_NETWORK_FAILED, \
+                      ST_LOGIN_ERROR
 
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADED, UNSET_TEXT, \
                       UNSET_LABEL, MESSAGE_ERROR, UNSET_USERNAME, UNSET_TIMEOUT
@@ -119,7 +120,9 @@ class GUIHelpers(object):
             self.tray.set_tooltip(lang.tray_logging_in % self.main.username,
                                   self.html.count, self.message.count)
         
-        elif not view_mode:
+        elif not view_mode \
+             and not self.main.any_status(ST_NETWORK_FAILED, ST_LOGIN_ERROR):
+            
             self.tray.set_tooltip(lang.tray_logged_out)
         
         # Set Tabs
