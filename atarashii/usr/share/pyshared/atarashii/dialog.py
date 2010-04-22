@@ -259,7 +259,6 @@ class ButtonDialog(object):
         self.button = gui.gtb.get_object(dtype + '_button')
         self.label = gui.gtb.get_object(dtype + '_label')
         self.image = gui.gtb.get_object(dtype + '_image')
-        self.button.set_tooltip_text(lang.button_open)
         self.button.connect('clicked', callback if self.passive \
                                                 else self.show_dialog)
         
@@ -293,6 +292,9 @@ class ButtonDialog(object):
     
     def show(self, button_label, info, title=None, timeout=UNSET_TIMEOUT):
         self.information = info
+        self.button.set_tooltip_text(lang.button_open if info is not None \
+                                     else lang.button_remove)
+        
         if self.dialog is not None:
             self.dialog.destroy()
             self.dialog = None

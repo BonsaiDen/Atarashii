@@ -376,6 +376,7 @@ LANG = {
         
         # Buttons
         'button_open': 'Für weitere Informationen klicken',
+        'button_remove': 'Zum entfernen klicken',
         
         # Multibutton
         'multi_refresh': 'Tweets aktualisieren',
@@ -768,7 +769,8 @@ LANG = {
         'info_template': '',
         
         # Buttons
-        'button_open': 'Clock for more information',
+        'button_open': 'Click for more information',
+        'button_remove': 'Click to remove',
         
         # Multibutton
         'multi_refresh': 'Refresh Tweets',
