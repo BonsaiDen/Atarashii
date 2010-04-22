@@ -113,7 +113,8 @@ class HTML(view.HTMLView):
         
         # Is this tweet a reply?
         if tweet.in_reply_to_screen_name and tweet.in_reply_to_status_id:
-            reply = ('<a href="status:http://twitter.com/%s/statuses/%d">' + \
+            reply = ('<a href="status:http://twitter.com/%s/statuses/%d" ' + \
+                     'title="' + lang.html_in_reply_view + '">' + \
                      lang.html_in_reply + '</a>') \
                      % (tweet.in_reply_to_screen_name,
                         tweet.in_reply_to_status_id,
