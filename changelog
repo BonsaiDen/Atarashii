@@ -3,7 +3,7 @@ atarashii (0.99.23-1) all;
   + Added ALT+T and ALT+D accelerators for switching between tweet/message view.
   + Added the green check mark to the tray icon if unread tweets or messages
     exist.
-  ~ Replace -e with -l [langcode].
+  ~ Replaced -e with -l [langcode].
   ~ Instead of replacing the whole Atarashii tray icon with the error/warning
     icon, it now just gets overlayed by it.
   ~ Newlines are now respected in tweets and messages.
@@ -15,7 +15,7 @@ atarashii (0.99.23-1) all;
   * Fix broken "retweeted by" links.
   * Fixed missing username in some error tooltips.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 22 Apr 2010 03:07:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 22 Apr 2010 09:45:00 +0200
 
 atarashii (0.99.22b-1) all;
 
