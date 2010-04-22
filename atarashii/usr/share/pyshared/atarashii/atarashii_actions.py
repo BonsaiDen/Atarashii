@@ -28,7 +28,7 @@ import calendar
 import time
 import math
 import socket
-from urllib2 import URLError
+from urllib2 import URLError, HTTPError
 
 import send
 
@@ -265,6 +265,12 @@ class AtarashiiActions(object):
             msg = UNSET_ERROR
             error_code = 0
             error_errno = ERR_URLLIB_TIMEOUT
+        
+        # HTTP Errors
+        elif isinstance(error, HTTPError):
+            msg = UNSET_ERROR
+            error_code = error.code
+            error_errno = None
         
         # GAI errors
         elif isinstance(error, socket.gaierror) or isinstance(error, URLError):

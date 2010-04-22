@@ -241,9 +241,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.on_multi_move(None, None)
         
         # Hide Warning/Error Buttons
-        self.warning_button.hide()
-        self.error_button.hide()
-        self.info_button.hide()
         self.on_mode()
         
         # Statusbar Updater
@@ -350,8 +347,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.text_scroll.hide()
         self.set_multi_button(False, None, False, True)
         self.tabs.set_sensitive(False)
-        self.warning_button.hide()
-        self.error_button.hide()
     
     
     # Profile ------------------------------------------------------------------
@@ -732,8 +727,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 
                 ERR_ALREADY_RETWEETED : lang.error_already_retweeted,
                 ERR_RATE_RECONNECT : rate_error,
-                HT_401_UNAUTHORIZED : lang.error_login % self.main.username,
-                HT_404_NOT_FOUND : lang.error_login % self.main.username
+                HT_401_UNAUTHORIZED : lang.error_login % self.main.last_username,
+                HT_404_NOT_FOUND : lang.error_login % self.main.last_username
             }[code]
             dialog.MessageDialog(self, MESSAGE_WARNING \
                                  if code == ERR_NETWORK_FAILED \
@@ -761,21 +756,16 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                     lang.tray_error_login % self.main.last_username
             }[code]
             
-            self.tray.set_tooltip_error(
-                    msg, gtk.STOCK_DIALOG_ERROR \
-                    if code != ERR_NETWORK_FAILED \
-                    else gtk.STOCK_DIALOG_WARNING)
-        
-        # Don't show error dialogs when not on screen
-        if code in (ERR_NETWORK_FAILED, ERR_RATE_RECONNECT, HT_404_NOT_FOUND,
-                    HT_401_UNAUTHORIZED) and not is_visible:
+            # Show GUI if not shown so the user does notices the message
+            if not self.is_shown:
+                gobject.idle_add(self.show_gui)
             
-            self.notifcation(MESSAGE_WARNING if code == ERR_NETWORK_FAILED \
-                             else MESSAGE_ERROR, msg)
-            
-            return True
+            gobject.idle_add(self.tray.set_tooltip_error, msg,
+                             gtk.STOCK_DIALOG_ERROR \
+                             if code != ERR_NETWORK_FAILED \
+                             else gtk.STOCK_DIALOG_WARNING)
         
-        elif code in (ERR_NETWORK_TWITTER_FAILED, ERR_NETWORK_FAILED,
+        if code in (ERR_NETWORK_TWITTER_FAILED, ERR_NETWORK_FAILED,
                       HT_503_SERVICE_UNAVAILABLE):
             
             msg = lang.tray_logged_in % self.main.last_username + '\n'
