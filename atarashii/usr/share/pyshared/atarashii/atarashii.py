@@ -176,6 +176,9 @@ class Atarashii(AtarashiiActions):
         
         # Progress
         self.gui.hide_all(False)
+        self.gui.warning_button.hide()
+        self.gui.error_button.hide()
+        self.gui.info_button.hide()
         self.gui.show_progress()
         
         # Connect
@@ -235,6 +238,11 @@ class Atarashii(AtarashiiActions):
         self.gui.set_app_title()
         self.gui.hide_all()
         self.gui.update_status()
+        
+        self.gui.warning_button.hide()
+        self.gui.error_button.hide()
+        self.gui.info_button.hide()
+        
         if error:
             self.handle_error(error)
         
