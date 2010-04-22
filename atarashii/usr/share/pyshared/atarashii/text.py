@@ -133,6 +133,7 @@ class TextInput(gtk.TextView):
             self.change_contents = False
     
     def check_keys(self, text, event, *args):
+        control = event.state & gtk.gdk.CONTROL_MASK == gtk.gdk.CONTROL_MASK
         self.backspace = False
         
         # Cancel auto complete via move
@@ -190,11 +191,17 @@ class TextInput(gtk.TextView):
             self.get_buffer().select_range(end, end)
             return True
         
+        # Tab skips to the end
+        if event.keyval == gtk.keysyms.Tab:
+            end = self.get_buffer().get_iter_at_offset(len(self.get_text()))
+            self.get_buffer().move_mark(self.get_buffer().get_insert(), end)
+            self.get_buffer().select_range(end, end)
+            return True
+        
         # CRTL + S stops any input
-        if event.keyval == gtk.keysyms.s:
-            if event.state & gtk.gdk.CONTROL_MASK == gtk.gdk.CONTROL_MASK:
-                self.reset()
-                return True
+        if event.keyval == gtk.keysyms.s and control:
+            self.reset()
+            return True
         
         # Shift + Return will start a new tweet/message right after submission
         if (self.main.reply_user != UNSET_TEXT \
@@ -207,9 +214,7 @@ class TextInput(gtk.TextView):
             return True
         
         # Take care of misplaced newlines
-        if event.keyval == gtk.keysyms.Return \
-           and event.state & gtk.gdk.CONTROL_MASK == gtk.gdk.CONTROL_MASK:
-            
+        if event.keyval == gtk.keysyms.Return and control:
             text = self.get_text().strip()
             if len(text) > 0 and not text[0] in u'@\uFF20d':
                 return False
