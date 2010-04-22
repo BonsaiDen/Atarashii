@@ -1,4 +1,4 @@
-atarashii (0.99.22c-1) all;
+atarashii (0.99.23-1) all;
 
   + Added ALT+T and ALT+D accelerators for switching between tweet/message view.
   + Added the green check mark to the tray icon if unread tweets or messages
