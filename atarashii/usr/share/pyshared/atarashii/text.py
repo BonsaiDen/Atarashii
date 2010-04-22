@@ -53,9 +53,11 @@ class TextInput(gtk.TextView):
         self.message_len = 0
         self.message_to_send = None
         self.tweet_to_send = None
-        self.auto_complete_name = UNSET_TEXT
         
         # Auto complete stuff
+        self.auto_complete_name = UNSET_TEXT
+        self.user_offset = 0
+        self.user_complete = False
         self.auto_complete = False
         self.backspace = False
         
@@ -169,7 +171,12 @@ class TextInput(gtk.TextView):
                 self.set_text(text)
                 self.is_changing = False
             
-            end = self.get_buffer().get_iter_at_offset(len(text) + 1)
+            if not self.user_complete:
+                end = self.get_buffer().get_iter_at_offset(len(text) + 1)
+            
+            else:
+                end = self.get_buffer().get_iter_at_offset(self.user_offset)
+            
             self.get_buffer().move_mark(self.get_buffer().get_insert(), end)
             self.get_buffer().select_range(end, end)
             return True
@@ -445,21 +452,36 @@ class TextInput(gtk.TextView):
         
         # Extract @user and 'd user'
         start = self.get_buffer().get_iter_at_offset(0)
-        user_text = unicode(self.get_buffer().get_text(start, end)).lstrip()
+        pre_text = unicode(self.get_buffer().get_text(start, end)).lstrip()
         auto = False
         offset = 0
-        if len(user_text) > 2:
-            if user_text[0:2] == 'd ':
-                user_text = user_text[2:]
+        if len(pre_text) > 2:
+            if pre_text[0:2] == 'd ':
+                user_text = pre_text[2:]
                 if len(user_text) > 1 and not ' ' in user_text:
                     auto = True
                     offset = 2
             
-            elif user_text[0] in u'@\uFF20' and not ' ' in user_text:
-                user_text = user_text[1:]
+            elif pre_text[0] in u'@\uFF20' and not ' ' in pre_text:
+                user_text = pre_text[1:]
                 auto = True
                 offset = 1
         
+        # @user completion
+        self.user_complete = False
+        if not auto:
+            pos = pre_text.rfind('@')
+            if pos == -1:
+                pos = pre_text.rfind(u'\uFF20')
+            
+            if pos != -1:
+                offset = pos + 1
+                user_text = pre_text[offset:]
+                if len(user_text) > 1:
+                    auto = True
+                    self.user_complete = True
+        
+        # Insert completion stuff
         if auto:
             name = None
             for i in self.main.settings.user_list:
@@ -477,9 +499,10 @@ class TextInput(gtk.TextView):
                 self.auto_complete_name = name
                 
                 self.is_changing = True
-                self.set_text(all_text[0:offset] + name + \
-                              ' ' + all_text[off:].lstrip())
+                pre = all_text[0:offset] + name 
+                self.set_text(pre + ' ' + all_text[off:].lstrip())
                 
+                self.user_offset = len(pre) + 1
                 self.is_changing = False
                 
                 # Set auto complete

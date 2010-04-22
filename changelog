@@ -1,6 +1,6 @@
 atarashii (0.99.23a-1) all;
 
-  + Added auto completion for usernames when starting a new message or tweet.
+  + Added auto completion for usernames. This completes @'s as well as 'd user'.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 22 Apr 2010 12:41:00 +0200
 
