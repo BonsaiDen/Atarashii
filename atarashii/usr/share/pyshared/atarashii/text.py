@@ -40,6 +40,7 @@ class TextInput(gtk.TextView):
         gtk.TextView.__init__(self)
         self.gui = gui
         self.main = gui.main
+        self.buffer = self.get_buffer()
         
         # Variables
         self.initiated = False
@@ -79,14 +80,16 @@ class TextInput(gtk.TextView):
         self.set_cursor_visible(True)
         
         # Events
-        self.connect('submit', self.submit)
         self.connect('focus-in-event', self.focus)
         self.connect('key-press-event', self.check_keys)
-        self.connect('paste-clipboard', self.paste)
-        self.get_buffer().connect('changed', self.changed)
-        self.get_buffer().connect('insert-text', self.insert)
-        self.connect('move-cursor', self.move_cursor)
-        self.connect('button-press-event', self.move_cursor)
+        
+        self.connect('submit', self.on_submit)
+        self.connect('paste-clipboard', self.on_paste)
+        self.connect('move-cursor', self.on_move)
+        self.connect('button-press-event', self.on_move)
+        
+        self.buffer.connect('changed', self.on_changed)
+        self.buffer.connect('insert-text', self.on_insert)
     
     
     # Focus Events -------------------------------------------------------------
@@ -148,6 +151,10 @@ class TextInput(gtk.TextView):
             return False
         
         if event.keyval == gtk.keysyms.space:
+            pos = self.get_cursor_pos()
+            if pos == 0:
+                return True
+            
             self.remove_auto_complete()
             return False
         
@@ -182,20 +189,16 @@ class TextInput(gtk.TextView):
             
             self.auto_typed = UNSET_TEXT
             if not self.user_complete:
-                end = self.get_buffer().get_iter_at_offset(len(text) + 1)
+                self.set_cursor(self.get_offset(len(text) + 1))
             
             else:
-                end = self.get_buffer().get_iter_at_offset(self.user_offset)
+                self.set_cursor(self.get_offset(self.user_offset))
             
-            self.get_buffer().move_mark(self.get_buffer().get_insert(), end)
-            self.get_buffer().select_range(end, end)
             return True
         
         # Tab skips to the end
         if event.keyval == gtk.keysyms.Tab:
-            end = self.get_buffer().get_iter_at_offset(len(self.get_text()))
-            self.get_buffer().move_mark(self.get_buffer().get_insert(), end)
-            self.get_buffer().select_range(end, end)
+            self.set_cursor(self.get_offset(len(self.get_text())))
             return True
         
         # CRTL + S stops any input
@@ -210,12 +213,16 @@ class TextInput(gtk.TextView):
            and event.keyval == gtk.keysyms.Return \
            and event.state & gtk.gdk.SHIFT_MASK == gtk.gdk.SHIFT_MASK:
             
-            self.submit(self, True)
+            self.on_submit(self, True)
             return True
         
         # Take care of misplaced newlines
         if event.keyval == gtk.keysyms.Return and control:
-            text = self.get_text().strip()
+            pos = self.get_cursor_pos()
+            if pos == 0:
+                return True
+        
+            text = self.get_text().strip()            
             if len(text) > 0 and not text[0] in u'@\uFF20d':
                 return False
             
@@ -240,7 +247,7 @@ class TextInput(gtk.TextView):
     
     # Events -------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def submit(self, textbox, multi=False):
+    def on_submit(self, textbox, multi=False):
         text = self.get_text().lstrip()
         if len(text) <= 140 + self.message_len and text.strip() != UNSET_TEXT \
            and self.gui.is_text_mode():
@@ -296,17 +303,17 @@ class TextInput(gtk.TextView):
             else:
                 pass
     
-    def paste(self, view):
+    def on_paste(self, view):
         self.is_pasting = True
     
-    def insert(self, buf, itr, text, length):
+    def on_insert(self, buf, itr, text, length):
         if self.is_pasting:
             if text.find('http') != -1 or text.find('www') != -1:
                 URLShorter(text, self)
             
             self.is_pasting = False
     
-    def changed(self, *args):
+    def on_changed(self, *args):
         text = self.get_text().lstrip()
         
         # Message mode ---------------------------------------------------------
@@ -339,24 +346,17 @@ class TextInput(gtk.TextView):
                 check = text[self.message_len:]
                 length = len(check) - len(check.lstrip())
                 if length > 0:
-                    pos = self.get_buffer().get_iter_at_mark(
-                                    self.get_buffer().get_insert()).get_offset()
-                    
-                    check = text[0:self.message_len] \
-                            + text[self.message_len + length:]
-                    
-                    gobject.idle_add(self.clear_text, check, pos - length)
+                    gobject.idle_add(self.clear_text,
+                                     text[0:self.message_len] \
+                                     + text[self.message_len + length:],
+                                     (self.message_len + length) - 1)
             
             elif self.main.message_user_id == UNSET_ID_NUM:
                 self.main.message_user = UNSET_TEXT
             
             # Remove whitespace between 'd' and username
-            elif len(text) > 3 and text[2].strip(' \n\t\r\v') == UNSET_TEXT:
-                pos = self.get_buffer().get_iter_at_mark(
-                                    self.get_buffer().get_insert()).get_offset()
-                
-                text = 'd ' + text[1:].lstrip()
-                gobject.idle_add(self.clear_text, text, pos - 1)
+            if len(text) > 2 and text[2].strip(' \n\t\r\v') == UNSET_TEXT:
+                gobject.idle_add(self.clear_text, 'd ' + text[1:].lstrip(), 2)
             
             # check for '@user' and switch to tweeting
             at_user = REPLY_REGEX.match(text)
@@ -402,14 +402,9 @@ class TextInput(gtk.TextView):
                 check = text[at_len:]
                 length = len(check) - len(check.lstrip())
                 if length > 0:
-                    if check == UNSET_TEXT:
-                        check = ' '
-                    
-                    pos = self.get_buffer().get_iter_at_mark(
-                                    self.get_buffer().get_insert()).get_offset()
-                    
-                    check = text[0:at_len] + text[at_len + length:]
-                    gobject.idle_add(self.clear_text, check, pos - length)
+                    gobject.idle_add(self.clear_text,
+                                     text[0:at_len] + text[at_len + length:],
+                                     (at_len + length) - 1)
             
             elif self.main.reply_id == UNSET_ID_NUM:
                 self.main.reply_user = UNSET_TEXT
@@ -424,7 +419,8 @@ class TextInput(gtk.TextView):
                     self.message_to_send = self.get_text()
         
         # Strip left
-        if self.get_text()[0:1] == ' ':
+        space = self.get_text()[0:1]
+        if space.strip() != space:
             ctext = self.get_text().lstrip()
             gobject.idle_add(self.clear_text, ctext)
         
@@ -454,19 +450,16 @@ class TextInput(gtk.TextView):
     
     # Auto completion of usernames ---------------------------------------------
     # --------------------------------------------------------------------------
-    def move_cursor(self, *args):
+    def on_move(self, *args):
         self.remove_auto_complete()
     
     def check_auto_complete(self):
         if self.is_changing or self.backspace:
             return False
         
-        ins = self.get_buffer().get_insert()
-        end = self.get_buffer().get_iter_at_mark(ins)
-        
         # Extract @user and 'd user'
-        start = self.get_buffer().get_iter_at_offset(0)
-        pre_text = unicode(self.get_buffer().get_text(start, end)).lstrip()
+        end_mark = self.get_insert(True)
+        pre_text = self.get_text(self.get_offset(0), end_mark).lstrip()
         auto = False
         offset = 0
         if len(pre_text) > 2:
@@ -503,7 +496,7 @@ class TextInput(gtk.TextView):
                     name = i
                     break
                         
-            # Store originial typing
+            # Store original typing
             diff = len(user_text) - len(self.auto_typed)
             if diff >= 0 or len(self.auto_typed) == 0:
                 self.auto_typed += user_text[len(user_text) - diff:]
@@ -513,30 +506,28 @@ class TextInput(gtk.TextView):
             
             # Suggest a username
             if name is not None and len(name) > len(user_text):
+                
+                # Calculate remaining completion text stuff
                 all_text = self.get_text()
-                end = end.get_offset()
+                end_pos = end_mark.get_offset()
                 off = offset + len(self.auto_complete_name) + 1 \
-                      if self.auto_complete else end
+                      if self.auto_complete else end_pos
                 
                 self.auto_complete_name = name
                 
+                # Set text
                 self.is_changing = True
                 pre = all_text[0:offset] + name
                 self.set_text(pre + ' ' + all_text[off:].lstrip())
-                
                 self.user_offset = len(pre) + 1
                 self.is_changing = False
                 
-                # Set auto complete
-                self.auto_complete = True
-                auto_start = end
-                auto_end = end + len(name) - end + offset
-                
                 # Move cursor and selection
-                start = self.get_buffer().get_iter_at_offset(auto_start)
-                self.get_buffer().move_mark(ins, start)
-                end = self.get_buffer().get_iter_at_offset(auto_end)
-                self.get_buffer().select_range(start, end)
+                self.auto_complete = True
+                start = self.get_offset(end_pos)
+                auto_end = end_pos + len(name) - end_pos + offset
+                self.buffer.move_mark(self.get_insert(), start)
+                self.buffer.select_range(start, self.get_offset(auto_end))
             
             else:
                 self.remove_auto_complete()
@@ -545,21 +536,21 @@ class TextInput(gtk.TextView):
         if self.auto_complete:
             self.is_changing = True
             
-            # Replace text with the one that was originally typed
+            # Retrieve text before deleting the selection!
             text = self.get_text()
             
-            select = self.get_buffer().get_selection_bounds()
+            # Replace text with the one that was originally typed
+            select = self.buffer.get_selection_bounds()
             if len(select) > 0:
-                self.get_buffer().delete(*select)     
-                   
+                self.buffer.delete(*select)     
+            
             pos = (self.user_offset - len(self.auto_complete_name)) - 1
             pre = text[:pos] + self.auto_typed
             dec = 1 if self.backspace else 0
             self.set_text(pre + text[self.user_offset - dec:])
-            end = self.get_buffer().get_iter_at_offset(len(pre))
-            self.get_buffer().move_mark(self.get_buffer().get_insert(), end)
-            self.get_buffer().select_range(end, end)
             
+            # Move cursor
+            self.set_cursor(self.get_offset(len(pre)))
             self.is_changing = False
             self.auto_complete = False
         
@@ -651,12 +642,33 @@ class TextInput(gtk.TextView):
     
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def get_text(self):
-        text = self.get_buffer().get_text(*self.get_buffer().get_bounds())
-        return unicode(text)
+    def get_text(self, start=None, end=None):
+        if start is not None:
+            return unicode(self.buffer.get_text(start, end))
+        
+        else:
+            return unicode(self.buffer.get_text(*self.buffer.get_bounds()))
     
     def set_text(self, text):
-        self.get_buffer().set_text(text)
+        self.buffer.set_text(text)
+    
+    def get_offset(self, offset):
+        return self.buffer.get_iter_at_offset(offset)
+    
+    def get_insert(self, mark=False):
+        insert = self.buffer.get_insert()        
+        if mark:
+            return self.buffer.get_iter_at_mark(insert)
+    
+        else:
+            return insert
+    
+    def get_cursor_pos(self):
+        return self.buffer.get_iter_at_mark(self.get_insert()).get_offset()
+    
+    def set_cursor(self, pos):
+        self.buffer.move_mark(self.get_insert(), pos)
+        self.buffer.select_range(pos, pos)
     
     def clear_text(self, text, pos=0):
         self.auto_complete = False
@@ -667,8 +679,8 @@ class TextInput(gtk.TextView):
         if len(text.strip()) == pos:
             pos = len(text)
         
-        self.get_buffer().place_cursor(
-                          self.get_buffer().get_iter_at_offset(pos))
+        self.buffer.place_cursor(
+                          self.get_offset(pos))
     
     def shorten_text(self, text):
         if self.is_shortening:
@@ -725,7 +737,7 @@ class TextInput(gtk.TextView):
         self.set_text(text)
         self.is_changing = False
         self.check_color(len(text))
-        self.changed()
+        self.on_changed()
         self.modify_text(gtk.STATE_NORMAL, self.default_fg)
         self.resize()
     
