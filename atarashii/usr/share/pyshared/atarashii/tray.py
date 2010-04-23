@@ -93,6 +93,16 @@ class TrayIcon(gtk.StatusIcon):
         self.read_menu = self.add_menu(lang.menu_read, gtk.STOCK_OK, 'm',
                                        self.gui.on_read_all)
         
+        # Accounts
+        self.account_menu_item = self.add_menu(lang.menu_accounts,
+                                               gtk.STOCK_ABOUT)
+        
+        self.account_menu = gtk.Menu()
+        self.account_menu_item.set_submenu(self.account_menu)
+        
+        # Separator
+        self.menu.append(gtk.SeparatorMenuItem())
+        
         # Settings
         self.add_menu(lang.menu_settings, gtk.STOCK_PREFERENCES, 'p',
                                           lambda *args:
@@ -101,13 +111,6 @@ class TrayIcon(gtk.StatusIcon):
         # About
         self.add_menu(lang.menu_about, gtk.STOCK_ABOUT, None,
                       lambda *args: self.gui.on_about(None, True))
-        
-        # Accounts
-        self.account_menu_item = self.add_menu(lang.menu_accounts,
-                                               gtk.STOCK_ABOUT)
-        
-        self.account_menu = gtk.Menu()
-        self.account_menu_item.set_submenu(self.account_menu)
         
         # Separator
         self.menu.append(gtk.SeparatorMenuItem())
