@@ -4,6 +4,9 @@
 .B Atarashii 
 \- Twitter Client for the GNOME Desktop
 
+.SH SYNOPSIS
+.B atarashii 
+[-l=language]
 
 .SH DESCRIPTION
 .B Atarashii 
@@ -12,6 +15,10 @@ It uses GTK+ and webkit to archive a slim and functional design.
 The code itself is written in Python and uses the corresponding Python bindings
 for the GTK+ libraries.
 
+.SH OPTIONS
+.B -l 
+Language to use, this should be a two letter lowercase language code 
+e.g. en, de, es, fr.
 
 .SH CONTRIBUTING
 The source is available on GitHub:
@@ -20,7 +27,6 @@ The source is available on GitHub:
 
 To contribute to the project, fork it on GitHub and send a pull request.
 Everyone is welcome to make improvements to Atarashii!
-
 
 .SH LICENSE
 .B Atarashii 
@@ -38,7 +44,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License along with
 .B Atarashii. 
 If not, see <http://www.gnu.org/licenses/>.
-
 
 .SH AUTHOR
 Ivo Wetzel <ivo.wetzel@googlemail.com>
