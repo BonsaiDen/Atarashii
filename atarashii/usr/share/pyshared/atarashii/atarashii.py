@@ -253,6 +253,7 @@ class Atarashii(AtarashiiActions):
         self.on_login_failed(error)
     
     def logout(self, menu=None):
+        self.updater.update_id += 1
         self.username = UNSET_USERNAME
         self.settings['username'] = UNSET_USERNAME
         self.refresh_time = UNSET_TIMEOUT

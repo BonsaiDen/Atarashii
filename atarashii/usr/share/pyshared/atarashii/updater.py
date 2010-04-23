@@ -64,6 +64,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         self.ratelimit = 150
         self.message_counter = 0
         self.finish = False
+        self.update_id = 0
         
         self.daemon = True
         self.wait = threading.Event()
@@ -281,9 +282,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
            + self.main.refresh_timeout or self.refresh_now \
            or self.refresh_messages:
             
+            self.update_id += 1
             self.main.set_status(ST_UPDATE)
             gobject.idle_add(self.gui.set_multi_button, False, None, True, True)
-            self.update()
+            self.update(self.update_id)
             self.refresh_messages = False
             self.refresh_now = False
             return True
@@ -303,7 +305,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     
     # Update -------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def update(self):
+    def update(self, uid):
         both = self.refresh_messages and self.refresh_now
         
         # Tweets
@@ -323,6 +325,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             
             if len(updates) > 0:
                 self.html.save_last_id(updates[0].id)
+        
+        # Stop when the account was switched
+        if self.update_id != uid:
+            return False
         
         # Messages
         messages = []
@@ -348,6 +354,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         elif not self.refresh_now:
             self.message_counter += 1
+        
+        # Stop when the account was switched
+        if self.update_id != uid:
+            return False
         
         # Hide the Network Error Warning
         if self.main.status(ST_NETWORK_FAILED):
@@ -376,7 +386,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             self.unwait()
             self.finish = True
         
-        gobject.idle_add(update_views, updates, messages)
+        # Don't insert updates when logged out
+        if self.update_id == uid:
+            gobject.idle_add(update_views, updates, messages)
+        
         return True
     
     
