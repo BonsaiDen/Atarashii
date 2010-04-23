@@ -25,6 +25,7 @@ from constants import REPLY_REGEX, MESSAGE_REGEX
 from utils import URLShorter
 from language import LANG as lang
 
+from constants import MSG_SIGN, AT_SIGNS
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE
 
@@ -223,7 +224,7 @@ class TextInput(gtk.TextView):
                 return True
             
             text = self.get_text().strip()
-            if len(text) > 0 and not text[0] in u'@\uFF20d':
+            if len(text) > 0 and not text[0] in AT_SIGNS + MSG_SIGN:
                 return False
             
             spaces = text.count(' ')
@@ -256,7 +257,7 @@ class TextInput(gtk.TextView):
                 
                 # Prevent message to be send without text
                 ctext = text.strip()
-                if ctext[0:1] == 'd':
+                if ctext[0:1] == MSG_SIGN:
                     if ctext[2:].find(' ') == -1 \
                        or self.main.message_user == UNSET_TEXT:
                         
@@ -284,11 +285,11 @@ class TextInput(gtk.TextView):
                 # therefore won't return a tweet since twitter thinks that you
                 # wanted to send a DM
                 ctext = text.strip()
-                if text.lstrip()[0:2] == 'd ' or ctext == 'd':
+                if text.lstrip()[0:2] == MSG_SIGN + ' ' or ctext == MSG_SIGN:
                     return False
                 
                 # Prevent @reply to be send without text
-                if ctext[0:1] in u'@\uFF20':
+                if ctext[0:1] in AT_SIGNS:
                     if ctext.find(' ') == -1 \
                        or self.main.reply_user == UNSET_TEXT:
                         
@@ -331,8 +332,14 @@ class TextInput(gtk.TextView):
             # check for 'd user'
             msg = MESSAGE_REGEX.match(text)
             self.message_len = 0
-            if msg is not None:
-                self.message_len = len('d %s ' % msg.group(1))
+            
+            # Remove whitespace between 'd' and username
+            if len(text) > 2 and text[2].strip(' \n\t\r\v') == UNSET_TEXT:
+                gobject.idle_add(self.clear_text,
+                                 MSG_SIGN + ' ' + text[1:].lstrip(), 2) 
+            
+            elif msg is not None:
+                self.message_len = len('%s %s ' % (MSG_SIGN, msg.group(1)))
                 
                 if self.main.message_user_id == UNSET_ID_NUM:
                     self.main.message_user = msg.group(1)
@@ -354,9 +361,7 @@ class TextInput(gtk.TextView):
             elif self.main.message_user_id == UNSET_ID_NUM:
                 self.main.message_user = UNSET_TEXT
             
-            # Remove whitespace between 'd' and username
-            if len(text) > 2 and text[2].strip(' \n\t\r\v') == UNSET_TEXT:
-                gobject.idle_add(self.clear_text, 'd ' + text[1:].lstrip(), 2)
+
             
             # check for '@user' and switch to tweeting
             at_user = REPLY_REGEX.match(text)
@@ -373,7 +378,7 @@ class TextInput(gtk.TextView):
             self.message_len = 0
             
             # Cancel reply mode
-            if not text.strip()[0:1] in u'@\uFF20' and not self.is_changing:
+            if not text.strip()[0:1] in AT_SIGNS and not self.is_changing:
                 self.main.unset('reply')
             
             # Remove spaces only
@@ -463,13 +468,13 @@ class TextInput(gtk.TextView):
         auto = False
         offset = 0
         if len(pre_text) > 2:
-            if pre_text[0:2] == 'd ':
+            if pre_text[0:2] == MSG_SIGN + ' ':
                 user_text = pre_text[2:]
                 if len(user_text) > 1 and not ' ' in user_text:
                     auto = True
                     offset = 2
             
-            elif pre_text[0] in u'@\uFF20' and not ' ' in pre_text:
+            elif pre_text[0] in AT_SIGNS and not ' ' in pre_text:
                 user_text = pre_text[1:]
                 auto = True
                 offset = 1
@@ -574,7 +579,7 @@ class TextInput(gtk.TextView):
             text = UNSET_TEXT
         
         # Check for already existing reply
-        if text[0:1] in u'@\uFF20':
+        if text[0:1] in AT_SIGNS:
             space = text.find(' ')
             if space == -1:
                 space = len(text)
@@ -606,11 +611,11 @@ class TextInput(gtk.TextView):
         msg = MESSAGE_REGEX.match(text)
         if msg is not None:
             space = 2 + len(msg.group(1))
-            text = ('d %s ' % self.main.message_user) \
+            text = ('%s %s ' % (MSG_SIGN, self.main.message_user)) \
                    + (text[space + 1:] if not multi else UNSET_TEXT)
         
         else:
-            text = ('d %s ' % self.main.message_user) + text
+            text = ('%s %s ' % (MSG_SIGN, self.main.message_user)) + text
         
         self.end_change(text)
     
@@ -618,7 +623,7 @@ class TextInput(gtk.TextView):
     # Acceleratores ------------------------------------------------------------
     # --------------------------------------------------------------------------
     def start_tweet(self, *args):
-        if not self.has_typed or self.get_text().strip() == 'd':
+        if not self.has_typed or self.get_text().strip() == MSG_SIGN:
             self.gui.set_mode(MODE_TWEETS)
             self.is_changing = True
             self.grab_focus()
@@ -633,7 +638,7 @@ class TextInput(gtk.TextView):
             self.gui.set_mode(MODE_MESSAGES)
             self.is_changing = True
             self.grab_focus()
-            self.set_text('d ')
+            self.set_text(MSG_SIGN + ' ')
             self.is_changing = False
         
         elif self.gui.mode == MODE_MESSAGES:
