@@ -395,16 +395,20 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         elif uri.startswith('avatar:') or uri.startswith('profile'):
             num = int(uri.split(':')[1])
             gobject.idle_add(self.main.profile, self.get_screen_name(num))
+            gobject.idle_add(self.fake_move, (-1.0, -1.0))
         
         # User
         elif uri.startswith('user'):
             gobject.idle_add(self.main.profile, uri.split(':')[1])
+            gobject.idle_add(self.fake_move, (-1.0, -1.0))
         
         # Message Profile
         elif uri.startswith('rprofile'):
             num = int(uri.split(':')[1])
             gobject.idle_add(self.main.profile,
                              self.get_recipient(num).screen_name)
+            
+            gobject.idle_add(self.fake_move, (-1.0, -1.0))
         
         # Regular links
         else:
