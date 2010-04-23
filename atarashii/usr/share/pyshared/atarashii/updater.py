@@ -227,9 +227,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # TODO implement loading of search
         else:
             pass
-        
-        # Force update of the statusbar
-        gobject.idle_add(self.gui.update_status, True)
     
     
     # Mainloop -----------------------------------------------------------------
@@ -500,6 +497,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         if last:
             gobject.idle_add(self.main.show_start_notifications)
             gobject.idle_add(self.main.on_login_complete)
+            gobject.idle_add(self.gui.update_status, True)
     
     # Calculate refresh interval based on rate limit information
     def update_limit(self):
