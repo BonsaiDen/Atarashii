@@ -189,9 +189,9 @@ class Settings(object):
     def sort_users(self):
         
         def like(i, e):
-            for c in xrange(len(e)):
-                if not i.lower().startswith(e.lower()[:c]):
-                    return c
+            for pos in xrange(len(e)):
+                if not i.lower().startswith(e.lower()[:pos]):
+                    return pos
         
         self.user_list.sort(key=len)
         users = self.user_list

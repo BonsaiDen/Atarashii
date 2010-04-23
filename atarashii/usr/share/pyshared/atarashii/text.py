@@ -221,8 +221,8 @@ class TextInput(gtk.TextView):
             pos = self.get_cursor_pos()
             if pos == 0:
                 return True
-        
-            text = self.get_text().strip()            
+            
+            text = self.get_text().strip()
             if len(text) > 0 and not text[0] in u'@\uFF20d':
                 return False
             
@@ -495,7 +495,7 @@ class TextInput(gtk.TextView):
                 if i.lower().startswith(user_text.lower()):
                     name = i
                     break
-                        
+            
             # Store original typing
             diff = len(user_text) - len(self.auto_typed)
             if diff >= 0 or len(self.auto_typed) == 0:
@@ -542,7 +542,7 @@ class TextInput(gtk.TextView):
             # Replace text with the one that was originally typed
             select = self.buffer.get_selection_bounds()
             if len(select) > 0:
-                self.buffer.delete(*select)     
+                self.buffer.delete(select[0], select[1])
             
             pos = (self.user_offset - len(self.auto_complete_name)) - 1
             pre = text[:pos] + self.auto_typed
@@ -656,10 +656,10 @@ class TextInput(gtk.TextView):
         return self.buffer.get_iter_at_offset(offset)
     
     def get_insert(self, mark=False):
-        insert = self.buffer.get_insert()        
+        insert = self.buffer.get_insert()
         if mark:
             return self.buffer.get_iter_at_mark(insert)
-    
+        
         else:
             return insert
     
