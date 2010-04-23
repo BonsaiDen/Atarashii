@@ -744,31 +744,45 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Show Error/Warning Boxes -------------------------------------------------
     def show_box(self, code, rate_error, is_visible):
-        if code in (ERR_NETWORK_FAILED, ERR_RATE_RECONNECT, HT_404_NOT_FOUND,
-                    HT_401_UNAUTHORIZED):
+    
+        # Tray icon
+        if code in (ERR_NETWORK_FAILED, ERR_NETWORK_TWITTER_FAILED,
+                    ERR_RATE_RECONNECT, HT_404_NOT_FOUND, HT_401_UNAUTHORIZED,
+                    HT_503_SERVICE_UNAVAILABLE):
             
             msg = {
                 ERR_NETWORK_FAILED: (lang.tray_error_login \
                                         % self.main.last_username) + '\n' \
                                         + lang.tray_warning_network,
                 
+                ERR_NETWORK_TWITTER_FAILED:
+                    lang.tray_warning_timeout \
+                    if self.main.status(ST_LOGIN_COMPLETE) \
+                    else lang.tray_warning_twitter,
+                
                 ERR_RATE_RECONNECT: lang.tray_error_rate,
                 HT_404_NOT_FOUND:
                     lang.tray_error_login % self.main.last_username,
                 
                 HT_401_UNAUTHORIZED:
-                    lang.tray_error_login % self.main.last_username
+                    lang.tray_error_login % self.main.last_username,
+                
+                HT_503_SERVICE_UNAVAILABLE: lang.tray_warning_overload
             }[code]
             
             # Show GUI if not shown so the user does notices the message
             if not self.is_shown:
                 gobject.idle_add(self.show_gui)
             
-            gobject.idle_add(self.tray.set_tooltip_error, msg,
-                             gtk.STOCK_DIALOG_ERROR \
-                             if code != ERR_NETWORK_FAILED \
-                             else gtk.STOCK_DIALOG_WARNING)
+            # Update tray tooltip
+            icon = gtk.STOCK_DIALOG_WARNING if code in (ERR_NETWORK_FAILED,
+                                            ERR_NETWORK_TWITTER_FAILED,
+                                            HT_503_SERVICE_UNAVAILABLE) else \
+                                            gtk.STOCK_DIALOG_ERROR
+            
+            gobject.idle_add(self.tray.set_tooltip_error, msg, icon)
         
+        # Warning popups
         if code in (ERR_NETWORK_TWITTER_FAILED, ERR_NETWORK_FAILED,
                       HT_503_SERVICE_UNAVAILABLE):
             
@@ -805,7 +819,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             return True
         
-        # Show Error Button
+        # Error popups
         elif code in (HT_500_INTERNAL_SERVER_ERROR, HT_502_BAD_GATEWAY,
                       ERR_RATE_LIMIT):
             
