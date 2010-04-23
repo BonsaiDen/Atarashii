@@ -40,7 +40,7 @@ from language import LANG as lang
 from constants import CRASH_LOG_FILE
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_DELETE, ST_UPDATE, ST_SEND, ST_RECONNECT, ST_HISTORY, \
-                      ST_LOGIN_COMPLETE, ST_NETWORK_FAILED
+                      ST_LOGIN_COMPLETE, ST_NETWORK_FAILED, ST_TRAY_WARNING
 
 from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       UNSET_USERNAME, MESSAGE_WARNING, MESSAGE_QUESTION, \
@@ -750,24 +750,27 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                     ERR_RATE_RECONNECT, HT_404_NOT_FOUND, HT_401_UNAUTHORIZED,
                     HT_503_SERVICE_UNAVAILABLE):
             
+            login = lang.tray_logged_in % self.main.last_username \
+                    if self.main.status(ST_LOGIN_COMPLETE) \
+                    else lang.tray_error_login % self.main.last_username
+            
             msg = {
-                ERR_NETWORK_FAILED: (lang.tray_error_login \
-                                        % self.main.last_username) + '\n' \
-                                        + lang.tray_warning_network,
+                ERR_NETWORK_FAILED: login + '\n' + lang.tray_warning_network,
                 
                 ERR_NETWORK_TWITTER_FAILED:
-                    lang.tray_warning_timeout \
+                    login + '\n' + lang.tray_warning_timeout \
                     if self.main.status(ST_LOGIN_COMPLETE) \
-                    else lang.tray_warning_twitter,
+                    else login + '\n' + lang.tray_warning_twitter,
                 
-                ERR_RATE_RECONNECT: lang.tray_error_rate,
+                ERR_RATE_RECONNECT: login + '\n' + lang.tray_error_rate,
                 HT_404_NOT_FOUND:
-                    lang.tray_error_login % self.main.last_username,
+                    login,
                 
                 HT_401_UNAUTHORIZED:
-                    lang.tray_error_login % self.main.last_username,
+                    login,
                 
-                HT_503_SERVICE_UNAVAILABLE: lang.tray_warning_overload
+                HT_503_SERVICE_UNAVAILABLE:
+                    login + '\n' + lang.tray_warning_overload
             }[code]
             
             # Show GUI if not shown so the user does notices the message
@@ -775,6 +778,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 gobject.idle_add(self.show_gui)
             
             # Update tray tooltip
+            self.main.set_status(ST_TRAY_WARNING)
             icon = gtk.STOCK_DIALOG_WARNING if code in (ERR_NETWORK_FAILED,
                                             ERR_NETWORK_TWITTER_FAILED,
                                             HT_503_SERVICE_UNAVAILABLE) else \

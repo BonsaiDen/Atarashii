@@ -24,7 +24,7 @@ import gobject
 from utils import menu_escape
 from language import LANG as lang
 
-from constants import UNSET_TOOLTIP, UNSET_USERNAME
+from constants import UNSET_TOOLTIP, UNSET_USERNAME, ST_TRAY_WARNING
 
 
 class TrayIcon(gtk.StatusIcon):
@@ -207,6 +207,9 @@ class TrayIcon(gtk.StatusIcon):
     # Tooltip ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def set_tooltip(self, status, twt=0, msg=0):
+        if self.main.status(ST_TRAY_WARNING):
+            return False
+        
         text = []
         if twt > 0:
             text.append((lang.tray_tweets if twt > 1 \

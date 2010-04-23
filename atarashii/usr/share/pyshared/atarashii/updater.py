@@ -32,7 +32,9 @@ from settings import CACHE_DIR
 from utils import tweepy, TweepError
 from language import LANG as lang
 
-from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED
+from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED, \
+                      ST_TRAY_WARNING
+
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_UNSET_ID, \
                       UNSET_TIMEOUT, HTML_RESET, HTML_LOADING, HTML_LOADED, \
                       UNSET_PASSWORD
@@ -364,6 +366,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             gobject.idle_add(self.gui.warning_button.hide, 5000)
         
         self.main.unset_status(ST_NETWORK_FAILED)
+        self.main.unset_status(ST_TRAY_WARNING)
         
         # Update Views
         def update_views(updates, messages):

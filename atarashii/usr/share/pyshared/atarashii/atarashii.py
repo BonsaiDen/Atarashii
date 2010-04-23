@@ -51,7 +51,8 @@ from language import LANG as lang
 from constants import SHORTS_LIST
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_UPDATE,ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, \
-                      ST_NONE, ST_SEND, ST_DELETE, ST_LOGIN_COMPLETE
+                      ST_NONE, ST_SEND, ST_DELETE, ST_LOGIN_COMPLETE, \
+                      ST_TRAY_WARNING
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
                       MODE_TWEETS, MODE_MESSAGES, UNSET_USERNAME
@@ -203,7 +204,9 @@ class Atarashii(AtarashiiActions):
         self.updater.unwait(init = True)
     
     def on_login(self):
-        self.unset_status(ST_LOGIN_ERROR | ST_CONNECT | ST_DELETE)
+        self.unset_status(ST_LOGIN_ERROR | ST_CONNECT | ST_DELETE |
+                          ST_TRAY_WARNING)
+        
         self.set_status(ST_LOGIN_SUCCESSFUL)
         self.gui.set_title(lang.title_logged_in % self.username)
         self.gui.update_status()
@@ -260,8 +263,6 @@ class Atarashii(AtarashiiActions):
         self.refresh_timeout = UNSET_TIMEOUT
         self.gui.set_mode(MODE_TWEETS)
         self.unset_status(ST_ALL)
-        self.unset_status(ST_LOGIN_SUCCESSFUL)
-        self.unset_status(ST_LOGIN_COMPLETE)
         self.gui.update_status()
         self.gui.hide_all()
         

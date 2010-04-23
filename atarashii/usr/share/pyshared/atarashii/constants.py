@@ -180,10 +180,11 @@ ST_LOGIN_ALL = ST_LOGIN_ERROR | ST_LOGIN_SUCCESSFUL | ST_LOGIN_COMPLETE
 
 # Network
 ST_NETWORK_FAILED = 32768
+ST_TRAY_WARNING = 65536
 
 # All
 ST_ALL = ST_ALL_PENDING | ST_WAS_ALL | ST_WARNING_RATE | ST_LOGIN_ALL | \
-         ST_NETWORK_FAILED
+         ST_NETWORK_FAILED | ST_TRAY_WARNING
 
 
 # Shortening / Escaping / Textbox ----------------------------------------------
