@@ -294,6 +294,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         self.tabs.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL))
         
+        # Force update of the statusbar
+        gobject.idle_add(self.update_status, True)
+        
         # Focus current view
         if focus and not self.text.has_typed:
             if self.mode == MODE_MESSAGES:

@@ -227,6 +227,9 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # TODO implement loading of search
         else:
             pass
+        
+        # Force update of the statusbar
+        gobject.idle_add(self.gui.update_status, True)
     
     
     # Mainloop -----------------------------------------------------------------
