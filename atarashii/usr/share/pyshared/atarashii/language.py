@@ -222,7 +222,7 @@ LANG = {
         'settings_file_cancel': 'Abbrechen',
         
         # About Dialog
-        'about_title': 'Über Atarashii',
+        'about_title': 'Info zu Atarashii',
         'about_okbutton': 'OK',
         'about_kitten_button': 'Kittens',
         'about_back_button': 'Zurück',
@@ -391,7 +391,7 @@ LANG = {
         'menu_update': 'Akualisie_ren',
         'menu_read': 'Alle als gelesen _markieren',
         'menu_settings': '_Einstellungen',
-        'menu_about': 'Über Atarashii',
+        'menu_about': '_Info',
         'menu_accounts': '_Accounts',
         'menu_logout': 'Ausl_oggen',
         'menu_quit': '_Beenden',
@@ -786,7 +786,7 @@ LANG = {
         'menu_update': '_Refresh',
         'menu_read': '_Mark all as read',
         'menu_settings': '_Preferences',
-        'menu_about': 'About Atarashii',
+        'menu_about': 'About',
         'menu_accounts': '_Accounts',
         'menu_logout': 'L_ogout',
         'menu_quit': '_Quit',
