@@ -127,14 +127,12 @@ class ViewHTML(object):
         
         self.render_html('''
             <body class="unloaded" ondragstart="return false">
-                <a style="cursor:default" onclick="return false">
                 <div class="loading">
                 <img src="file://%s" /><br/>
                 <b class="loadingtext">%s</b>
                 <div class="infoheader">%s</div>
                 <div class="infotext">%s</div>
                 </div>
-                </a>
             </body>''' % (self.main.get_image(), lang.html_welcome, acc,
                           acc_info))
     
