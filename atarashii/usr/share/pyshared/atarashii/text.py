@@ -336,7 +336,7 @@ class TextInput(gtk.TextView):
             # Remove whitespace between 'd' and username
             if len(text) > 2 and text[2].strip(' \n\t\r\v') == UNSET_TEXT:
                 gobject.idle_add(self.clear_text,
-                                 MSG_SIGN + ' ' + text[1:].lstrip(), 2) 
+                                 MSG_SIGN + ' ' + text[1:].lstrip(), 2)
             
             elif msg is not None:
                 self.message_len = len('%s %s ' % (MSG_SIGN, msg.group(1)))
@@ -361,7 +361,7 @@ class TextInput(gtk.TextView):
             elif self.main.message_user_id == UNSET_ID_NUM:
                 self.main.message_user = UNSET_TEXT
             
-
+            
             
             # check for '@user' and switch to tweeting
             at_user = REPLY_REGEX.match(text)
