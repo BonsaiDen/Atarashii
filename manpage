@@ -10,10 +10,17 @@
 
 .SH DESCRIPTION
 .B Atarashii 
-is a simple Twitter Client for the GNOME Desktop.
-It uses GTK+ and webkit to archive a slim and functional design.
-The code itself is written in Python and uses the corresponding Python bindings
-for the GTK+ libraries.
+is a simple Twitter Client for your GNOME Desktop.
+
+.B Features include:
+
+A clean minimalistic GUI, Desktop notifications with configurable sounds,
+the possibility to theme the timeline and auto completion of usernames.
+
+It's build using 
+.B Python, GTK+ 
+and 
+.B Webkit.
 
 .SH OPTIONS
 .B -l 
