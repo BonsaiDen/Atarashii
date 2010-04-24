@@ -205,6 +205,7 @@ class AtarashiiActions(object):
     # Block / Unblock
     def block(self, menu, user_id, name, mode, spam=None):
         if mode and spam is None:
+            
             def block_spam():
                 self.block(menu, user_id, name, mode, True)
             

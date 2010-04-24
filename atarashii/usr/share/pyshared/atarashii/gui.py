@@ -753,7 +753,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Show Error/Warning Boxes -------------------------------------------------
     def show_box(self, code, rate_error, is_visible):
-    
+        
         # Tray icon
         if code in (ERR_NETWORK_FAILED, ERR_NETWORK_TWITTER_FAILED,
                     ERR_RATE_RECONNECT, HT_404_NOT_FOUND, HT_401_UNAUTHORIZED,

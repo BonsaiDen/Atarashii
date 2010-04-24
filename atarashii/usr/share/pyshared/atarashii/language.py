@@ -680,7 +680,7 @@ LANG = {
         'block_user_spam':
             'Do you want to report <b>%s</b> for spam/abuse?',
         
-        'block_title': 'Block user', 
+        'block_title': 'Block user',
         
         # Delete Dialogs
         'delete_title': 'Confirm delete',
@@ -821,7 +821,7 @@ LANG = {
         'tray_warning_network': '<b>Network error.</b>',
         'tray_warning_overload': '<b>Twitter is over capacity.</b>',
         'tray_warning_timeout': '<b>Network error.</b>',
-        'tray_warning_twitter': '<b>Twitter is unavailable.</b>',    
+        'tray_warning_twitter': '<b>Twitter is unavailable.</b>',
         'tray_error_twitter': 'Twitter server error.',
         'tray_error_down': 'Twitter is offline.',
         'tray_error_rate_limit': 'Ratelimit exceeded.',
