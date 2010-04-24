@@ -216,7 +216,7 @@ class Settings(object):
                     self.user_list_lower.pop(i)
                     self.user_list.pop(i)
                     self.removed_list.append(name_lower)
-                    self.users_changed = True         
+                    self.users_changed = True
                     break
     
     def sort_users(self):
@@ -250,19 +250,12 @@ class Settings(object):
         
         self.css_count += 1
         
-        # Avatar
-        if avatar is None:
-            avatar_size = self.get('avatarsize', AVATAR_DEFAULT)
+        # Avatar / Font
+        avatar_size = avatar if avatar is not None \
+                             else self.get('avatarsize', AVATAR_DEFAULT)
         
-        else:
-            avatar_size = avatar
-        
-        # Font
-        if font is None:
-            font_size = self.get('fontsize', FONT_DEFAULT)
-        
-        else:
-            font_size = font
+        font_size = font if font is not None \
+                         else self.get('fontsize', FONT_DEFAULT)
         
         # Theme
         if color_theme is not None:
@@ -278,7 +271,7 @@ class Settings(object):
             css_data = f.read()
             with open(self.css_file, 'wb') as csf:
                 csf.write('/* THIS FILE HAS BEEN AUTOMATICALLY GENERATED '
-                         'AND WILL BE OVERRIDEN ON STARTUP */\n\n')
+                         'AND WILL BE OVERRIDEN */\n\n')
                 
                 path = os.path.join(self.main.get_resource(''), 'themes',
                                     color_theme) + '/'
