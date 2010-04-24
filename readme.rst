@@ -3,9 +3,12 @@ Atarashii
 
 **Atarashii** is a simple Twitter Client for your GNOME Desktop.
 
-It uses *GTK+* and *Webkit* to archive a slim and functional design.  
-The code itself is written in *Python* and uses the corresponding *Python*  
-bindings for the *GTK+* libraries.
+| **Features include:**
+| A clean minimalistic GUI, Desktop notifications with configurable sounds,
+| as well as the possibility to theme the timelines and auto completion of
+| usernames.
+
+It's build using *Python*, *GTK+* and *Webkit*.
 
 
 Installation
