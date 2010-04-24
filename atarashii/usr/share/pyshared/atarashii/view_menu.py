@@ -298,8 +298,7 @@ class ViewMenu(object):
             (link.href != undefined ? link.href : link.parentNode.href);
             delete link;
             delete sizes;''' % (event.x, event.y))
-            title = self.get_main_frame().get_title()
-            return title
+            return self.get_main_frame().get_title()
         
         except Exception:
             return None
