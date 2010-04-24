@@ -35,7 +35,9 @@ from utils import gmtime
 from language import LANG as lang
 
 from constants import LOGOUT_FILE
-from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR, UNSET_USERNAME
+from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR, UNSET_USERNAME, \
+                      USERLIST_TIMEOUT
+
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
                       ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_SUCCESSFUL
@@ -230,6 +232,15 @@ class AtarashiiActions(object):
     def stop_profile(self, *args):
         self.profile_pending = False
         self.gui.load_button.hide()
+    
+    # Update the user list with all the users friends
+    def update_user_list(self):
+        if self.username != UNSET_USERNAME and gmtime() - \
+           (self.settings['userlist_time_' + self.username] or 0) \
+           > USERLIST_TIMEOUT:
+            
+            self.settings['userlist_time_' + self.username] = gmtime()
+            api.Friends(self, self.username, self.settings.add_users)
     
     
     # Reconnect ----------------------------------------------------------------

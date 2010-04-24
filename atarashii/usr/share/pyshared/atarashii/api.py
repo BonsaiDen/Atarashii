@@ -272,9 +272,9 @@ class Favorite(SimpleAPICall):
         del main.favorites_pending[tweet_id]
 
 
-# Friend information -----------------------------------------------------------
+# Friendship status information ------------------------------------------------
 # ------------------------------------------------------------------------------
-class Friends(SimpleAPICall):
+class FriendStatus(SimpleAPICall):
     def before(self, main, name, menu, callback):
         self.menu = menu
     
@@ -310,6 +310,7 @@ class Follow(SimpleAPICall):
         
         else:
             main.api.destroy_friendship(user_id = user_id)
+            main.settings.remove_username(name)
     
     def on_success(self, main, user_id, name, mode):
         gobject.idle_add(main.gui.show_follow_info, mode, name)
@@ -330,6 +331,7 @@ class Block(SimpleAPICall):
                 main.api.report_spam(user_id = user_id)
             
             main.api.create_block(user_id = user_id)
+            main.settings.remove_username(name)
         
         else:
             main.api.destroy_block(user_id = user_id)
@@ -353,6 +355,26 @@ class Followers(SimpleAPICall):
         while cur != 0:
             users, cursors = self.main.api.followers(screen_name = user,
                                                      cursor = cur)
+            
+            self.users += users
+            cur = cursors[1]
+    
+    def on_success(self, main, user, callback):
+        gobject.idle_add(callback, self.users)
+    
+    def on_error(self, main, user, callback):
+        pass
+
+
+# Friends(aka Following) -------------------------------------------------------
+# ------------------------------------------------------------------------------
+class Friends(SimpleAPICall):
+    def call(self, main, user, callback):
+        self.users = []
+        cur = -1
+        while cur != 0:
+            users, cursors = self.main.api.friends(screen_name = user,
+                                                  cursor = cur)
             
             self.users += users
             cur = cursors[1]

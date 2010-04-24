@@ -197,8 +197,8 @@ class ViewMenu(object):
                     self.add_menu_link(menu, lang.context_friend_loading,
                                        None).set_sensitive(False)
                     
-                    self.friend_thread = api.Friends(self.main, user, menu,
-                                                     self.create_friend_menu)
+                    self.friend_thread = api.FriendStatus(self.main, user, menu,
+                                             self.create_friend_menu)
                 
                 return True
         

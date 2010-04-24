@@ -210,6 +210,7 @@ class Atarashii(AtarashiiActions):
         self.gui.set_title(lang.title_logged_in % self.username)
         self.gui.update_status()
         self.gui.show_input()
+        self.update_user_list()
     
     def on_login_complete(self):
         self.set_status(ST_LOGIN_COMPLETE)

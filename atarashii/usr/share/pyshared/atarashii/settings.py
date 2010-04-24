@@ -42,9 +42,12 @@ class Settings(object):
         self.main = main
         self.values = {}
         self.user_list = []
+        self.user_list_lower = []
+        self.removed_list = []
         self.load()
         self.save_count = 0
         self.users_changed = False
+        self.users_unsorted = False
         self.has_changed = False
         
         # Theme and CSS
@@ -87,7 +90,9 @@ class Settings(object):
         # Users
         try:
             with open(USERLIST_FILE, 'rb') as f:
-                self.user_list = [i.strip() for i in f.read().split(',')]
+                users = f.read().split(',')
+                self.user_list = [i.strip() for i in users if i.strip() != '']
+                self.users_unsorted = True
                 self.sort_users()
         
         except IOError:
@@ -164,6 +169,12 @@ class Settings(object):
     def get_accounts(self):
         return sorted([i[8:] for i in self.values if i.startswith('account_')])
     
+    def add_users(self, users):
+        for i in users:
+            self.add_username(i.screen_name)
+        
+        self.sort_users()
+    
     def add_user(self, item):
         if hasattr(item, 'user'):
             self.add_username(item.user.screen_name)
@@ -181,12 +192,28 @@ class Settings(object):
             self.add_username(item.recipient.screen_name)
     
     def add_username(self, name):
-        if not name.lower() in [i.lower() for i in self.user_list]:
+        if not name.lower() in self.user_list_lower \
+           and not name.lower() in self.removed_list:
+            
             self.user_list.append(name)
-            self.sort_users()
+            self.user_list_lower.append(name.lower())
+            self.users_unsorted = True
             self.users_changed = True
     
+    def remove_username(self, name):
+        if name.lower() in self.user_list_lower:
+            for i, user in enumerate(self.user_list):
+                if name.lower() == user.lower():
+                    self.user_list_lower.pop(i)
+                    self.user_list.pop(i)
+                    self.removed_list.append(name.lower())
+                    break
+    
     def sort_users(self):
+        if not self.users_unsorted:
+            return False
+        
+        self.users_unsorted = False
         
         def like(i, e):
             for pos in xrange(len(e)):
@@ -203,6 +230,10 @@ class Settings(object):
                     
                     else:
                         users[i], users[e] = users[e], users[i]
+        
+        print users
+        self.user_list_lower = [i.lower() for i in users]
+    
     
     # CSS ----------------------------------------------------------------------
     def css(self, font=None, avatar=None, color_theme=None):

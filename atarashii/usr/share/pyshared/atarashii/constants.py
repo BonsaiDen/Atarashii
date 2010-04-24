@@ -72,6 +72,7 @@ USERNAME_CHARS = 'abcdefghijklmnopqrstuvwxyz' \
                  + '_1234567890'
 
 CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
+USERLIST_TIMEOUT = 60 * 60 * 2 # 2 Hours
 
 # Rewteets
 RETWEET_NEW = 1          # Can be anything

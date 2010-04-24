@@ -208,6 +208,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             self.add(self.history_list.pop(0), True)
         
         self.render()
+        self.main.settings.sort_users()
     
     def add(self, item, append=False):
         # Add usernames to auto complete list

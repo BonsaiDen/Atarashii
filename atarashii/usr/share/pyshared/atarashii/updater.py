@@ -76,6 +76,9 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
     def init(self):
         self.gui = self.main.gui
         
+        # Unset removed user list
+        self.settings.removed_list = []
+        
         # Init Views
         self.html = self.gui.html
         self.message = self.gui.message
