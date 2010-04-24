@@ -343,3 +343,23 @@ class Block(SimpleAPICall):
     def after(self, main, user_id, name, mode, spam):
         del main.block_pending[name.lower()]
 
+
+# Followers --------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class Followers(SimpleAPICall):
+    def call(self, main, user, callback):
+        self.users = []
+        cur = -1
+        while cur != 0:
+            users, cursors = self.main.api.followers(screen_name = user,
+                                                     cursor = cur)
+            
+            self.users += users
+            cur = cursors[1]
+    
+    def on_success(self, main, user, callback):
+        gobject.idle_add(callback, self.users)
+    
+    def on_error(self, main, user, callback):
+        pass
+
