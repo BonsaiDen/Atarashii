@@ -12,7 +12,12 @@ from __init__ import __version__ as VERSION
 
 from constants import CRASH_LOG_FILE, ERROR_LOG_FILE, CRASH_FILE, START_TIME
 
-# Catch python errors which crash Atarashii
+def format_time(date, format='%a %b %d %H:%M:%S +0000 %Y'):
+    locale.setlocale(locale.LC_TIME, 'C')
+    string = time.strftime(format, date)
+    locale.setlocale(locale.LC_TIME, '')
+    return string
+
 def crash_exit():
     try:
         if sys.last_traceback is None:
@@ -21,20 +26,12 @@ def crash_exit():
     except AttributeError:
         return False
     
-    # Set date format to english
-    locale.setlocale(locale.LC_TIME, 'C')
-    
-    # Save the crashlog
-    trace = traceback.extract_tb(sys.last_traceback)
     with open(CRASH_LOG_FILE, 'ab') as f:
         error = '''Atarashii %s\nStarted at %s\nCrashed at %s\nTraceback:\n''' \
-                % (VERSION,
-                   time.strftime('%a %b %d %H:%M:%S +0000 %Y',
-                   time.gmtime(START_TIME)),
-                   
-                   time.strftime('%a %b %d %H:%M:%S +0000 %Y',
-                   time.gmtime()))
+                % (VERSION, format_time(time.gmtime(START_TIME)),
+                   format_time(time.gmtime()))
         
+        trace = traceback.extract_tb(sys.last_traceback)
         f.write(error + '\n'.join(traceback.format_list(trace)) + '\n')
     
     sys.exit(70) # os.EX_SOFTWARE
@@ -52,11 +49,6 @@ def crash_file(mode, data=None):
         log_error('IO on crashfile failed')
 
 def log_error(error):
-    locale.setlocale(locale.LC_TIME, 'C')
     with open(ERROR_LOG_FILE, 'ab') as f:
-        f.write('%s %s\n' \
-                % (time.strftime('%a %b %d %H:%M:%S +0000 %Y', time.gmtime()),
-                   error))
-    
-    locale.setlocale(locale.LC_TIME, '')
+        f.write('%s %s\n' % (format_time(time.gmtime()), error))
 
