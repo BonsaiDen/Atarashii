@@ -284,7 +284,7 @@ class ButtonDialog(object):
     def check_timer(self):
         if self.timer is not None:
             gobject.source_remove(self.timer)
-            self.timer = None   
+            self.timer = None
     
     
     # Display ------------------------------------------------------------------

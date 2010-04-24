@@ -12,9 +12,9 @@ from __init__ import __version__ as VERSION
 
 from constants import CRASH_LOG_FILE, ERROR_LOG_FILE, CRASH_FILE, START_TIME
 
-def format_time(date, format='%a %b %d %H:%M:%S +0000 %Y'):
+def format_time(date, form='%a %b %d %H:%M:%S +0000 %Y'):
     locale.setlocale(locale.LC_TIME, 'C')
-    string = time.strftime(format, date)
+    string = time.strftime(form, date)
     locale.setlocale(locale.LC_TIME, '')
     return string
 
