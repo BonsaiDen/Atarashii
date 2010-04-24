@@ -169,6 +169,8 @@ class Settings(object):
     def get_accounts(self):
         return sorted([i[8:] for i in self.values if i.startswith('account_')])
     
+    
+    # Usernames ----------------------------------------------------------------
     def add_users(self, users):
         for i in users:
             self.add_username(i.screen_name)
@@ -192,45 +194,47 @@ class Settings(object):
             self.add_username(item.recipient.screen_name)
     
     def add_username(self, name):
-        if not name.lower() in self.user_list_lower \
-           and not name.lower() in self.removed_list:
+        name_lower = name.lower()
+        if not name_lower in self.removed_list:
+            if not name_lower in self.user_list_lower:
+                self.user_list.append(name)
+                self.user_list_lower.append(name.lower())
+                self.users_unsorted = True
             
-            self.user_list.append(name)
-            self.user_list_lower.append(name.lower())
-            self.users_unsorted = True
-            self.users_changed = True
+            # Replace users when they have changed their casing
+            else:
+                index = self.user_list_lower.index(name_lower)
+                if self.user_list[index] != name:
+                    self.user_list[index] = name
+                    self.users_unsorted = True
     
     def remove_username(self, name):
-        if name.lower() in self.user_list_lower:
+        name_lower = name.lower()
+        if name_lower in self.user_list_lower:
             for i, user in enumerate(self.user_list):
-                if name.lower() == user.lower():
+                if name_lower == user.lower():
                     self.user_list_lower.pop(i)
                     self.user_list.pop(i)
-                    self.removed_list.append(name.lower())
+                    self.removed_list.append(name_lower)
+                    self.users_changed = True         
                     break
     
     def sort_users(self):
         if not self.users_unsorted:
             return False
         
+        self.users_changed = True
         self.users_unsorted = False
+        users = self.user_list[:]
+        self.user_list = []
+        self.user_list_lower = []
         
-        def like(i, e):
-            for pos in xrange(len(e)):
-                if not i.lower().startswith(e.lower()[:pos]):
-                    return pos
-        
-        def like_compare(i, e):
-            if like(i, e) > 1:
-                return -1
-            
-            else:
-                return 1
-        
-        # Sort by length and after that by likeness
-        self.user_list.sort(key=len)
-        self.user_list.sort(cmp=like_compare)
-        self.user_list_lower = [i.lower() for i in self.user_list]
+        # Sort aplhabetically and by length
+        for user, length in sorted([(i, len(i)) for i in users]):
+            user_lower = user.lower()
+            if not user_lower in self.user_list_lower:
+                self.user_list.append(user)
+                self.user_list_lower.append(user.lower())
     
     
     # CSS ----------------------------------------------------------------------
