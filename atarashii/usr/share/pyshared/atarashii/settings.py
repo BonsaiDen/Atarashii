@@ -231,7 +231,6 @@ class Settings(object):
                     else:
                         users[i], users[e] = users[e], users[i]
         
-        print users
         self.user_list_lower = [i.lower() for i in users]
     
     
