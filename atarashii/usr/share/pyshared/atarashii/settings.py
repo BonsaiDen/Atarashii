@@ -220,18 +220,17 @@ class Settings(object):
                 if not i.lower().startswith(e.lower()[:pos]):
                     return pos
         
-        self.user_list.sort(key=len)
-        users = self.user_list
-        for i in xrange(len(users)):
-            for e in xrange(i + 1, len(users)):
-                if like(users[i], users[e]) > 1:
-                    if users[i] > users[e]:
-                        users[e], users[i] = users[i], users[e]
-                    
-                    else:
-                        users[i], users[e] = users[e], users[i]
+        def like_compare(i, e):
+            if like(i, e) > 1:
+                return -1
+            
+            else:
+                return 1
         
-        self.user_list_lower = [i.lower() for i in users]
+        # Sort by length and after that by likeness
+        self.user_list.sort(key=len)
+        self.user_list.sort(cmp=like_compare)
+        self.user_list_lower = [i.lower() for i in self.user_list]
     
     
     # CSS ----------------------------------------------------------------------
