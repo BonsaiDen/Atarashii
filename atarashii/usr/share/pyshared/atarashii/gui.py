@@ -663,8 +663,17 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                              lang.profile_error % lang.name(name),
                              lang.error_title)
     
-    def show_block_info(self, mode, name):
-        self.info_button.show(lang.block_button % name if mode \
+    def ask_for_block_spam(self, user, yes, noo):
+        dialog.MessageDialog(self, MESSAGE_QUESTION,
+                        lang.block_user_spam % user,
+                        lang.block_title,
+                        yes_callback = yes, no_callback = noo)
+    
+    def show_block_info(self, mode, name, spam):
+        blocked = lang.block_button_spam % name if spam \
+                  else lang.block_button % name
+        
+        self.info_button.show(blocked if mode \
                               else lang.unblock_button % name,
                               None, None, 5000)
     

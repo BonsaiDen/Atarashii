@@ -324,19 +324,22 @@ class Follow(SimpleAPICall):
 # Block ------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Block(SimpleAPICall):
-    def call(self, main, user_id, name, mode):
+    def call(self, main, user_id, name, mode, spam):
         if mode:
+            if spam:
+                main.api.report_spam(user_id = user_id)
+            
             main.api.create_block(user_id = user_id)
         
         else:
             main.api.destroy_block(user_id = user_id)
     
-    def on_success(self, main, user_id, name, mode):
-        gobject.idle_add(main.gui.show_block_info, mode, name)
+    def on_success(self, main, user_id, name, mode, spam):
+        gobject.idle_add(main.gui.show_block_info, mode, name, spam)
     
-    def on_error(self, main, user_id, name, mode):
+    def on_error(self, main, user_id, name, mode, spam):
         gobject.idle_add(main.gui.show_block_error, mode, name)
     
-    def after(self, main, user_id, name, mode):
+    def after(self, main, user_id, name, mode, spam):
         del main.block_pending[name.lower()]
 

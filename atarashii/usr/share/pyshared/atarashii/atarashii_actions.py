@@ -203,9 +203,19 @@ class AtarashiiActions(object):
         send.Follow(self, user_id, name, mode)
     
     # Block / Unblock
-    def block(self, menu, user_id, name, mode):
+    def block(self, menu, user_id, name, mode, spam=None):
+        if mode and spam is None:
+            def block_spam():
+                self.block(menu, user_id, name, mode, True)
+            
+            def simple_block():
+                self.block(menu, user_id, name, mode, False)
+            
+            self.gui.ask_for_block_spam(name, block_spam, simple_block)
+            return False
+        
         self.block_pending[name.lower()] = True
-        send.Block(self, user_id, name, mode)
+        send.Block(self, user_id, name, mode, spam)
     
     # Show profile
     def profile(self, name):

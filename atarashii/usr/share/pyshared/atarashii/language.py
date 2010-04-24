@@ -239,7 +239,7 @@ LANG = {
         'account_create': 'Benutzer erstellen',
         'account_delete': 'Benutzer löschen',
         'account_delete_description':
-        'Möchten sie den Benutzer <b>%s</b> wirklich löschen?',
+            'Möchten sie den Benutzer <b>%s</b> wirklich löschen?',
         
         'account_button': 'OK',
         'account_button_cancel': 'Abbrechen',
@@ -263,9 +263,15 @@ LANG = {
         
         # Block Dialogs
         'block_button': '<b>%s</b> wird nun geblockt',
+        'block_button_spam': '<b>%s</b> wird nun geblockt und wurde gemeldet',
         'unblock_button': '<b>%s</b> wird nicht mehr geblockt',
         'error_block': '<b>%s</b> konnte nicht geblockt werden.',
         'error_unblock': '<b>%s</b> konnte nicht entblockt werden.',
+        'block_user_spam':
+            'Möchten Sie <b>%s</b> zusätzlich noch wegen '
+            'Spam/Missbrauch melden?',
+        
+        'block_title': 'Benutzer blocken',
         
         # Delete Dialogs
         'delete_title': 'Löschen bestätigen',
@@ -667,9 +673,14 @@ LANG = {
         
         # Block Dialogs
         'block_button': '<b>%s</b> has been blocked',
+        'block_button_spam': '<b>%s</b> has been blocked and reported',
         'unblock_button': '<b>%s</b> has been unblocked',
         'error_block': 'Could not block <b>%s</b>.',
         'error_unblock': 'Could not unblock <b>%s</b>.',
+        'block_user_spam':
+            'Do you want to report <b>%s</b> for spam/abuse?',
+        
+        'block_title': 'Block user', 
         
         # Delete Dialogs
         'delete_title': 'Confirm delete',
