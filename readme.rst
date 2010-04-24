@@ -5,8 +5,7 @@ Atarashii
 
 | **Features include:**
 | A clean minimalistic GUI, Desktop notifications with configurable sounds,
-| as well as the possibility to theme the timelines and auto completion of
-| usernames.
+| the possibility to theme the timeline and auto completion of usernames.
 
 It's build using *Python*, *GTK+* and *Webkit*.
 
