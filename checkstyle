@@ -244,7 +244,7 @@ def check(path, folders, excludes, flags, checkstyle):
                 errors += '%d: Unneded 0 index in "(x)range()" call\n' % (l + 1)
             
             if d.find('in range(0, len(') != -1 or d.find('in range(0,len(') != -1 or d.find('in range(len(') != -1 \
-               or d.find('in xrange(0, len(') != -1 or d.find('in xrange(0,len(') != -1 or d.find('in xrange(len(') != -1:
+               or d.find('in xrange(0, len(') != -1 or d.find('in xrange(0,len(') != -1:
                 errors += '%d: Use of "for ... in (x)range" instead of "enumerate"\n' % (l + 1)
             
             if d.find('== True') != -1 and not 'B' in flags:
@@ -342,7 +342,7 @@ def check(path, folders, excludes, flags, checkstyle):
             if not last_comment:
                 last_empty = dd == '' or dd.endswith('\\')
                 
-                ld = d.replace('+=', '  ').replace('-=', '  ').replace('*=', '  ').replace('/=', '  ').replace('//', '  ').replace('**', '  ').replace(', *', '    ').replace('(*', '').replace('lambda *', '')
+                ld = d.replace('+=', '  ').replace('-=', '  ').replace('-(', '  ').replace('*=', '  ').replace('/=', '  ').replace('//', '  ').replace('**', '  ').replace(', *', '    ').replace('(*', '').replace('lambda *', '')
                 ld = number_regex.sub(lambda o: '', ld)
                 cpos = ld.rfind('#')
                 if cpos != -1:
