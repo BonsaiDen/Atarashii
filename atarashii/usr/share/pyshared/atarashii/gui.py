@@ -75,7 +75,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         gtb.add_from_file(main.get_resource('main.glade'))
         frame = gtb.get_object('frame')
         self.add(frame)
-        gtb.get_object('content').set_border_width(2)
         
         # Multi Button
         self.is_on_multi_button = False
