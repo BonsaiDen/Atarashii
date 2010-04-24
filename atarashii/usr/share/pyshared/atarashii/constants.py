@@ -198,7 +198,7 @@ SHORTS = {
     'u.nu': 'http://u.nu/unu-api-simple?url=%s'
 }
 
-SHORTS_LIST = ['is.gd', 'u.nu', 'tinyurl.com', 'snipurl.com']
+SHORTS_LIST = [e for i, e in sorted([(len(i), i) for i in SHORTS.keys()])]
 
 # Note the missing lowercase l, the uppercase I, the O and the 0(zero)
 BASE58 = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
