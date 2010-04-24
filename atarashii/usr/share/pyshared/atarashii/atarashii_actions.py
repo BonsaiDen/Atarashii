@@ -30,7 +30,7 @@ import math
 import socket
 from urllib2 import URLError, HTTPError
 
-import send
+import api
 
 from errors import log_error
 from language import LANG as lang
@@ -149,10 +149,10 @@ class AtarashiiActions(object):
             self.gui.set_status(lang.status_send)
         
         if edit:
-            send.Edit(self, text)
+            api.Edit(self, text)
         
         else:
-            send.Send(self, text, multi)
+            api.Send(self, text, multi)
     
     # New style Retweet
     def retweet(self, name, tweet_id, new_style=False):
@@ -170,7 +170,7 @@ class AtarashiiActions(object):
         self.gui.show_progress()
         self.gui.set_status(lang.status_retweet % name)
         
-        send.Retweet(self, name, tweet_id)
+        api.Retweet(self, name, tweet_id)
     
     # Delete
     def delete(self, tweet_id=UNSET_ID_NUM, message_id=UNSET_ID_NUM):
@@ -189,18 +189,18 @@ class AtarashiiActions(object):
                             if tweet_id != UNSET_ID_NUM \
                             else lang.status_deleting_message)
         
-        send.Delete(self, tweet_id, message_id)
+        api.Delete(self, tweet_id, message_id)
     
     # Favorite
     def favorite(self, tweet_id, mode, name):
         if not tweet_id in self.favorites_pending:
             self.favorites_pending[tweet_id] = mode
-            send.Favorite(self, tweet_id, mode, name)
+            api.Favorite(self, tweet_id, mode, name)
     
     # Follow / Unfollow
     def follow(self, menu, user_id, name, mode):
         self.follow_pending[name.lower()] = True
-        send.Follow(self, user_id, name, mode)
+        api.Follow(self, user_id, name, mode)
     
     # Block / Unblock
     def block(self, menu, user_id, name, mode, spam=None):
@@ -216,7 +216,7 @@ class AtarashiiActions(object):
             return False
         
         self.block_pending[name.lower()] = True
-        send.Block(self, user_id, name, mode, spam)
+        api.Block(self, user_id, name, mode, spam)
     
     # Show profile
     def profile(self, name):
@@ -226,7 +226,7 @@ class AtarashiiActions(object):
         self.gui.hide_profile()
         self.profile_pending = True
         self.gui.load_button.show(lang.profile_loading % lang.name(name), None)
-        send.Profile(self, name, self.gui.show_profile)
+        api.Profile(self, name, self.gui.show_profile)
     
     def stop_profile(self, *args):
         self.profile_pending = False
