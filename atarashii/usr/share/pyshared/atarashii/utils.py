@@ -90,7 +90,7 @@ class URLShorter(threading.Thread):
         find_urls = SHORT_REGEX.findall(self.text + ' ')
         urls = []
         for url in find_urls:
-            if not url[0] in urls and not url[0] in self.__class__.black_list:
+            if not url[0] in urls and not url[0] in self.black_list:
                 urls.append(url[0])
         
         # Replace them all
@@ -109,19 +109,19 @@ class URLShorter(threading.Thread):
             gobject.idle_add(self.text_box.shorten_text, short_text)
     
     def shorten_url(self, url, api):
-        if url in self.__class__.url_list:
-            return self.__class__.url_list[url]
+        if url in self.url_list:
+            return self.url_list[url]
         
         try:
             short = self.try_shorten(url, api).strip()
             if not short.lower().startswith('http://'):
                 raise ValueError
             
-            self.__class__.url_list[url] = short
+            self.url_list[url] = short
             return short
         
         except (IOError, ValueError):
-            self.__class__.black_list.append(url)
+            self.black_list.append(url)
             return url
     
     def try_shorten(self, url, api):
@@ -189,10 +189,10 @@ class URLExpander(threading.Thread):
     
     def run(self):
         # Check for already resolved / failed urls
-        if self.url in self.__class__.url_list:
-            current_url = self.__class__.url_list[self.url]
+        if self.url in self.url_list:
+            current_url = self.url_list[self.url]
         
-        elif self.url in self.__class__.black_list:
+        elif self.url in self.black_list:
             current_url = self.url
         
         else:
@@ -228,7 +228,7 @@ class URLExpander(threading.Thread):
                         hops += 1
             
             except IOError:
-                self.__class__.black_list.append(current_url)
+                self.black_list.append(current_url)
         
         gobject.idle_add(self.callback, self.url, current_url)
     

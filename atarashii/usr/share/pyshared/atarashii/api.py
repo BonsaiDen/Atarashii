@@ -374,7 +374,7 @@ class Friends(SimpleAPICall):
         cur = -1
         while cur != 0:
             users, cursors = self.main.api.friends(screen_name = user,
-                                                  cursor = cur)
+                                                   cursor = cur)
             
             self.users += users
             cur = cursors[1]

@@ -40,10 +40,10 @@ class Dialog(object):
         self.main = gui.main
         self.settings = gui.main.settings
         
-        if self.__class__.instance is None:
+        if self.instance is None:
             self.gtb = gtk.Builder()
             self.gtb.add_from_file(
-                 gui.main.get_resource(self.__class__.resource))
+                 gui.main.get_resource(self.resource))
             
             self.dlg = self.get('dialog')
             self.dlg.set_property('skip-taskbar-hint', True)
@@ -55,7 +55,7 @@ class Dialog(object):
             if close:
                 self.close_button.connect('clicked', self.on_close)
             
-            self.__class__.instance = self.dlg
+            self.instance = self.dlg
             self.dlg.show_all()
             if init:
                 self.on_init()
@@ -63,13 +63,13 @@ class Dialog(object):
             self.close_button.grab_focus()
         
         else:
-            gobject.idle_add(self.__class__.instance.present)
+            gobject.idle_add(self.instance.present)
     
     def on_init(self):
         pass
     
     def on_close(self, *args):
-        self.__class__.instance = None
+        self.instance = None
         self.dlg.hide()
     
     def get(self, widget):
@@ -142,7 +142,7 @@ class PasswordDialog(Dialog):
             self.main.api_temp_password = UNSET_PASSWORD
         
         self.main.updater.password_wait.set()
-        self.__class__.instance = None
+        self.instance = None
         self.dlg.hide()
 
 
@@ -187,7 +187,7 @@ class AboutDialog(Dialog):
         self.kitten_button.connect('toggled', toggle)
     
     def on_close(self, *args):
-        self.__class__.instance = None
+        self.instance = None
         self.gui.about_dialog = None
         self.dlg.hide()
         self.dlg.destroy()
@@ -246,8 +246,8 @@ class MessageDialog(gtk.MessageDialog):
 # Button Dialog ----------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class ButtonDialog(object):
-    def __init__(self, gui, dtype, template, title,
-                 passive=False, callback=None):
+    def __init__(self, gui, dtype, template, title, passive=False,
+                 callback=None):
         
         self.gui = gui
         self.dialog = None
@@ -262,7 +262,7 @@ class ButtonDialog(object):
         self.button.connect('clicked', callback if self.passive \
                                                 else self.show_dialog)
         
-        # Text
+        # Data
         self.information = UNSET_TEXT
         self.default_title = title
         self.title = title
@@ -274,40 +274,46 @@ class ButtonDialog(object):
         self.shown = False
         self.is_visible = False
     
+    
+    # Checkers -----------------------------------------------------------------
+    def check_destroy(self):
+        if self.dialog is not None:
+            self.dialog.destroy()
+            self.dialog = None
+    
+    def check_timer(self):
+        if self.timer is not None:
+            gobject.source_remove(self.timer)
+            self.timer = None   
+    
+    
+    # Display ------------------------------------------------------------------
     def hide(self, timeout=UNSET_TIMEOUT):
         if timeout != UNSET_TIMEOUT:
             self.timer = gobject.timeout_add(timeout, self.hide)
             return False
         
-        if self.dialog is not None:
-            self.dialog.destroy()
-            self.dialog = None
-        
-        if self.timer is not None:
-            gobject.source_remove(self.timer)
-            self.timer = None
-        
+        self.check_destroy()
+        self.check_timer()
         self.is_visible = False
         self.box.hide()
     
     def show(self, button_label, info, title=None, timeout=UNSET_TIMEOUT):
+        self.check_destroy()
+        
+        # Data
+        self.time = time.time()
         self.information = info
+        self.title = self.default_title if title is None else title
         self.button.set_tooltip_text(lang.button_open if info is not None \
                                      else lang.button_remove)
         
-        if self.dialog is not None:
-            self.dialog.destroy()
-            self.dialog = None
-        
-        self.title = self.default_title if title is None else title
-        
-        if self.timer is not None:
-            gobject.source_remove(self.timer)
-        
+        # Timer
+        self.check_timer()
         if timeout != UNSET_TIMEOUT:
             self.timer = gobject.timeout_add(timeout, self.hide)
         
-        self.time = time.time()
+        # Show
         self.box.show()
         self.is_visible = True
         self.label.set_markup(button_label)
@@ -323,28 +329,19 @@ class ButtonDialog(object):
             gobject.idle_add(self.gui.show_gui)
     
     def show_dialog(self, *args):
-        if self.dialog is not None:
-            self.dialog.destroy()
-            self.dialog = None
-        
+        self.check_destroy()
         if self.information is None:
             self.hide()
             return False
         
-        date = time.localtime(self.time)
-        if self.dtype == 'warning':
-            itype = MESSAGE_WARNING
-            msg = time.strftime(self.template, date) + self.information
+        info = time.strftime(self.template, time.localtime(self.time)) \
+                             + self.information
         
-        elif self.dtype == 'error':
-            itype = MESSAGE_ERROR
-            msg = time.strftime(self.template, date) + self.information
-        
-        elif self.dtype == 'information':
-            itype = MESSAGE_INFO
-            msg = self.information
-        
-        self.dialog = MessageDialog(self.gui, itype,
-                                    msg,
-                                    self.title, close_callback = self.hide)
+        itype, msg = {
+            'warning': (MESSAGE_WARNING, info),
+            'error': (MESSAGE_ERROR, info),
+            'information': (MESSAGE_INFO, self.information)
+        }[self.dtype]
+        self.dialog = MessageDialog(self.gui, itype, msg, self.title,
+                                    close_callback = self.hide)
 
