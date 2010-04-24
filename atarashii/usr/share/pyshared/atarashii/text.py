@@ -475,23 +475,38 @@ class TextInput(gtk.TextView):
                     offset = 2
             
             elif pre_text[0] in AT_SIGNS and not ' ' in pre_text:
-                user_text = pre_text[1:]
-                auto = True
-                offset = 1
+                for i in AT_SIGNS:
+                    offset = pre_text.rfind(i)
+                    if offset != -1:
+                        break
+                
+                offset += 1
+                user_text = pre_text[offset:]
+                if len(user_text) > 1:
+                    auto = True
+                
+                else:
+                    self.auto_typed += pre_text[offset - 1]
+                    self.remove_auto_complete()
         
         # @user completion
         self.user_complete = False
         if not auto:
-            pos = pre_text.rfind('@')
-            if pos == -1:
-                pos = pre_text.rfind(u'\uFF20')
+            for i in AT_SIGNS:
+                offset = pre_text.rfind(i)
+                if offset != -1:
+                    break
             
-            if pos != -1:
-                offset = pos + 1
+            if offset != -1:
+                offset += 1
                 user_text = pre_text[offset:]
                 if len(user_text) > 1:
                     auto = True
                     self.user_complete = True
+                
+                else:
+                    self.auto_typed += pre_text[offset - 1]
+                    self.remove_auto_complete()
         
         # Insert completion stuff
         if auto:
