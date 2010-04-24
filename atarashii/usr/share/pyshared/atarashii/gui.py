@@ -21,8 +21,6 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-import calendar
-import time
 import math
 
 import html
@@ -34,7 +32,7 @@ import dialog
 
 from gui_events import GUIEventHandler
 from gui_helpers import GUIHelpers
-from utils import escape
+from utils import escape, gmtime
 from language import LANG as lang
 
 from constants import CRASH_LOG_FILE
@@ -541,7 +539,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         elif self.main.status(ST_RECONNECT):
             wait = self.main.refresh_timeout - \
-                    (calendar.timegm(time.gmtime()) - self.main.reconnect_time)
+                    (gmtime() - self.main.reconnect_time)
             if wait < 60:
                 self.set_status(lang.status_reconnect_seconds % wait)
             
@@ -585,7 +583,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
               and not self.main.status(ST_SEND):
             
             wait = self.main.refresh_timeout - \
-                (calendar.timegm(time.gmtime()) - self.main.refresh_time)
+                   (gmtime() - self.main.refresh_time)
             
             if wait < 0:
                 wait = 0

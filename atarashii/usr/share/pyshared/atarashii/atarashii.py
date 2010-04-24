@@ -36,8 +36,6 @@ if not DBUS_INSTANCE.is_unique:
 import gobject
 gobject.threads_init()
 
-import time
-import calendar
 import os
 
 import notify
@@ -46,11 +44,12 @@ import settings
 import updater
 
 from atarashii_actions import AtarashiiActions
+from utils import gmtime
 from language import LANG as lang
 
 from constants import SHORTS_LIST
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
-                      ST_UPDATE,ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, \
+                      ST_UPDATE, ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, \
                       ST_NONE, ST_SEND, ST_DELETE, ST_LOGIN_COMPLETE, \
                       ST_TRAY_WARNING
 
@@ -221,7 +220,7 @@ class Atarashii(AtarashiiActions):
         
         self.save_settings(True)
         self.gui.set_multi_button(True)
-        self.refresh_time = calendar.timegm(time.gmtime())
+        self.refresh_time = gmtime()
     
     def on_login_failed(self, error=None):
         self.last_username = self.username
@@ -305,7 +304,6 @@ class Atarashii(AtarashiiActions):
         self.notifier.add(info)
     
     def set_user_picture(self, img, date):
-        date = calendar.timegm(date)
         if date >= self.settings['picture_time_' + self.username]:
             self.settings['picture_time_' + self.username] = date
             self.settings['picture_' + self.username] = img

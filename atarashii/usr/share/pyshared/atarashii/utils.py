@@ -24,6 +24,7 @@ import urllib2
 import urlparse
 import httplib
 import threading
+import calendar
 
 from constants import UNSET_HOST, ENTITIES, STRIP, SHORT_REGEX, SHORTS, \
                       BASE58, UNSET_URL
@@ -56,6 +57,19 @@ def menu_escape(text):
 
 def strip_tags(text):
     return STRIP.sub('', text)
+
+
+# Time stuff -------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+def gmtime(value=None):
+    if value is None:
+        return long(calendar.timegm(time.gmtime()))
+    
+    else:
+        return long(calendar.timegm(value.timetuple()))
+
+def localtime(value=None):
+    return time.localtime(gmtime(value))
 
 
 # URL Shortener / Expander------------------------------------------------------

@@ -21,10 +21,10 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
-import calendar
 import time
 import math
 
+from utils import gmtime, localtime
 from language import LANG as lang
 
 
@@ -192,8 +192,7 @@ class ViewHelpers(object):
     # Time ---------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def relative_time(self, date):
-        delta = long(calendar.timegm(time.gmtime())) \
-                - long(calendar.timegm(date.timetuple()))
+        delta = gmtime() - gmtime(date)
         
         if delta <= 1:
             return lang.html_about_second
@@ -223,14 +222,11 @@ class ViewHelpers(object):
             return lang.html_day % math.ceil(delta / (60.0 * 60.0 * 24.0))
         
         else:
-            return time.strftime(lang.html_exact,
-                        time.localtime(calendar.timegm(date.timetuple())))
+            return time.strftime(lang.html_exact, localtime(date))
     
     def absolute_time(self, date, message=False):
-        delta = long(calendar.timegm(time.gmtime())) \
-                - long(calendar.timegm(date.timetuple()))
-        
-        date = time.localtime(calendar.timegm(date.timetuple()))
+        delta = gmtime() - gmtime(date)
+        date = localtime(date)
         if delta <= 60 * 60 * 24:
             return time.strftime(lang.html_time_message if message \
                                  else lang.html_time, date)

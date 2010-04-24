@@ -16,12 +16,10 @@
 
 # Background Twitter Updater ---------------------------------------------------
 # ------------------------------------------------------------------------------
-import time
 import threading
 import urllib
 import os
 import gobject
-import calendar
 import socket
 import hashlib
 
@@ -29,7 +27,7 @@ import hashlib
 from updater_message import UpdaterMessage
 from updater_tweet import UpdaterTweet
 from settings import CACHE_DIR
-from utils import tweepy, TweepError
+from utils import tweepy, TweepError, gmtime
 from language import LANG as lang
 
 from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED, \
@@ -280,9 +278,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         if self.main.refresh_time == UNSET_TIMEOUT:
             return False
         
-        elif calendar.timegm(time.gmtime()) > self.main.refresh_time \
-           + self.main.refresh_timeout or self.refresh_now \
-           or self.refresh_messages:
+        elif gmtime() > self.main.refresh_time + self.main.refresh_timeout \
+             or self.refresh_now or self.refresh_messages:
             
             self.update_id += 1
             self.main.set_status(ST_UPDATE)
@@ -296,7 +293,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         gobject.idle_add(self.main.save_settings, True)
         self.main.unset_status(ST_UPDATE)
         
-        self.main.refresh_time = calendar.timegm(time.gmtime())
+        self.main.refresh_time = gmtime()
         gobject.idle_add(self.gui.set_multi_button,
                          not self.main.status(ST_NETWORK_FAILED))
         
@@ -322,7 +319,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 self.main.unset_status(ST_UPDATE)
                 gobject.idle_add(self.html.render)
                 gobject.idle_add(self.main.handle_error, error)
-                self.main.refresh_time = calendar.timegm(time.gmtime())
+                self.main.refresh_time = gmtime()
                 return False
             
             if len(updates) > 0:
@@ -346,7 +343,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 self.main.unset_status(ST_UPDATE)
                 gobject.idle_add(self.message.render)
                 gobject.idle_add(self.main.handle_error, error)
-                self.main.refresh_time = calendar.timegm(time.gmtime())
+                self.main.refresh_time = gmtime()
                 return False
             
             if len(messages) > 0:
@@ -522,8 +519,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             self.main.refresh_timeout = 60
             return False
         
-        minutes = (ratelimit['reset_time_in_seconds'] \
-                   - calendar.timegm(time.gmtime())) / 60
+        minutes = (ratelimit['reset_time_in_seconds'] - gmtime()) / 60
         
         limit = ratelimit['remaining_hits']
         if limit > 0:
@@ -565,9 +561,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         # Check for user picture
         if user.screen_name.lower() == self.main.username.lower():
-            date = item.created_at.timetuple() if item is not None \
-                                               else time.gmtime()
-            
+            date = gmtime(item.created_at) if item is not None else gmtime()
             self.main.set_user_picture(img, date)
         
         return img

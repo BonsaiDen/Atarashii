@@ -24,8 +24,6 @@ import gnome.ui
 
 import os
 import sys
-import calendar
-import time
 import math
 import socket
 from urllib2 import URLError, HTTPError
@@ -33,6 +31,7 @@ from urllib2 import URLError, HTTPError
 import api
 
 from errors import log_error
+from utils import gmtime
 from language import LANG as lang
 
 from constants import LOGOUT_FILE
@@ -239,7 +238,7 @@ class AtarashiiActions(object):
         ratelimit = self.api.rate_limit_status()
         if ratelimit is not None:
             minutes = math.ceil((ratelimit['reset_time_in_seconds'] \
-                                 - calendar.timegm(time.gmtime())) / 60.0)
+                                 - gmtime()) / 60.0)
         
         else:
             minutes = 5
@@ -248,7 +247,7 @@ class AtarashiiActions(object):
         
         # Schedule a reconnect if the actual login failed
         if not self.status(ST_LOGIN_SUCCESSFUL):
-            self.reconnect_time = calendar.timegm(time.gmtime())
+            self.reconnect_time = gmtime()
             self.set_status(ST_RECONNECT)
             self.reconnect_timeout = gobject.timeout_add(
                                      int(self.refresh_timeout * 1000),
