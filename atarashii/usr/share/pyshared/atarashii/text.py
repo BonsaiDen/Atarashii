@@ -496,8 +496,10 @@ class TextInput(gtk.TextView):
         # Insert completion stuff
         if auto:
             name = None
+            user_text_lower = user_text.lower()
             for i in self.main.settings.user_list:
-                if i.lower().startswith(user_text.lower()):
+                user = i.lower()
+                if user.startswith(user_text_lower) and user != user_text_lower:
                     name = i
                     break
             
@@ -540,6 +542,12 @@ class TextInput(gtk.TextView):
     def remove_auto_complete(self):
         if self.auto_complete:
             self.is_changing = True
+            
+            # When typing out a user that is known use the know casing
+            for i in self.main.settings.user_list:
+                if self.auto_typed.lower() == i.lower():
+                    self.auto_typed = i
+                    break
             
             # Retrieve text before deleting the selection!
             text = self.get_text()
