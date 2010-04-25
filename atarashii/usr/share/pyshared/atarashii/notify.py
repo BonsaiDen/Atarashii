@@ -20,6 +20,7 @@ import dbus
 
 from sounds import play_sound
 from errors import log_error
+from utils import unescape
 
 
 class Notifier(object):
@@ -74,7 +75,8 @@ class Notifier(object):
             play_sound(self.main, item[3])
     
     def send(self, item):
-        return self.notify.Notify('Atarashii', 0, item[2], item[0], item[1],
+        return self.notify.Notify('Atarashii', 0, item[2], item[0],
+                                  unescape(item[1]),
                                   (), {'urgency': dbus.Byte(2)}, -1)
     
     # Try to close the last notification, this might get ignored on newer
