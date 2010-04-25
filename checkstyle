@@ -180,6 +180,8 @@ def check(path, folders, excludes, flags, checkstyle):
         last_def = False
         last_class = False
         last_decorator = False
+        comment_line_count = 0
+        real_empty_count = 0
         empty_count = 0
         
         for l, d in enumerate(lines):
@@ -333,11 +335,37 @@ def check(path, folders, excludes, flags, checkstyle):
             last_class = dd.startswith('class')
             last_decorator = dd.startswith('@')
             
+            # Comment lines
+            if last_comment and dd.find('----') == -1:
+                real_empty_count = 0
+            
+            if last_comment and dd.find('----') != -1:
+                comment_line_count += 1
+            
+            else:
+                if comment_line_count == 1:
+                    if real_empty_count < 2:
+                        errors += '%d: Only %d newline infront of full line comment\n' % (l, real_empty_count)
+                    
+                    elif real_empty_count > 2:
+                        errors += '%d: %d newlines instead of 2 infront of full line comment\n' % (l , real_empty_count)
+                
+                elif comment_line_count == 2:
+                    if real_empty_count < 2:
+                        errors += '%d: Only %d newlines infront of double line comment instead of 2\n' % (l - 1, real_empty_count)
+                    
+                    elif real_empty_count > 2:
+                        errors += '%d: %d newlines instead of 2 infront of double line comment\n' % (l - 1, real_empty_count)
+                
+                comment_line_count = 0
+            
             if dd == '':
                 empty_count += 1
+                real_empty_count += 1
             
             elif not last_comment:
                 empty_count = 0
+                real_empty_count = 0
             
             if not last_comment:
                 last_empty = dd == '' or dd.endswith('\\')
