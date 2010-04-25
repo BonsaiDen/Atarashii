@@ -216,7 +216,7 @@ ENTITIES = {
 
 # Textbox
 MSG_SIGN = 'd'
-AT_SIGNS = u'@\\uFF20'
+AT_SIGNS = u'@\uFF20'
 REPLY_REGEX = re.compile(ur'^[@\uFF20]([a-z0-9_]{1,20})\s.*',
                             re.UNICODE | re.IGNORECASE)
 
