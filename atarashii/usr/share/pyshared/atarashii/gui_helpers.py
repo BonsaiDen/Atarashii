@@ -126,11 +126,6 @@ class GUIHelpers(object):
             self.tray.set_tooltip(lang.tray_logged_out)
         
         # Set Tabs
-        self.set_tabs()
-    
-    
-    # Tabs ---------------------------------------------------------------------
-    def set_tabs(self):
         label = lang.tabs_tweets_new % self.html.count \
                 if self.html.count > 0 else lang.tabs_tweets
         
@@ -141,7 +136,7 @@ class GUIHelpers(object):
                 if self.message.count > 0 else lang.tabs_messages
         
         self.tab_messages.set_label('<b>%s</b>' % label \
-                                    if self.mode == MODE_MESSAGES else label)
+                                    if self.mode == MODE_MESSAGES else label)    
     
     
     # Helpers ------------------------------------------------------------------
@@ -171,6 +166,17 @@ class GUIHelpers(object):
         return self.message.load_state == HTML_LOADED \
                and self.html.load_state == HTML_LOADED
     
+    def get_view_height(self):
+        if self.mode == MODE_TWEETS:
+            view = self.html
+        
+        elif self.mode == MODE_MESSAGES:
+            view = self.message
+        
+        size = view.get_allocation()
+        return size[3] - size[0]
+    
+    # Visible helpers ----------------------------------------------------------
     def get_normalized_position(self):
         screen = self.get_screen()
         pos = self.get_position()
@@ -188,19 +194,39 @@ class GUIHelpers(object):
         else:
             return True
     
-    def get_view_height(self):
-        if self.mode == MODE_TWEETS:
-            view = self.html
-        
-        elif self.mode == MODE_MESSAGES:
-            view = self.message
-        
-        size = view.get_allocation()
-        return size[3] - size[0]
+    def show_in_taskbar(self, mode):
+        self.main.settings['taskbar'] = mode
+        self.set_property('skip-taskbar-hint', not mode)
     
+    def notifcation(self, typ, msg):
+        if self.main.settings.is_true('notify'):
+            typ = 'dialog-error' if typ == MESSAGE_ERROR else 'dialog-warning'
+            self.main.notifier.add(('Atarashii', strip_tags(msg),
+                                     typ, 'theme:' + typ))
+     
+    def multi_border(self, mode):
+        base_color = self.get_style().bg[gtk.STATE_NORMAL]
+        if not mode:
+            self.multi_container.modify_bg(gtk.STATE_NORMAL, base_color)
+            return False
+        
+        # Crazy color blending!
+        col1 = base_color.to_string()[1:]
+        col2 = self.html.get_style().dark[gtk.STATE_NORMAL].to_string()[1:]
+        col1 = (col1[0:4], col1[4:8], col1[8:12])
+        col2 = (col2[0:4], col2[4:8], col2[8:12])
+        col3 = [0, 0, 0]
+        
+        # Aplhablend the two colors since there is no way to get the lighter
+        # border color of the scrollbar
+        for i in xrange(3):
+            col3[i] = int(int((1 - 0.5) * int(col2[i], 16) \
+                                          + 0.5 * int(col1[i], 16)))
+        
+        col = gtk.gdk.color_parse('#' + ''.join([hex(i)[2:] for i in col3]))
+        self.multi_container.modify_bg(gtk.STATE_NORMAL, col)
     
-    # Kitten HackAttack for presenting the window to the user ------------------
-    # --------------------------------------------------------------------------
+    # Hacked Helpers -----------------------------------------------------------
     def force_present(self):
         pos = self.get_normalized_position()
         self.move(pos[0], pos[1])
@@ -225,9 +251,6 @@ class GUIHelpers(object):
             if self.activate_tries < 10:
                 return True
     
-    # Fix tooltips that would stay on screen when switching workspaces
-    # This doesn't work 100% of the time, but it's better than nothing
-    # FIXME this is broken...
     def fix_tooltips(self, *args):
         if self.mode == MODE_TWEETS:
             self.html.fake_move((-1.0, -1.0))
@@ -239,30 +262,6 @@ class GUIHelpers(object):
         else:
             pass
     
-    # Hack a border around the multi button
-    def multi_border(self, mode):
-        base_color = self.get_style().bg[gtk.STATE_NORMAL]
-        if not mode:
-            self.multi_container.modify_bg(gtk.STATE_NORMAL, base_color)
-            return False
-        
-        # Crazy color blending!
-        col1 = base_color.to_string()[1:]
-        col2 = self.html.get_style().dark[gtk.STATE_NORMAL].to_string()[1:]
-        col1 = (col1[0:4], col1[4:8], col1[8:12])
-        col2 = (col2[0:4], col2[4:8], col2[8:12])
-        col3 = [0, 0, 0]
-        
-        # Aplhablend the two colors since there is no way to get the lighter
-        # border color of the scrollbar
-        for i in xrange(3):
-            col3[i] = int(int((1 - 0.5) * int(col2[i], 16) \
-                                          + 0.5 * int(col1[i], 16)))
-        
-        col = gtk.gdk.color_parse('#' + ''.join([hex(i)[2:] for i in col3]))
-        self.multi_container.modify_bg(gtk.STATE_NORMAL, col)
-    
-    # This does nothing! Really nothing will happen if you type THAT in!!
     def is_text_mode(self):
         if self.text.get_text().lstrip() != 'ohlookcolorfulrainbows!':
             return True
@@ -275,16 +274,4 @@ class GUIHelpers(object):
         gobject.idle_add(self.text.unfocus)
         if not toggled:
             self.info_button.show('Oh look! Unicorns!', None, None, 5000)
-    
-    # Toggle visibility of taskbar entry
-    def show_in_taskbar(self, mode):
-        self.main.settings['taskbar'] = mode
-        self.set_property('skip-taskbar-hint', not mode)
-    
-    # Show a popup notification
-    def notifcation(self, typ, msg):
-        if self.main.settings.is_true('notify'):
-            typ = 'dialog-error' if typ == MESSAGE_ERROR else 'dialog-warning'
-            self.main.notifier.add(('Atarashii', strip_tags(msg),
-                                     typ, 'theme:' + typ))
 
