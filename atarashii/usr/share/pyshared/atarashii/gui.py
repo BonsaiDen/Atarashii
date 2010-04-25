@@ -407,6 +407,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         elif friend[0].blocking:
             status = lang.profile_status_blocked
         
+        elif user.protected:
+            status = lang.profile_status_protected
+        
         else:
             status = None
         

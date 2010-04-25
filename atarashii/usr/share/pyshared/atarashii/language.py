@@ -131,6 +131,9 @@ LANG = {
         'profile_status_blocked':
             '<b>Status:</b> Wird von Ihnen <b>geblockt</b>.',
         
+        'profile_status_protected':
+            '<b>Status:</b> Tweets sind <b>geschützt</b>.',
+        
         'profile_error':
             '<b>%s</b> Profil konnte nicht geladen werden, der Benutzer '
             'existiert nicht.',
@@ -545,6 +548,9 @@ LANG = {
         
         'profile_status_blocked':
             '<b>Status:</b> Has been <b>blocked</b> by you.',
+        
+        'profile_status_protected':
+            '<b>Status:</b> Tweets are <b>protected</b>.',
         
         'profile_error':
             'Could not load <b>%s</b> profile, the user does not exist.',
