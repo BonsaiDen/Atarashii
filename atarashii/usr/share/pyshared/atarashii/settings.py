@@ -193,8 +193,11 @@ class Settings(object):
         if hasattr(item, 'recipient'):
             self.add_username(item.recipient.screen_name)
     
-    def add_username(self, name):
+    def add_username(self, name, follow=False):
         name_lower = name.lower()
+        if follow and name_lower in self.removed_list:
+            self.removed_list.remove(name_lower)
+        
         if not name_lower in self.removed_list:
             if not name_lower in self.user_list_lower:
                 self.user_list.append(name)

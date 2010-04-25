@@ -306,7 +306,9 @@ class Profile(SimpleAPICall):
 class Follow(SimpleAPICall):
     def call(self, main, user_id, name, mode):
         if mode:
-            main.api.create_friendship(user_id = user_id)
+            user = main.api.create_friendship(user_id = user_id)
+            main.settings.add_username(user.screen_name, True)
+            main.settings.sort_users()
         
         else:
             main.api.destroy_friendship(user_id = user_id)
