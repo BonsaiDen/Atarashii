@@ -59,16 +59,18 @@ from constants import HT_400_BAD_REQUEST, HT_401_UNAUTHORIZED, \
 
 class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     def __init__(self, main):
+        self.main = main
+        self.settings = self.main.settings
+        
         # Setup
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
-        self.main = main
         self.hide_on_delete()
         self.set_border_width(2)
         self.set_size_request(280, 400)
         self.set_icon_from_file(main.get_image())
         
         # Hide in Taskbar?
-        self.show_in_taskbar(main.settings.is_true('taskbar'))
+        self.show_in_taskbar(self.settings.is_true('taskbar'))
         
         # Load Components
         self.gtb = gtb = gtk.Builder()
@@ -160,15 +162,14 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.profile_status = gtb.get_object('profilestatus')
         gtb.get_object('profileclose').connect('clicked', self.hide_profile)
         
-        
-        # Restore Position & Size ----------------------------------------------
-        if main.settings.isset('position'):
-            self.window_position = main.settings['position'][1:-1].split(',')
+        # Restore Position & Size
+        if self.settings.isset('position'):
+            self.window_position = self.settings['position'][1:-1].split(',')
             self.move(int(self.window_position[0]),
                       int(self.window_position[1]))
         
-        if main.settings.isset('size'):
-            size = main.settings['size'][1:-1].split(',')
+        if self.settings.isset('size'):
+            size = self.settings['size'][1:-1].split(',')
             self.resize(int(size[0]), int(size[1]))
         
         else:
@@ -217,8 +218,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                           0, lambda *args: self.on_tabs(None, None, 1))
         
         # Show GUI
-        if not main.settings.is_true('tray', False) \
-           or main.settings.is_true('crashed', False): # show after crash
+        if not self.settings.is_true('tray', False) \
+           or self.settings.is_true('crashed', False): # show after crash
             self.show_gui()
         
         else:
@@ -246,7 +247,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         gobject.timeout_add(1000, self.update_status)
         
         # Crash Info
-        if self.main.settings.is_true('crashed', False):
+        if self.settings.is_true('crashed', False):
             gobject.timeout_add(250, self.show_crash_report)
         
         # Show
@@ -688,7 +689,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                              % lang.name(name), lang.error_title)
     
     def show_crash_report(self):
-        code = self.main.settings['crash_reason']
+        code = self.settings['crash_reason']
         
         # Python error, link to the traceback file
         if code == '70': #str(EX_SOFTWARE)

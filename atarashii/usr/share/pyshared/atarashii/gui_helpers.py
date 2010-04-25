@@ -83,12 +83,12 @@ class GUIHelpers(object):
     
     def set_label_text(self, info, label_text, label_extra=None):
         if label_extra:
-            self.info_label.set_markup(info \
-                                       % (escape(label_text),
-                                          escape(label_extra)))
+            self.info_label.set_markup(info % (escape(label_text),
+                                               escape(label_extra)))
         
         else:
             self.info_label.set_markup(info % escape(label_text))
+    
     
     # App Title ----------------------------------------------------------------
     def set_app_title(self, view_mode=False):
@@ -136,7 +136,7 @@ class GUIHelpers(object):
                 if self.message.count > 0 else lang.tabs_messages
         
         self.tab_messages.set_label('<b>%s</b>' % label \
-                                    if self.mode == MODE_MESSAGES else label)    
+                                    if self.mode == MODE_MESSAGES else label)
     
     
     # Helpers ------------------------------------------------------------------
@@ -176,6 +176,7 @@ class GUIHelpers(object):
         size = view.get_allocation()
         return size[3] - size[0]
     
+    
     # Visible helpers ----------------------------------------------------------
     def get_normalized_position(self):
         screen = self.get_screen()
@@ -195,15 +196,15 @@ class GUIHelpers(object):
             return True
     
     def show_in_taskbar(self, mode):
-        self.main.settings['taskbar'] = mode
+        self.settings['taskbar'] = mode
         self.set_property('skip-taskbar-hint', not mode)
     
     def notifcation(self, typ, msg):
-        if self.main.settings.is_true('notify'):
+        if self.settings.is_true('notify'):
             typ = 'dialog-error' if typ == MESSAGE_ERROR else 'dialog-warning'
             self.main.notifier.add(('Atarashii', strip_tags(msg),
                                      typ, 'theme:' + typ))
-     
+    
     def multi_border(self, mode):
         base_color = self.get_style().bg[gtk.STATE_NORMAL]
         if not mode:
@@ -225,6 +226,7 @@ class GUIHelpers(object):
         
         col = gtk.gdk.color_parse('#' + ''.join([hex(i)[2:] for i in col3]))
         self.multi_container.modify_bg(gtk.STATE_NORMAL, col)
+    
     
     # Hacked Helpers -----------------------------------------------------------
     def force_present(self):
@@ -266,8 +268,8 @@ class GUIHelpers(object):
         if self.text.get_text().lstrip() != 'ohlookcolorfulrainbows!':
             return True
         
-        toggled = self.main.settings.is_true('unicorns', False)
-        self.main.settings['unicorns'] = not toggled
+        toggled = self.settings.is_true('unicorns', False)
+        self.settings['unicorns'] = not toggled
         self.main.user_picture_time_delta = UNSET_TIMEOUT
         self.main.updater.unwait(images=True)
         self.text.set_text(UNSET_TEXT)

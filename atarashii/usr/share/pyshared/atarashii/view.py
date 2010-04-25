@@ -37,8 +37,7 @@ from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \
                       MODE_MESSAGES
 
 
-# Watch out! This is one giant 'Is this OK mommy?' hackery by the kittens!
-# You've been warned...
+# Watch out! This is one giant 'Is this OK mommy?' hackery by the kittens ------
 # ------------------------------------------------------------------------------
 class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     def __init__(self, main, gui, scroll, mode):

@@ -53,6 +53,7 @@ class ViewHelpers(object):
         self.copy_to_clipboard('%s%s\n%s' \
                                % (lang.tweet_at, user.screen_name, text))
     
+    
     # Scrolling ----------------------------------------------------------------
     # --------------------------------------------------------------------------
     def get_offset(self):

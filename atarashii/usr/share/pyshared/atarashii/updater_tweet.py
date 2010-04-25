@@ -55,8 +55,8 @@ class UpdaterTweet(object):
         return True
     
     
-    # Main Function that fetches the updates -----------------------------------
-    # Don't call this directly! Use updater.try_get_items instead
+    # Don't call this directly! Use updater.try_get_items instead --------------
+    # --------------------------------------------------------------------------
     def get_updates(self, since_id, max_id, max_count):
         gobject.idle_add(self.gui.update_status, True)
         updates = []

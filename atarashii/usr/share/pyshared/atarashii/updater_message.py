@@ -54,8 +54,8 @@ class UpdaterMessage(object):
         return True
     
     
-    # Main Function that fetches the messages ----------------------------------
-    # Don't call this directly! Use updater.try_get_items instead
+    # Don't call this directly! Use updater.try_get_items instead --------------
+    # --------------------------------------------------------------------------
     def get_messages(self, since_id, max_id, max_count):
         messages = []
         if since_id != HTML_UNSET_ID:

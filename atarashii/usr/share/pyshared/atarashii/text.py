@@ -317,6 +317,7 @@ class TextInput(gtk.TextView):
     def on_changed(self, *args):
         text = self.get_text().lstrip()
         
+        
         # Message mode ---------------------------------------------------------
         if self.gui.mode == MODE_MESSAGES:
             

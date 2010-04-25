@@ -32,20 +32,20 @@ from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADING, HTML_LOADED, \
 class GUIEventHandler(object):
     def delete_event(self, widget, event, data=None):
         self.window_position = self.get_position()
-        self.main.settings['position'] = str(self.window_position)
+        self.settings['position'] = str(self.window_position)
         self.hide()
         return True
     
     def destroy_event(self, widget, data=None):
         self.window_position = self.get_position()
-        self.main.settings['position'] = str(self.window_position)
+        self.settings['position'] = str(self.window_position)
         self.hide()
         return True
     
     def state_event(self, window, event):
         if event.changed_mask & gtk.gdk.WINDOW_STATE_ICONIFIED:
             self.minimized = event.new_window_state & \
-                                gtk.gdk.WINDOW_STATE_ICONIFIED
+                                   gtk.gdk.WINDOW_STATE_ICONIFIED
     
     def resize_event(self, window, request):
         size = (request[2], request[3])
@@ -154,7 +154,8 @@ class GUIEventHandler(object):
             elif self.html.load_state == HTML_LOADED:
                 self.show_input()
         
-        else: # TODO implement search here
+        # TODO implement search here
+        else:
             pass
         
         self.set_app_title()

@@ -371,6 +371,7 @@ class SettingsDialog(Dialog):
         
         return item
     
+    
     # Generate Account List ----------------------------------------------------
     def get_drop_active(self):
         i = self.drop.get_selection().get_selected_rows()[1]
