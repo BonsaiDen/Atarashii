@@ -3,11 +3,14 @@ atarashii (0.99.24-1) all;
   + Added auto completion for usernames. This completes @'s as well as 'd user'.
   + When blocking a user there's now an option to additionally report him for 
     spam/abuse.
+  + Added "Copy Hashtag" to the context menu of Hashtags.
+  * Reduce the memory leak that is caused by webkit by using Javascript to 
+    update the view times if the state hasn't changed.
   * Multiple fixes to some bugs concerning the textbox.
   * Bugfix for some minor issues with the avatar tooltip
   * Fixed missing/broken tray icon warnings.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 24 Apr 2010 04:52:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sub, 24 Apr 2010 11:58:00 +0200
 
 atarashii (0.99.23-1) all;
 
