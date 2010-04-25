@@ -410,7 +410,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             status = None
         
         if status is not None:
-            self.profile_status.set_label(status)
+            self.profile_status.set_label('<span size="small">%s</span>' \
+                                          % status)
+            
             self.profile_status.show()
         
         else:

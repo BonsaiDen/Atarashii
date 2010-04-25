@@ -387,8 +387,8 @@ Following &lt;b&gt;1337&lt;/b&gt;</property>
                                 <property name="yalign">0</property>
                                 <property name="xpad">4</property>
                                 <property name="ypad">2</property>
-                                <property name="label" translatable="yes">&lt;b&gt;Biografie:&lt;/b&gt;
-Bunch of coffeine addicted kittens!</property>
+                                <property name="label" translatable="yes">&lt;b&gt;Web:&lt;/b&gt; &lt;a href="http://github.com"&gt;http://github.com/BonsaiDen&lt;/a&gt;
+&lt;b&gt;Biografie:&lt;/b&gt; Bunch of coffeine addicted kittens!</property>
                                 <property name="use_markup">True</property>
                                 <property name="wrap">True</property>
                                 <property name="wrap_mode">word-char</property>
@@ -399,14 +399,21 @@ Bunch of coffeine addicted kittens!</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="profilestatus">
+                              <object class="GtkAlignment" id="alignment1">
                                 <property name="visible">True</property>
-                                <property name="xalign">0</property>
-                                <property name="xpad">4</property>
-                                <property name="label" translatable="yes">&lt;b&gt;Status:&lt;/b&gt; Wird &lt;b&gt;gefollowed&lt;/b&gt; und &lt;b&gt;followed&lt;/b&gt;.</property>
-                                <property name="use_markup">True</property>
-                                <property name="wrap">True</property>
-                                <property name="wrap_mode">word-char</property>
+                                <property name="top_padding">3</property>
+                                <property name="bottom_padding">1</property>
+                                <child>
+                                  <object class="GtkLabel" id="profilestatus">
+                                    <property name="visible">True</property>
+                                    <property name="xalign">0</property>
+                                    <property name="xpad">4</property>
+                                    <property name="label" translatable="yes">&lt;span size="small"&gt;&lt;b&gt;Followed&lt;/b&gt; by you and is &lt;b&gt;following&lt;/b&gt; you.&lt;/span&gt;</property>
+                                    <property name="use_markup">True</property>
+                                    <property name="wrap">True</property>
+                                    <property name="wrap_mode">word-char</property>
+                                  </object>
+                                </child>
                               </object>
                               <packing>
                                 <property name="position">2</property>
