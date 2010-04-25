@@ -226,6 +226,8 @@ class AtarashiiActions(object):
         
         self.gui.hide_profile()
         self.profile_pending = True
+        
+        name = self.settings.get_username(name)
         self.gui.load_button.show(lang.profile_loading % lang.name(name), None)
         api.Profile(self, name, self.gui.show_profile)
     

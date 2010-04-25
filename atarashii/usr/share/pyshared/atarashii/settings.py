@@ -233,11 +233,18 @@ class Settings(object):
         self.user_list_lower = []
         
         # Sort aplhabetically and by length
-        for user, length in sorted([(i, len(i)) for i in users]):
-            user_lower = user.lower()
+        for item in sorted([(i, len(i)) for i in users]):
+            user_lower = item[0].lower()
             if not user_lower in self.user_list_lower:
-                self.user_list.append(user)
-                self.user_list_lower.append(user.lower())
+                self.user_list.append(item[0])
+                self.user_list_lower.append(user_lower)
+    
+    # Return the correct capitalization for a username if it's in the userlist
+    def get_username(self, name):
+        if name.lower() in self.user_list_lower:
+            name = self.user_list[self.user_list_lower.index(name.lower())]
+        
+        return name
     
     
     # CSS ----------------------------------------------------------------------
