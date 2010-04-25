@@ -21,6 +21,8 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
+import urllib2
+
 import api
 
 from utils import URLExpander, escape, menu_escape
@@ -248,6 +250,9 @@ class ViewMenu(object):
         elif link == 'tag':
             self.add_menu_link(menu, lang.context_search,
                                self.context_link, full)
+            
+            tag = urllib2.unquote(full[full.find('?q=') + 3:])
+            self.add_menu_link(menu, lang.context_copy_tag, self.copy_tag, tag)
             return True
     
     

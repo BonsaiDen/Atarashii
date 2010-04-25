@@ -55,6 +55,9 @@ class ViewHelpers(object):
         self.copy_to_clipboard('%s%s\n%s' \
                                % (lang.tweet_at, user.screen_name, text))
     
+    def copy_tag(self, menu, tag):
+        self.copy_to_clipboard(tag)
+    
     
     # Scrolling ----------------------------------------------------------------
     # --------------------------------------------------------------------------
