@@ -28,6 +28,8 @@ from utils import gmtime, localtime
 from language import LANG as lang
 
 
+# Did you ever see faked mouse move events which fixed CSS bugs? ---------------
+# No? Then see down below ------------------------------------------------------
 class ViewHelpers(object):
     def copy_to_clipboard(self, data):
         display = gtk.gdk.display_manager_get().get_default_display()
