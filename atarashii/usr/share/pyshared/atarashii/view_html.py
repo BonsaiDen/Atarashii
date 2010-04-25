@@ -120,7 +120,7 @@ class ViewHTML(object):
             item = obj[0]
             if hasattr(item, 'retweeted_status'):
                 item = item.retweeted_status
-                fav = item.retweeted_status.favorited
+                fav = item.favorited
             
             else:
                 fav = item.favorited if hasattr(item, 'favorited') else False
