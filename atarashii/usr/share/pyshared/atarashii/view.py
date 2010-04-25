@@ -140,6 +140,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.load_state = HTML_UNSET_ID
         self.init_id = HTML_UNSET_ID
         self.last_id = HTML_UNSET_ID
+        self.old_items_changed = True
         
         if splash:
             self.splash()
@@ -181,6 +182,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.set_item_count(self.get_item_count() - self.history_count)
         self.history_count = 0
         self.gui.set_multi_button(not self.main.status(ST_NETWORK_FAILED))
+        self.old_items_changed = True
         self.render()
     
     def read(self):
@@ -193,6 +195,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                 
                 self.items = self.items[pos:]
             
+            self.old_items_changed = True
             self.render(True)
             gobject.idle_add(self.main.save_settings, True)
     
@@ -241,6 +244,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                 self.items.append(item)
             
             self.has_newitems = True
+            self.old_items_changed = True
             if len(self.items) > self.main.max_tweet_count:
                 self.items.pop(0)
     
@@ -251,6 +255,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                 remove_item_id = e
         
         if remove_item_id != UNSET_ID_NUM:
+            self.old_items_changed = True
             self.items.pop(remove_item_id)
             self.render()
     

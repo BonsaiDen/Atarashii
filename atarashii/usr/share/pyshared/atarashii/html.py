@@ -167,12 +167,13 @@ class HTML(view.HTMLView):
         
         # Favorite -------------------------------------------------------------
         if tweet.favorited:
-            favorite = '''<div class="undofav">
+            favorite = '''<div id="fav_''' + str(num) + '''" class="undofav">
                           <a href="unfav:%s:%d" title="''' + \
                           lang.html_unfavorite + '''"> </a></div>'''
         
         else:
-            favorite = '''<div class="dofav"><a href="fav:%s:%d" title="''' + \
+            favorite = '''<div id="fav_''' + str(num) + '''" class="dofav">
+                          <a href="fav:%s:%d" title="''' + \
                           lang.html_favorite + '''"> </a></div>'''
         
         
@@ -193,7 +194,8 @@ class HTML(view.HTMLView):
                 lang.html_profile + '''">%s</a></b></span>''' + \
                 self.is_protected(user) + '''%s</div>
             <div class="time">
-            <a href="status:http://twitter.com/%s/statuses/%d" title="''' + \
+            <a id="time_%d" href="status:http://twitter.com/%s/statuses/%d" 
+               title="''' + \
                 self.absolute_time(tweet.created_at) + '''">%s</a>
                 ''' + by_user + '''</div>
             <div class="reply">%s</div>
@@ -221,6 +223,7 @@ class HTML(view.HTMLView):
                 formatted.html.replace('\n', '<br/>'),
                 
                 # Time
+                num,
                 user.screen_name,
                 tweet.id,
                 self.relative_time(tweet.created_at),

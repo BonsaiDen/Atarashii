@@ -53,6 +53,13 @@ class ViewHTML(object):
                 self.new_items_id = self.init_id
     
     def render(self, update_multi=False):
+        
+        # If item don't have changed just update the times via javascript
+        if not self.old_items_changed:
+            self.update_times()
+            return False
+        
+        self.old_items_changed = False
         self.init_render()
         self.last_name = HTML_UNSET_TEXT
         self.last_recipient = HTML_UNSET_TEXT
@@ -106,6 +113,45 @@ class ViewHTML(object):
         
         except Exception:
             pass
+    
+    def update_times(self):
+        time_list = []
+        for num, obj in enumerate(self.items):
+            item = obj[0]
+            if hasattr(item, 'retweeted_status'):
+                item = item.retweeted_status
+                fav = item.retweeted_status.favorited
+            
+            else:
+                fav = item.favorited if hasattr(item, 'favorited') else False
+            
+            time_list.append([num, self.relative_time(item.created_at),
+                              self.absolute_time(item.created_at),
+                              1 if fav else 0])
+        
+        self.execute_script('''
+            var time_list = %s;
+            for(var i = 0, l = time_list.length; i < l; i++) {
+                var el = document.getElementById('time_' + time_list[i][0]);
+                el.innerHTML = time_list[i][1];
+                el.title = time_list[i][2];
+                var fav = document.getElementById('fav_' + time_list[i][0]);
+                if (fav !== null) {
+                    fav.className = time_list[i][3] ? 'undofav' : 'dofav';
+                    var links = fav.getElementsByTagName('a');
+                    if (links.length > 0) {
+                        var parts = links[0].href.split(':');
+                        parts[0] = time_list[i][3] ? 'unfav' : 'fav';
+                        links[0].href = parts.join(':');
+                        delete parts;
+                    }
+                    delete links;
+                }
+                delete fav;
+                delete el;
+            }
+            delete time_list;
+            ''' % time_list)
     
     def start(self):
         self.scroll.get_vscrollbar().set_value(0)

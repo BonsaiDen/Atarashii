@@ -144,7 +144,7 @@ class HTML(view.HTMLView):
                 + '''">%s</a></b></span>''' \
                 + self.is_protected(user) \
                 + '''%s</div>
-            <div class="time" title="''' + \
+            <div id="time_%d" class="time" title="''' + \
             self.absolute_time(item.created_at, True) + '''">%s</div>
         </div>
         </div>'''
@@ -166,6 +166,7 @@ class HTML(view.HTMLView):
                 formatted.html.replace('\n', '<br/>'),
                 
                 # Time
+                num,
                 self.relative_time(item.created_at))
         
         # Return the HTML string
