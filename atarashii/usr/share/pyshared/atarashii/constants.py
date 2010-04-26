@@ -95,6 +95,7 @@ BUTTON_HISTORY = 3
 MODE_TWEETS = 0          # Can be anything
 MODE_MESSAGES = 1        # Can be anything
 MODE_SEARCH = 2          # Can be anything, currently unused
+MODE_PROFILE = 4
 
 # HTML
 HTML_UNSET_ID = -1       # Must be lower than 0

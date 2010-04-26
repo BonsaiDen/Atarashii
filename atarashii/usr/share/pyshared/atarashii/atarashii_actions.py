@@ -36,7 +36,7 @@ from language import LANG as lang
 
 from constants import LOGOUT_FILE
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR, UNSET_USERNAME, \
-                      USERLIST_TIMEOUT
+                      USERLIST_TIMEOUT, HTML_LOADING, MODE_PROFILE, MODE_TWEETS
 
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
@@ -226,14 +226,21 @@ class AtarashiiActions(object):
         
         self.gui.hide_profile()
         self.profile_pending = True
+        self.gui.profile.load_state = HTML_LOADING
+        self.gui.profile.start()
+        gobject.timeout_add(50, self.gui.set_mode, MODE_PROFILE)
+        gobject.timeout_add(50, self.gui.on_mode)
         
         name = self.settings.get_username(name)
-        self.gui.load_button.show(lang.profile_loading % lang.name(name), None)
+       # self.gui.load_button.show(lang.profile_loading % lang.name(name), None)
         api.Profile(self, name, self.gui.show_profile)
     
     def stop_profile(self, *args):
         self.profile_pending = False
-        self.gui.load_button.hide()
+        gobject.idle_add(self.gui.set_mode, MODE_TWEETS)
+        gobject.idle_add(self.gui.on_mode)
+        self.gui.profile.load_state = HTML_LOADING
+        self.gui.profile.start()
     
     # Update the user list with all the users friends
     def update_user_list(self):

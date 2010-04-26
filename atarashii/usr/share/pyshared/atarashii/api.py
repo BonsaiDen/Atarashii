@@ -292,9 +292,11 @@ class Profile(SimpleAPICall):
     def call(self, main, name, callback):
         self.user = self.main.api.get_user(screen_name = name)
         self.friend = self.main.api.show_friendship(target_screen_name = name)
+        self.tweets = self.main.api.user_timeline(screen_name = name,
+                                                  count = 10)
     
     def on_success(self, main, name, callback):
-        gobject.idle_add(callback, self.user, self.friend)
+        gobject.idle_add(callback, self.user, self.friend, self.tweets)
     
     def on_error(self, main, name, callback):
         gobject.idle_add(main.stop_profile)

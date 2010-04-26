@@ -54,7 +54,7 @@ from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_TRAY_WARNING
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
-                      MODE_TWEETS, MODE_MESSAGES, UNSET_USERNAME
+                      MODE_TWEETS, MODE_MESSAGES, UNSET_USERNAME, MODE_PROFILE
 
 
 class Atarashii(AtarashiiActions):
@@ -167,7 +167,11 @@ class Atarashii(AtarashiiActions):
             self.settings['username'] = change_user
         
         # Set Mode
-        self.gui.set_mode(self.settings['mode_' + self.username])
+        mode = self.settings['mode_' + self.username]
+        if mode == MODE_PROFILE:
+            mode = MODE_TWEETS
+            
+        self.gui.set_mode(mode)
         
         # Status
         self.unset_status(ST_LOGIN_SUCCESSFUL | ST_LOGIN_COMPLETE | ST_SEND | \

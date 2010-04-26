@@ -25,6 +25,7 @@ import math
 
 import html
 import message
+import profile
 import tray
 import text
 import dialog
@@ -44,7 +45,7 @@ from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       UNSET_USERNAME, MESSAGE_WARNING, MESSAGE_QUESTION, \
                       UNSET_TIMEOUT, HTML_UNSET_ID, MESSAGE_ERROR, \
                       MESSAGE_WARNING, BUTTON_REFRESH, BUTTON_READ, \
-                      BUTTON_HISTORY
+                      BUTTON_HISTORY, MODE_PROFILE, HTML_LOADED
 
 from constants import ERR_TWEET_NOT_FOUND, ERR_MESSAGE_NOT_FOUND, \
                       ERR_ALREADY_RETWEETED, ERR_TWEET_DUPLICATED, \
@@ -107,7 +108,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.html_scroll.set_shadow_type(gtk.SHADOW_IN)
         self.html.splash()
         
-        
         # Messages
         self.message_scroll = gtb.get_object('messagescroll')
         self.message = message.HTML(self.main, self)
@@ -115,11 +115,19 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.message_scroll.set_shadow_type(gtk.SHADOW_IN)
         self.message.splash()
         
+        # Profile
+        self.profile_scroll = gtb.get_object('profilescroll')
+        self.profile = profile.HTML(self.main, self)
+        self.profile_scroll.add(self.profile)
+        self.profile_scroll.set_shadow_type(gtk.SHADOW_IN)
+        self.profile.splash()
+        
         # Tabs
         self.tabsbox = gtb.get_object('tabsbox')
         self.tabs = gtb.get_object('pages')
         self.tab_tweets = gtb.get_object('tab_tweets')
         self.tab_messages = gtb.get_object('tab_messages')
+        self.tab_profile = gtb.get_object('tab_profile')
         self.tabs.connect('switch-page', self.on_tabs)
         self.tabs.set_property('can-focus', False)
         self.tab_tweets.set_property('can-focus', False)
@@ -285,8 +293,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         else:
             self.text.resize(1)
         
-        self.text.set_sensitive(True)
-        self.set_multi_button(True)
+        self.text.set_sensitive(self.mode != MODE_PROFILE)
+        self.set_multi_button(self.mode != MODE_PROFILE)
         if self.main.status(ST_LOGIN_SUCCESSFUL):
             self.tabsbox.show()
         
@@ -322,6 +330,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             return True
         
+        elif self.mode == MODE_PROFILE \
+             and self.profile.load_state == HTML_LOADING:
+            
+            return True
+        
         elif self.mode == MODE_TWEETS and self.html.load_state == HTML_LOADING:
             return True
         
@@ -353,76 +366,16 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Profile ------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def show_profile(self, user, friend):
+    def show_profile(self, user, friend, tweets):
         if not self.main.profile_pending:
             return False
         
         self.main.profile_current_user = user.screen_name
-        self.load_button.hide()
         
-        # Image / Name / Tweets
-        img_file = self.main.updater.get_image(None, False, user)
-        buf = gtk.gdk.pixbuf_new_from_file_at_size(img_file, 48, 48)
-        self.profile_image.set_from_pixbuf(buf)
-        
-        url = ('<a href="http://twitter.com/%s">'
-               + lang.profile_link + '</a>') % user.screen_name
-        
-        self.profile_name.set_label(lang.profile_name % (user.screen_name, url))
-        self.profile_info.set_label(lang.profile_info \
-                                    % (user.name, user.statuses_count,
-                                       user.followers_count,
-                                       user.friends_count))
-        
-        # Detailed information
-        details = []
-        if user.url is not None and user.url.strip() != '':
-            details.append(lang.profile_website % (escape(user.url),
-                                                   escape(user.url)))
-        
-        if user.location is not None and user.location.strip() != '':
-            details.append(lang.profile_location % escape(user.location))
-        
-        if user.description is not None and user.description.strip() != '':
-            details.append(lang.profile_description % escape(user.description))
-        
-        self.profile_bio.set_label('\n'.join(details))
-        
-        if len(details) == 0:
-            self.profile_bio.hide()
-        
-        else:
-            self.profile_bio.show()
-        
-        # Status
-        if friend[0].following and friend[0].followed_by:
-            status = lang.profile_status_both
-        
-        elif friend[0].following:
-            status = lang.profile_status_following
-        
-        elif friend[0].followed_by:
-            status = lang.profile_status_followed
-        
-        elif friend[0].blocking:
-            status = lang.profile_status_blocked
-        
-        elif user.protected:
-            status = lang.profile_status_protected
-        
-        else:
-            status = None
-        
-        if status is not None:
-            self.profile_status.set_label('<span size="small">%s</span>' \
-                                          % status)
-            
-            self.profile_status.show()
-        
-        else:
-            self.profile_status.hide()
-        
-        self.profile_box.show()
+        self.profile.load_state = HTML_LOADED
+        self.profile.render(user, friend, tweets)
+        if self.mode == MODE_PROFILE:
+            self.show_input()
     
     def hide_profile(self, *args):
         self.main.profile_current_user = UNSET_USERNAME
@@ -468,7 +421,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             mode = False
         
         if self.main.status(ST_UPDATE) or no_read \
-           or self.main.status(ST_HISTORY):
+           or self.main.status(ST_HISTORY) or self.mode == MODE_PROFILE:
             
             history_mode = False
             read_mode = False
@@ -585,6 +538,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
              and self.html.load_state == HTML_LOADING):
             
             self.set_status(lang.status_connected)
+        
+        elif self.mode == MODE_PROFILE \
+             and self.profile.load_state == HTML_LOADING:
+            
+            self.set_status(lang.status_profile)
         
         elif (not self.text.is_typing or not self.text.has_focus) \
               and not self.main.status(ST_SEND):

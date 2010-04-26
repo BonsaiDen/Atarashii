@@ -495,6 +495,20 @@ Following &lt;b&gt;1337&lt;/b&gt;</property>
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkScrolledWindow" id="profilescroll">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hscrollbar_policy">automatic</property>
+                    <property name="vscrollbar_policy">automatic</property>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkHBox" id="tabsbox">
                     <property name="visible">True</property>
                     <child>
@@ -520,7 +534,7 @@ Following &lt;b&gt;1337&lt;/b&gt;</property>
                             </child>
                             <child type="tab">
                               <object class="GtkLabel" id="tab_tweets">
-                                <property name="width_request">100</property>
+                                <property name="width_request">70</property>
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Tweets</property>
                                 <property name="use_markup">True</property>
@@ -544,7 +558,7 @@ Following &lt;b&gt;1337&lt;/b&gt;</property>
                             </child>
                             <child type="tab">
                               <object class="GtkLabel" id="tab_messages">
-                                <property name="width_request">100</property>
+                                <property name="width_request">80</property>
                                 <property name="visible">True</property>
                                 <property name="label" translatable="yes">Messages</property>
                                 <property name="use_markup">True</property>
@@ -557,10 +571,29 @@ Following &lt;b&gt;1337&lt;/b&gt;</property>
                               </packing>
                             </child>
                             <child>
-                              <placeholder/>
+                              <object class="GtkAlignment" id="alignment6">
+                                <property name="visible">True</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="position">2</property>
+                              </packing>
                             </child>
                             <child type="tab">
-                              <placeholder/>
+                              <object class="GtkLabel" id="tab_profile">
+                                <property name="width_request">40</property>
+                                <property name="visible">True</property>
+                                <property name="label" translatable="yes">Profile</property>
+                                <property name="use_markup">True</property>
+                                <property name="ellipsize">middle</property>
+                                <property name="track_visited_links">False</property>
+                              </object>
+                              <packing>
+                                <property name="position">2</property>
+                                <property name="tab_fill">False</property>
+                              </packing>
                             </child>
                           </object>
                           <packing>
@@ -629,7 +662,7 @@ Following &lt;b&gt;1337&lt;/b&gt;</property>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">False</property>
-                    <property name="position">2</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
               </object>

@@ -138,6 +138,10 @@ LANG = {
             '<b>%s</b> Profil konnte nicht geladen werden, der Benutzer '
             'existiert nicht.',
         
+        'profile_loading': 'Lade Profil...',
+        'profile_empty': 'Keine aktuellen Tweets',
+        'profile_load_more': '',
+        
         # Messages
         'message_loading': 'Nachrichten werden geladen...',
         'message_load_more': 'Mehr',
@@ -173,6 +177,7 @@ LANG = {
         'status_message': 'Sende Nachricht an %s...',
         'status_message_reply': 'Antworte %s...',
         'status_send': 'Sende Status...',
+        'status_profile': 'Lade Profil...',
         'status_left': 'Noch %d Zeichen.',
         'status_more': '%d Zeichen zu viel.',
         'status_more_tweet': '%d Zeichen zu viel, %d mehr um zu teilen.',

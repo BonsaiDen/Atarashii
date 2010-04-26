@@ -125,13 +125,18 @@ class HTML(view.HTMLView):
         
         
         # Avatar ---------------------------------------------------------------
-        self.is_new_avatar(num)
-        has_avatar = (num < len(self.items) - 1 \
-                     and (user.screen_name != self.get_screen_name(num + 1) \
-                     or self.new_avatar)) \
-                     or num == len(self.items) - 1 or self.new_timeline
-        
-        avatar, text_class = self.get_avatar(has_avatar, user, num, img)
+        if self.show_avatars:
+            self.is_new_avatar(num)
+            has_avatar = (num < len(self.items) - 1 and \
+                         (user.screen_name != self.get_screen_name(num + 1) \
+                         or self.new_avatar)) \
+                         or num == len(self.items) - 1 or self.new_timeline
+            
+            avatar, text_class = self.get_avatar(has_avatar, user, num, img)
+            
+        else:
+            avatar = ''
+            text_class = 'inner-text-no'
         
         
         # Background -----------------------------------------------------------
@@ -188,11 +193,7 @@ class HTML(view.HTMLView):
                 '''"> </a></div>''' + favorite + '''
         </div>
         <div class="''' + text_class + '''">
-            <div><span class="name">''' + \
-                ('<b>RT</b> ' if retweeted else '') + \
-                '''<b><a href="profile:%d:http://twitter.com/%s" title="''' + \
-                lang.html_profile + '''">%s</a></b></span>''' + \
-                self.is_protected(user) + '''%s</div>
+            %s%s</div>
             <div class="time">
             <a id="time_%d" href="status:http://twitter.com/%s/statuses/%d" 
                title="''' + \
@@ -205,6 +206,19 @@ class HTML(view.HTMLView):
         </div>'''
         
         
+        if self.show_avatars:
+            name =  '''<div><span class="name">''' + \
+                    ('<b>RT</b> ' if retweeted else '') + \
+                    '''<b><a href="profile:%d:http://twitter.com/%s" title="''' + \
+                    lang.html_profile + '''">%s</a></b></span>''' + \
+                    self.is_protected(user)
+                    
+            name = name % (num, user.screen_name, lang.name(user.screen_name),
+                           user.screen_name,)
+        
+        else:
+            name = ''
+        
         # Insert values
         html = html % (
                 clas,
@@ -216,10 +230,7 @@ class HTML(view.HTMLView):
                 user.screen_name, tweet.id,
                 
                 # Text
-                num,
-                user.screen_name,
-                lang.name(user.screen_name),
-                user.screen_name,
+                name,
                 formatted.html.replace('\n', '<br/>'),
                 
                 # Time

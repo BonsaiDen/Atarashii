@@ -91,6 +91,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.set_maintains_back_forward_list(False)
         self.parser = ttp.Parser()
         self.item_count = HTML_UNSET_ID
+        self.show_avatars = True
         
         self.lang_loading = HTML_UNSET_TEXT
         self.lang_load = HTML_UNSET_TEXT

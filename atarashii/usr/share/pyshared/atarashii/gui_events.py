@@ -26,7 +26,7 @@ import dialog_settings
 
 from constants import ST_UPDATE
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADING, HTML_LOADED, \
-                      BUTTON_REFRESH, BUTTON_HISTORY
+                      BUTTON_REFRESH, BUTTON_HISTORY, MODE_PROFILE
 
 
 class GUIEventHandler(object):
@@ -123,10 +123,14 @@ class GUIEventHandler(object):
         elif page_num == 1 and self.mode != MODE_MESSAGES:
             self.set_mode(MODE_MESSAGES)
     
+        elif page_num == 2 and self.mode != MODE_PROFILE:
+            self.set_mode(MODE_PROFILE)
+    
     def on_mode(self, *args):
         if self.mode == MODE_MESSAGES:
             self.tabs.set_current_page(1)
             self.html_scroll.hide()
+            self.profile_scroll.hide()
             self.message_scroll.show()
             self.text.has_typed = False
             self.message.focus_me()
@@ -142,6 +146,7 @@ class GUIEventHandler(object):
         elif self.mode == MODE_TWEETS:
             self.tabs.set_current_page(0)
             self.message_scroll.hide()
+            self.profile_scroll.hide()
             self.html_scroll.show()
             self.text.has_typed = False
             self.html.focus_me()
@@ -152,6 +157,24 @@ class GUIEventHandler(object):
                 self.show_progress()
             
             elif self.html.load_state == HTML_LOADED:
+                self.show_input()
+        
+        elif self.mode == MODE_PROFILE:
+            self.tabs.set_current_page(2)
+            self.message_scroll.hide()
+            self.profile_scroll.show()
+            self.html_scroll.hide()
+            self.text.has_typed = False
+            self.profile.focus_me()
+            self.profile.fix_scroll()
+            self.set_multi_button(False)
+            
+            if self.profile.load_state == HTML_LOADING:
+                self.profile.start()
+                self.show_progress()
+            
+            elif self.profile.load_state == HTML_LOADED:
+                self.profile.render()
                 self.show_input()
         
         # TODO implement search here
