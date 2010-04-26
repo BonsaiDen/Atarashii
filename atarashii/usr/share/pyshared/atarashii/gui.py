@@ -467,7 +467,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         if not self.is_ready() or read_mode or history_info is not None:
             mode = False
         
-        if self.main.status(ST_UPDATE) or no_read:
+        if self.main.status(ST_UPDATE) or no_read \
+           or self.main.status(ST_HISTORY):
+            
             history_mode = False
             read_mode = False
             mode = False

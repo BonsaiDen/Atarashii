@@ -101,15 +101,25 @@ class UpdaterTweet(object):
     def load_history(self):
         updates = []
         try:
+            if self.html.history_level < 2:
+                load_count = self.main.load_tweet_count
+            
+            elif self.html.history_level < 4:
+                load_count = self.main.load_tweet_count * 1.5
+            
+            else:
+                load_count = self.main.load_tweet_count * 2
+            
             updates = self.try_get_items(
                            self.get_updates,
                            max_id = self.html.load_history_id,
-                           max_count = self.main.load_tweet_count)
+                           max_count = load_count)
         
         except (IOError, TweepError), error:
             self.html.load_history_id = HTML_UNSET_ID
             self.main.unset_status(ST_HISTORY)
             gobject.idle_add(self.main.handle_error, error)
+            gobject.idle_add(self.gui.set_multi_button, True)
             return False
         
         self.main.max_tweet_count += len(updates)

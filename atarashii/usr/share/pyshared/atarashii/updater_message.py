@@ -88,15 +88,25 @@ class UpdaterMessage(object):
     def load_history_message(self):
         messages = []
         try:
+            if self.html.history_level < 2:
+                load_count = self.main.load_message_count
+            
+            elif self.html.history_level < 4:
+                load_count = self.main.load_message_count * 1.5
+            
+            else:
+                load_count = self.main.load_message_count * 2
+            
             messages = self.try_get_items(
                             self.get_messages,
                             max_id = self.message.load_history_id,
-                            max_count = self.main.load_message_count)
+                            max_count = load_count)
         
         except (IOError, TweepError), error:
             self.message.load_history_id = HTML_UNSET_ID
             self.main.unset_status(ST_HISTORY)
             gobject.idle_add(self.main.handle_error, error)
+            gobject.idle_add(self.gui.set_multi_button, True)
             return False
         
         self.main.max_message_count += len(messages)

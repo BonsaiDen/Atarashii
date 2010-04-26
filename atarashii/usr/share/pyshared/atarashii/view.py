@@ -132,6 +132,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.history_loaded = False
         self.history_position = HTML_UNSET_ID
         self.history_count = 0
+        self.history_level = 0
         self.first_load = True
         self.newest_id = HTML_UNSET_ID
         self.has_newitems = False
@@ -181,6 +182,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.items = self.items[self.history_count:]
         self.set_item_count(self.get_item_count() - self.history_count)
         self.history_count = 0
+        self.history_level = 0
         self.gui.set_multi_button(not self.main.status(ST_NETWORK_FAILED))
         self.old_items_changed = True
         self.render()
@@ -235,6 +237,9 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             if append:
                 if not replaced:
                     self.history_count += 1
+                    if not self.load_history:
+                        self.history_level += 1
+                    
                     self.load_history = True
                     self.history_loaded = True
                 
@@ -294,6 +299,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                 if self.load_history_id != HTML_UNSET_ID:
                     self.main.set_status(ST_HISTORY)
                     self.gui.show_progress()
+                    gobject.idle_add(self.gui.set_multi_button, False)
                     gobject.idle_add(self.gui.update_status, True)
                     self.text.html_focus()
         
