@@ -21,6 +21,8 @@ pygtk.require('2.0')
 import gtk
 import gobject
 
+import textwrap
+
 from utils import URLShorter
 from language import LANG as lang
 
@@ -55,6 +57,7 @@ class TextInput(gtk.TextView):
         self.message_len = 0
         self.message_to_send = None
         self.tweet_to_send = None
+        self.next_text = UNSET_TEXT
         
         # Auto complete stuff
         self.auto_complete_name = UNSET_TEXT
@@ -217,6 +220,13 @@ class TextInput(gtk.TextView):
             self.on_submit(self, True)
             return True
         
+        if self.main.message_user == UNSET_TEXT \
+           and self.gui.mode == MODE_MESSAGES \
+           and event.keyval == gtk.keysyms.Return \
+           and event.state & gtk.gdk.SHIFT_MASK == gtk.gdk.SHIFT_MASK:
+            
+            return True
+        
         # Take care of misplaced newlines
         if event.keyval == gtk.keysyms.Return and control:
             pos = self.get_cursor_pos()
@@ -250,6 +260,15 @@ class TextInput(gtk.TextView):
     # --------------------------------------------------------------------------
     def on_submit(self, textbox, multi=False):
         text = self.get_text().lstrip()
+        
+        # Split the text
+        self.next_text = UNSET_TEXT
+        if len(text) > 140 + self.message_len:
+            parts = textwrap.wrap(text, 140)
+            self.next_text = text[len(parts[0]):].strip()
+            text = parts[0]
+            multi = True
+        
         if len(text) <= 140 + self.message_len and text.strip() != UNSET_TEXT \
            and self.gui.is_text_mode():
             
@@ -609,11 +628,16 @@ class TextInput(gtk.TextView):
                 space = len(text)
             
             text = ('%s%s ' % (lang.tweet_at,  self.main.reply_user)) \
-                   + (text[space + 1:] if not multi else UNSET_TEXT)
+                   + (text[space + 1:] if not multi else self.next_text)
         
         else:
             text = ('%s%s ' % (lang.tweet_at, self.main.reply_user)) + text
         
+        self.end_change(text)
+    
+    def more(self):
+        text = self.init_change()
+        text = self.next_text
         self.end_change(text)
     
     # Edit
@@ -636,7 +660,7 @@ class TextInput(gtk.TextView):
         if msg is not None:
             space = 2 + len(msg.group(1))
             text = ('%s %s ' % (MSG_SIGN, self.main.message_user)) \
-                   + (text[space + 1:] if not multi else UNSET_TEXT)
+                   + (text[space + 1:] if not multi else self.next_text)
         
         else:
             text = ('%s %s ' % (MSG_SIGN, self.main.message_user)) + text
@@ -733,7 +757,10 @@ class TextInput(gtk.TextView):
             self.gui.set_status(lang.status_left % (max_length - len(text)))
         
         else:
-            self.gui.set_status(lang.status_more % (len(text) - max_length))
+            more = lang.status_more_tweet if self.gui.mode == MODE_TWEETS \
+                                          else lang.status_more_message
+            
+            self.gui.set_status(more % (len(text) - max_length))
     
     def check_color(self, count):
         if count > 140 + self.message_len:
