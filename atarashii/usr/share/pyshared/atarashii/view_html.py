@@ -57,6 +57,7 @@ class ViewHTML(object):
         # If item don't have changed just update the times via javascript
         if not self.old_items_changed:
             self.update_times()
+            self.gui.set_app_title(True)
             return False
         
         self.old_items_changed = False
