@@ -263,7 +263,9 @@ class TextInput(gtk.TextView):
         
         # Split the text
         self.next_text = UNSET_TEXT
-        if len(text) > 140 + self.message_len:
+        if len(text) >= 150 + self.message_len \
+           and self.main.retweet_user == UNSET_TEXT:
+            
             parts = textwrap.wrap(text, 140)
             self.next_text = text[len(parts[0]):].strip()
             text = parts[0]
@@ -629,6 +631,8 @@ class TextInput(gtk.TextView):
             
             text = ('%s%s ' % (lang.tweet_at,  self.main.reply_user)) \
                    + (text[space + 1:] if not multi else self.next_text)
+            
+            self.next_text = UNSET_TEXT
         
         else:
             text = ('%s%s ' % (lang.tweet_at, self.main.reply_user)) + text
@@ -639,6 +643,7 @@ class TextInput(gtk.TextView):
         text = self.init_change()
         text = self.next_text
         self.end_change(text)
+        self.next_text = UNSET_TEXT
     
     # Edit
     def edit(self):
@@ -661,6 +666,8 @@ class TextInput(gtk.TextView):
             space = 2 + len(msg.group(1))
             text = ('%s %s ' % (MSG_SIGN, self.main.message_user)) \
                    + (text[space + 1:] if not multi else self.next_text)
+            
+            self.next_text = UNSET_TEXT
         
         else:
             text = ('%s %s ' % (MSG_SIGN, self.main.message_user)) + text
@@ -756,16 +763,33 @@ class TextInput(gtk.TextView):
         if len(text) <= max_length:
             self.gui.set_status(lang.status_left % (max_length - len(text)))
         
-        else:
+        elif self.main.retweet_user != UNSET_TEXT:
+            self.gui.set_status(lang.status_more % (len(text) - max_length))
+        
+        elif len(text) < max_length + 10:
             more = lang.status_more_tweet if self.gui.mode == MODE_TWEETS \
                                           else lang.status_more_message
+            
+            self.gui.set_status(more % (len(text) - max_length,
+                                        max_length + 10 - len(text)))
+        
+        else:
+            more = lang.status_more_tweet_split \
+                        if self.gui.mode == MODE_TWEETS \
+                        else lang.status_more_message_split
             
             self.gui.set_status(more % (len(text) - max_length))
     
     def check_color(self, count):
-        if count > 140 + self.message_len:
+        if count >= 150 + self.message_len \
+           and self.main.retweet_user == UNSET_TEXT:
+            
             self.modify_base(gtk.STATE_NORMAL,
-                             gtk.gdk.Color(255 * 255, 200 * 255, 200 * 255))
+                             gtk.gdk.Color(200 * 255, 200 * 255, 255 * 255))
+        
+        elif count > 140 + self.message_len:
+            self.modify_base(gtk.STATE_NORMAL,
+                             gtk.gdk.Color(255 * 255, 190 * 255, 190 * 255))
         
         else:
             self.modify_base(gtk.STATE_NORMAL, self.default_bg)

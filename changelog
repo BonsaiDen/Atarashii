@@ -1,10 +1,11 @@
 atarashii (0.99.24a-1) all;
 
-  ~ Tweets/Messages that are over the 140 character limit will now be split when
+  + Tweets/Messages that are over the 150 character limit will now be split when
     send. After the first 140 characters have been send, the textbox will 
-    contain the leftover part of the Tweet/Message.
+    contain the leftover part of the Tweet/Message. Retweets wont be split,
+    you'll need to shorten them accordingly.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 26 Apr 2010 15:06:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 26 Apr 2010 16:38:00 +0200
 
 atarashii (0.99.24-1) all;
 
