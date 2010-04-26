@@ -578,5 +578,5 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         
         gobject.idle_add(self.html.render)
         gobject.idle_add(self.message.render)
-        gobject.idle_add(self.gui.set_app_title)
+        gobject.idle_add(self.gui.update_app)
 

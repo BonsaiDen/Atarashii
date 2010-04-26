@@ -198,7 +198,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Set Message/Tweet Mode
         self.set_mode(self.mode)
-        self.set_app_title()
+        self.update_app()
         self.on_mode()
         
         

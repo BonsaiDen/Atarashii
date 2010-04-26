@@ -90,8 +90,8 @@ class GUIHelpers(object):
             self.info_label.set_markup(info % escape(label_text))
     
     
-    # App Title ----------------------------------------------------------------
-    def set_app_title(self, view_mode=False):
+    # App Title / Tabs / Tray Icon updating ------------------------------------
+    def update_app(self, view_mode=False):
         if self.main.username == UNSET_USERNAME \
            or not self.main.any_status(ST_LOGIN_SUCCESSFUL, ST_CONNECT):
             

@@ -158,7 +158,7 @@ class GUIEventHandler(object):
         else:
             pass
         
-        self.set_app_title()
+        self.update_app()
         self.text.check_mode()
         self.text.loose_focus()
         

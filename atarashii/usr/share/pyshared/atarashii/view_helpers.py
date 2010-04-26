@@ -119,7 +119,7 @@ class ViewHelpers(object):
         self.load_history = False
         self.has_newitems = False
         self.fake_move(self.mouse_position)
-        self.gui.set_app_title(True)
+        self.gui.update_app(True)
     
     def on_scroll(self, view, event):
         # FIXME sometimes this still doesn't remove the menu

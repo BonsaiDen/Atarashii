@@ -145,7 +145,7 @@ class Atarashii(AtarashiiActions):
         if self.username == UNSET_USERNAME \
            and (change_user is None or change_user == UNSET_TEXT):
             
-            self.gui.set_app_title()
+            self.gui.update_app()
             return False
         
         # Disable the account menu
@@ -199,7 +199,7 @@ class Atarashii(AtarashiiActions):
             self.gui.message.start()
         
         self.gui.text.reset()
-        self.gui.set_app_title()
+        self.gui.update_app()
         self.updater.unwait(init = True)
     
     def on_login(self):
@@ -215,7 +215,7 @@ class Atarashii(AtarashiiActions):
     def on_login_complete(self):
         self.set_status(ST_LOGIN_COMPLETE)
         self.gui.tray.activate_menu(True)
-        self.gui.set_app_title()
+        self.gui.update_app()
         if self.gui.settings_dialog is not None:
             self.gui.settings_dialog.activate(True)
         
@@ -238,7 +238,7 @@ class Atarashii(AtarashiiActions):
         
         self.gui.tray.activate_menu(True)
         self.gui.set_multi_button(False, None, False)
-        self.gui.set_app_title()
+        self.gui.update_app()
         self.gui.hide_all()
         self.gui.update_status()
         
@@ -272,7 +272,7 @@ class Atarashii(AtarashiiActions):
         
         gobject.idle_add(self.gui.message.init, True)
         gobject.idle_add(self.gui.html.init, True)
-        gobject.idle_add(self.gui.set_app_title)
+        gobject.idle_add(self.gui.update_app)
         self.gui.tray.update_account_menu()
         self.gui.tray.activate_menu(True)
     
