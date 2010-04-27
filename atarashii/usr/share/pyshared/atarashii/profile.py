@@ -109,7 +109,8 @@ class HTML(html.HTML):
             status = None
         
         if status is not None:
-            status = '<div class="profile_status">%s</div>' % status
+            status = '<div class="profile_status">%s<br/>%s</div>' \
+                     % (lang.profile_status, status)
         
         else:
             status = HTML_UNSET_TEXT

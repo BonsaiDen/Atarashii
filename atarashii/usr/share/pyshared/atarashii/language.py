@@ -119,21 +119,22 @@ LANG = {
         'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
         'profile_location': '<b>Ort:</b> %s',
         'profile_description': '<b>Bio:</b> %s',
+        
+        'profile_status': '<b>Status:</b>',
         'profile_status_both':
-            '<b>Status:</b> Wird von Ihnen <b>gefollowed</b> und '
-            '<b>followed</b> Ihnen.',
+            'Wird von Ihnen <b>gefollowed</b> und <b>followed</b> Ihnen.',
         
         'profile_status_following':
-            '<b>Status:</b> Wird von Ihnen <b>gefollowed</b>.',
+            'Wird von Ihnen <b>gefollowed</b>.',
         
         'profile_status_followed':
-            '<b>Status:</b> <b>Followed</b> Ihnen.',
+            '<b>Followed</b> Ihnen.',
         
         'profile_status_blocked':
-            '<b>Status:</b> Wird von Ihnen <b>geblockt</b>.',
+            'Wird von Ihnen <b>geblockt</b>.',
         
         'profile_status_protected':
-            '<b>Status:</b> Tweets sind <b>geschützt</b>.',
+            'Tweets sind <b>geschützt</b>.',
         
         'profile_error':
             '<b>%s</b> Profil konnte nicht geladen werden, der Benutzer '
@@ -549,21 +550,22 @@ LANG = {
         'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
         'profile_location': '<b>Location:</b> %s',
         'profile_description': '<b>Bio:</b> %s',
+        
+        'profile_status': '<b>Status:</b>',
         'profile_status_both':
-            '<b>Status:</b> <b>Followed</b> by you and is <b>following</b> '
-            'you.',
+            '<b>Followed</b> by you and is <b>following</b> you.',
         
         'profile_status_following':
-            '<b>Status:</b> <b>Followed</b> by you.',
+            '<b>Followed</b> by you.',
         
         'profile_status_followed':
-            '<b>Status:</b> Is <b>following</b> you.',
+            'Is <b>following</b> you.',
         
         'profile_status_blocked':
-            '<b>Status:</b> Has been <b>blocked</b> by you.',
+            'Has been <b>blocked</b> by you.',
         
         'profile_status_protected':
-            '<b>Status:</b> Tweets are <b>protected</b>.',
+            'Tweets are <b>protected</b>.',
         
         'profile_error':
             'Could not load <b>%s</b> profile, the user does not exist.',
