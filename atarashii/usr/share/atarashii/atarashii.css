@@ -143,6 +143,10 @@ a:active, a:hover, a, .protected {
     margin-bottom: 6px;
 }
 
+.profile_empty {
+    padding-top: 12px;
+}
+
 .profile_realname {
     font-size: {FONT13}px;
     font-weight: bold;

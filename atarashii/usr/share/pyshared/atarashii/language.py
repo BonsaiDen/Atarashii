@@ -94,7 +94,7 @@ LANG = {
         'html_in_reply_view': 'Antwort auf Twitter.com betrachten',
         'html_in_retweet': 'retweeted von %s',
         'html_load_more': 'Mehr',
-        'html_empty': 'Keine Tweets',
+        'html_empty': 'Keine Tweets.',
         'html_protected': '%s Tweets sind geschützt',
         'html_about_second': 'vor ca. einer Sekunde',
         'html_second': 'vor %d Sekunden',
@@ -133,21 +133,19 @@ LANG = {
         'profile_status_blocked':
             'Wird von Ihnen <b>geblockt</b>.',
         
-        'profile_status_protected':
-            'Tweets sind <b>geschützt</b>.',
-        
         'profile_error':
             '<b>%s</b> Profil konnte nicht geladen werden, der Benutzer '
             'existiert nicht.',
         
+        'profile_html_protected': 'Tweets sind geschützt.',
         'profile_html_loading': 'Profil wird geladen...',
         'profile_html_empty': 'Keine aktuellen Tweets',
-        'profile_html_load_more': '',
+        'profile_html_load_more': 'Mehr',
         
         # Messages
         'message_loading': 'Nachrichten werden geladen...',
         'message_load_more': 'Mehr',
-        'message_empty': 'Keine Nachrichten',
+        'message_empty': 'Keine Nachrichten.',
         'message_from': 'Von',
         'message_to': 'An',
         
@@ -525,7 +523,7 @@ LANG = {
         'html_in_reply_view': 'View Reply on Twitter.com',
         'html_in_retweet': 'retweeted by %s',
         'html_load_more': 'More',
-        'html_empty': 'No Tweets',
+        'html_empty': 'No Tweets.',
         'html_protected': '%s\'s Tweets are protected',
         'html_about_second': 'about one second ago',
         'html_second': '%d seconds ago',
@@ -564,20 +562,18 @@ LANG = {
         'profile_status_blocked':
             'Has been <b>blocked</b> by you.',
         
-        'profile_status_protected':
-            'Tweets are <b>protected</b>.',
-        
         'profile_error':
             'Could not load <b>%s</b> profile, the user does not exist.',
         
+        'profile_html_protected': 'Tweets are protected.',
         'profile_html_loading': 'Loading profile...',
-        'profile_html_empty': 'No recent Tweets',
-        'profile_html_load_more': '',
+        'profile_html_empty': 'No recent Tweets.',
+        'profile_html_load_more': 'More',
         
         # Messages
         'message_loading': 'Loading messages...',
         'message_load_more': 'More',
-        'message_empty': 'No Messages',
+        'message_empty': 'No Messages.',
         'message_from': 'From',
         'message_to': 'To',
         

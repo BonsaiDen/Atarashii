@@ -480,9 +480,16 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                     lang.status_reconnect_minutes % math.ceil(wait / 60.0))
         
         elif self.main.status(ST_HISTORY):
-            self.set_status(lang.status_load_history \
-                            if self.html.load_history_id != HTML_UNSET_ID \
-                            else lang.status_load_message_history)
+            if self.html.load_history_id != HTML_UNSET_ID:
+                state = lang.status_load_history
+            
+            elif self.message.load_history_id != HTML_UNSET_ID:
+                state = status_load_message_history
+            
+            else:
+                state = lang.status_load_history
+            
+            self.set_status(state)
         
         elif self.main.status(ST_CONNECT):
             self.set_status(lang.status_connecting % self.main.username)
@@ -496,6 +503,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         elif self.main.any_status(ST_SEND, ST_DELETE):
             pass
         
+        elif self.mode == MODE_PROFILE \
+             and self.profile.load_state == HTML_LOADING:
+            
+            self.set_status(lang.status_profile \
+                            % lang.name(self.main.profile_current_user))
+        
         elif self.main.status(ST_UPDATE):
             self.set_multi_button(False, None, False, True)
             self.set_status(lang.status_update)
@@ -507,12 +520,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
              and self.html.load_state == HTML_LOADING):
             
             self.set_status(lang.status_connected)
-        
-        elif self.mode == MODE_PROFILE \
-             and self.profile.load_state == HTML_LOADING:
-            
-            self.set_status(lang.status_profile \
-                            % lang.name(self.main.profile_current_user))
         
         elif (not self.text.is_typing or not self.text.has_focus \
               or self.mode == MODE_PROFILE) and not self.main.status(ST_SEND):

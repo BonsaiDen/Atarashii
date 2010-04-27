@@ -106,10 +106,14 @@ class ViewMenu(object):
             
             # Calculate on which item the user clicked
             item_id, link = self.get_clicked_item(self.get_sizes(event), event)
-            if item_id == -1:
+            if item_id == -2:
+                item = None
+            
+            elif item_id == -1:
                 return False
             
-            item = self.items[item_id][0]
+            else:
+                item = self.items[item_id][0]
             
             # Create Menu
             menu = gtk.Menu()
@@ -180,6 +184,9 @@ class ViewMenu(object):
                 if link in ('user', 'profile', 'rprofile', 'avatar'):
                     user = full[full.rfind('/') + 1:]
                     url = full[full.find('http://'):]
+                    if user.lower() == self.main.profile_current_user:
+                        return False
+                    
                     self.add_menu_link(menu,
                                        lang.context_profile % menu_escape(user),
                                        self.context_link, url)
@@ -187,7 +194,8 @@ class ViewMenu(object):
                 else:
                     user = None
                 
-                self.create_menu(menu, item, item_id, link, full, user)
+                if item is not None:
+                    self.create_menu(menu, item, item_id, link, full, user)
                 
                 # Follow / Block
                 if link in ('profile', 'avatar', 'user') \
@@ -270,7 +278,10 @@ class ViewMenu(object):
         mouse_y = event.y + self.scroll.get_vscrollbar().get_value()
         item_num = -1
         last_pos = 0
-        for i in items:
+        if event.y <= int(items[0]):
+            return -2, link
+        
+        for i in items[1:]:
             data = i.split(',')
             if len(data) > 1:
                 pos = int(data[1])
@@ -286,9 +297,9 @@ class ViewMenu(object):
     def get_sizes(self, event):
         try:
             self.execute_script('''
-            var sizes = [];
             var items = document.getElementsByClassName('viewitem');
             var pos = 0;
+            var sizes = [pos];
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 pos += item.offsetHeight;

@@ -220,14 +220,14 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     
     # Item management ----------------------------------------------------------
     # --------------------------------------------------------------------------
-    def push_updates(self):
+    def push_updates(self, force_render=False):
         while len(self.update_list) > 0:
             self.add(self.update_list.pop(0))
         
         while len(self.history_list) > 0:
             self.add(self.history_list.pop(0), True)
         
-        self.render()
+        self.render(force_render = force_render)
         self.main.settings.sort_users()
     
     def add(self, item, append=False):

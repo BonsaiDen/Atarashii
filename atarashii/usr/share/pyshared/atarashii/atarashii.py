@@ -13,6 +13,8 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
+# make sure to display an info in protected profile if .protected and not followed_by
+
 
 # Atarashii --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -96,6 +98,11 @@ class Atarashii(AtarashiiActions):
         self.load_message_count = 20
         self.max_message_count = 200
         self.max_message_init_count = 400
+        
+        # Look above
+        self.load_profile_count = 10
+        self.max_profile_count = 200
+        self.max_profile_init_count = 10
         
         # Timer
         self.refresh_time = UNSET_TIMEOUT

@@ -26,19 +26,20 @@ import hashlib
 
 from updater_message import UpdaterMessage
 from updater_tweet import UpdaterTweet
+from updater_profile import UpdaterProfile
 from settings import CACHE_DIR
 from utils import tweepy, TweepError, gmtime
 from language import LANG as lang
 
 from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED, \
-                      ST_TRAY_WARNING
+                      ST_TRAY_WARNING, ST_HISTORY
 
 from constants import MODE_MESSAGES, MODE_TWEETS, MODE_PROFILE, HTML_UNSET_ID, \
                       UNSET_TIMEOUT, HTML_RESET, HTML_LOADING, HTML_LOADED, \
                       UNSET_PASSWORD
 
 
-class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
+class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
     def __init__(self, main):
         threading.Thread.__init__(self)
         self.main = main
@@ -82,6 +83,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
         # Init Views
         self.html = self.gui.html
         self.message = self.gui.message
+        self.profile = self.gui.profile
         
         # Reset
         self.finish = False
@@ -255,6 +257,9 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
                 elif self.message.load_history_id != HTML_UNSET_ID:
                     self.load_history_message()
                 
+                elif self.profile.load_history_id != HTML_UNSET_ID:
+                    self.load_history_profile()
+                
                 elif self.main.refresh_timeout != UNSET_TIMEOUT:
                     self.check_for_update()
             
@@ -387,7 +392,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             
             # Update profile tweet times
             if self.gui.mode == MODE_PROFILE:
-                self.gui.profile.render()
+                self.profile.render()
             
             # Update GUI
             self.unwait()

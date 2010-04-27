@@ -292,8 +292,14 @@ class Profile(SimpleAPICall):
     def call(self, main, name, callback):
         self.user = self.main.api.get_user(screen_name = name)
         self.friend = self.main.api.show_friendship(target_screen_name = name)
-        self.tweets = self.main.api.user_timeline(screen_name = name,
-                                                  count = 10)
+        if self.user.protected \
+           and (not self.friend[0].followed_by or not self.friend[0].following):
+            
+            self.tweets = []
+        
+        else:
+            self.tweets = self.main.api.user_timeline(screen_name = name,
+                                        count = main.max_profile_init_count)
     
     def on_success(self, main, name, callback):
         gobject.idle_add(callback, self.user, self.friend, self.tweets)

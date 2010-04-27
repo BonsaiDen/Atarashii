@@ -38,17 +38,20 @@ class HTML(html.HTML):
         self.last_highlight = UNSET_TEXT
         self.last_mentioned = UNSET_TEXT
         
+        self.protected_view = False
         self.load_state = HTML_LOADED
     
-    def render(self, user=None, friend=None, tweets=None):
+    def render(self, user=None, friend=None, tweets=[], force_render=False):
         # If item don't have changed just update the times via javascript
-        if not user:
+        if not user and not force_render:
             self.update_times()
             self.gui.update_app(True)
             return False
         
         # Add recent Tweets
-        self.items = []
+        if not force_render:
+            self.items = []
+        
         for i in tweets:
             img_file = self.main.updater.get_image(i)
             self.update_list.append([i, img_file])
@@ -74,7 +77,15 @@ class HTML(html.HTML):
             self.is_new_timeline(item)
             self.renderitems.insert(0, self.render_item(num, item, img))
         
-        # Image / Name / Tweets
+        # Render header
+        if user is not None:
+            self.render_header(user, friend)
+        
+        # Render
+        self.set_html(self.renderitems, True)
+    
+    
+    def render_header(self, user, friend):
         img_file = self.main.updater.get_image(None, False, user)
         
         # Detailed information
@@ -96,14 +107,11 @@ class HTML(html.HTML):
         elif friend[0].following:
             status = lang.profile_status_following
         
-        elif friend[0].followed_by:
+        elif friend[0].followed_by and not user.protected:
             status = lang.profile_status_followed
         
         elif friend[0].blocking:
             status = lang.profile_status_blocked
-        
-        elif user.protected:
-            status = lang.profile_status_protected
         
         else:
             status = None
@@ -115,15 +123,24 @@ class HTML(html.HTML):
         else:
             status = HTML_UNSET_TEXT
         
+        # Display the protected Info?
+        if user.protected \
+           and (not friend[0].followed_by or not friend[0].following):
+            
+            self.protected_view = True
+        
+        else:
+            self.protected_view = False
+        
         # Profile HTML
         self.profile_data = '''
         <div class="profile_header" id="header">
-            <a href="user:%s:http://twitter.com/%s">
+            <a href="http://twitter.com/%s">
                 <img class="profile_image" width="64" src="file://%s" />
             </a>
             <div class="profile_infos">   
                 <div class="profile_realname">
-                    <a href="user:%s:http://twitter.com/%s">%s</a>
+                    <a href="http://twitter.com/%s">%s</a>
                 </div>
                 <div><b>%s</b> Tweets</div>
                 <div><b>%s</b> Followers</div>
@@ -133,13 +150,9 @@ class HTML(html.HTML):
                 <div>%s</div>
                 %s
             </div>
-        </div>''' % (user.screen_name, user.screen_name, img_file,
-                     user.screen_name, user.screen_name, user.name,
+        </div>''' % (user.screen_name, img_file, user.screen_name, user.name,
                      user.statuses_count, user.followers_count,
                      user.friends_count, '</div><div>'.join(details), status)
-        
-        # Render
-        self.set_html(self.renderitems, True)
     
     def after_loaded(self):
         self.execute_script(
@@ -152,6 +165,34 @@ class HTML(html.HTML):
                    delete header;
                 };window.onresize = resize;resize();''')
     
+    
+    # Run some crazy javascript in order to calculate all the positioning
+    def get_sizes(self, event):
+        try:
+            self.execute_script('''
+            var sizes = [];
+            var items = document.getElementsByClassName('viewitem');
+            var pos = document.getElementById('header').offsetHeight;
+            var sizes = [pos];
+            for (var i = 0; i < items.length; i++) {
+                var item = items[i];
+                pos += item.offsetHeight;
+                sizes.push([item.getAttribute('id'), pos])
+                pos += 2;
+                delete item;
+            };
+            delete pos;
+            delete items;
+            var link = document.elementFromPoint(%d, %d);
+            document.title = sizes.join(';') + '|' +
+            (link.href != undefined ? link.href : link.parentNode.href);
+            delete link;
+            delete sizes;''' % (event.x, event.y))
+            return self.get_main_frame().get_title()
+        
+        except Exception:
+            return None
+    
     def set_html(self, renderitems, rendered=False):
         if rendered:
             if len(self.items) > 0:
@@ -161,8 +202,12 @@ class HTML(html.HTML):
                         <div id="tweets">
                             <div id="newcontainer"></div>
                             <div>%s</div>
+                            <div class="loadmore">
+                                <a href="more:%d"><b>%s</b></a>
+                            </div>
                         </div>
-                    </body>''' % (self.profile_data, ''.join(renderitems)))
+                    </body>''' % (self.profile_data, ''.join(renderitems),
+                                  self.items[0][0].id, self.lang_load))
             
             else:
                 self.render_html('''
@@ -170,16 +215,10 @@ class HTML(html.HTML):
                         %s
                         <div id="tweets" class="profile_tweets">
                             <div class="loading">
-                                <b>%s</b>
+                                <div class="profile_empty"><b>%s</b></div>
                             </div>
                         </div>
-                    </body>''' % (self.profile_data, self.lang_empty))
-        
-        elif self.main.status(ST_LOGIN_SUCCESSFUL):
-            self.render_html('''
-                <body class="unloaded" ondragstart="return false">
-                    <div class="loading" style="padding-top: 6px">
-                        <b>%s</b>
-                    </div>
-                </body>''' % self.lang_empty)
+                    </body>''' % (self.profile_data,
+                                  lang.profile_html_protected \
+                                  if self.protected_view else self.lang_empty))
 

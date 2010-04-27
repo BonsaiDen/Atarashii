@@ -55,7 +55,7 @@ class ViewHTML(object):
             else:
                 self.new_items_id = self.init_id
     
-    def render(self, update_multi=False):
+    def render(self, update_multi=False, force_render=False):
         
         # If item don't have changed just update the times via javascript
         if not self.old_items_changed:

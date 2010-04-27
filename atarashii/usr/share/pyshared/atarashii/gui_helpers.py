@@ -158,10 +158,12 @@ class GUIHelpers(object):
             self.mode = mode
         
         if self.mode == MODE_MESSAGES:
+            self.main.stop_profile(True)
             self.tabs.set_current_page(1)
             self.on_mode()
         
         elif self.mode == MODE_TWEETS:
+            self.main.stop_profile(True)
             self.tabs.set_current_page(0)
             self.on_mode()
         

@@ -266,6 +266,7 @@ class AtarashiiActions(object):
         
         self.profile_current_user = user.screen_name
         self.gui.profile.load_state = HTML_LOADED
+        self.gui.profile.history_level = 0
         self.gui.profile.render(user, friend, tweets)
         self.gui.show_input()
     
