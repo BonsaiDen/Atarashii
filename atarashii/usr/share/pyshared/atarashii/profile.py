@@ -157,7 +157,7 @@ class HTML(html.HTML):
                     block_button.disabled = !mode;
                 }
             </script>
-        </div>''' 
+        </div>'''
         
         self.current_user = user
         self.profile_data = self.profile_data % (

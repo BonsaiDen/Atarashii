@@ -272,7 +272,7 @@ class AtarashiiActions(object):
            or not self.status(ST_LOGIN_COMPLETE) \
            or name.lower() in self.follow_pending \
            or name.lower() in self.block_pending:
-           
+            
             gobject.timeout_add(50, self.profile, name, True)
             return False
         

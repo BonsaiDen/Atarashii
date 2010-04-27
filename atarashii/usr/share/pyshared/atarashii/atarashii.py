@@ -13,9 +13,9 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-# TODO add follow/block buttons in profile views
-# TODO add a single tweet view? For @replies etc
+
 # TODO rename html.py to view_tweet.py and profile/message to view_*
+
 
 # Atarashii --------------------------------------------------------------------
 # ------------------------------------------------------------------------------

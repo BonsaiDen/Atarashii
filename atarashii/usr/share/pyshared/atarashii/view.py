@@ -439,7 +439,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         elif uri.startswith('follow'):
             user_id, name, mode = uri.split(':')[1:]
             self.main.follow(None, long(user_id), name, bool(int(mode)))
-            
+        
         # Block/Unblock
         elif uri.startswith('block'):
             user_id, name, mode = uri.split(':')[1:]
