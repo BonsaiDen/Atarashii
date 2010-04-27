@@ -324,10 +324,10 @@ class Follow(SimpleAPICall):
             main.settings.remove_username(name)
     
     def on_success(self, main, user_id, name, mode):
-        gobject.idle_add(main.gui.show_follow_info, mode, name)
+        gobject.idle_add(main.followed, mode, name)
     
     def on_error(self, main, user_id, name, mode):
-        gobject.idle_add(main.gui.show_follow_error, mode, name)
+        gobject.idle_add(main.follow_error, mode, name)
     
     def after(self, main, user_id, name, mode):
         del main.follow_pending[name.lower()]
@@ -348,10 +348,10 @@ class Block(SimpleAPICall):
             main.api.destroy_block(user_id = user_id)
     
     def on_success(self, main, user_id, name, mode, spam):
-        gobject.idle_add(main.gui.show_block_info, mode, name, spam)
+        gobject.idle_add(main.blocked, mode, name, spam)
     
     def on_error(self, main, user_id, name, mode, spam):
-        gobject.idle_add(main.gui.show_block_error, mode, name)
+        gobject.idle_add(main.block_error, mode, name)
     
     def after(self, main, user_id, name, mode, spam):
         del main.block_pending[name.lower()]

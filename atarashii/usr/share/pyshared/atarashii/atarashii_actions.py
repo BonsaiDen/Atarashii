@@ -210,6 +210,18 @@ class AtarashiiActions(object):
         self.follow_pending[name.lower()] = True
         api.Follow(self, user_id, name, mode)
     
+    def followed(self, mode, name):
+        if self.profile_current_user != UNSET_USERNAME:
+            self.gui.profile.update_follow(mode)
+        
+        self.gui.show_follow_info(mode, name)
+    
+    def follow_error(self, mode, name):
+        if self.profile_current_user != UNSET_USERNAME:
+            self.gui.profile.enable_button()
+        
+        self.gui.show_follow_error(mode, name)
+    
     # Block / Unblock
     def block(self, menu, user_id, name, mode, spam=None):
         if mode and spam is None:
@@ -226,23 +238,41 @@ class AtarashiiActions(object):
         self.block_pending[name.lower()] = True
         api.Block(self, user_id, name, mode, spam)
     
+    def blocked(self, mode, name, spam):
+        if self.profile_current_user != UNSET_USERNAME:
+            self.gui.profile.update_block(mode)
+        
+        self.gui.show_block_info(mode, name, spam)
+    
+    def block_error(self, mode, name):
+        if self.profile_current_user != UNSET_USERNAME:
+            self.gui.profile.enable_button()
+        
+        self.gui.show_block_error(mode, name)
+    
     # Show profile
     def profile(self, name, retry=False):
         if self.profile_current_user.lower() == name.lower() and not retry:
             return False
         
         # Button
-        self.profile_pending = True
         if not retry:
+            self.profile_pending = True
             name = self.settings.get_username(name)
             self.profile_current_user = name
             self.gui.load_button.show(lang.profile_loading % lang.name(name),
                                       None)
         
+        # Make sure to stop when aborted
+        if not self.profile_pending:
+            return False
+        
         # Wait until send/delete etc. is completed
         if self.any_status(ST_DELETE, ST_SEND, ST_CONNECT) \
-           or not self.status(ST_LOGIN_COMPLETE):
-            
+           or not self.status(ST_LOGIN_COMPLETE) \
+           or name.lower() in self.follow_pending \
+           or name.lower() in self.block_pending:
+           
             gobject.timeout_add(50, self.profile, name, True)
             return False
         

@@ -119,23 +119,22 @@ LANG = {
         'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
         'profile_location': '<b>Ort:</b> %s',
         'profile_description': '<b>Bio:</b> %s',
-        
-        'profile_status': '<b>Status:</b>',
-        'profile_status_both':
-            'Wird von Ihnen <b>gefollowed</b> und <b>followed</b> Ihnen.',
-        
-        'profile_status_following':
-            'Wird von Ihnen <b>gefollowed</b>.',
-        
-        'profile_status_followed':
-            '<b>Followed</b> Ihnen.',
-        
-        'profile_status_blocked':
-            'Wird von Ihnen <b>geblockt</b>.',
+        'profile_follows_you': '(auch Ihnen)',
         
         'profile_error':
             '<b>%s</b> Profil konnte nicht geladen werden, der Benutzer '
-            'existiert nicht.',
+            'existiert entweder nicht oder Twitter ist gerade nicht '
+            'erreichbar.',
+        
+        'profile_tweets': 'Tweets',
+        'profile_followers': 'Follower',
+        'profile_following': 'Following',
+        
+        'profile_follow': 'Followen',
+        'profile_unfollow': 'Unfollowen',
+        'profile_block': 'Blocken',
+        'profile_unblock': 'Unblocken',
+        'profile_message': 'Nachricht',
         
         'profile_html_protected': 'Tweets sind geschützt.',
         'profile_html_loading': 'Profil wird geladen...',
@@ -548,22 +547,21 @@ LANG = {
         'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
         'profile_location': '<b>Location:</b> %s',
         'profile_description': '<b>Bio:</b> %s',
-        
-        'profile_status': '<b>Status:</b>',
-        'profile_status_both':
-            '<b>Followed</b> by you and is <b>following</b> you.',
-        
-        'profile_status_following':
-            '<b>Followed</b> by you.',
-        
-        'profile_status_followed':
-            'Is <b>following</b> you.',
-        
-        'profile_status_blocked':
-            'Has been <b>blocked</b> by you.',
+        'profile_follows_you': '(you too)',
         
         'profile_error':
-            'Could not load <b>%s</b> profile, the user does not exist.',
+            'Could not load <b>%s</b> profile, either the user does not exist '
+            'or Twitter is currently unavailable.',
+        
+        'profile_tweets': 'Tweets',
+        'profile_followers': 'Followers',
+        'profile_following': 'Following',
+        
+        'profile_follow': 'Follow',
+        'profile_unfollow': 'Unfollow',
+        'profile_block': 'Block',
+        'profile_unblock': 'Unblock',
+        'profile_message': 'Message',
         
         'profile_html_protected': 'Tweets are protected.',
         'profile_html_loading': 'Loading profile...',

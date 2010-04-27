@@ -37,6 +37,7 @@ class HTML(html.HTML):
         self.last_highlight = UNSET_TEXT
         self.last_mentioned = UNSET_TEXT
         
+        self.current_user = None
         self.protected_view = False
         self.load_state = HTML_LOADED
     
@@ -100,29 +101,6 @@ class HTML(html.HTML):
         if user.description is not None and user.description.strip() != '':
             details.append(lang.profile_description % escape(user.description))
         
-        # Status
-        if friend[0].following and friend[0].followed_by:
-            status = lang.profile_status_both
-        
-        elif friend[0].following:
-            status = lang.profile_status_following
-        
-        elif friend[0].followed_by and not user.protected:
-            status = lang.profile_status_followed
-        
-        elif friend[0].blocking:
-            status = lang.profile_status_blocked
-        
-        else:
-            status = None
-        
-        if status is not None:
-            status = '<div class="profile_status">%s<br/>%s</div>' \
-                     % (lang.profile_status, status)
-        
-        else:
-            status = HTML_UNSET_TEXT
-        
         # Display the protected Info?
         if user.protected \
            and (not friend[0].followed_by or not friend[0].following):
@@ -142,17 +120,88 @@ class HTML(html.HTML):
                 <div class="profile_realname">
                     <a href="http://twitter.com/%s">%s</a>
                 </div>
-                <div><b>%s</b> Tweets</div>
-                <div><b>%s</b> Followers</div>
-                <div>Following <b>%s</b></div>
+                <div><b>%s</b> %s</div>
+                <div><b>%s</b> %s</div>
+                <div>%s <b>%s</b>%s</div>
             </div>
             <div>
                 <div>%s</div>
-                %s
+                <div>
+                    <input id="follow_button" type="button" value="%s"
+                     onclick="follow(%d, '%s', %d);"/>
+                    <input id="block_button" type="button" value="%s"
+                     onclick="block(%d, '%s', %d);"/>
+                    <input id="message_button" type="button" value="%s"
+                     onclick="message('%s', %d);"/>
+                </div>
             </div>
-        </div>''' % (user.screen_name, img_file, user.screen_name, user.name,
-                     user.statuses_count, user.followers_count,
-                     user.friends_count, '</div><div>'.join(details), status)
+            <script type="text/javascript">
+                var follow_button = document.getElementById('follow_button');
+                var block_button = document.getElementById('block_button');
+                function follow(id, name, mode) {
+                    enable_buttons(false);
+                    window.location = ['follow', id, name, mode].join(':');
+                }
+                
+                function block(id, name, mode) {
+                    enable_buttons(false);
+                    window.location = ['block', id, name, mode].join(':');
+                }
+                
+                function message(name, id) {
+                    window.location = ['message', name, id, -1].join(':');
+                }
+                
+                function enable_buttons(mode) {
+                    follow_button.disabled = !mode;
+                    block_button.disabled = !mode;
+                }
+            </script>
+        </div>''' 
+        
+        self.current_user = user
+        self.profile_data = self.profile_data % (
+             user.screen_name, img_file, user.screen_name, user.name,
+             user.statuses_count, lang.profile_tweets,
+             user.followers_count, lang.profile_followers,
+             lang.profile_following, user.friends_count,
+             lang.profile_follows_you if friend[0].followed_by \
+                                      else HTML_UNSET_TEXT,
+             
+             '</div><div>'.join(details),
+             lang.profile_unfollow if friend[0].following \
+                                   else lang.profile_follow,
+             
+             user.id, user.screen_name, int(not friend[0].following),
+             
+             lang.profile_unblock if friend[0].blocking \
+                                  else lang.profile_block,
+             
+             user.id, user.screen_name, int(not friend[0].blocking),
+             lang.profile_message, user.screen_name, user.id)
+    
+    
+    # JavaScript stuff ---------------------------------------------------------
+    def update_follow(self, mode):
+        self.execute_script('''
+            document.getElementById('follow_button').value = '%s';
+            document.getElementById('follow_button').setAttribute('onclick',
+            "follow(%d, '%s', %d);");
+            enable_buttons(true);''' % (
+            lang.profile_unfollow if mode else lang.profile_follow,
+            self.current_user.id, self.current_user.screen_name, int(not mode)))
+    
+    def update_block(self, mode):
+        self.execute_script('''
+            document.getElementById('block_button').value = '%s';
+            document.getElementById('block_button').setAttribute('onclick',
+            "block(%d, '%s', %d);");
+            enable_buttons(true);''' % (
+            lang.profile_unblock if mode else lang.profile_block,
+            self.current_user.id, self.current_user.screen_name, int(not mode)))
+    
+    def enable_button(self):
+        self.execute_script('enable_buttons(true);')
     
     def after_loaded(self):
         self.execute_script(

@@ -435,6 +435,16 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             
             gobject.idle_add(self.fake_move, (-1.0, -1.0))
         
+        # Follow/Unfollow
+        elif uri.startswith('follow'):
+            user_id, name, mode = uri.split(':')[1:]
+            self.main.follow(None, long(user_id), name, bool(int(mode)))
+            
+        # Block/Unblock
+        elif uri.startswith('block'):
+            user_id, name, mode = uri.split(':')[1:]
+            self.main.block(None, long(user_id), name, bool(int(mode)))
+        
         # Regular links
         else:
             link = self.get_link_type(uri)[1]
