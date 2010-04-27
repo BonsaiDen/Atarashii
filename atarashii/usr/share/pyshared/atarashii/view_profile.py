@@ -111,6 +111,10 @@ class HTML(tweet.HTML):
             self.protected_view = False
         
         # Profile HTML
+        style = 'style="display:none;"' \
+                if user.screen_name.lower() == self.main.username.lower() \
+                else ''
+        
         self.profile_data = '''
         <div class="profile_header" id="header">
             <a href="http://twitter.com/%s">
@@ -126,7 +130,7 @@ class HTML(tweet.HTML):
             </div>
             <div>
                 <div>%s</div>
-                <div>
+                <div ''' + style + '''>
                     <input id="follow_button" type="button" value="%s"
                      onclick="follow(%d, '%s', %d);"/>
                     <input id="block_button" type="button" value="%s"
