@@ -1,11 +1,14 @@
-atarashii (0.99.24a-1) all;
+atarashii (0.99.25-1) all;
 
   + Tweets/Messages that are over the 150 character limit will now be split when
     send. After the first 140 characters have been send, the textbox will 
     contain the leftover part of the Tweet/Message. Retweets wont be split,
     you'll need to shorten them accordingly.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 26 Apr 2010 16:38:00 +0200
+  + Completely reworked profile view! The new profile view is now HTML based
+    and displays the 10 most recent Tweets of the user.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 27 Apr 2010 15:25:00 +0200
 
 atarashii (0.99.24-1) all;
 
