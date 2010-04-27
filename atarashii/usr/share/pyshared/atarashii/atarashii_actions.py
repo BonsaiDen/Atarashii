@@ -237,8 +237,8 @@ class AtarashiiActions(object):
             name = self.settings.get_username(name)
             self.profile_current_user = name
             self.gui.load_button.show(lang.profile_loading % lang.name(name),
-                                      None)  
-                
+                                      None)
+        
         # Wait until send/delete etc. is completed
         if self.any_status(ST_DELETE, ST_SEND, ST_CONNECT) \
            or not self.status(ST_LOGIN_COMPLETE):
