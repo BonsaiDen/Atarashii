@@ -41,7 +41,8 @@ from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR, UNSET_USERNAME, \
 
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
-                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_SUCCESSFUL
+                      ST_WAS_RETWEET, ST_WAS_DELETE, \
+                      ST_CONNECT, ST_LOGIN_COMPLETE
 
 from constants import ERR_TWEET_NOT_FOUND, ERR_MESSAGE_NOT_FOUND, \
                       ERR_ALREADY_RETWEETED, ERR_TWEET_DUPLICATED, \
@@ -226,24 +227,34 @@ class AtarashiiActions(object):
         api.Block(self, user_id, name, mode, spam)
     
     # Show profile
-    def profile(self, name):
-        if self.profile_current_user.lower() == name.lower():
+    def profile(self, name, retry=False):
+        if self.profile_current_user.lower() == name.lower() and not retry:
             return False
         
+        # Button
+        self.profile_pending = True
+        if not retry:
+            name = self.settings.get_username(name)
+            self.profile_current_user = name
+            self.gui.load_button.show(lang.profile_loading % lang.name(name),
+                                      None)  
+                
+        # Wait until send/delete etc. is completed
+        if self.any_status(ST_DELETE, ST_SEND, ST_CONNECT) \
+           or not self.status(ST_LOGIN_COMPLETE):
+            
+            gobject.timeout_add(50, self.profile, name, True)
+            return False
+        
+        # View
         if self.gui.mode != MODE_PROFILE:
             self.profile_mode = self.gui.mode
         
-        self.profile_pending = True
         self.gui.profile.load_state = HTML_LOADING
         self.gui.profile.start()
-        
         self.gui.text.remove_auto_complete(True)
         gobject.idle_add(self.gui.set_mode, MODE_PROFILE)
         gobject.idle_add(self.gui.on_mode)
-        
-        name = self.settings.get_username(name)
-        self.profile_current_user = name
-        self.gui.load_button.show(lang.profile_loading % lang.name(name), None)
         api.Profile(self, name, self.show_profile)
     
     def show_profile(self, user, friend, tweets):
