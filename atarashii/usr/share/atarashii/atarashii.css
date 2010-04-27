@@ -131,7 +131,7 @@ a:active, a:hover, a, .protected {
     width: 100%;
     position: fixed;
     top: 0px;
-    background: #{HIGHLIGHT_OLD};
+    background: #{PROFILE};
     padding-top: 2px;
 	padding-left: 6px;
 	padding-right: 2px;

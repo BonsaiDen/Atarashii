@@ -85,7 +85,10 @@
         'LOADING': '5b5b5b',
         
         # Color of time and retweet etc. infos
-        'TIME': '555555'
+        'TIME': '555555',
+        
+        # Profile header background
+        'PROFILE': 'd5e3ed'
     }
 }
 
