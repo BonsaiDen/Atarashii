@@ -21,7 +21,6 @@ import html
 from utils import escape
 from language import LANG as lang
 
-from constants import ST_LOGIN_SUCCESSFUL
 from constants import UNSET_TEXT, HTML_UNSET_TEXT, HTML_LOADED
 
 
@@ -41,7 +40,7 @@ class HTML(html.HTML):
         self.protected_view = False
         self.load_state = HTML_LOADED
     
-    def render(self, user=None, friend=None, tweets=[], force_render=False):
+    def render(self, user=None, friend=None, tweets=None, force_render=False):
         # If item don't have changed just update the times via javascript
         if not user and not force_render:
             self.update_times()
@@ -52,12 +51,13 @@ class HTML(html.HTML):
         if not force_render:
             self.items = []
         
-        for i in tweets:
-            img_file = self.main.updater.get_image(i)
-            self.update_list.append([i, img_file])
-        
-        while len(self.update_list) > 0:
-            self.add(self.update_list.pop(0))
+        if tweets is not None:
+            for i in tweets:
+                img_file = self.main.updater.get_image(i)
+                self.update_list.append([i, img_file])
+            
+            while len(self.update_list) > 0:
+                self.add(self.update_list.pop(0))
         
         # Init Render
         self.setup_render()

@@ -32,7 +32,7 @@ from utils import tweepy, TweepError, gmtime
 from language import LANG as lang
 
 from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED, \
-                      ST_TRAY_WARNING, ST_HISTORY
+                      ST_TRAY_WARNING
 
 from constants import MODE_MESSAGES, MODE_TWEETS, MODE_PROFILE, HTML_UNSET_ID, \
                       UNSET_TIMEOUT, HTML_RESET, HTML_LOADING, HTML_LOADED, \
