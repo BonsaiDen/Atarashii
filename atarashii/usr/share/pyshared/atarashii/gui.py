@@ -23,9 +23,9 @@ import gobject
 
 import math
 
-import html
-import message
-import profile
+import view_tweet as html
+import view_message as message
+import view_profile as profile
 import tray
 import text
 import dialog

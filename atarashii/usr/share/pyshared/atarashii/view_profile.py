@@ -16,7 +16,7 @@
 
 # HTML View --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-import html
+import view_tweet as tweet
 
 from utils import escape
 from language import LANG as lang
@@ -24,9 +24,9 @@ from language import LANG as lang
 from constants import UNSET_TEXT, HTML_UNSET_TEXT, HTML_LOADED
 
 
-class HTML(html.HTML):
+class HTML(tweet.HTML):
     def __init__(self, main, gui):
-        html.HTML.__init__(self, main, gui, True)
+        tweet.HTML.__init__(self, main, gui, True)
         self.item_count = self.main.load_tweet_count
         
         self.lang_loading = lang.profile_html_loading
