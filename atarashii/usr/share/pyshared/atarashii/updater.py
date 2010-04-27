@@ -46,7 +46,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         self.settings = main.settings
         self.gui = None
         self.api = None
-        self.html = None
+        self.tweet = None
         self.message = None
         
         # Notifier
@@ -81,7 +81,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         self.settings.removed_list = []
         
         # Init Views
-        self.html = self.gui.html
+        self.tweet = self.gui.tweet
         self.message = self.gui.message
         self.profile = self.gui.profile
         
@@ -95,16 +95,16 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         self.refresh_images = False
         self.main.refresh_time = UNSET_TIMEOUT
         self.main.refresh_timeout = UNSET_TIMEOUT
-        self.html.load_history_id = HTML_UNSET_ID
+        self.tweet.load_history_id = HTML_UNSET_ID
         self.message.load_history_id = HTML_UNSET_ID
         
         self.message.last_id = HTML_UNSET_ID
-        self.html.last_id = HTML_UNSET_ID
+        self.tweet.last_id = HTML_UNSET_ID
         self.message.load_state = HTML_RESET
-        self.html.load_state = HTML_RESET
+        self.tweet.load_state = HTML_RESET
         
         # InitID = the last read tweet
-        self.html.init_id = self.html.get_latest()
+        self.tweet.init_id = self.tweet.get_latest()
         self.message.init_id = self.message.get_latest()
         
         # Try to Login
@@ -184,19 +184,19 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
     def init_load(self):
         # Set loading to pending
         self.message.load_state = HTML_LOADING
-        self.html.load_state = HTML_LOADING
+        self.tweet.load_state = HTML_LOADING
         
         # Lazy loading
         if self.gui.mode == MODE_MESSAGES:
             if not self.get_init_messages(init = True):
                 self.message.load_state = HTML_RESET
-                self.html.load_state = HTML_RESET
+                self.tweet.load_state = HTML_RESET
                 return False
         
         elif self.gui.mode == MODE_TWEETS:
             if not self.get_init_tweets(init = True):
                 self.message.load_state = HTML_RESET
-                self.html.load_state = HTML_RESET
+                self.tweet.load_state = HTML_RESET
                 return False
         
         # TODO implement loading of search
@@ -214,7 +214,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
             
             else:
                 self.message.load_state = HTML_RESET
-                self.html.load_state = HTML_RESET
+                self.tweet.load_state = HTML_RESET
                 return False
         
         elif self.gui.mode == MODE_MESSAGES:
@@ -227,7 +227,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
             
             else:
                 self.message.load_state = HTML_RESET
-                self.html.load_state = HTML_RESET
+                self.tweet.load_state = HTML_RESET
                 return False
         
         # TODO implement loading of search
@@ -251,7 +251,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                     self.finish = False
                     self.end_update()
                 
-                elif self.html.load_history_id != HTML_UNSET_ID:
+                elif self.tweet.load_history_id != HTML_UNSET_ID:
                     self.load_history()
                 
                 elif self.message.load_history_id != HTML_UNSET_ID:
@@ -320,18 +320,18 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         if not self.refresh_messages or both:
             try:
                 updates = self.try_get_items(self.get_updates,
-                                             self.html.last_id)
+                                             self.tweet.last_id)
             
             # Something went wrong...
             except (IOError, TweepError), error:
                 self.main.unset_status(ST_UPDATE)
-                gobject.idle_add(self.html.render)
+                gobject.idle_add(self.tweet.render)
                 gobject.idle_add(self.main.handle_error, error)
                 self.main.refresh_time = gmtime()
                 return False
             
             if len(updates) > 0:
-                self.html.save_last_id(updates[0].id)
+                self.tweet.save_last_id(updates[0].id)
         
         # Stop when the account was switched
         if self.update_id != uid:
@@ -379,10 +379,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
             self.show_notifications(updates, messages)
             
             if len(updates) > 0:
-                self.html.push_updates()
+                self.tweet.push_updates()
             
             else:
-                self.html.render()
+                self.tweet.render()
             
             if len(messages) > 0:
                 self.message.push_updates()
@@ -470,10 +470,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         # Tweets
         notify_tweet_list = []
         update_ids = []
-        html_view_ids = [i[0].id for i in self.html.items]
+        tweet_view_ids = [i[0].id for i in self.tweet.items]
         for i in updates:
             img_file = self.get_image(i)
-            if not i.id in update_ids and not i.id in html_view_ids:
+            if not i.id in update_ids and not i.id in tweet_view_ids:
                 update_ids.append(i.id)
                 if i.user.screen_name.lower() != username:
                     if hasattr(i, 'retweeted_status'):
@@ -491,7 +491,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                     
                     notify_tweet_list.append([name, text, img_file, e])
             
-            self.html.update_list.append([i, img_file])
+            self.tweet.update_list.append([i, img_file])
         
         count = len(notify_tweet_list)
         if count > 0:
@@ -579,13 +579,13 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         return img
     
     def reload_images(self):
-        for i in self.html.items:
+        for i in self.tweet.items:
             i[1] = self.get_image(i[0])
         
         for i in self.message.items:
             i[1] = self.get_image(i[0], True)
         
-        gobject.idle_add(self.html.render)
+        gobject.idle_add(self.tweet.render)
         gobject.idle_add(self.message.render)
         gobject.idle_add(self.gui.update_app)
 

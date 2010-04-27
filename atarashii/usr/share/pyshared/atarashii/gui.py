@@ -23,7 +23,7 @@ import gobject
 
 import math
 
-import view_tweet as html
+import view_tweet as tweet
 import view_message as message
 import view_profile as profile
 import tray
@@ -102,11 +102,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.text_scroll.add(self.text)
         
         # HTML
-        self.html_scroll = gtb.get_object('htmlscroll')
-        self.html = html.HTML(self.main, self)
-        self.html_scroll.add(self.html)
-        self.html_scroll.set_shadow_type(gtk.SHADOW_IN)
-        self.html.splash()
+        self.tweet_scroll = gtb.get_object('tweetscroll')
+        self.tweet = tweet.HTML(self.main, self)
+        self.tweet_scroll.add(self.tweet)
+        self.tweet_scroll.set_shadow_type(gtk.SHADOW_IN)
+        self.tweet.splash()
         
         # Messages
         self.message_scroll = gtb.get_object('messagescroll')
@@ -257,7 +257,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     # Scroll the views when started in tray
     def scroll_views(self):
         if self.mode == MODE_TWEETS:
-            self.html.loaded(None, None, True)
+            self.tweet.loaded(None, None, True)
         
         elif self.mode == MODE_MESSAGES:
             self.message.loaded(None, None, True)
@@ -296,7 +296,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 self.message.focus_me()
             
             elif self.mode == MODE_TWEETS:
-                self.html.focus_me()
+                self.tweet.focus_me()
             
             # TODO implement search
             else:
@@ -322,7 +322,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             return True
         
-        elif self.mode == MODE_TWEETS and self.html.load_state == HTML_LOADING:
+        elif self.mode == MODE_TWEETS and self.tweet.load_state == HTML_LOADING:
             return True
         
         else:
@@ -361,7 +361,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             history_info = lang.multi_history_message
             history_mode = True
         
-        elif self.mode == MODE_TWEETS and self.html.history_loaded:
+        elif self.mode == MODE_TWEETS and self.tweet.history_loaded:
             history_info = lang.multi_history
             history_mode = True
         
@@ -375,7 +375,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             read_icon = read_mode
         
         elif self.mode == MODE_TWEETS:
-            read_mode = self.html.count > 0
+            read_mode = self.tweet.count > 0
             read_icon = read_mode
         
         else:
@@ -480,7 +480,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                     lang.status_reconnect_minutes % math.ceil(wait / 60.0))
         
         elif self.main.status(ST_HISTORY):
-            if self.html.load_history_id != HTML_UNSET_ID:
+            if self.tweet.load_history_id != HTML_UNSET_ID:
                 state = lang.status_load_history
             
             elif self.message.load_history_id != HTML_UNSET_ID:
@@ -517,7 +517,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
              or  (self.mode == MODE_MESSAGES \
              and self.message.load_state == HTML_LOADING) \
              or (self.mode == MODE_TWEETS \
-             and self.html.load_state == HTML_LOADING):
+             and self.tweet.load_state == HTML_LOADING):
             
             self.set_status(lang.status_connected)
         
@@ -658,7 +658,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             # Clear already deleted tweets
             if self.main.delete_tweet_id != UNSET_ID_NUM:
-                gobject.idle_add(self.html.remove, self.main.delete_tweet_id)
+                gobject.idle_add(self.tweet.remove, self.main.delete_tweet_id)
             
             elif self.main.delete_message_id != UNSET_ID_NUM:
                 gobject.idle_add(self.message.remove,

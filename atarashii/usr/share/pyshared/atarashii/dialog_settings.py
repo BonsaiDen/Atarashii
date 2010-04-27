@@ -330,7 +330,7 @@ class SettingsDialog(Dialog):
                   != self.old_color_theme:
                 
                 self.settings.css()
-                gobject.idle_add(self.gui.html.update_css)
+                gobject.idle_add(self.gui.tweet.update_css)
                 gobject.idle_add(self.gui.message.update_css)
                 gobject.idle_add(self.gui.profile.update_css)
         
@@ -345,7 +345,7 @@ class SettingsDialog(Dialog):
                           AVATAR_SIZES[self.avatars.get_active()],
                           self.color_ids[self.themes.get_active()])
         
-        gobject.idle_add(self.gui.html.update_css)
+        gobject.idle_add(self.gui.tweet.update_css)
         gobject.idle_add(self.gui.message.update_css)
         gobject.idle_add(self.gui.profile.update_css)
     

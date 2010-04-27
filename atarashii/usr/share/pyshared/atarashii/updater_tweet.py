@@ -29,14 +29,14 @@ class UpdaterTweet(object):
         updates = []
         try:
             updates = self.try_get_items(self.get_updates,
-                                         self.html.get_first())
+                                         self.tweet.get_first())
         
         except (IOError, TweepError), error:
             gobject.idle_add(self.main.on_login_failed, error)
             return False
         
         if len(updates) > 0:
-            self.html.save_last_id(updates[0].id)
+            self.tweet.save_last_id(updates[0].id)
         
         # Expand the tweet count
         if len(updates) > self.main.max_tweet_count:
@@ -49,9 +49,9 @@ class UpdaterTweet(object):
         updates.reverse()
         for i in updates:
             if i is not None:
-                self.html.update_list.append([i, self.get_image(i)])
+                self.tweet.update_list.append([i, self.get_image(i)])
         
-        gobject.idle_add(self.do_render, self.html, init, last)
+        gobject.idle_add(self.do_render, self.tweet, init, last)
         return True
     
     
@@ -101,10 +101,10 @@ class UpdaterTweet(object):
     def load_history(self):
         updates = []
         try:
-            if self.html.history_level < 2:
+            if self.tweet.history_level < 2:
                 load_count = self.main.load_tweet_count
             
-            elif self.html.history_level < 4:
+            elif self.tweet.history_level < 4:
                 load_count = self.main.load_tweet_count * 1.5
             
             else:
@@ -112,11 +112,11 @@ class UpdaterTweet(object):
             
             updates = self.try_get_items(
                            self.get_updates,
-                           max_id = self.html.load_history_id,
+                           max_id = self.tweet.load_history_id,
                            max_count = load_count)
         
         except (IOError, TweepError), error:
-            self.html.load_history_id = HTML_UNSET_ID
+            self.tweet.load_history_id = HTML_UNSET_ID
             self.main.unset_status(ST_HISTORY)
             gobject.idle_add(self.main.handle_error, error)
             gobject.idle_add(self.gui.set_multi_button, True)
@@ -125,13 +125,13 @@ class UpdaterTweet(object):
         self.main.max_tweet_count += len(updates)
         for i in updates:
             imgfile = self.get_image(i)
-            self.html.history_list.append((i, imgfile))
+            self.tweet.history_list.append((i, imgfile))
         
-        self.html.load_history_id = HTML_UNSET_ID
+        self.tweet.load_history_id = HTML_UNSET_ID
         self.main.unset_status(ST_HISTORY | ST_NETWORK_FAILED)
         
         def update_view():
-            self.html.push_updates()
+            self.tweet.push_updates()
             self.gui.show_input()
             self.gui.set_multi_button(True)
         

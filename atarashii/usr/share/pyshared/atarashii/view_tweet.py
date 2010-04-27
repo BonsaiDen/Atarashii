@@ -31,7 +31,7 @@ class HTML(view.HTMLView):
             scroll, mode = gui.profile_scroll, MODE_PROFILE
         
         else:
-            scroll, mode = gui.html_scroll, MODE_TWEETS
+            scroll, mode = gui.tweet_scroll, MODE_TWEETS
         
         view.HTMLView.__init__(self, main, gui, scroll, mode)
         self.profile_mode = profile

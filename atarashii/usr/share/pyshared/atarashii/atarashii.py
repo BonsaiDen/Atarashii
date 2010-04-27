@@ -205,9 +205,9 @@ class Atarashii(AtarashiiActions):
         
         # Reset
         self.gui.update_status()
-        self.gui.html.init(load = True)
+        self.gui.tweet.init(load = True)
         if self.gui.mode == MODE_MESSAGES:
-            self.gui.html.start()
+            self.gui.tweet.start()
         
         self.gui.message.init(load = True)
         if self.gui.mode == MODE_TWEETS:
@@ -266,7 +266,7 @@ class Atarashii(AtarashiiActions):
             self.handle_error(error)
         
         gobject.idle_add(self.gui.message.init, True)
-        gobject.idle_add(self.gui.html.init, True)
+        gobject.idle_add(self.gui.tweet.init, True)
     
     def on_network_failed(self, error):
         self.on_login_failed(error)
@@ -288,7 +288,7 @@ class Atarashii(AtarashiiActions):
         self.gui.info_button.hide()
         
         gobject.idle_add(self.gui.message.init, True)
-        gobject.idle_add(self.gui.html.init, True)
+        gobject.idle_add(self.gui.tweet.init, True)
         gobject.idle_add(self.gui.update_app)
         self.gui.tray.update_account_menu()
         self.gui.tray.activate_menu(True)
@@ -303,10 +303,10 @@ class Atarashii(AtarashiiActions):
         
         # Tweet Info
         info_text = []
-        if self.gui.html.count > 0:
+        if self.gui.tweet.count > 0:
             info_text.append(
-              (lang.notification_login_tweets if self.gui.html.count > 1 \
-               else lang.notification_login_tweet) % self.gui.html.count)
+              (lang.notification_login_tweets if self.gui.tweet.count > 1 \
+               else lang.notification_login_tweet) % self.gui.tweet.count)
         
         # Message Info
         if self.gui.message.count > 0:

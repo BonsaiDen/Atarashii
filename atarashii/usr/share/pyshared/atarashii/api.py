@@ -86,11 +86,11 @@ class APICall(threading.Thread):
             update = self.main.api.update_status(text)
         
         self.after_send()
-        self.gui.html.set_newest()
+        self.gui.tweet.set_newest()
         
         imgfile = self.main.updater.get_image(update)
-        self.gui.html.update_list.append([update, imgfile])
-        gobject.idle_add(self.gui.html.push_updates)
+        self.gui.tweet.update_list.append([update, imgfile])
+        gobject.idle_add(self.gui.tweet.push_updates)
 
 
 # Send Tweets/Messages ---------------------------------------------------------
@@ -140,10 +140,10 @@ class Edit(APICall):
         self.send_tweet(self.text, self.main.edit_reply_id)
     
     def on_error(self):
-        gobject.idle_add(self.gui.html.remove, self.tweet_id)
+        gobject.idle_add(self.gui.tweet.remove, self.tweet_id)
     
     def after_send(self):
-        gobject.idle_add(self.gui.html.remove, self.tweet_id)
+        gobject.idle_add(self.gui.tweet.remove, self.tweet_id)
     
     def delete(self):
         self.main.set_status(ST_WAS_DELETE)
@@ -235,7 +235,7 @@ class Delete(SimpleAPICall):
         main.gui.show_input(False, True)
         
         if tweet_id != UNSET_ID_NUM:
-            gobject.idle_add(main.gui.html.remove, tweet_id)
+            gobject.idle_add(main.gui.tweet.remove, tweet_id)
             main.delete_tweet_id = UNSET_ID_NUM
         
         elif message_id != UNSET_ID_NUM:

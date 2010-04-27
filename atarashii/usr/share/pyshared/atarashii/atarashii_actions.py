@@ -96,9 +96,9 @@ class AtarashiiActions(object):
             self.save_mode()
         
         if self.username != UNSET_USERNAME:
-            self.gui.html.save_first()
+            self.gui.tweet.save_first()
             self.gui.message.save_first()
-            self.gui.html.save_last_id()
+            self.gui.tweet.save_last_id()
             self.gui.message.save_last_id()
         
         self.settings['position'] = str(self.gui.get_normalized_position())
@@ -201,7 +201,7 @@ class AtarashiiActions(object):
             api.Favorite(self, tweet_id, mode, name)
     
     def set_favorite(self, tweet_id, mode):
-        gobject.idle_add(self.gui.html.favorite, tweet_id, mode)
+        gobject.idle_add(self.gui.tweet.favorite, tweet_id, mode)
         if self.gui.mode == MODE_PROFILE:
             gobject.idle_add(self.gui.profile.favorite, tweet_id, mode)
     
@@ -416,7 +416,7 @@ class AtarashiiActions(object):
                 self.gui.tray.refresh_menu.set_sensitive(False)
                 
                 # Refresh Views
-                gobject.idle_add(self.gui.html.render)
+                gobject.idle_add(self.gui.tweet.render)
                 gobject.idle_add(self.gui.message.render)
         
         # Catch common Twitter errors

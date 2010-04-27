@@ -116,15 +116,15 @@ class GUIHelpers(object):
             
             elif self.mode == MODE_MESSAGES:
                 self.tray.set_tooltip(lang.tray_logged_in % self.main.username,
-                                      self.html.count, self.message.count)
+                                      self.tweet.count, self.message.count)
             
             elif self.mode == MODE_TWEETS:
                 self.tray.set_tooltip(lang.tray_logged_in % self.main.username,
-                                      self.html.count, self.message.count)
+                                      self.tweet.count, self.message.count)
         
         elif self.main.status(ST_CONNECT):
             self.tray.set_tooltip(lang.tray_logging_in % self.main.username,
-                                  self.html.count, self.message.count)
+                                  self.tweet.count, self.message.count)
         
         elif not view_mode \
              and not self.main.any_status(ST_NETWORK_FAILED, ST_LOGIN_ERROR):
@@ -132,8 +132,8 @@ class GUIHelpers(object):
             self.tray.set_tooltip(lang.tray_logged_out)
         
         # Set Tabs
-        label = lang.tabs_tweets_new % self.html.count \
-                if self.html.count > 0 else lang.tabs_tweets
+        label = lang.tabs_tweets_new % self.tweet.count \
+                if self.tweet.count > 0 else lang.tabs_tweets
         
         self.tab_tweets.set_label('<b>%s</b>' % label \
                                   if self.mode == MODE_TWEETS else label)
@@ -175,11 +175,11 @@ class GUIHelpers(object):
     
     def load_state(self):
         return self.message.load_state == HTML_LOADED \
-               and self.html.load_state == HTML_LOADED
+               and self.tweet.load_state == HTML_LOADED
     
     def get_view_height(self):
         if self.mode == MODE_TWEETS:
-            view = self.html
+            view = self.tweet
         
         elif self.mode == MODE_MESSAGES:
             view = self.message
@@ -227,7 +227,7 @@ class GUIHelpers(object):
         
         # Crazy color blending!
         col1 = base_color.to_string()[1:]
-        col2 = self.html.get_style().dark[gtk.STATE_NORMAL].to_string()[1:]
+        col2 = self.tweet.get_style().dark[gtk.STATE_NORMAL].to_string()[1:]
         col1 = (col1[0:4], col1[4:8], col1[8:12])
         col2 = (col2[0:4], col2[4:8], col2[8:12])
         col3 = [0, 0, 0]
@@ -269,7 +269,7 @@ class GUIHelpers(object):
     
     def fix_tooltips(self, *args):
         if self.mode == MODE_TWEETS:
-            self.html.fake_move((-1.0, -1.0))
+            self.tweet.fake_move((-1.0, -1.0))
         
         elif self.mode == MODE_MESSAGES:
             self.message.fake_move((-1.0, -1.0))

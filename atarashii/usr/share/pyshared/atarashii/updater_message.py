@@ -88,10 +88,10 @@ class UpdaterMessage(object):
     def load_history_message(self):
         messages = []
         try:
-            if self.html.history_level < 2:
+            if self.tweet.history_level < 2:
                 load_count = self.main.load_message_count
             
-            elif self.html.history_level < 4:
+            elif self.tweet.history_level < 4:
                 load_count = self.main.load_message_count * 1.5
             
             else:

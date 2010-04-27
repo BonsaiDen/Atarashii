@@ -96,18 +96,18 @@ class GUIEventHandler(object):
             gobject.idle_add(self.message.clear)
         
         else:
-            gobject.idle_add(self.html.clear)
+            gobject.idle_add(self.tweet.clear)
     
     def on_read(self, *args):
         if self.mode == MODE_MESSAGES:
             gobject.idle_add(self.message.read)
         
         else:
-            gobject.idle_add(self.html.read)
+            gobject.idle_add(self.tweet.read)
     
     def on_read_all(self, *args):
         gobject.idle_add(self.message.read)
-        gobject.idle_add(self.html.read)
+        gobject.idle_add(self.tweet.read)
     
     def on_tabs(self, tabs, page, page_num):
         if page_num == 0 and self.mode != MODE_TWEETS:
@@ -122,7 +122,7 @@ class GUIEventHandler(object):
     def on_mode(self, no_check=False, from_profile=False):
         if self.mode == MODE_MESSAGES:
             self.tabs.set_current_page(1)
-            self.html_scroll.hide()
+            self.tweet_scroll.hide()
             self.profile_scroll.hide()
             self.message_scroll.show()
             if not from_profile:
@@ -145,27 +145,27 @@ class GUIEventHandler(object):
             self.tabs.set_current_page(0)
             self.message_scroll.hide()
             self.profile_scroll.hide()
-            self.html_scroll.show()
+            self.tweet_scroll.show()
             if not from_profile:
                 self.text.has_typed = False
             
             else:
                 self.text.check_typing()
             
-            self.html.focus_me()
-            self.html.fix_scroll()
+            self.tweet.focus_me()
+            self.tweet.fix_scroll()
             self.set_multi_button(True)
             
-            if self.html.load_state == HTML_LOADING:
+            if self.tweet.load_state == HTML_LOADING:
                 self.show_progress()
             
-            elif self.html.load_state == HTML_LOADED:
+            elif self.tweet.load_state == HTML_LOADED:
                 self.show_input()
         
         elif self.mode == MODE_PROFILE:
             self.message_scroll.hide()
             self.profile_scroll.show()
-            self.html_scroll.hide()
+            self.tweet_scroll.hide()
             self.profile.focus_me()
             self.profile.fix_scroll()
             self.set_multi_button(False)
