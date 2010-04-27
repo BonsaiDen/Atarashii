@@ -306,7 +306,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                          not self.main.status(ST_NETWORK_FAILED))
         
         # Fix a strange problem where the multi button does not get activated
-        gobject.timeout_add(25, self.gui.set_multi_button,
+        gobject.timeout_add(50, self.gui.set_multi_button,
+                            not self.main.status(ST_NETWORK_FAILED))
+        
+        gobject.timeout_add(100, self.gui.set_multi_button,
                             not self.main.status(ST_NETWORK_FAILED))
     
     
