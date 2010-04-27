@@ -484,7 +484,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 state = lang.status_load_history
             
             elif self.message.load_history_id != HTML_UNSET_ID:
-                state = status_load_message_history
+                state = lang.status_load_message_history
             
             else:
                 state = lang.status_load_history
