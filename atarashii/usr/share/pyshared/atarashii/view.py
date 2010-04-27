@@ -315,6 +315,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
                 if self.load_history_id != HTML_UNSET_ID:
                     self.main.set_status(ST_HISTORY)
                     self.gui.show_progress()
+                    self.main.updater.unwait()
                     gobject.idle_add(self.gui.set_multi_button, False)
                     gobject.idle_add(self.gui.update_status, True)
                     self.text.html_focus()
