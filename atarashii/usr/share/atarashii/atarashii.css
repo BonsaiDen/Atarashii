@@ -32,7 +32,7 @@ a {
 	border-top: 2px solid #{LOADMORE};
 }
 
-.loadmore, .inner-text, .inner-text-avatar, .inner-text-no, .avatar {
+.loadmore, .inner-text, .inner-text-avatar, .avatar {
 	padding-bottom: 4px;
 }
 
@@ -40,7 +40,7 @@ a {
 	text-align: center;
 }
 
-.loadmore a, .inner-text a, .inner-text-avatar a, .inner-text-no a, .name a, 
+.loadmore a, .inner-text a, .inner-text-avatar a, .name a, 
 .time a, .reply a, .doreply a, .doreply a:hover, .doretweet a, 
 .doretweet a:hover {
 	text-decoration: none;
@@ -104,7 +104,7 @@ a:active, a:hover, a, .protected {
 }
 
 .loadmore a:hover, .name a:hover, .inner-text-avatar a:hover,
-.inner-text-no a:hover, .inner-text a:hover, .time a:hover,.reply a:hover {
+.inner-text a:hover, .time a:hover,.reply a:hover {
 	text-decoration: underline;
 }
 
@@ -179,7 +179,7 @@ a:active, a:hover, a, .protected {
     width: {AVATAR32}px;
 }
 
-.inner-text, .inner-text-avatar, .inner-text-no {
+.inner-text, .inner-text-avatar {
 	word-wrap: break-word;
 	padding-top: 5px;
 	margin-right: 20px;
