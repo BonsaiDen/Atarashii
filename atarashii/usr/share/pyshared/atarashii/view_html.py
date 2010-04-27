@@ -23,7 +23,7 @@ from constants import ST_NETWORK_FAILED, ST_LOGIN_SUCCESSFUL
 
 
 class ViewHTML(object):
-    def init_render(self):
+    def setup_render(self):
         self.position = self.scroll.get_vscrollbar().get_value()
         self.current_scroll = self.position
         self.is_loading = True
@@ -37,6 +37,9 @@ class ViewHTML(object):
         self.new_items_id = HTML_UNSET_ID
         if self.newest_id == HTML_UNSET_ID:
             self.newest_id = self.init_id
+    
+    def init_render(self):
+        self.setup_render()
         
         # Find newest item
         for item in self.items:

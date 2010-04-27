@@ -112,16 +112,15 @@ a:active, a:hover, a, .protected {
 /* Profile Stuff ---------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 .profile_image {
-    padding-top: 6px;
-    width: 64px;
+    padding-top: 4px;
+    width: {AVATAR48}px;
     float: left;
 	display: block;
 }
 
 .profile_infos {
-    padding-top: 4px;
-    margin-left: 70px;
-    min-height: 72px;
+    margin-left: {AVATAR54}px;
+    min-height: {AVATAR54}px;
 }
 
 .profile_status {
@@ -129,21 +128,39 @@ a:active, a:hover, a, .protected {
 }
 
 .profile_header {
-    background: #{TWEET_OLD};
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    background: #{HIGHLIGHT_OLD};
+    padding-top: 2px;
 	padding-left: 6px;
 	padding-right: 2px;
-	border-bottom: 4px solid #c0c0c0;
-	padding-bottom: 6px;
+	border-bottom: 2px solid #{SPACER_TWEET_HIGHLIGHT};
+	padding-bottom: 2px;
+}
+
+.profile_tweets {
+    margin-bottom: 6px;
 }
 
 .profile_realname {
-    font-size: 15px;
+    font-size: {FONT13}px;
     font-weight: bold;
 } 
 
 .profile_screenname {
+    padding-top: 4px;
     font-size: {FONT10}px;
     font-weight: bold;
+}
+
+.profile_header a {
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.profile_header a:hover {
+    text-decoration: underline;
 }
 
 
@@ -162,6 +179,9 @@ a:active, a:hover, a, .protected {
 	word-wrap: break-word;
 	padding-top: 5px;
 	margin-right: 20px;
+}
+
+.inner-text {
 	min-height: 28px;
 }
 

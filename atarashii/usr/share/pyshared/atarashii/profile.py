@@ -16,52 +16,29 @@
 
 # HTML View --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-import view
 import html
 
-from utils import menu_escape, escape
+from utils import escape
 from language import LANG as lang
 
-from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, UNSET_ID_NUM, \
-                      MODE_PROFILE, HTML_UNSET_ID, HTML_UNSET_TEXT, HTML_LOADED
+from constants import ST_LOGIN_SUCCESSFUL
+from constants import UNSET_TEXT, HTML_UNSET_TEXT, HTML_LOADED
 
 
 class HTML(html.HTML):
     def __init__(self, main, gui):
-        view.HTMLView.__init__(self, main, gui,
-                               gui.profile_scroll, MODE_PROFILE)
-        
+        html.HTML.__init__(self, main, gui, True)
         self.item_count = self.main.load_tweet_count
         
-        self.lang_loading = lang.profile_loading
-        self.lang_empty = lang.profile_empty
-        self.lang_load = lang.profile_load_more
+        self.lang_loading = lang.profile_html_loading
+        self.lang_empty = lang.profile_html_empty
+        self.lang_load = lang.profile_html_load_more
         
         self.last_name = UNSET_TEXT
         self.last_highlight = UNSET_TEXT
         self.last_mentioned = UNSET_TEXT
         
-        self.show_avatars = False
         self.load_state = HTML_LOADED
-
-        
-    def init_render(self):
-        self.position = self.scroll.get_vscrollbar().get_value()
-        self.current_scroll = self.position
-        self.is_loading = True
-        self.items.sort(key = lambda i: i[0].id)
-        self.count = 0
-        
-        # Newest Stuff
-        self.init_id = 10000000000000
-        self.newest = False
-        self.newest_avatar = False
-        self.new_timeline = False
-        self.new_items_id = HTML_UNSET_ID
-        if self.newest_id == HTML_UNSET_ID:
-            self.newest_id = self.init_id
-        
-        self.new_items_id = self.init_id
     
     def render(self, user=None, friend=None, tweets=None):
         # If item don't have changed just update the times via javascript
@@ -79,7 +56,10 @@ class HTML(html.HTML):
         while len(self.update_list) > 0:
             self.add(self.update_list.pop(0))
         
-        self.init_render()
+        # Init Render
+        self.setup_render()
+        self.init_id = 10000000000000
+        self.new_items_id = self.init_id
         self.last_name = HTML_UNSET_TEXT
         self.last_highlight = False
         self.last_mentioned = False
@@ -89,20 +69,13 @@ class HTML(html.HTML):
         
         # Do the rendering!
         self.renderitems = []
-        newest_closed = False
         for num, obj in enumerate(self.items):
             item, img = obj
             self.is_new_timeline(item)
             self.renderitems.insert(0, self.render_item(num, item, img))
         
-        
         # Image / Name / Tweets
         img_file = self.main.updater.get_image(None, False, user)
-        
-       # url = ('<a href="http://twitter.com/%s">'
-       #        + lang.profile_link + '</a>') % user.screen_name
-        
-       # self.profile_name.set_label(lang.profile_name % (user.screen_name, url))
         
         # Detailed information
         details = []
@@ -133,42 +106,50 @@ class HTML(html.HTML):
             status = lang.profile_status_protected
         
         else:
-            status = ''
+            status = None
         
-        # Profile
+        if status is not None:
+            status = '<div class="profile_status">%s</div>' % status
+        
+        else:
+            status = HTML_UNSET_TEXT
+        
+        # Profile HTML
         self.profile_data = '''
-        <div class="profile_header">
-            <a href="http://twitter.com/%s">
+        <div class="profile_header" id="header">
+            <a href="user:%s:http://twitter.com/%s">
                 <img class="profile_image" width="64" src="file://%s" />
             </a>
-            <div class="profile_infos">
-                <div class="profile_screenname">%s</div>
-                <div class="profile_realname">%s</div>
+            <div class="profile_infos">   
+                <div class="profile_realname">
+                    <a href="user:%s:http://twitter.com/%s">%s</a>
+                </div>
                 <div><b>%s</b> Tweets</div>
                 <div><b>%s</b> Followers</div>
                 <div>Following <b>%s</b></div>
             </div>
             <div>
                 <div>%s</div>
-                <div class="profile_status">
-                    %s
-                </div>
+                %s
             </div>
-        </div>''' % (user.screen_name, img_file, user.screen_name, user.name, 
+        </div>''' % (user.screen_name, user.screen_name, img_file,
+                     user.screen_name, user.screen_name, user.name,
                      user.statuses_count, user.followers_count,
                      user.friends_count, '</div><div>'.join(details), status)
         
         # Render
-        self.set_html(self.renderitems, True)        
+        self.set_html(self.renderitems, True)
     
-    def start(self):
-        self.scroll.get_vscrollbar().set_value(0)
-        self.offset_count = 0
-        self.render_html('''
-            <body class="unloaded" ondragstart="return false">
-                <div class="loading"><img src="file://%s" /><br/>
-                <b class="loadingtext">%s</b></div>
-            </body>''' % (self.main.get_image(), self.lang_loading))
+    def after_loaded(self):
+        self.execute_script(
+            '''function resize() {
+                   var header = document.getElementById('tweets');
+                   if (header !== null) {
+                       header.setAttribute('style', 'margin-top:' + 
+                       (document.getElementById('header').offsetHeight) + 'px');
+                   }
+                   delete header;
+                };window.onresize = resize;resize();''')
     
     def set_html(self, renderitems, rendered=False):
         if rendered:
@@ -176,19 +157,28 @@ class HTML(html.HTML):
                 self.render_html('''
                     <body ondragstart="return false">
                         %s
-                        <div><div id="newcontainer"></div>%s</div>
+                        <div id="tweets">
+                            <div id="newcontainer"></div>
+                            <div>%s</div>
+                        </div>
                     </body>''' % (self.profile_data, ''.join(renderitems)))
             
             else:
                 self.render_html('''
                     <body class="unloaded" ondragstart="return false">
                         %s
-                        <div class="loading"><b>%s</b></div>
+                        <div id="tweets" class="profile_tweets">
+                            <div class="loading">
+                                <b>%s</b>
+                            </div>
+                        </div>
                     </body>''' % (self.profile_data, self.lang_empty))
         
         elif self.main.status(ST_LOGIN_SUCCESSFUL):
             self.render_html('''
                 <body class="unloaded" ondragstart="return false">
-                    <div class="loading"><b>%s</b></div>
+                    <div class="loading" style="padding-top: 6px">
+                        <b>%s</b>
+                    </div>
                 </body>''' % self.lang_empty)
 

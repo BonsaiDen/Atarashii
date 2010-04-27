@@ -33,7 +33,7 @@ import dialog
 
 from gui_events import GUIEventHandler
 from gui_helpers import GUIHelpers
-from utils import escape, gmtime
+from utils import gmtime
 from language import LANG as lang
 
 from constants import CRASH_LOG_FILE
@@ -45,7 +45,7 @@ from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       UNSET_USERNAME, MESSAGE_WARNING, MESSAGE_QUESTION, \
                       UNSET_TIMEOUT, HTML_UNSET_ID, MESSAGE_ERROR, \
                       MESSAGE_WARNING, BUTTON_REFRESH, BUTTON_READ, \
-                      BUTTON_HISTORY, MODE_PROFILE, HTML_LOADED
+                      BUTTON_HISTORY, MODE_PROFILE
 
 from constants import ERR_TWEET_NOT_FOUND, ERR_MESSAGE_NOT_FOUND, \
                       ERR_ALREADY_RETWEETED, ERR_TWEET_DUPLICATED, \
@@ -127,7 +127,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.tabs = gtb.get_object('pages')
         self.tab_tweets = gtb.get_object('tab_tweets')
         self.tab_messages = gtb.get_object('tab_messages')
-        self.tab_profile = gtb.get_object('tab_profile')
         self.tabs.connect('switch-page', self.on_tabs)
         self.tabs.set_property('can-focus', False)
         self.tab_tweets.set_property('can-focus', False)
@@ -156,19 +155,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         # Loading Button
         self.load_button = dialog.ButtonDialog(self, 'load', '', '',
                                                True, self.main.stop_profile)
-        
-        # Fix a few resize problems
-        self.current_size = (0, 0)
-        self.connect('size-allocate', self.resize_event)
-        
-        # Profile
-        self.profile_box = gtb.get_object('profilebox')
-        self.profile_bio = gtb.get_object('profilebio')
-        self.profile_info = gtb.get_object('profileinfo')
-        self.profile_image = gtb.get_object('profileimage')
-        self.profile_name = gtb.get_object('profilename')
-        self.profile_status = gtb.get_object('profilestatus')
-        gtb.get_object('profileclose').connect('clicked', self.hide_profile)
         
         # Restore Position & Size
         if self.settings.isset('position'):
@@ -298,7 +284,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         if self.main.status(ST_LOGIN_SUCCESSFUL):
             self.tabsbox.show()
         
-        self.tabs.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL))
+        self.tabs.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL) \
+                                and self.mode != MODE_PROFILE)
         
         # Force update of the statusbar
         gobject.idle_add(self.update_status, True)
@@ -362,24 +349,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.text_scroll.hide()
         self.set_multi_button(False, None, False, True)
         self.tabs.set_sensitive(False)
-    
-    
-    # Profile ------------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def show_profile(self, user, friend, tweets):
-        if not self.main.profile_pending:
-            return False
-        
-        self.main.profile_current_user = user.screen_name
-        
-        self.profile.load_state = HTML_LOADED
-        self.profile.render(user, friend, tweets)
-        if self.mode == MODE_PROFILE:
-            self.show_input()
-    
-    def hide_profile(self, *args):
-        self.main.profile_current_user = UNSET_USERNAME
-        self.profile_box.hide()
     
     
     # Refresh / Read / History Button ------------------------------------------
@@ -494,7 +463,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     # Statusbar ----------------------------------------------------------------
     # --------------------------------------------------------------------------
     def update_status(self, once=False):
-        if self.text.has_typed:
+        if self.text.has_typed and not self.mode == MODE_PROFILE:
             pass
         
         elif self.main.status(ST_RECONNECT):
@@ -542,10 +511,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         elif self.mode == MODE_PROFILE \
              and self.profile.load_state == HTML_LOADING:
             
-            self.set_status(lang.status_profile)
+            self.set_status(lang.status_profile \
+                            % lang.name(self.main.profile_current_user))
         
-        elif (not self.text.is_typing or not self.text.has_focus) \
-              and not self.main.status(ST_SEND):
+        elif (not self.text.is_typing or not self.text.has_focus \
+              or self.mode == MODE_PROFILE) and not self.main.status(ST_SEND):
             
             wait = self.main.refresh_timeout - \
                    (gmtime() - self.main.refresh_time)

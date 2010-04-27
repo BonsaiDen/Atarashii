@@ -33,7 +33,7 @@ from language import LANG as lang
 from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED, \
                       ST_TRAY_WARNING
 
-from constants import MODE_MESSAGES, MODE_TWEETS, HTML_UNSET_ID, \
+from constants import MODE_MESSAGES, MODE_TWEETS, MODE_PROFILE, HTML_UNSET_ID, \
                       UNSET_TIMEOUT, HTML_RESET, HTML_LOADING, HTML_LOADED, \
                       UNSET_PASSWORD
 
@@ -384,6 +384,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet):
             
             else:
                 self.message.render()
+            
+            # Update profile tweet times
+            if self.gui.mode == MODE_PROFILE:
+                self.gui.profile.render()
             
             # Update GUI
             self.unwait()

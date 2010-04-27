@@ -109,6 +109,7 @@ LANG = {
         
         # Profile
         'profile_loading': '<b>%s</b> Profil wird geladen...',
+        'profile_close': '<b>%s</b> Profil schliessen',
         'profile_link': 'Auf Twitter.com',
         'profile_name': '<b>%s</b> (%s)',
         'profile_info':
@@ -138,9 +139,9 @@ LANG = {
             '<b>%s</b> Profil konnte nicht geladen werden, der Benutzer '
             'existiert nicht.',
         
-        'profile_loading': 'Lade Profil...',
-        'profile_empty': 'Keine aktuellen Tweets',
-        'profile_load_more': '',
+        'profile_html_loading': 'Profil wird geladen...',
+        'profile_html_empty': 'Keine aktuellen Tweets',
+        'profile_html_load_more': '',
         
         # Messages
         'message_loading': 'Nachrichten werden geladen...',
@@ -177,7 +178,7 @@ LANG = {
         'status_message': 'Sende Nachricht an %s...',
         'status_message_reply': 'Antworte %s...',
         'status_send': 'Sende Status...',
-        'status_profile': 'Lade Profil...',
+        'status_profile': 'Lade %s Profil...',
         'status_left': 'Noch %d Zeichen.',
         'status_more': '%d Zeichen zu viel.',
         'status_more_tweet': '%d Zeichen zu viel, %d mehr um zu teilen.',
@@ -538,6 +539,7 @@ LANG = {
         
         # Profile
         'profile_loading': 'Loading <b>%s</b> profile...',
+        'profile_close': '<b>%s</b> Profil schliessen',
         'profile_link': 'On Twitter.com',
         'profile_name': '<b>%s</b> (%s)',
         'profile_info':
@@ -565,6 +567,10 @@ LANG = {
         
         'profile_error':
             'Could not load <b>%s</b> profile, the user does not exist.',
+        
+        'profile_html_loading': 'Loading profile...',
+        'profile_html_empty': 'No recent Tweets',
+        'profile_html_load_more': '',
         
         # Messages
         'message_loading': 'Loading messages...',
@@ -601,8 +607,9 @@ LANG = {
         'status_message': 'Sending Message to %s...',
         'status_message_reply': 'Replying to %s...',
         'status_send': 'Sending Status...',
+        'status_profile': 'Loading %s profile...',
         'status_left': '%d char(s) left.',
-        'status_more_tweet': 'Plus %d char(s).',
+        'status_more': 'Plus %d char(s).',
         'status_more_tweet': 'Plus %d char(s), %d till split.',
         'status_more_message': 'Plus %d char(s), %d till split.',
         'status_more_tweet_split': 'Plus %d char(s). Tweet will be split.',

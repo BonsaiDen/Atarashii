@@ -36,7 +36,8 @@ from language import LANG as lang
 
 from constants import LOGOUT_FILE
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR, UNSET_USERNAME, \
-                      USERLIST_TIMEOUT, HTML_LOADING, MODE_PROFILE, MODE_TWEETS
+                      USERLIST_TIMEOUT, HTML_LOADING, MODE_PROFILE, \
+                      HTML_LOADED, MODE_PROFILE
 
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
@@ -106,7 +107,7 @@ class AtarashiiActions(object):
         self.settings.save()
     
     def save_mode(self):
-        if self.username != UNSET_TEXT:
+        if self.username != UNSET_TEXT and self.gui.mode != MODE_PROFILE:
             self.settings['mode_' + self.username] = self.gui.mode
     
     
@@ -198,6 +199,11 @@ class AtarashiiActions(object):
             self.favorites_pending[tweet_id] = mode
             api.Favorite(self, tweet_id, mode, name)
     
+    def set_favorite(self, tweet_id, mode):
+        gobject.idle_add(self.gui.html.favorite, tweet_id, mode)
+        if self.gui.mode == MODE_PROFILE:
+            gobject.idle_add(self.gui.profile.favorite, tweet_id, mode)
+    
     # Follow / Unfollow
     def follow(self, menu, user_id, name, mode):
         self.follow_pending[name.lower()] = True
@@ -224,23 +230,46 @@ class AtarashiiActions(object):
         if self.profile_current_user.lower() == name.lower():
             return False
         
-        self.gui.hide_profile()
+        if self.gui.mode != MODE_PROFILE:
+            self.profile_mode = self.gui.mode
+        
         self.profile_pending = True
         self.gui.profile.load_state = HTML_LOADING
         self.gui.profile.start()
-        gobject.timeout_add(50, self.gui.set_mode, MODE_PROFILE)
-        gobject.timeout_add(50, self.gui.on_mode)
+        
+        self.gui.text.remove_auto_complete(True)
+        gobject.idle_add(self.gui.set_mode, MODE_PROFILE)
+        gobject.idle_add(self.gui.on_mode)
         
         name = self.settings.get_username(name)
-       # self.gui.load_button.show(lang.profile_loading % lang.name(name), None)
-        api.Profile(self, name, self.gui.show_profile)
+        self.profile_current_user = name
+        self.gui.load_button.show(lang.profile_loading % lang.name(name), None)
+        api.Profile(self, name, self.show_profile)
     
-    def stop_profile(self, *args):
+    def show_profile(self, user, friend, tweets):
+        if not self.profile_pending:
+            return False
+        
+        self.gui.load_button.show(lang.profile_close % \
+                                  lang.name(user.screen_name), None)
+        
+        self.profile_current_user = user.screen_name
+        self.gui.profile.load_state = HTML_LOADED
+        self.gui.profile.render(user, friend, tweets)
+        self.gui.show_input()
+    
+    def stop_profile(self, blank=False):
         self.profile_pending = False
-        gobject.idle_add(self.gui.set_mode, MODE_TWEETS)
-        gobject.idle_add(self.gui.on_mode)
-        self.gui.profile.load_state = HTML_LOADING
-        self.gui.profile.start()
+        self.profile_current_user = UNSET_USERNAME
+        self.gui.load_button.hide()
+        
+        if blank is not True:
+            if self.gui.mode == MODE_PROFILE:
+                self.gui.mode = self.profile_mode
+                self.gui.on_mode(no_check = True, from_profile = True)
+            
+            self.gui.profile.load_state = HTML_LOADING
+            self.gui.profile.start()
     
     # Update the user list with all the users friends
     def update_user_list(self):
@@ -258,12 +287,12 @@ class AtarashiiActions(object):
         ratelimit = self.api.rate_limit_status()
         if ratelimit is not None:
             minutes = math.ceil((ratelimit['reset_time_in_seconds'] \
-                                 - gmtime()) / 60.0)
+                                 - gmtime()) / 60.0) + 2
         
         else:
             minutes = 5
         
-        self.refresh_timeout = int(minutes * 60 + 2)
+        self.refresh_timeout = int(minutes * 60)
         
         # Schedule a reconnect if the actual login failed
         if not self.status(ST_LOGIN_SUCCESSFUL):
@@ -271,7 +300,8 @@ class AtarashiiActions(object):
             self.set_status(ST_RECONNECT)
             self.reconnect_timeout = gobject.timeout_add(
                                      int(self.refresh_timeout * 1000),
-                                     self.login)
+                                     self.login,
+                                     self.last_username)
             
             return ERR_RATE_RECONNECT, lang.error_ratelimit_reconnect \
                                          % math.ceil(minutes)

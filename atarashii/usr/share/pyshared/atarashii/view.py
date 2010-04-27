@@ -91,7 +91,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.set_maintains_back_forward_list(False)
         self.parser = ttp.Parser()
         self.item_count = HTML_UNSET_ID
-        self.show_avatars = True
+        self.profile_mode = False
         
         self.lang_loading = HTML_UNSET_TEXT
         self.lang_load = HTML_UNSET_TEXT
@@ -154,6 +154,9 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     # History / Read Button ----------------------------------------------------
     # --------------------------------------------------------------------------
     def save_first(self):
+        if self.profile_mode:
+            return False
+        
         if len(self.items) > 0 and self.load_state == HTML_LOADED:
             itemid = len(self.items) - self.item_count
             if itemid < 0:
@@ -162,6 +165,9 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             self.set_first(self.items[itemid][0].id - 1)
     
     def save_last(self, setting, item_id):
+        if self.profile_mode:
+            return False
+        
         # Save on exit
         if item_id is None:
             if len(self.items) > 0 and self.load_state == HTML_LOADED:
@@ -175,10 +181,16 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             self.set_newest()
     
     def set_newest(self):
+        if self.profile_mode:
+            return False
+        
         if len(self.items) > 0:
             self.newest_id = self.items[len(self.items) - 1][0].id
     
     def clear(self):
+        if self.profile_mode:
+            return False
+        
         self.history_loaded = False
         self.items = self.items[self.history_count:]
         self.set_item_count(self.get_item_count() - self.history_count)
@@ -189,6 +201,9 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.render()
     
     def read(self):
+        if self.profile_mode:
+            return False
+        
         if self.init_id != self.get_latest():
             self.init_id = self.get_latest()
             if not self.history_loaded:

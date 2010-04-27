@@ -31,7 +31,8 @@ from constants import REPLY_REGEX, MESSAGE_REGEX
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE
 
-from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, MODE_TWEETS
+from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, MODE_TWEETS, \
+                      MODE_PROFILE
 
 
 class TextInput(gtk.TextView):
@@ -57,6 +58,7 @@ class TextInput(gtk.TextView):
         self.message_len = 0
         self.message_to_send = None
         self.tweet_to_send = None
+        self.switch_profile = False
         self.next_text = UNSET_TEXT
         
         # Auto complete stuff
@@ -104,6 +106,7 @@ class TextInput(gtk.TextView):
         if not self.has_typed:
             self.modify_text(gtk.STATE_NORMAL, self.default_fg)
             self.set_text(UNSET_TEXT)
+            self.gui.update_status()
         
         else:
             gobject.idle_add(self.check_length)
@@ -455,24 +458,9 @@ class TextInput(gtk.TextView):
         self.check_auto_complete()
         
         # Resize
-        self.resize()
-        self.is_typing = len(text) > 0
-        
-        # Status
-        if self.is_typing:
-            self.has_typed = self.has_focus
-            if self.has_focus:
-                self.modify_text(gtk.STATE_NORMAL, self.default_fg)
-                self.check_length()
-        
-        else:
-            if not self.is_changing:
-                self.change_contents = False
-            
-            self.has_typed = False
-            self.gui.update_status()
-        
-        self.check_color(len(text))
+        if not self.switch_profile:
+            self.resize()
+            self.check_typing(text)
     
     
     # Auto completion of usernames ---------------------------------------------
@@ -576,9 +564,10 @@ class TextInput(gtk.TextView):
             else:
                 self.remove_auto_complete()
     
-    def remove_auto_complete(self):
+    def remove_auto_complete(self, profile=True):
         if self.auto_complete:
             self.is_changing = True
+            self.switch_profile = profile
             
             # When typing out a user that is known use the know casing
             for i in self.main.settings.user_list:
@@ -603,6 +592,7 @@ class TextInput(gtk.TextView):
             self.set_cursor(self.get_offset(len(pre)))
             self.is_changing = False
             self.auto_complete = False
+            self.switch_profile = False
         
         self.auto_typed = UNSET_TEXT
         self.auto_complete_name = UNSET_TEXT
@@ -751,6 +741,7 @@ class TextInput(gtk.TextView):
         self.set_text(UNSET_TEXT)
         self.auto_complete = False
         self.is_shortening = False
+        self.switch_profile = False
         self.has_focus = False
         self.loose_focus()
         self.unfocus()
@@ -758,6 +749,9 @@ class TextInput(gtk.TextView):
     
     # Checks -------------------------------------------------------------------
     def check_length(self):
+        if self.gui.mode == MODE_PROFILE:
+            return False
+        
         text = self.get_text().lstrip()
         max_length = 140 + self.message_len
         if len(text) <= max_length:
@@ -794,6 +788,28 @@ class TextInput(gtk.TextView):
         else:
             self.modify_base(gtk.STATE_NORMAL, self.default_bg)
     
+    def check_typing(self, text=None):
+        if text is None:
+            text = self.get_text()
+        
+        self.is_typing = len(text) > 0
+        
+        # Status
+        if self.is_typing:
+            self.has_typed = self.has_focus
+            if self.has_focus:
+                self.modify_text(gtk.STATE_NORMAL, self.default_fg)
+                self.check_length()
+        
+        else:
+            if not self.is_changing:
+                self.change_contents = False
+            
+            self.has_typed = False
+            self.gui.update_status()
+        
+        self.check_color(len(text))
+    
     def check_mode(self):
         self.is_shortening = False
         self.has_focus = False
@@ -803,6 +819,9 @@ class TextInput(gtk.TextView):
     
     # Content switching --------------------------------------------------------
     def init_change(self):
+        if self.gui.mode == MODE_PROFILE:
+            self.main.stop_profile()
+        
         self.change_contents = True
         self.is_changing = True
         self.grab_focus()
@@ -857,6 +876,12 @@ class TextInput(gtk.TextView):
     
     def resize(self, line_count=5):
         self.gui.set_label()
+        
+        # Always small in profile view
+        if self.gui.mode == MODE_PROFILE:
+            line_count = 1
+            self.modify_text(gtk.STATE_NORMAL,
+                             self.get_style().text[gtk.STATE_INSENSITIVE])
         
         # Get Font Height
         font = self.create_pango_context().get_font_description()

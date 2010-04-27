@@ -116,10 +116,14 @@ class ViewHelpers(object):
         if len(self.items) > 0:
             self.first_load = False
         
+        self.after_loaded()
         self.load_history = False
         self.has_newitems = False
         self.fake_move(self.mouse_position)
         self.gui.update_app(True)
+    
+    def after_loaded(self):
+        pass
     
     def on_scroll(self, view, event):
         # FIXME sometimes this still doesn't remove the menu
@@ -134,7 +138,10 @@ class ViewHelpers(object):
     
     def on_draw(self, *args):
         if self.is_rendering_history:
-            if self.scroll.get_vscrollbar().get_value() == 0.0:
+            if self.scroll.get_vscrollbar().get_value() == 0.0 \
+               and self.scroll.get_vscrollbar().get_adjustment().get_upper() \
+               > self.gui.get_view_height():
+                
                 return True
             
             else:
@@ -267,6 +274,9 @@ class ViewHelpers(object):
         
         if self.newest_avatar or self.init_id == 0:
             self.new_avatar = False
+        
+        if self.profile_mode:
+            self.new_avatar = True
         
         if self.new_avatar:
             self.newest_avatar = True

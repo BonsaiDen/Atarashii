@@ -291,11 +291,14 @@ class Settings(object):
                 css_data = css_data.replace('{AVATAR32}', str(avatar_size))
                 css_data = css_data.replace('{AVATAR34}', str(avatar_size + 2))
                 css_data = css_data.replace('{AVATAR38}', str(avatar_size + 6))
+                css_data = css_data.replace('{AVATAR48}', str(avatar_size + 16))
+                css_data = css_data.replace('{AVATAR54}', str(avatar_size + 22))
                 
                 css_data = css_data.replace('{FONT9}', str(font_size - 1))
                 css_data = css_data.replace('{FONT10}', str(font_size))
                 css_data = css_data.replace('{FONT11}', str(font_size + 1))
                 css_data = css_data.replace('{FONT12}', str(font_size + 2))
+                css_data = css_data.replace('{FONT13}', str(font_size + 3))
                 css_data = css_data.replace('{FONT14}', str(font_size + 4))
                 
                 colors = self.color_themes[color_theme]['colors']

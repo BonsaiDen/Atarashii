@@ -22,13 +22,19 @@ from utils import menu_escape
 from language import LANG as lang
 
 from constants import RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, UNSET_ID_NUM, \
-                      MODE_TWEETS, HTML_UNSET_ID, HTML_UNSET_TEXT
+                      MODE_TWEETS, HTML_UNSET_ID, HTML_UNSET_TEXT, MODE_PROFILE
 
 
 class HTML(view.HTMLView):
-    def __init__(self, main, gui):
-        view.HTMLView.__init__(self, main, gui,
-                               gui.html_scroll, MODE_TWEETS)
+    def __init__(self, main, gui, profile=False):
+        if profile:
+            scroll, mode = gui.profile_scroll, MODE_PROFILE
+        
+        else:
+            scroll, mode = gui.html_scroll, MODE_TWEETS
+        
+        view.HTMLView.__init__(self, main, gui, scroll, mode)
+        self.profile_mode = profile
         
         self.item_count = self.main.load_tweet_count
         
@@ -125,18 +131,13 @@ class HTML(view.HTMLView):
         
         
         # Avatar ---------------------------------------------------------------
-        if self.show_avatars:
-            self.is_new_avatar(num)
-            has_avatar = (num < len(self.items) - 1 and \
-                         (user.screen_name != self.get_screen_name(num + 1) \
-                         or self.new_avatar)) \
-                         or num == len(self.items) - 1 or self.new_timeline
-            
-            avatar, text_class = self.get_avatar(has_avatar, user, num, img)
-            
-        else:
-            avatar = ''
-            text_class = 'inner-text-no'
+        self.is_new_avatar(num)
+        has_avatar = (num < len(self.items) - 1 and \
+                     (user.screen_name != self.get_screen_name(num + 1) \
+                     or self.new_avatar)) \
+                     or num == len(self.items) - 1 or self.new_timeline
+        
+        avatar, text_class = self.get_avatar(has_avatar, user, num, img)
         
         
         # Background -----------------------------------------------------------
@@ -205,19 +206,15 @@ class HTML(view.HTMLView):
         <div class="clearfloat"></div>
         </div>'''
         
+        # Avatar and Name
+        name =  '<div><span class="name">' + \
+                ('<b>RT</b> ' if retweeted else HTML_UNSET_TEXT) + \
+                '<b><a href="profile:%d:http://twitter.com/%s" title="' + \
+                lang.html_profile + '">%s</a></b></span>' + \
+                self.is_protected(user)
         
-        if self.show_avatars:
-            name =  '''<div><span class="name">''' + \
-                    ('<b>RT</b> ' if retweeted else '') + \
-                    '''<b><a href="profile:%d:http://twitter.com/%s" title="''' + \
-                    lang.html_profile + '''">%s</a></b></span>''' + \
-                    self.is_protected(user)
-                    
-            name = name % (num, user.screen_name, lang.name(user.screen_name),
-                           user.screen_name,)
-        
-        else:
-            name = ''
+        name = name % (num, user.screen_name, lang.name(user.screen_name),
+                       user.screen_name)
         
         # Insert values
         html = html % (

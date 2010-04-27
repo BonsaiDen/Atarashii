@@ -263,7 +263,7 @@ class Favorite(SimpleAPICall):
             main.api.destroy_favorite(tweet_id)
     
     def on_success(self, main, tweet_id, mode, name):
-        gobject.idle_add(main.gui.html.favorite, tweet_id, mode)
+        gobject.idle_add(main.set_favorite, tweet_id, mode)
     
     def on_error(self, main, tweet_id, mode, name):
         gobject.idle_add(main.gui.show_favorite_error, mode, name)
@@ -299,6 +299,7 @@ class Profile(SimpleAPICall):
         gobject.idle_add(callback, self.user, self.friend, self.tweets)
     
     def on_error(self, main, name, callback):
+        gobject.idle_add(main.gui.show_input)
         gobject.idle_add(main.stop_profile)
         gobject.idle_add(main.gui.show_profile_error, name)
 

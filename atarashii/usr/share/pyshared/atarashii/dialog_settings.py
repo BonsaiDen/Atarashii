@@ -332,6 +332,7 @@ class SettingsDialog(Dialog):
                 self.settings.css()
                 gobject.idle_add(self.gui.html.update_css)
                 gobject.idle_add(self.gui.message.update_css)
+                gobject.idle_add(self.gui.profile.update_css)
         
         self.__class__.instance = None
         self.gui.settings_dialog = None
@@ -346,6 +347,7 @@ class SettingsDialog(Dialog):
         
         gobject.idle_add(self.gui.html.update_css)
         gobject.idle_add(self.gui.message.update_css)
+        gobject.idle_add(self.gui.profile.update_css)
     
     
     # Generate listboxes -------------------------------------------------------

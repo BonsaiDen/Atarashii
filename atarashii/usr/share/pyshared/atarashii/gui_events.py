@@ -47,13 +47,6 @@ class GUIEventHandler(object):
             self.minimized = event.new_window_state & \
                                    gtk.gdk.WINDOW_STATE_ICONIFIED
     
-    def resize_event(self, window, request):
-        size = (request[2], request[3])
-        if size != self.current_size:
-            self.profile_bio.set_size_request(size[0] - 16, -1)
-            self.profile_status.set_size_request(size[0] - 16, -1)
-            self.current_size = size
-    
     
     # Handlers -----------------------------------------------------------------
     # --------------------------------------------------------------------------
@@ -122,17 +115,22 @@ class GUIEventHandler(object):
         
         elif page_num == 1 and self.mode != MODE_MESSAGES:
             self.set_mode(MODE_MESSAGES)
-    
+        
         elif page_num == 2 and self.mode != MODE_PROFILE:
             self.set_mode(MODE_PROFILE)
     
-    def on_mode(self, *args):
+    def on_mode(self, no_check=False, from_profile=False):
         if self.mode == MODE_MESSAGES:
             self.tabs.set_current_page(1)
             self.html_scroll.hide()
             self.profile_scroll.hide()
             self.message_scroll.show()
-            self.text.has_typed = False
+            if not from_profile:
+                self.text.has_typed = False
+            
+            else:
+                self.text.check_typing()
+            
             self.message.focus_me()
             self.message.fix_scroll()
             self.set_multi_button(True)
@@ -148,7 +146,12 @@ class GUIEventHandler(object):
             self.message_scroll.hide()
             self.profile_scroll.hide()
             self.html_scroll.show()
-            self.text.has_typed = False
+            if not from_profile:
+                self.text.has_typed = False
+            
+            else:
+                self.text.check_typing()
+            
             self.html.focus_me()
             self.html.fix_scroll()
             self.set_multi_button(True)
@@ -160,15 +163,14 @@ class GUIEventHandler(object):
                 self.show_input()
         
         elif self.mode == MODE_PROFILE:
-            self.tabs.set_current_page(2)
             self.message_scroll.hide()
             self.profile_scroll.show()
             self.html_scroll.hide()
-            self.text.has_typed = False
             self.profile.focus_me()
             self.profile.fix_scroll()
             self.set_multi_button(False)
-            
+            self.tabs.set_sensitive(False)
+            no_check = True
             if self.profile.load_state == HTML_LOADING:
                 self.profile.start()
                 self.show_progress()
@@ -182,10 +184,11 @@ class GUIEventHandler(object):
             pass
         
         self.update_app()
-        self.text.check_mode()
-        self.text.loose_focus()
+        if not no_check:
+            self.text.check_mode()
+            self.text.loose_focus()
         
-        if self.is_shown:
+        if self.is_shown and not MODE_PROFILE and not from_profile:
             self.main.save_settings(True)
     
     def on_settings(self, button, menu):

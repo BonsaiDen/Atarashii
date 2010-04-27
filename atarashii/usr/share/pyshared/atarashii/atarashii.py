@@ -54,7 +54,8 @@ from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_TRAY_WARNING
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
-                      MODE_TWEETS, MODE_MESSAGES, UNSET_USERNAME, MODE_PROFILE
+                      MODE_TWEETS, MODE_MESSAGES, UNSET_USERNAME, \
+                      MODE_PROFILE
 
 
 class Atarashii(AtarashiiActions):
@@ -110,6 +111,7 @@ class Atarashii(AtarashiiActions):
         self.block_pending = {}
         self.profile_pending = False
         self.profile_current_user = UNSET_USERNAME
+        self.profile_mode = MODE_TWEETS
         
         # User stuff
         self.username = self.settings['username'] or UNSET_USERNAME
@@ -162,15 +164,16 @@ class Atarashii(AtarashiiActions):
         # Switch User
         if change_user is not None:
             self.gui.text.reset()
-            self.username = change_user
             self.last_username = self.username
+            self.username = change_user
             self.settings['username'] = change_user
         
         # Set Mode
+        self.stop_profile(blank=True)
         mode = self.settings['mode_' + self.username]
         if mode == MODE_PROFILE:
             mode = MODE_TWEETS
-            
+        
         self.gui.set_mode(mode)
         
         # Status
@@ -235,6 +238,7 @@ class Atarashii(AtarashiiActions):
         
         self.refresh_time = UNSET_TIMEOUT
         self.refresh_timeout = UNSET_TIMEOUT
+        self.stop_profile(blank=True)
         self.gui.set_mode(MODE_TWEETS)
         self.unset_status(ST_ALL)
         if error is not None:
@@ -265,6 +269,7 @@ class Atarashii(AtarashiiActions):
         self.settings['username'] = UNSET_USERNAME
         self.refresh_time = UNSET_TIMEOUT
         self.refresh_timeout = UNSET_TIMEOUT
+        self.stop_profile(blank=True)
         self.gui.set_mode(MODE_TWEETS)
         self.unset_status(ST_ALL)
         self.gui.update_status()

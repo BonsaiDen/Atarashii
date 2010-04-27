@@ -29,7 +29,8 @@ from constants import ST_SEND, ST_CONNECT, ST_LOGIN_SUCCESSFUL, \
                       ST_LOGIN_ERROR
 
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADED, UNSET_TEXT, \
-                      UNSET_LABEL, MESSAGE_ERROR, UNSET_USERNAME, UNSET_TIMEOUT, MODE_PROFILE
+                      UNSET_LABEL, MESSAGE_ERROR, UNSET_USERNAME, \
+                      UNSET_TIMEOUT, MODE_PROFILE
 
 
 class GUIHelpers(object):
@@ -37,8 +38,13 @@ class GUIHelpers(object):
         if self.main.status(ST_SEND):
             return False
         
+        # Don't show in profile mode
+        if self.mode == MODE_PROFILE:
+            self.info_label.set_markup(UNSET_LABEL)
+            self.info_label.hide()
+        
         # Unset
-        if self.main.reply_user == UNSET_TEXT \
+        elif self.main.reply_user == UNSET_TEXT \
            and self.main.retweet_user == UNSET_TEXT \
            and self.main.message_user == UNSET_TEXT \
            and self.main.edit_text == UNSET_TEXT:
@@ -160,7 +166,6 @@ class GUIHelpers(object):
             self.on_mode()
         
         elif self.mode == MODE_PROFILE:
-            self.tabs.set_current_page(2)
             self.on_mode()
     
     def is_ready(self):
