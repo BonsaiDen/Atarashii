@@ -16,6 +16,8 @@
 
 # HTML View / HTML -------------------------------------------------------------
 # ------------------------------------------------------------------------------
+import gobject
+
 from language import LANG as lang
 
 from constants import HTML_UNSET_ID, HTML_UNSET_TEXT, UNSET_USERNAME, SPACES
@@ -117,6 +119,8 @@ class ViewHTML(object):
         
         except Exception:
             pass
+        
+        gobject.timeout_add(50, self.after_loaded)
     
     def update_times(self):
         time_list = []
