@@ -9,7 +9,13 @@ atarashii (0.99.25-1) all;
     displays themost recent Tweets of the user and has buttons for following / 
     blocking and sending a message.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 28 Apr 2010 11:27:00 +0200
+  + Atarashii Cloud Sync. Multiple installtions of Atarashii can now be synced
+    via the cloud. When first activating the syncing you will recieve your  
+    Sync-Token. As soon as you've logged in with one of your accounts after 
+    that, you can then enter the same Token in another installtion of Atarashii 
+    in order to share tweet and messages read status between both installations.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 28 Apr 2010 19:28:00 +0200
 
 atarashii (0.99.24-1) all;
 
