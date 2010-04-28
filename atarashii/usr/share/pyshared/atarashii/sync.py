@@ -125,11 +125,22 @@ class Syncer(object):
                 first_message, last_message = message.split(',')
                 
                 # Set the IDs
-                self.settings['firsttweet_' + username] = long(first_tweet)
-                self.settings['lasttweet_' + username] = long(last_tweet)
+                first_tweet = long(first_tweet)
+                if first_tweet > self.settings['firsttweet_' + username]:
+                    self.settings['firsttweet_' + username] = first_tweet
                 
-                self.settings['firstmessage_' + username] = long(first_message)
-                self.settings['lastmessage_' + username] = long(last_message)
+                last_tweet = long(last_tweet)
+                if last_tweet > self.settings['lasttweet_' + username]:
+                    self.settings['lasttweet_' + username] = last_tweet
+                
+                first_message = long(first_message)
+                if first_message > self.settings['firstmessage_' + username]:
+                    self.settings['firstmessage_' + username] = first_message
+                
+                last_message = long(last_message)
+                if last_message > self.settings['lastmessage_' + username]:
+                    self.settings['lastmessage_' + username] = last_message
+                
                 print 'done!'
                 return True
             
