@@ -10,7 +10,7 @@ atarashii (0.99.25-1) all;
     blocking and sending a message.
 
   + Atarashii Cloud Sync. Multiple installtions of Atarashii can now be synced
-    via the cloud. When first activating the syncing you will recieve your  
+    via the cloud. When first activating the syncing you will receive your  
     Sync-Token. As soon as you've logged in with one of your accounts after 
     that, you can then enter the same Token in another installtion of Atarashii 
     in order to share tweet and messages read status between both installations.
