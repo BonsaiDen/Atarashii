@@ -158,7 +158,7 @@ class Syncer(object):
     # Request a new key --------------------------------------------------------
     def new_key(self):
         try:
-            self.key = self.request('new', {}, post = False)
+            self.key = self.request('new', {'coding': 'kittens'})
             self.settings['synckey'] = self.key
             return True
         
@@ -168,7 +168,7 @@ class Syncer(object):
     
     def retrieve_new_key(self):
         try:
-            key = self.request('new', {}, post = False)
+            key = self.request('new', {'coding': 'kittens'})
             return key
         
         except IOError:
@@ -177,7 +177,7 @@ class Syncer(object):
     
     def check_key(self, key):
         try:
-            self.request('check', {'token': key}, post = True)
+            self.request('check', {'token': key})
             return True
         
         except IOError:
@@ -215,13 +215,11 @@ class Syncer(object):
     
     
     # Make HTTP requests -------------------------------------------------------
-    def request(self, method, data, post=True, timeout=2):
+    def request(self, method, data, timeout=2):
         conn = httplib.HTTPConnection(SYNC_SERVER_HOST, SYNC_SERVER_PORT,
                                       timeout = timeout)
         
-        conn.request('POST' if post else 'GET',  '/' + method,
-                     urllib.urlencode(data))
-        
+        conn.request('POST',  '/' + method, urllib.urlencode(data))
         response = conn.getresponse()
         if response.status == 200:
             data = response.read()
