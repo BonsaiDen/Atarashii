@@ -241,21 +241,21 @@ LANG = {
         
         # Syncing Dialog
         'sync_checkbutton': 'Synchronisation aktivieren',
-        'sync_key_current': '<b>Derzeitiger Schlüssel</b>',
+        'sync_key_current': '<b>Derzeitiges Sync-Token</b>',
         'sync_key_error': '<b>Fehler</b>',
-        'sync_key_loading': '<b>Lade Schlüssel...</b>',
-        'sync_key_no': '<b>Kein Schlüssel gesetzt</b>',
-        'sync_key_failed': 'Schlüssel konnte nicht empfangen werden.',
+        'sync_key_loading': '<b>Lade Sync-Token...</b>',
+        'sync_key_no': '<b>Kein Sync-Token gesetzt.</b>',
+        'sync_key_failed': 'Sync-Token konnte nicht empfangen werden.',
         'sync_key_label': '<b><span size="large">%s</span></b>',
-        'sync_new': 'Neuer Schlüssel',
+        'sync_new': 'Neues Token',
         'sync_cancel': 'Abbrechen',
         'sync_ok': 'OK',
         'sync_change': 'Ändern',
         
-        'sync_user_error_title': 'Ungültiger Schlüssel',
+        'sync_user_error_title': 'Ungültiges Token',
         'sync_user_error':
-            'Es wurden keine Synchronisationsdaten für den eingebenen '
-            'Schlüssel gefunden, bitte überprüfen sie Ihre Eingabe.',
+            'Es wurden keine Synchronisationsdaten für das eingebene '
+            'Token gefunden, bitte überprüfen Sie ob es korrekt ist.',
         
         # About Dialog
         'about_title': 'Info zu Atarashii',
@@ -688,21 +688,21 @@ LANG = {
         
         # Syncing Dialog
         'sync_checkbutton': 'Activate synchronization',
-        'sync_key_current': '<b>Current key</b>',
-        'sync_key_loading': '<b>Loading key...</b>',
-        'sync_key_no': '<b>No key set</b>',
+        'sync_key_current': '<b>Current Sync-Token</b>',
+        'sync_key_loading': '<b>Loading Sync-Token...</b>',
+        'sync_key_no': '<b>No Sync-Token set.</b>',
         'sync_key_error': '<b>Error</b>',
-        'sync_key_failed': 'Failed to retrieve key.',
+        'sync_key_failed': 'Failed to retrieve Sync-Token.',
         'sync_key_label': '<b><span size="large">%s</span></b>',
-        'sync_new': 'New key',
+        'sync_new': 'New Token',
         'sync_cancel': 'Cancel',
         'sync_ok': 'OK',
         'sync_change': 'Change',
         
-        'sync_user_error_title': 'Invalid key',
+        'sync_user_error_title': 'Invalid Token',
         'sync_user_error':
-            'No synchronisation data for the entered key was found, '
-            'please make sure that you have entered the key correctly.',
+            'No synchronisation data for the entered Sync-Token was found, '
+            'please make sure that you have entered the token correctly.',
         
         # About Dialog
         'about_title': 'About Atarashii',
