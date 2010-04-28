@@ -20,7 +20,6 @@ import httplib
 import urllib
 
 import threading
-import time
 
 from errors import log_error
 from constants import UNSET_USERNAME, HTML_UNSET_ID
@@ -52,15 +51,12 @@ class Syncer(object):
         self.last_tweet = HTML_UNSET_ID
         self.first_message = HTML_UNSET_ID
         self.last_message = HTML_UNSET_ID
-        print 'reset'
     
     def set_ids(self):
         if self.settings['syncing'] is not True:
-            print 'syncing disabled'
             return False
         
         if self.main.username == UNSET_USERNAME:
-            print 'no user'
             return False
         
         # Check for change
@@ -69,10 +65,10 @@ class Syncer(object):
            or self.last_tweet < self.settings['lasttweet_' + username] \
            or self.first_message < self.settings['firstmessage_' + username] \
            or self.last_message < self.settings['lastmessage_' + username]:
-            print 'ids changed'
+            
+            pass
         
         else:
-            print 'no id change'
             return False
         
         # Start async
@@ -102,23 +98,19 @@ class Syncer(object):
                 return True
             
             except IOError:
-                print 'failed to sync up'
                 log_error('Syncing up failed')
                 self.pending = False
                 return False
         
         else:
-            print 'no key'
             self.pending = False
             return False
     
     def get_ids(self):
         if self.settings['syncing'] is not True:
-            print 'syncing disabled'
             return False
         
         if self.main.username == UNSET_USERNAME:
-            print 'no user'
             return False
         
         if self.get_key():
@@ -142,12 +134,10 @@ class Syncer(object):
                 return True
             
             except IOError:
-                print 'failed to sync down'
                 log_error('Syncing down failed')
                 return False
         
         else:
-            print 'no key'
             return False
     
     def set_key(self):
@@ -159,33 +149,27 @@ class Syncer(object):
         try:
             self.key = self.request('new', {}, post = False)
             self.settings['synckey'] = self.key
-            print 'new key is', self.key
             return True
         
         except IOError:
-            print 'key request failed'
             log_error('Key request failed')
             return False
     
     def retrieve_new_key(self):
         try:
             key = self.request('new', {}, post = False)
-            print 'retrieved key', key
             return key
         
         except IOError:
-            print 'key retrieve failed'
             log_error('Key retrieve failed')
             return None
     
     def check_key(self, key):
         try:
             self.request('check', {'token': key}, post = True)
-            print 'key is ok', key
             return True
         
         except IOError:
-            print 'key not found', key
             return False
     
     
@@ -202,22 +186,20 @@ class Syncer(object):
             key = None
         
         else:
-            for c in key:
-                if not c in SYNC_KEY_CHARS:
+            for i in key:
+                if not i in SYNC_KEY_CHARS:
                     key = None
                     break
         
         # new key
         if key is None:
             if self.settings['syncing'] is not True:
-                print 'syncing disabled'
                 return False
             
             return self.new_key()
         
         else:
             self.key = key
-            print 'current key is', self.key
             return True
     
     
@@ -233,7 +215,6 @@ class Syncer(object):
         if response.status == 200:
             data = response.read()
             if data.startswith('Error: '):
-                print data
                 raise IOError
             
             else:

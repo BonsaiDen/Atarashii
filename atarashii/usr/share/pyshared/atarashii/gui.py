@@ -583,9 +583,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                         lang.delete_title,
                         yes_callback = yes, no_callback = noo)
     
-    def show_delete_info(self, tweet, msg):
+    def show_delete_info(self, twt, msg):
         self.info_button.show(lang.delete_button_tweet \
-                             if tweet != UNSET_ID_NUM \
+                             if twt != UNSET_ID_NUM \
                              else lang.delete_button_message,
                              None, None, 5000)
     

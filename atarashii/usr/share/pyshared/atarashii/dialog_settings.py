@@ -730,9 +730,4 @@ class AccountDialog(Dialog):
         self.parent.blocked = False
         self.instance = None
         self.dlg.hide()
-    
-    def on_close(self, *args):
-        self.parent.blocked = False
-        self.instance = None
-        self.dlg.hide()
 

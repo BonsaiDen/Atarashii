@@ -88,7 +88,7 @@ class AtarashiiActions(object):
         self.updater.running = False
         self.gui.hide()
         gobject.idle_add(self.real_quit)
-        
+    
     def real_quit(self):
         gtk.main_quit()
         self.notifier.close()
@@ -105,16 +105,13 @@ class AtarashiiActions(object):
         if mode:
             self.save_mode()
         
-        print tweets, messages
         if self.username != UNSET_USERNAME:
             if tweets:
-                print 'saving tweet ids'
                 self.gui.tweet.save_first()
                 self.gui.tweet.save_last_id()
                 self.syncer.set_ids()
             
             elif messages:
-                print 'saving message ids'
                 self.gui.message.save_first()
                 self.gui.message.save_last_id()
                 self.syncer.set_ids()
