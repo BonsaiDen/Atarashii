@@ -11,6 +11,7 @@
     <child>
       <object class="GtkAlignment" id="alignment1">
         <property name="visible">True</property>
+        <property name="top_padding">6</property>
         <property name="bottom_padding">4</property>
         <property name="left_padding">8</property>
         <property name="right_padding">8</property>
@@ -109,7 +110,6 @@
                 <child>
                   <object class="GtkLabel" id="label1">
                     <property name="visible">True</property>
-                    <property name="ypad">6</property>
                     <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Kitten Facts!&lt;/b&gt;&lt;/span&gt;</property>
                     <property name="use_markup">True</property>
                   </object>
@@ -212,6 +212,7 @@ Their lucky number is &lt;b&gt;e456357&lt;/b&gt;!</property>
                 <child>
                   <object class="GtkAccelLabel" id="accellabel1">
                     <property name="visible">True</property>
+                    <property name="ypad">6</property>
                   </object>
                   <packing>
                     <property name="position">7</property>

@@ -5,10 +5,11 @@ atarashii (0.99.25-1) all;
     contain the leftover part of the Tweet/Message. Retweets wont be split,
     you'll need to shorten them accordingly.
 
-  + Completely reworked profile view! The new profile view is now HTML based
-    and displays the 10 most recent Tweets of the user.
+  + Completely reworked profile view! The new profile view is now HTML based,
+    displays themost recent Tweets of the user and has buttons for following / 
+    blocking and sending a message.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 27 Apr 2010 15:25:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 28 Apr 2010 11:27:00 +0200
 
 atarashii (0.99.24-1) all;
 

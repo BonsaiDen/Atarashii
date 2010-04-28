@@ -138,11 +138,15 @@ class ViewHelpers(object):
     
     def on_draw(self, *args):
         if self.is_rendering_history:
-            if self.scroll.get_vscrollbar().get_value() == 0.0 \
-               and self.scroll.get_vscrollbar().get_adjustment().get_upper() \
-               > self.gui.get_view_height():
+            if self.scroll.get_vscrollbar().get_value() == 0.0:
+                if self.scroll.get_vscrollbar().get_adjustment().get_upper() \
+                  > self.gui.get_view_height():
+                    
+                    return True
                 
-                return True
+                else:
+                    self.is_rendering_history = False
+                    return False
             
             else:
                 self.is_rendering_history = False

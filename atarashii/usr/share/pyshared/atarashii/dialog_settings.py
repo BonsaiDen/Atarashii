@@ -189,7 +189,7 @@ class SettingsDialog(Dialog):
         self.file_chooser = None
         
         def select_file(button, snd):
-            self.file_chooser = SoundChooser(self.dlg)
+            self.file_chooser = SoundChooser(self)
             self.file_chooser.open_file(get_sound(snd), snd, set_sound)
         
         for snd in self.sounds:
@@ -484,8 +484,10 @@ class SettingsDialog(Dialog):
 # Sound File Chooser -----------------------------------------------------------
 # ------------------------------------------------------------------------------
 class SoundChooser(object):
-    def __init__(self, dlg):
-        self.chooser = gtk.FileChooserDialog(None, dlg,
+    def __init__(self, parent):
+        self.parent = parent
+        self.parent.blocked = True
+        self.chooser = gtk.FileChooserDialog(None, parent.dlg,
                            action = gtk.FILE_CHOOSER_ACTION_OPEN,
                            buttons = (lang.settings_file_cancel,
                            gtk.RESPONSE_CANCEL,
@@ -509,6 +511,7 @@ class SoundChooser(object):
         self.chooser.set_filter(self.filter)
     
     def close(self):
+        self.parent.blocked = False
         self.chooser.destroy()
     
     def choosen(self, chooser, code):
@@ -580,6 +583,11 @@ class AccountDialog(Dialog):
     def on_changed(self, *args):
         text = self.user.get_text().strip()
         self.user.set_text(''.join([i for i in text if i in USERNAME_CHARS]))
+    
+    def on_close(self, *args):
+        self.parent.blocked = False
+        self.instance = None
+        self.dlg.hide()
 
     def on_close(self, *args):
         self.parent.blocked = False
