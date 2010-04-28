@@ -364,11 +364,9 @@ class Followers(SimpleAPICall):
         self.users = []
         cur = -1
         while cur != 0:
-            users, cursors = self.main.api.followers(screen_name = user,
-                                                     cursor = cur)
-            
+            users, curs = main.api.followers(screen_name = user, cursor = cur)
             self.users += users
-            cur = cursors[1]
+            cur = curs[1]
     
     def on_success(self, main, user, callback):
         gobject.idle_add(callback, self.users)
@@ -384,11 +382,9 @@ class Friends(SimpleAPICall):
         self.users = []
         cur = -1
         while cur != 0:
-            users, cursors = self.main.api.friends(screen_name = user,
-                                                   cursor = cur)
-            
+            users, curs = main.api.friends(screen_name = user, cursor = cur)
             self.users += users
-            cur = cursors[1]
+            cur = curs[1]
     
     def on_success(self, main, user, callback):
         gobject.idle_add(callback, self.users)
