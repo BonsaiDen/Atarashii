@@ -163,6 +163,7 @@ class GUIEventHandler(object):
                 self.show_input()
         
         elif self.mode == MODE_PROFILE:
+            self.tabsbox.hide()
             self.message_scroll.hide()
             self.profile_scroll.show()
             self.tweet_scroll.hide()

@@ -272,7 +272,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     def show_input(self, resize=True, focus=False):
         self.progress.hide()
         self.progress_visible = False
-        self.text_scroll.show()
+        if self.mode != MODE_PROFILE:
+            self.text_scroll.show()
+        
+        else:
+            self.text_scroll.hide()
+        
         if resize:
             self.text.resize()
         
@@ -281,8 +286,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         self.text.set_sensitive(self.mode != MODE_PROFILE)
         self.set_multi_button(self.mode != MODE_PROFILE)
-        if self.main.status(ST_LOGIN_SUCCESSFUL):
+        if self.main.status(ST_LOGIN_SUCCESSFUL) and self.mode != MODE_PROFILE:
             self.tabsbox.show()
+            
+        elif self.mode == MODE_PROFILE:
+            self.tabsbox.hide()
         
         self.tabs.set_sensitive(self.main.status(ST_LOGIN_SUCCESSFUL) \
                                 and self.mode != MODE_PROFILE)
