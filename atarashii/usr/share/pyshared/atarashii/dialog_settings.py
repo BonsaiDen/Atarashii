@@ -28,7 +28,7 @@ from sounds import THEME_SOUNDS, THEME_DIR
 from utils import URLShorter, URLExpander
 from language import LANG as lang, LANG_NAME
 
-from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING
+from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING, SYNCKEY_CHARS
 from constants import ST_CONNECT, ST_LOGIN_COMPLETE
 from constants import MESSAGE_QUESTION
 from constants import SHORTS_LIST, USERNAME_CHARS, FONT_DEFAULT, FONT_SIZES, \
@@ -54,6 +54,7 @@ class SettingsDialog(Dialog):
         Dialog.__init__(self, parent, True, False)
         self.dlg.set_transient_for(parent)
         self.parent = parent
+        self.blocked = False
         
         # Check for autostart
         self.main.settings.check_autostart()
@@ -100,6 +101,7 @@ class SettingsDialog(Dialog):
         
         # Edit Action
         def edit_dialog(*args):
+            self.blocked = True
             name = self.user_accounts[self.get_drop_active()]
             AccountDialog(self, name, lang.account_edit, self.edit_account)
         
@@ -107,19 +109,32 @@ class SettingsDialog(Dialog):
         
         # Add Action
         def create_dialog(*args):
+            self.blocked = True
             AccountDialog(self, '', lang.account_create, self.create_account)
         
         add.connect('clicked', create_dialog)
         
         # Delete Action
         def delete_dialog(*args):
+            self.blocked = True
             name = self.user_accounts[self.get_drop_active()]
             MessageDialog(self.dlg, MESSAGE_QUESTION,
                             lang.account_delete_description % name,
                             lang.account_delete,
-                            yes_callback = self.delete_account)
+                            yes_callback = self.delete_account,
+                            no_callback = self.unblock)
         
         delete.connect('clicked', delete_dialog)
+        
+        # Sync Dialog
+        def sync_dialog(*args):
+            self.blocked = True
+            SyncDialog(self, self.main.settings['synckey', None],
+                       lang.sync_title, None)
+        
+        self.sync = self.get('syncbutton')
+        self.sync.set_label(lang.settings_sync)
+        self.sync.connect('clicked', sync_dialog)
         
         
         # General --------------------------------------------------------------
@@ -315,7 +330,13 @@ class SettingsDialog(Dialog):
         gobject.idle_add(self.drop.grab_focus)
         self.dlg.set_size_request(-1, -1)
     
+    def unblock(self):
+        self.blocked = False
+    
     def on_close(self, *args):
+        if self.blocked:
+            return False
+        
         if self.file_chooser is not None:
             self.file_chooser.close()
         
@@ -532,11 +553,12 @@ class AccountDialog(Dialog):
     
     def on_init(self):
         self.user = self.get('username')
-        self.close_button.set_label(lang.account_button)
-        cancel_button = self.get('cancelbutton')
-        cancel_button.set_label(lang.account_button_cancel)
         self.get('user').set_text(lang.account_username)
         self.user.connect('changed', self.on_changed)
+        
+        self.close_button.set_label(lang.account_button)
+        cancel_button = self.get('cancelbutton')
+        cancel_button.set_label(lang.account_button_cancel)  
         
         def save(*args):
             username = self.user.get_text().strip()
@@ -558,4 +580,75 @@ class AccountDialog(Dialog):
     def on_changed(self, *args):
         text = self.user.get_text().strip()
         self.user.set_text(''.join([i for i in text if i in USERNAME_CHARS]))
+
+    def on_close(self, *args):
+        self.parent.blocked = False
+        self.instance = None
+        self.dlg.hide()
+
+
+# Sync Dialog ---------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class SyncDialog(Dialog):
+    resource = 'sync.glade'
+    instance = None
+    
+    def __init__(self, parent, key, title, callback):
+        Dialog.__init__(self, parent.gui, False)
+        self.dlg.set_transient_for(parent.dlg)
+        self.parent = parent
+        self.callback = callback
+        self.dlg.set_title(title)
+        
+        # Request a key
+        if key is None:
+            self.key = '1DIRvNaOR5FipS90sVq#Lk'
+        
+        else:
+            self.key = key
+        
+        self.synckey.set_text(self.key)
+        self.synckey.set_sensitive(False)
+        self.synckey.grab_focus()
+    
+    def on_init(self):
+        self.synckey = self.get('synckey')
+        self.get('sync').set_text(lang.sync_label)
+        self.synckey.connect('changed', self.on_changed)
+        
+        self.close_button.set_label(lang.sync_button)
+        self.cancel_button = self.get('cancelbutton')
+        self.cancel_button.set_label(lang.sync_button_cancel)
+        
+        def save(*args):
+            key = self.synckey.get_text().strip()
+            if len(key) < 22:
+                self.synckey.grab_focus()
+            
+            else:
+              #  self.callback(key)
+                self.on_close()
+        
+        self.close_button.connect('clicked', save)
+        self.cancel_button.connect('clicked', self.on_close)
+    
+    def edit(self, *args):
+        self.synckey.set_sensitive(True)
+        self.get('editbutton').set_sensitive(False)
+    
+    def new(self, *args):
+        self.synckey.set_sensitive(True)
+        self.get('editbutton').set_sensitive(False)
+        self.get('newbutton').set_sensitive(False)
+        self.cancel_button.set_sensitive(False)
+        self.close_button.set_sensitive(False)
+    
+    def on_changed(self, *args):
+        text = self.synckey.get_text().strip()
+        self.synckey.set_text(''.join([i for i in text if i in SYNCKEY_CHARS]))
+
+    def on_close(self, *args):
+        self.parent.blocked = False
+        self.instance = None
+        self.dlg.hide()
 

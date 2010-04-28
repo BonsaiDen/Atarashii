@@ -234,6 +234,13 @@ LANG = {
         'settings_delete': 'Löschen',
         'settings_file_ok': 'OK',
         'settings_file_cancel': 'Abbrechen',
+        'settings_sync': 'Syncing',
+        
+        # Syncing Dialog
+        'sync_title': 'Synchronisierung',
+        'sync_label': 'Synckey:',
+        'sync_button': 'Speichern',
+        'sync_button_cancel': 'Abbrechen', 
         
         # About Dialog
         'about_title': 'Info zu Atarashii',
@@ -659,6 +666,12 @@ LANG = {
         'settings_delete': 'Delete',
         'settings_file_ok': 'OK',
         'settings_file_cancel': 'Cancel',
+        'settings_sync': 'Syncing',
+        
+        # Syncing Dialog
+        'sync_label': 'Synckey:',
+        'sync_button': 'Save',
+        'sync_button_cancel': 'Cancel',
         
         # About Dialog
         'about_title': 'About Atarashii',

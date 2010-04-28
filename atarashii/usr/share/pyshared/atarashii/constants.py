@@ -70,6 +70,10 @@ UNSET_URL = ''           # Must be ''
 USERNAME_CHARS = 'abcdefghijklmnopqrstuvwxyz' \
                  + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' \
                  + '_1234567890'
+                 
+SYNCKEY_CHARS = '0123456789@AB' \
+                + 'CDEFGHIJKLMNOPQRSTUVWXYZ#' \
+                + 'abcdefghijklmnopqrstuvwxyz'
 
 CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
 USERLIST_TIMEOUT = 60 * 60 * 2 # 2 Hours
