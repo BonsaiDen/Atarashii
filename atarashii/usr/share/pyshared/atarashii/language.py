@@ -241,7 +241,7 @@ LANG = {
         'sync_title': 'Synchronisierung',
         'sync_label': 'Synckey:',
         'sync_button': 'Speichern',
-        'sync_button_cancel': 'Abbrechen', 
+        'sync_button_cancel': 'Abbrechen',
         
         # About Dialog
         'about_title': 'Info zu Atarashii',
@@ -671,6 +671,7 @@ LANG = {
         'settings_sync': 'Syncing',
         
         # Syncing Dialog
+        'sync_title': 'Synchronisation',
         'sync_label': 'Synckey:',
         'sync_button': 'Save',
         'sync_button_cancel': 'Cancel',

@@ -45,6 +45,7 @@ import notify
 import gui
 import settings
 import updater
+import sync
 
 from atarashii_actions import AtarashiiActions
 from utils import gmtime
@@ -133,6 +134,9 @@ class Atarashii(AtarashiiActions):
         
         # GUI
         self.gui = gui.GUI(self)
+        
+        #Syncer
+        self.syncer = sync.Syncer(self)
         
         # Check Shortener
         if not self.settings['shortener'] in SHORTS_LIST:
@@ -273,6 +277,7 @@ class Atarashii(AtarashiiActions):
     
     def logout(self, menu=None):
         self.updater.update_id += 1
+        self.last_username = UNSET_USERNAME
         self.username = UNSET_USERNAME
         self.settings['username'] = UNSET_USERNAME
         self.refresh_time = UNSET_TIMEOUT

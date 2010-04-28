@@ -103,6 +103,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         self.message.load_state = HTML_RESET
         self.tweet.load_state = HTML_RESET
         
+        # Try to sync with the cloud
+        self.main.syncer.reset()
+        self.main.syncer.get_ids()
+        
         # InitID = the last read tweet
         self.tweet.init_id = self.tweet.get_latest()
         self.message.init_id = self.message.get_latest()

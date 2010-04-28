@@ -70,10 +70,6 @@ UNSET_URL = ''           # Must be ''
 USERNAME_CHARS = 'abcdefghijklmnopqrstuvwxyz' \
                  + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' \
                  + '_1234567890'
-                 
-SYNCKEY_CHARS = '0123456789@AB' \
-                + 'CDEFGHIJKLMNOPQRSTUVWXYZ#' \
-                + 'abcdefghijklmnopqrstuvwxyz'
 
 CACHE_TIMEOUT = 60 * 60 * 24 * 7 # 7 Days
 USERLIST_TIMEOUT = 60 * 60 * 2 # 2 Hours
@@ -230,4 +226,13 @@ REPLY_REGEX = re.compile(ur'^[@\uFF20]([a-z0-9_]{1,20})\s.*',
 
 MESSAGE_REGEX = re.compile('d\s([a-z0-9_]{1,20})\s.*',
                             re.UNICODE | re.IGNORECASE)
+
+
+# Cloudsync --------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+SYNC_SERVER_PORT = 8080
+SYNC_SERVER_HOST = 'localhost'
+SYNC_KEY_CHARS = '0123456789@AB' \
+                 + 'CDEFGHIJKLMNOPQRSTUVWXYZ#' \
+                 + 'abcdefghijklmnopqrstuvwxyz'
 

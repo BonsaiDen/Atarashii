@@ -96,6 +96,7 @@ class AtarashiiActions(object):
             self.save_mode()
         
         if self.username != UNSET_USERNAME:
+            self.syncer.set_ids()
             self.gui.tweet.save_first()
             self.gui.message.save_first()
             self.gui.tweet.save_last_id()

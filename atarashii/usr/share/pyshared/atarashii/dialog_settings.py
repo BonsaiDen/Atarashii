@@ -28,7 +28,7 @@ from sounds import THEME_SOUNDS, THEME_DIR
 from utils import URLShorter, URLExpander
 from language import LANG as lang, LANG_NAME
 
-from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING, SYNCKEY_CHARS
+from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING, SYNC_KEY_CHARS
 from constants import ST_CONNECT, ST_LOGIN_COMPLETE
 from constants import MESSAGE_QUESTION
 from constants import SHORTS_LIST, USERNAME_CHARS, FONT_DEFAULT, FONT_SIZES, \
@@ -129,7 +129,7 @@ class SettingsDialog(Dialog):
         # Sync Dialog
         def sync_dialog(*args):
             self.blocked = True
-            SyncDialog(self, self.main.settings['synckey', None],
+            SyncDialog(self, self.main.settings['synckey'],
                        lang.sync_title, None)
         
         self.sync = self.get('syncbutton')
@@ -561,7 +561,7 @@ class AccountDialog(Dialog):
         
         self.close_button.set_label(lang.account_button)
         cancel_button = self.get('cancelbutton')
-        cancel_button.set_label(lang.account_button_cancel)  
+        cancel_button.set_label(lang.account_button_cancel)
         
         def save(*args):
             username = self.user.get_text().strip()
@@ -588,7 +588,7 @@ class AccountDialog(Dialog):
         self.parent.blocked = False
         self.instance = None
         self.dlg.hide()
-
+    
     def on_close(self, *args):
         self.parent.blocked = False
         self.instance = None
@@ -610,7 +610,7 @@ class SyncDialog(Dialog):
         
         # Request a key
         if key is None:
-            self.key = '1DIRvNaOR5FipS90sVq#Lk'
+            self.key = self.parent.main.syncer.get_key()
         
         else:
             self.key = key
@@ -634,7 +634,6 @@ class SyncDialog(Dialog):
                 self.synckey.grab_focus()
             
             else:
-              #  self.callback(key)
                 self.on_close()
         
         self.close_button.connect('clicked', save)
@@ -653,8 +652,8 @@ class SyncDialog(Dialog):
     
     def on_changed(self, *args):
         text = self.synckey.get_text().strip()
-        self.synckey.set_text(''.join([i for i in text if i in SYNCKEY_CHARS]))
-
+        self.synckey.set_text(''.join([i for i in text if i in SYNC_KEY_CHARS]))
+    
     def on_close(self, *args):
         self.parent.blocked = False
         self.instance = None
