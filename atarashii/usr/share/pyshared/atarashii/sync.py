@@ -78,7 +78,6 @@ class Syncer(object):
         self.pending = True
         if self.get_key():
             try:
-                print 'syncing up...', username
                 self.request('set', {
                     'token': self.key,
                     'user': username,
@@ -93,11 +92,11 @@ class Syncer(object):
                 self.last_tweet = self.settings['lasttweet_' + username]
                 self.first_message = self.settings['firstmessage_' + username]
                 self.last_message = self.settings['lastmessage_' + username]
-                print 'done!'
                 self.pending = False
                 return True
             
             except IOError:
+                self.main.on_sync_up_fail()
                 log_error('Syncing up failed')
                 self.pending = False
                 return False
@@ -115,7 +114,6 @@ class Syncer(object):
         
         if self.get_key():
             try:
-                print 'syncing down...'
                 username = self.main.username
                 data = self.request('get', {'token': self.key,
                                             'user': username})
@@ -141,10 +139,10 @@ class Syncer(object):
                 if last_message > self.settings['lastmessage_' + username]:
                     self.settings['lastmessage_' + username] = last_message
                 
-                print 'done!'
                 return True
             
             except IOError:
+                self.main.on_sync_down_fail()
                 log_error('Syncing down failed')
                 return False
         

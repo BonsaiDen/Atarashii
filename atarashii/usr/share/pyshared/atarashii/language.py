@@ -252,6 +252,16 @@ LANG = {
         'sync_ok': 'OK',
         'sync_change': 'Ändern',
         
+        'sync_button_down': 'Synchronisation fehlgeschlagen',
+        'sync_warning_down':
+            'Atarashii konnte die Synchronisationsdaten nicht <b>abrufen</b>.\n'
+            'Dies ist in den meisten Fällen lediglich ein temporäres Problem.',
+        
+        'sync_button_up': 'Synchronisation fehlgeschlagen',
+        'sync_warning_up':
+            'Atarashii konnte die Synchronisationsdaten nicht <b>senden</b>.\n'
+            'Dies ist in den meisten Fällen lediglich ein temporäres Problem.',
+        
         'sync_user_error_title': 'Ungültiges Token',
         'sync_user_error':
             'Es wurden keine Synchronisationsdaten für das eingebene '
@@ -698,6 +708,16 @@ LANG = {
         'sync_cancel': 'Cancel',
         'sync_ok': 'OK',
         'sync_change': 'Change',
+        
+        'sync_button_down': 'Synchronization failed',
+        'sync_warning_down':
+            'Atarashii could not <b>retrieve</b> the synchronization data.\n'
+            'In most cases this is just a temporary problem.',
+        
+        'sync_button_up': 'Synchronization failed',
+        'sync_warning_up':
+            'Atarashii could not <b>send</b> the synchronization data.\n'
+            'In most cases this is just a temporary problem.',
         
         'sync_user_error_title': 'Invalid Token',
         'sync_user_error':

@@ -298,7 +298,9 @@ class ButtonDialog(object):
         self.is_visible = False
         self.box.hide()
     
-    def show(self, button_label, info, title=None, timeout=UNSET_TIMEOUT):
+    def show(self, button_label, info, title=None, timeout=UNSET_TIMEOUT,
+             sound=False):
+        
         self.check_destroy()
         
         # Data
@@ -320,7 +322,7 @@ class ButtonDialog(object):
         
         # Play sound
         if self.gui.main.settings.is_true('infosound', True) \
-           and info is None and not self.passive:
+           and ((info is None and not self.passive) or sound):
             
             play_sound(self.gui.main, 'theme:dialog-%s' % self.dtype)
         

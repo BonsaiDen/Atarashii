@@ -303,6 +303,17 @@ class Atarashii(AtarashiiActions):
         self.gui.tray.activate_menu(True)
     
     
+    # Syncing errors -----------------------------------------------------------
+    # --------------------------------------------------------------------------
+    def on_sync_up_fail(self):
+        gobject.idle_add(self.gui.show_sync_warning, lang.sync_button_up,
+                         lang.sync_warning_up)
+    
+    def on_sync_down_fail(self):
+        gobject.idle_add(self.gui.show_sync_warning, lang.sync_button_down,
+                         lang.sync_warning_down)
+    
+    
     # Helper Functions ---------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_start_notifications(self):
