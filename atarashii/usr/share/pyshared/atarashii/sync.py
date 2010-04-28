@@ -32,7 +32,6 @@ class Async(threading.Thread):
         threading.Thread.__init__(self)
         self.callback = callback
         self.args = args
-        self.daemon = True
         self.start()
     
     def run(self):
@@ -45,6 +44,7 @@ class Syncer(object):
         self.gui = main.gui
         self.settings = main.settings
         self.key = None
+        self.pending = False
         self.reset()
     
     def reset(self):
@@ -79,9 +79,10 @@ class Syncer(object):
         Async(self.async_set_ids, username)
     
     def async_set_ids(self, username):
+        self.pending = True
         if self.get_key():
             try:
-                print 'syncing up...'
+                print 'syncing up...', username
                 self.request('set', {
                     'token': self.key,
                     'user': username,
@@ -97,15 +98,18 @@ class Syncer(object):
                 self.first_message = self.settings['firstmessage_' + username]
                 self.last_message = self.settings['lastmessage_' + username]
                 print 'done!'
+                self.pending = False
                 return True
             
             except IOError:
                 print 'failed to sync up'
                 log_error('Syncing up failed')
+                self.pending = False
                 return False
         
         else:
             print 'no key'
+            self.pending = False
             return False
     
     def get_ids(self):

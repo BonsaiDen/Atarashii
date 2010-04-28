@@ -34,7 +34,7 @@ from utils import unescape
 from constants import ST_HISTORY, ST_NETWORK_FAILED
 from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \
                       UNSET_ID_NUM, HTML_UNSET_TEXT, HTML_LOADED, \
-                      MODE_MESSAGES
+                      MODE_MESSAGES, MODE_TWEETS
 
 
 # Watch out! This is one giant 'Is this OK mommy?' hackery by the kittens ------
@@ -215,7 +215,9 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             
             self.old_items_changed = True
             self.render(True)
-            gobject.idle_add(self.main.save_settings, True)
+            gobject.idle_add(self.main.save_settings, True,
+                             self.mode_type == MODE_TWEETS,
+                             self.mode_type == MODE_MESSAGES)
     
     
     # Item management ----------------------------------------------------------

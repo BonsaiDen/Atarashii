@@ -24,6 +24,7 @@ import gnome.ui
 
 import os
 import sys
+import time
 import math
 import socket
 from urllib2 import URLError, HTTPError
@@ -74,7 +75,7 @@ class AtarashiiActions(object):
     
     # Add / Delete indicator file
     def on_logout(self, *args):
-        self.save_settings(True)
+        self.save_settings(True, True, True)
         i = open(LOGOUT_FILE, 'wb')
         i.close()
     
@@ -83,24 +84,40 @@ class AtarashiiActions(object):
             os.unlink(LOGOUT_FILE)
     
     def quit(self):
-        self.save_settings(True)
+        self.save_settings(True, True, True)
         self.updater.running = False
+        self.gui.hide()
+        gobject.idle_add(self.real_quit)
+        
+    def real_quit(self):
         gtk.main_quit()
         self.notifier.close()
         self.settings.check_cache()
         sys.last_traceback = None
+        
+        # Wait for sync up to finish
+        while self.syncer.pending:
+            time.sleep(0.01)
+        
         sys.exit(0) # os.EX_OK
     
-    def save_settings(self, mode=False):
+    def save_settings(self, mode=False, tweets=False, messages=False):
         if mode:
             self.save_mode()
         
+        print tweets, messages
         if self.username != UNSET_USERNAME:
-            self.syncer.set_ids()
-            self.gui.tweet.save_first()
-            self.gui.message.save_first()
-            self.gui.tweet.save_last_id()
-            self.gui.message.save_last_id()
+            if tweets:
+                print 'saving tweet ids'
+                self.gui.tweet.save_first()
+                self.gui.tweet.save_last_id()
+                self.syncer.set_ids()
+            
+            elif messages:
+                print 'saving message ids'
+                self.gui.message.save_first()
+                self.gui.message.save_last_id()
+                self.syncer.set_ids()
         
         self.settings['position'] = str(self.gui.get_normalized_position())
         size = self.gui.get_allocation()

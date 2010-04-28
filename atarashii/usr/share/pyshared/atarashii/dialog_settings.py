@@ -139,7 +139,6 @@ class SettingsDialog(Dialog):
         self.sync_box = self.get('syncbox')
         self.sync_box.set_label(lang.sync_checkbutton)
         self.sync_box.connect('toggled', sync_toggle)
-        self.sync_box.set_active(self.settings.is_true('syncing', False))
         self.sync_change = self.get('syncbuttonchange')
         self.sync_entry = self.get('syncentry')
         self.sync_new = self.get('syncbuttonnew')
@@ -153,30 +152,46 @@ class SettingsDialog(Dialog):
         self.sync_ok.set_label(lang.sync_ok)
         self.sync_cancel.set_label(lang.sync_cancel)
         self.sync_key_user_set = False
+        self.sync_box.set_active(self.settings.is_true('syncing', False))
         sync_toggle()
         
         self.sync_label = self.get('synclabel')
+        self.sync_box.set_sensitive(False)
+        self.get('syncoptions').set_sensitive(False)
+        self.sync_desc.set_label(lang.sync_key_loading)
+        self.sync_label.set_label('')
         
         # Setup syncing GUI
-        if not self.main.syncer.get_key():
-            self.syncing_key = None
-            if self.settings.is_true('syncing', False):
-                self.sync_desc.set_label(lang.sync_key_error)
-                self.sync_label.set_label(lang.sync_key_failed)
-                self.sync_box.set_sensitive(False)
-        
-            else:
-                self.sync_desc.set_label(lang.sync_key_no)
-                self.sync_label.set_label('')
+        def init_sync():
+            if not self.main.syncer.get_key():
+                self.syncing_key = None
+                if self.settings.is_true('syncing', False):
+                    self.sync_desc.set_label(lang.sync_key_error)
+                    self.sync_label.set_label(lang.sync_key_failed)
+                    self.sync_box.set_sensitive(True)
+                    self.get('syncoptions').set_sensitive(False)
+                    self.get('tabs').set_current_page(1)
+                    self.get('general_tabs').set_current_page(1)
+                
+                else:
+                    self.sync_desc.set_label(lang.sync_key_no)
+                    self.sync_label.set_label('')
+                    self.get('syncoptions').set_sensitive(True)
+                    self.sync_box.set_sensitive(True)
+                
+                sync_toggle()
+                self.settings['syncing'] = False
+                self.sync_box.set_active(False)
             
-            self.sync_change.set_sensitive(False)
-            sync_toggle()
+            else:
+                self.get('syncoptions').set_sensitive(True)
+                self.sync_box.set_sensitive(True)
+                self.syncing_key = self.settings['synckey']
+                self.sync_desc.set_label(lang.sync_key_current)
+                self.sync_label.set_label(lang.sync_key_label \
+                                         % self.syncing_key)
         
-        else:
-            self.syncing_key = self.settings['synckey']
-            self.sync_desc.set_label(lang.sync_key_current)
-            self.sync_label.set_label(lang.sync_key_label \
-                                     % self.syncing_key)
+        gobject.timeout_add(100, init_sync)
         
         def pre_retrieve_key(*args):
             self.dlg.set_sensitive(False)
@@ -193,6 +208,10 @@ class SettingsDialog(Dialog):
                 
                 self.sync_key_user_set = False
                 self.sync_change.set_sensitive(True)
+            
+            else:
+                self.sync_desc.set_label(lang.sync_key_error)
+                self.sync_label.set_label(lang.sync_key_failed)
             
             self.dlg.set_sensitive(True)
         
@@ -389,7 +408,9 @@ class SettingsDialog(Dialog):
                     self.main.syncer.key = self.settings['synckey']
             
             # Save all settings
-            self.settings['syncing'] = self.sync_box.get_active()
+            if self.settings['synckey'] is not None:
+                self.settings['syncing'] = self.sync_box.get_active()
+            
             self.saved = True
             
             for k, v in soundfiles.iteritems():

@@ -175,6 +175,7 @@ class Atarashii(AtarashiiActions):
         
         # Switch User
         if change_user is not None:
+            self.save_settings(True, True, True)
             self.gui.text.reset()
             self.last_username = self.username
             self.username = change_user
@@ -243,6 +244,7 @@ class Atarashii(AtarashiiActions):
         self.refresh_time = gmtime()
     
     def on_login_failed(self, error=None):
+        self.save_settings(True)
         self.last_username = self.username
         self.username = UNSET_USERNAME
         self.settings['username'] = UNSET_USERNAME
@@ -276,6 +278,7 @@ class Atarashii(AtarashiiActions):
         self.on_login_failed(error)
     
     def logout(self, menu=None):
+        self.save_settings(True, True, True)
         self.updater.update_id += 1
         self.last_username = UNSET_USERNAME
         self.username = UNSET_USERNAME
@@ -295,6 +298,7 @@ class Atarashii(AtarashiiActions):
         gobject.idle_add(self.gui.message.init, True)
         gobject.idle_add(self.gui.tweet.init, True)
         gobject.idle_add(self.gui.update_app)
+        
         self.gui.tray.update_account_menu()
         self.gui.tray.activate_menu(True)
     

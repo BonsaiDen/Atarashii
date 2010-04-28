@@ -230,8 +230,8 @@ MESSAGE_REGEX = re.compile('d\s([a-z0-9_]{1,20})\s.*',
 
 # Cloudsync --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-SYNC_SERVER_PORT = 8080
-SYNC_SERVER_HOST = 'localhost'
+SYNC_SERVER_PORT = 80
+SYNC_SERVER_HOST = 'atarashiicloud.appspot.com'
 SYNC_KEY_CHARS = '0123456789@AB' \
                  + 'CDEFGHIJKLMNOPQRSTUVWXYZ#' \
                  + 'abcdefghijklmnopqrstuvwxyz'
