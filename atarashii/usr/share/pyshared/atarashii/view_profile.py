@@ -102,9 +102,7 @@ class HTML(tweet.HTML):
             details.append(lang.profile_description % escape(user.description))
         
         # Display the protected Info?
-        if user.protected \
-           and (not friend[0].followed_by or not friend[0].following):
-            
+        if user.protected and not friend[0].following:
             self.protected_view = True
         
         else:
@@ -124,7 +122,7 @@ class HTML(tweet.HTML):
                 <div class="profile_realname">
                     <a href="http://twitter.com/%s">%s</a>
                 </div>
-                <div><b>%s</b> %s</div>
+                <div><b>%s</b> %s%s</div>
                 <div><b>%s</b> %s</div>
                 <div>%s <b>%s</b>%s</div>
             </div>
@@ -167,6 +165,9 @@ class HTML(tweet.HTML):
         self.profile_data = self.profile_data % (
              user.screen_name, img_file, user.screen_name, user.name,
              user.statuses_count, lang.profile_tweets,
+             lang.profile_protected if user.protected \
+                                    else HTML_UNSET_TEXT,
+             
              user.followers_count, lang.profile_followers,
              lang.profile_following, user.friends_count,
              lang.profile_follows_you if friend[0].followed_by \

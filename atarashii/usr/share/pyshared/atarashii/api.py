@@ -292,8 +292,8 @@ class Profile(SimpleAPICall):
     def call(self, main, name, callback):
         self.user = self.main.api.get_user(screen_name = name)
         self.friend = self.main.api.show_friendship(target_screen_name = name)
-        if self.user.protected \
-           and (not self.friend[0].followed_by or not self.friend[0].following):
+        if name.lower() != main.username.lower() and self.user.protected \
+           and not self.friend[0].following:
             
             self.tweets = []
         

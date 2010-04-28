@@ -119,7 +119,8 @@ LANG = {
         'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
         'profile_location': '<b>Ort:</b> %s',
         'profile_description': '<b>Bio:</b> %s',
-        'profile_follows_you': '(auch Ihnen)',
+        'profile_follows_you': '(<b>auch Ihnen</b>)',
+        'profile_protected': '(<b>geschützt</b>)',
         
         'profile_error':
             '<b>%s</b> Profil konnte nicht geladen werden, der Benutzer '
@@ -547,7 +548,8 @@ LANG = {
         'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
         'profile_location': '<b>Location:</b> %s',
         'profile_description': '<b>Bio:</b> %s',
-        'profile_follows_you': '(you too)',
+        'profile_follows_you': '(<b>you too</b>)',
+        'profile_protected': '(<b>protected</b>)',
         
         'profile_error':
             'Could not load <b>%s</b> profile, either the user does not exist '
