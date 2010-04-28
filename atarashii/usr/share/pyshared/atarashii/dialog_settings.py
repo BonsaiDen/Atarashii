@@ -54,6 +54,7 @@ class SettingsDialog(Dialog):
         Dialog.__init__(self, parent, True, False)
         self.dlg.set_transient_for(parent)
         self.parent = parent
+        self.blocked = False
         
         # Check for autostart
         self.main.settings.check_autostart()
@@ -100,6 +101,7 @@ class SettingsDialog(Dialog):
         
         # Edit Action
         def edit_dialog(*args):
+            self.blocked = True
             name = self.user_accounts[self.get_drop_active()]
             AccountDialog(self, name, lang.account_edit, self.edit_account)
         
@@ -107,17 +109,20 @@ class SettingsDialog(Dialog):
         
         # Add Action
         def create_dialog(*args):
+            self.blocked = True
             AccountDialog(self, '', lang.account_create, self.create_account)
         
         add.connect('clicked', create_dialog)
         
         # Delete Action
         def delete_dialog(*args):
+            self.blocked = True
             name = self.user_accounts[self.get_drop_active()]
             MessageDialog(self.dlg, MESSAGE_QUESTION,
                             lang.account_delete_description % name,
                             lang.account_delete,
-                            yes_callback = self.delete_account)
+                            yes_callback = self.delete_account,
+                            no_callback = self.unblock)
         
         delete.connect('clicked', delete_dialog)
         
@@ -174,7 +179,7 @@ class SettingsDialog(Dialog):
         self.file_chooser = None
         
         def select_file(button, snd):
-            self.file_chooser = SoundChooser(self.dlg)
+            self.file_chooser = SoundChooser(self)
             self.file_chooser.open_file(get_sound(snd), snd, set_sound)
         
         for snd in self.sounds:
@@ -315,7 +320,13 @@ class SettingsDialog(Dialog):
         gobject.idle_add(self.drop.grab_focus)
         self.dlg.set_size_request(-1, -1)
     
+    def unblock(self):
+        self.blocked = False
+    
     def on_close(self, *args):
+        if self.blocked:
+            return False
+        
         if self.file_chooser is not None:
             self.file_chooser.close()
         
@@ -463,8 +474,10 @@ class SettingsDialog(Dialog):
 # Sound File Chooser -----------------------------------------------------------
 # ------------------------------------------------------------------------------
 class SoundChooser(object):
-    def __init__(self, dlg):
-        self.chooser = gtk.FileChooserDialog(None, dlg,
+    def __init__(self, parent):
+        self.parent = parent
+        self.parent.blocked = True
+        self.chooser = gtk.FileChooserDialog(None, parent.dlg,
                            action = gtk.FILE_CHOOSER_ACTION_OPEN,
                            buttons = (lang.settings_file_cancel,
                            gtk.RESPONSE_CANCEL,
@@ -488,6 +501,7 @@ class SoundChooser(object):
         self.chooser.set_filter(self.filter)
     
     def close(self):
+        self.parent.blocked = False
         self.chooser.destroy()
     
     def choosen(self, chooser, code):
@@ -558,4 +572,9 @@ class AccountDialog(Dialog):
     def on_changed(self, *args):
         text = self.user.get_text().strip()
         self.user.set_text(''.join([i for i in text if i in USERNAME_CHARS]))
+    
+    def on_close(self, *args):
+        self.parent.blocked = False
+        self.instance = None
+        self.dlg.hide()
 
