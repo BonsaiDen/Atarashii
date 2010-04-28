@@ -213,6 +213,8 @@ LANG = {
         'settings_tab_accounts': 'Accounts',
         'settings_tab_notifications': 'Benachrichtigungen',
         'settings_tab_theme': 'Thema',
+        'settings_tab_atarashii': 'Atarashii',
+        'settings_tab_syncing': 'Synchronisation',
         'settings_notifications_enable': 'Aktivieren',
         'settings_notifications_sound': 'Sounds abspielen',
         'settings_file_tweets': 'Tweets:',
@@ -238,10 +240,21 @@ LANG = {
         'settings_sync': 'Syncing',
         
         # Syncing Dialog
-        'sync_title': 'Synchronisierung',
-        'sync_label': 'Synckey:',
-        'sync_button': 'Speichern',
-        'sync_button_cancel': 'Abbrechen',
+        'sync_checkbutton': 'Synchronisation aktivieren',
+        'sync_key_current': '<b>Derzeitiger Schlüssel</b>',
+        'sync_key_error': '<b>Fehler</b>',
+        'sync_key_no': '<b>Kein Schlüssel gesetzt</b>',
+        'sync_key_failed': 'Schlüssel konnte nicht empfangen werden',
+        'sync_key_label': '<b><span size="large">%s</span></b>',
+        'sync_new': 'Neuer Schlüssel',
+        'sync_cancel': 'Abbrechen',
+        'sync_ok': 'OK',
+        'sync_change': 'Ändern',
+        
+        'sync_user_error_title': 'Ungültiger Schlüssel',
+        'sync_user_error':
+            'Es wurden keine Synchronisationsdaten für den eingebenen '
+            'Schlüssel gefunden, bitte überprüfen sie Ihre Eingabe.',
         
         # About Dialog
         'about_title': 'Info zu Atarashii',
@@ -646,6 +659,8 @@ LANG = {
         'settings_tab_accounts': 'Accounts',
         'settings_tab_notifications': 'Notifications',
         'settings_tab_theme': 'Theme',
+        'settings_tab_atarashii': 'Atarashii',
+        'settings_tab_syncing': 'Synchronization',
         'settings_notifications_enable': 'Enable',
         'settings_notifications_sound': 'Play sounds',
         'settings_file_tweets': 'Tweets:',
@@ -671,10 +686,21 @@ LANG = {
         'settings_sync': 'Syncing',
         
         # Syncing Dialog
-        'sync_title': 'Synchronisation',
-        'sync_label': 'Synckey:',
-        'sync_button': 'Save',
-        'sync_button_cancel': 'Cancel',
+        'sync_checkbutton': 'Activate synchronization',
+        'sync_key_current': '<b>Current key</b>',
+        'sync_key_no': '<b>No key set</b>',
+        'sync_key_error': '<b>Error</b>',
+        'sync_key_failed': 'Failed to retrieve key',
+        'sync_key_label': '<b><span size="large">%s</span></b>',
+        'sync_new': 'New key',
+        'sync_cancel': 'Cancel',
+        'sync_ok': 'OK',
+        'sync_change': 'Change',
+        
+        'sync_user_error_title': 'Invalid key',
+        'sync_user_error':
+            'No synchronisation data for the entered key was found, '
+            'please make sure that you have entered the key correctly.',
         
         # About Dialog
         'about_title': 'About Atarashii',

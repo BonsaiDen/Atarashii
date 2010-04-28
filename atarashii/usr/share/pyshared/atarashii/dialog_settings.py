@@ -30,7 +30,7 @@ from language import LANG as lang, LANG_NAME
 
 from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING, SYNC_KEY_CHARS
 from constants import ST_CONNECT, ST_LOGIN_COMPLETE
-from constants import MESSAGE_QUESTION
+from constants import MESSAGE_QUESTION, MESSAGE_ERROR
 from constants import SHORTS_LIST, USERNAME_CHARS, FONT_DEFAULT, FONT_SIZES, \
                       AVATAR_DEFAULT, AVATAR_SIZES, THEME_DEFAULT
 
@@ -51,7 +51,7 @@ class SettingsDialog(Dialog):
                 self.delete.set_sensitive(mode)
     
     def __init__(self, parent):
-        Dialog.__init__(self, parent, True, False)
+        Dialog.__init__(self, parent, False, False)
         self.dlg.set_transient_for(parent)
         self.parent = parent
         self.blocked = False
@@ -69,6 +69,8 @@ class SettingsDialog(Dialog):
         # Tabs
         self.get('users').set_label(lang.settings_tab_accounts)
         self.get('general').set_label(lang.settings_tab_general)
+        self.get('atarashii').set_label(lang.settings_tab_atarashii)
+        self.get('syncing').set_label(lang.settings_tab_syncing)
         self.get('notifications').set_label(lang.settings_tab_notifications)
         self.get('theme').set_label(lang.settings_tab_theme)
         
@@ -126,15 +128,115 @@ class SettingsDialog(Dialog):
         
         delete.connect('clicked', delete_dialog)
         
-        # Sync Dialog
-        def sync_dialog(*args):
-            self.blocked = True
-            SyncDialog(self, self.main.settings['synckey'],
-                       lang.sync_title, None)
         
-        self.sync = self.get('syncbutton')
-        self.sync.set_label(lang.settings_sync)
-        self.sync.connect('clicked', sync_dialog)
+        # Syncing --------------------------------------------------------------
+        def sync_toggle(*args):
+            self.sync_editbox.set_property('visible', True)
+            self.sync_entrybox.set_property('visible', False)
+            self.get('syncoptions').set_sensitive(self.sync_box.get_active())
+        
+        self.sync_desc = self.get('syncdesc')
+        self.sync_box = self.get('syncbox')
+        self.sync_box.set_label(lang.sync_checkbutton)
+        self.sync_box.connect('toggled', sync_toggle)
+        self.sync_box.set_active(self.settings.is_true('syncing', False))
+        self.sync_change = self.get('syncbuttonchange')
+        self.sync_entry = self.get('syncentry')
+        self.sync_new = self.get('syncbuttonnew')
+        self.sync_ok = self.get('syncbuttonok')
+        self.sync_cancel = self.get('syncbuttoncancel')
+        self.sync_editbox = self.get('synceditbox')
+        self.sync_entrybox = self.get('syncentrybox')
+        
+        self.sync_new.set_label(lang.sync_new)
+        self.sync_change.set_label(lang.sync_change)
+        self.sync_ok.set_label(lang.sync_ok)
+        self.sync_cancel.set_label(lang.sync_cancel)
+        self.sync_key_user_set = False
+        sync_toggle()
+        
+        self.sync_label = self.get('synclabel')
+        
+        # Setup syncing GUI
+        if not self.main.syncer.get_key():
+            self.syncing_key = None
+            if self.settings.is_true('syncing', False):
+                self.sync_desc.set_label(lang.sync_key_error)
+                self.sync_label.set_label(lang.sync_key_failed)
+                self.sync_box.set_sensitive(False)
+        
+            else:
+                self.sync_desc.set_label(lang.sync_key_no)
+                self.sync_label.set_label('')
+            
+            self.sync_change.set_sensitive(False)
+            sync_toggle()
+        
+        else:
+            self.syncing_key = self.settings['synckey']
+            self.sync_desc.set_label(lang.sync_key_current)
+            self.sync_label.set_label(lang.sync_key_label \
+                                     % self.syncing_key)
+        
+        def pre_retrieve_key(*args):
+            self.dlg.set_sensitive(False)
+            self.dlg.queue_draw()
+            gobject.idle_add(retrieve_key)
+        
+        def retrieve_key():
+            key = self.main.syncer.retrieve_new_key()
+            if key is not None:
+                self.syncing_key = key
+                self.sync_desc.set_label(lang.sync_key_current)
+                self.sync_label.set_label(lang.sync_key_label \
+                                         % self.syncing_key)
+                
+                self.sync_key_user_set = False
+                self.sync_change.set_sensitive(True)
+            
+            self.dlg.set_sensitive(True)
+        
+        self.sync_new.connect('clicked', pre_retrieve_key)
+        
+        def sync_change(*args):
+            self.sync_editbox.set_property('visible', False)
+            self.sync_entrybox.set_property('visible', True)
+            self.sync_entry.set_text(self.syncing_key)
+        
+        def sync_cancel_key(*args):
+            self.sync_editbox.set_property('visible', True)
+            self.sync_entrybox.set_property('visible', False)
+        
+        def sync_ok_key(*args):
+            key = self.sync_entry.get_text().strip()
+            if len(key) != 22:
+                return False
+            
+            self.sync_key_user_set = True
+            self.syncing_key = key
+            self.sync_desc.set_label(lang.sync_key_current)
+            self.sync_label.set_label(lang.sync_key_label \
+                                      % self.syncing_key)
+            
+            self.sync_editbox.set_property('visible', True)
+            self.sync_entrybox.set_property('visible', False)
+        
+        def sync_entry_change(*args):
+            text = self.sync_entry.get_text().strip()
+            text = (''.join([i for i in text if i in SYNC_KEY_CHARS]))
+            self.sync_entry.set_text(text)
+            if len(text) != 22:
+                self.sync_entry.modify_base(gtk.STATE_NORMAL,
+                                gtk.gdk.Color(255 * 255, 190 * 255, 190 * 255))
+            
+            else:
+                self.sync_entry.modify_base(gtk.STATE_NORMAL,
+                                            self.gui.text.default_bg)
+        
+        self.sync_entry.connect('changed', sync_entry_change)
+        self.sync_change.connect('clicked', sync_change)
+        self.sync_cancel.connect('clicked', sync_cancel_key)
+        self.sync_ok.connect('clicked', sync_ok_key)
         
         
         # General --------------------------------------------------------------
@@ -269,6 +371,25 @@ class SettingsDialog(Dialog):
         oldusername = self.main.username
         
         def save(*args):
+            if self.syncing_key is not None \
+               and self.sync_box.get_active():
+                
+                # Check if this key exists if the user set it
+                if self.settings['synckey'] != self.syncing_key:
+                    if self.sync_key_user_set:
+                        if not self.main.syncer.check_key(self.syncing_key):
+                            MessageDialog(self.dlg, MESSAGE_ERROR,
+                                          lang.sync_user_error,
+                                          lang.sync_user_error_title)
+                            
+                            return False
+                    
+                    # Save key
+                    self.settings['synckey'] = self.syncing_key
+                    self.main.syncer.key = self.settings['synckey']
+            
+            # Save all settings
+            self.settings['syncing'] = self.sync_box.get_active()
             self.saved = True
             
             for k, v in soundfiles.iteritems():
@@ -588,71 +709,6 @@ class AccountDialog(Dialog):
         self.parent.blocked = False
         self.instance = None
         self.dlg.hide()
-    
-    def on_close(self, *args):
-        self.parent.blocked = False
-        self.instance = None
-        self.dlg.hide()
-
-
-# Sync Dialog ---------------------------------------------------------------
-# ------------------------------------------------------------------------------
-class SyncDialog(Dialog):
-    resource = 'sync.glade'
-    instance = None
-    
-    def __init__(self, parent, key, title, callback):
-        Dialog.__init__(self, parent.gui, False)
-        self.dlg.set_transient_for(parent.dlg)
-        self.parent = parent
-        self.callback = callback
-        self.dlg.set_title(title)
-        
-        # Request a key
-        if key is None:
-            self.key = self.parent.main.syncer.get_key()
-        
-        else:
-            self.key = key
-        
-        self.synckey.set_text(self.key)
-        self.synckey.set_sensitive(False)
-        self.synckey.grab_focus()
-    
-    def on_init(self):
-        self.synckey = self.get('synckey')
-        self.get('sync').set_text(lang.sync_label)
-        self.synckey.connect('changed', self.on_changed)
-        
-        self.close_button.set_label(lang.sync_button)
-        self.cancel_button = self.get('cancelbutton')
-        self.cancel_button.set_label(lang.sync_button_cancel)
-        
-        def save(*args):
-            key = self.synckey.get_text().strip()
-            if len(key) < 22:
-                self.synckey.grab_focus()
-            
-            else:
-                self.on_close()
-        
-        self.close_button.connect('clicked', save)
-        self.cancel_button.connect('clicked', self.on_close)
-    
-    def edit(self, *args):
-        self.synckey.set_sensitive(True)
-        self.get('editbutton').set_sensitive(False)
-    
-    def new(self, *args):
-        self.synckey.set_sensitive(True)
-        self.get('editbutton').set_sensitive(False)
-        self.get('newbutton').set_sensitive(False)
-        self.cancel_button.set_sensitive(False)
-        self.close_button.set_sensitive(False)
-    
-    def on_changed(self, *args):
-        text = self.synckey.get_text().strip()
-        self.synckey.set_text(''.join([i for i in text if i in SYNC_KEY_CHARS]))
     
     def on_close(self, *args):
         self.parent.blocked = False

@@ -45,7 +45,6 @@ class Syncer(object):
         self.gui = main.gui
         self.settings = main.settings
         self.key = None
-        self.settings['syncing'] = True
         self.reset()
     
     def reset(self):
@@ -90,7 +89,7 @@ class Syncer(object):
                     'last_tweet': self.settings['lasttweet_' + username],
                     'first_message': self.settings['firstmessage_' + username],
                     'last_message': self.settings['lastmessage_' + username]
-                })
+                }, timeout = 10)
                 
                 # Set stuff
                 self.first_tweet = self.settings['firsttweet_' + username]
@@ -164,6 +163,27 @@ class Syncer(object):
             log_error('Key request failed')
             return False
     
+    def retrieve_new_key(self):
+        try:
+            key = self.request('new', {}, post = False)
+            print 'retrieved key', key
+            return key
+        
+        except IOError:
+            print 'key retrieve failed'
+            log_error('Key retrieve failed')
+            return None
+    
+    def check_key(self, key):
+        try:
+            self.request('check', {'token': key}, post = True)
+            print 'key is ok', key
+            return True
+        
+        except IOError:
+            print 'key not found', key
+            return False
+    
     
     # Get the current key, and retrieve a new one if needed --------------------
     def get_key(self):
@@ -198,9 +218,9 @@ class Syncer(object):
     
     
     # Make HTTP requests -------------------------------------------------------
-    def request(self, method, data, post=True):
+    def request(self, method, data, post=True, timeout=2):
         conn = httplib.HTTPConnection(SYNC_SERVER_HOST, SYNC_SERVER_PORT,
-                                      timeout = 2)
+                                      timeout = timeout)
         
         conn.request('POST' if post else 'GET',  '/' + method,
                      urllib.urlencode(data))
