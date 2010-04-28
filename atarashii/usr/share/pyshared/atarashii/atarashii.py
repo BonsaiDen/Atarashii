@@ -13,8 +13,8 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-
-# TODO rename html.py to view_tweet.py and profile/message to view_*
+# TODO DRY view_profile.py, try to make something happen with the javascript
+# TODO rename view.py to view_base.py
 
 
 # Atarashii --------------------------------------------------------------------
