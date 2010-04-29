@@ -398,7 +398,7 @@ class SettingsDialog(Dialog):
         
         
         # Save -----------------------------------------------------------------
-        oldusername = self.main.username
+        self.oldusername = self.main.username
         
         def save(*args):
             if self.syncing_key is not None \
@@ -456,7 +456,7 @@ class SettingsDialog(Dialog):
             
             # Set new Username
             if self.get_drop_active() == -1 \
-               or not oldusername in self.main.settings.get_accounts():
+               or not self.oldusername in self.main.settings.get_accounts():
                 
                 self.main.logout()
             
@@ -494,7 +494,10 @@ class SettingsDialog(Dialog):
             self.file_chooser.close()
         
         if not self.saved:
-            if self.get_drop_active() == -1:
+            # Set new Username
+            if self.get_drop_active() == -1 \
+               or not self.oldusername in self.main.settings.get_accounts():
+                
                 self.main.logout()
             
             if FONT_SIZES[self.fonts.get_active()] != self.old_font_size \
@@ -612,16 +615,29 @@ class SettingsDialog(Dialog):
             self.main.settings['firstmessage_' + username] = fm_tmp
             self.main.settings['lastmessage_' + username] = lm_tmp
             
+            # Edit active account?
+            if self.main.username == name:
+                self.main.username = username
+                self.main.syncer.reset()
+                self.main.logout()
+            
+            # update menu
+            self.main.gui.tray.update_account_menu()
             self.main.settings.save()
             self.create_drop_list(username)
     
     def create_account(self, username):
         self.main.settings['account_' + username] = UNSET_USERNAME
+        
+        # update menu
+        self.main.gui.tray.update_account_menu()  
+        self.main.settings.save()
         self.create_drop_list()
         if len(self.user_accounts) == 1:
             self.select_drop(0)
     
     def delete_account(self):
+        self.blocked = False
         name = self.user_accounts[self.get_drop_active()]
         del self.main.settings['mode_' + name]
         del self.main.settings['account_' + name]
@@ -631,6 +647,15 @@ class SettingsDialog(Dialog):
         del self.main.settings['lastmessage_' + name]
         del self.main.settings['xkey_' + name]
         del self.main.settings['xsecret_' + name]
+        
+        # Delete active account?
+        if self.main.username == name:
+            self.main.username = UNSET_USERNAME
+            self.main.logout()
+        
+        # update menu
+        self.main.gui.tray.update_account_menu()  
+        self.main.settings.save()
         self.create_drop_list()
 
 
