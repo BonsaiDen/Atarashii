@@ -331,11 +331,18 @@
                                             <property name="receives_default">True</property>
                                           </object>
                                           <packing>
+                                            <property name="expand">False</property>
                                             <property name="position">0</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <placeholder/>
+                                          <object class="GtkLabel" id="fill29">
+                                            <property name="visible">True</property>
+                                            <property name="xalign">0.54000002145767212</property>
+                                          </object>
+                                          <packing>
+                                            <property name="position">1</property>
+                                          </packing>
                                         </child>
                                         <child>
                                           <object class="GtkButton" id="syncbuttonnew">
@@ -345,6 +352,7 @@
                                             <property name="receives_default">True</property>
                                           </object>
                                           <packing>
+                                            <property name="expand">False</property>
                                             <property name="position">2</property>
                                           </packing>
                                         </child>
@@ -407,7 +415,17 @@
                                                 <property name="receives_default">True</property>
                                               </object>
                                               <packing>
+                                                <property name="expand">False</property>
                                                 <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="filler17">
+                                                <property name="width_request">140</property>
+                                                <property name="visible">True</property>
+                                              </object>
+                                              <packing>
+                                                <property name="position">1</property>
                                               </packing>
                                             </child>
                                             <child>
@@ -418,15 +436,7 @@
                                                 <property name="receives_default">True</property>
                                               </object>
                                               <packing>
-                                                <property name="position">1</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel" id="filler17">
-                                                <property name="width_request">140</property>
-                                                <property name="visible">True</property>
-                                              </object>
-                                              <packing>
+                                                <property name="expand">False</property>
                                                 <property name="position">2</property>
                                               </packing>
                                             </child>
