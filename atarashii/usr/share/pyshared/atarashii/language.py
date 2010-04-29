@@ -580,7 +580,7 @@ LANG = {
         
         # Profile
         'profile_loading': 'Loading <b>%s</b> profile...',
-        'profile_close': '<b>%s</b> Profil schliessen',
+        'profile_close': 'Close <b>%s</b> profile',
         'profile_link': 'On Twitter.com',
         'profile_name': '<b>%s</b> (%s)',
         'profile_info':
