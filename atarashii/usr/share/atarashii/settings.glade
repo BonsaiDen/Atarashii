@@ -261,43 +261,41 @@
                                     <property name="visible">True</property>
                                     <property name="orientation">vertical</property>
                                     <child>
-                                      <object class="GtkAccelLabel" id="accellabel1">
+                                      <object class="GtkAlignment" id="alignment8">
                                         <property name="visible">True</property>
+                                        <property name="top_padding">4</property>
+                                        <child>
+                                          <object class="GtkVBox" id="vbox8">
+                                            <property name="visible">True</property>
+                                            <property name="orientation">vertical</property>
+                                            <child>
+                                              <object class="GtkLabel" id="syncdesc">
+                                                <property name="visible">True</property>
+                                                <property name="label" translatable="yes">&lt;b&gt;Current key&lt;/b&gt;</property>
+                                                <property name="use_markup">True</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="synclabel">
+                                                <property name="visible">True</property>
+                                                <property name="label" translatable="yes">&lt;span size="xx-large"&gt;&lt;b&gt;XXXXXXXXXXXXXXXXXXXXXX&lt;/b&gt;&lt;/span&gt;</property>
+                                                <property name="use_markup">True</property>
+                                                <property name="selectable">True</property>
+                                              </object>
+                                              <packing>
+                                                <property name="expand">False</property>
+                                                <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                          </object>
+                                        </child>
                                       </object>
                                       <packing>
-                                        <property name="expand">False</property>
                                         <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="syncdesc">
-                                        <property name="visible">True</property>
-                                        <property name="label" translatable="yes">&lt;b&gt;Current key&lt;/b&gt;</property>
-                                        <property name="use_markup">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="synclabel">
-                                        <property name="visible">True</property>
-                                        <property name="label" translatable="yes">&lt;span size="xx-large"&gt;&lt;b&gt;XXXXXXXXXXXXXXXXXXXXXX&lt;/b&gt;&lt;/span&gt;</property>
-                                        <property name="use_markup">True</property>
-                                        <property name="selectable">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="position">2</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="label1">
-                                        <property name="visible">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="position">3</property>
                                       </packing>
                                     </child>
                                     <child>
@@ -331,50 +329,95 @@
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
-                                        <property name="position">4</property>
+                                        <property name="position">1</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkHBox" id="syncentrybox">
-                                        <property name="no_show_all">True</property>
+                                      <object class="GtkVBox" id="syncentrybox">
+                                        <property name="visible">True</property>
+                                        <property name="orientation">vertical</property>
                                         <child>
-                                          <object class="GtkEntry" id="syncentry">
+                                          <object class="GtkLabel" id="syncenterlabel">
                                             <property name="visible">True</property>
-                                            <property name="can_focus">True</property>
-                                            <property name="max_length">22</property>
-                                            <property name="invisible_char">&#x25CF;</property>
-                                            <property name="width_chars">22</property>
+                                            <property name="xalign">0</property>
+                                            <property name="label" translatable="yes">&lt;b&gt;Enter an already existing Sync-Token:&lt;/b&gt;</property>
+                                            <property name="use_markup">True</property>
                                           </object>
                                           <packing>
                                             <property name="position">0</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkButton" id="syncbuttoncancel">
-                                            <property name="label" translatable="yes">Cancel</property>
+                                          <object class="GtkHBox" id="vbox15">
                                             <property name="visible">True</property>
-                                            <property name="can_focus">True</property>
-                                            <property name="receives_default">True</property>
+                                            <child>
+                                              <object class="GtkEntry" id="syncentry">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="max_length">22</property>
+                                                <property name="invisible_char">&#x25CF;</property>
+                                                <property name="width_chars">22</property>
+                                              </object>
+                                              <packing>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
                                           </object>
                                           <packing>
+                                            <property name="expand">False</property>
                                             <property name="position">1</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkButton" id="syncbuttonok">
-                                            <property name="label" translatable="yes">OK</property>
+                                          <object class="GtkHBox" id="hbox2">
                                             <property name="visible">True</property>
-                                            <property name="can_focus">True</property>
-                                            <property name="receives_default">True</property>
+                                            <child>
+                                              <object class="GtkButton" id="syncbuttoncancel">
+                                                <property name="label" translatable="yes">Cancel</property>
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="receives_default">True</property>
+                                              </object>
+                                              <packing>
+                                                <property name="position">0</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkButton" id="syncbuttonok">
+                                                <property name="label" translatable="yes">OK</property>
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">True</property>
+                                                <property name="receives_default">True</property>
+                                              </object>
+                                              <packing>
+                                                <property name="position">1</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="filler17">
+                                                <property name="width_request">140</property>
+                                                <property name="visible">True</property>
+                                              </object>
+                                              <packing>
+                                                <property name="position">2</property>
+                                              </packing>
+                                            </child>
                                           </object>
                                           <packing>
+                                            <property name="expand">False</property>
                                             <property name="position">2</property>
                                           </packing>
                                         </child>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
-                                        <property name="position">5</property>
+                                        <property name="position">2</property>
                                       </packing>
                                     </child>
                                   </object>

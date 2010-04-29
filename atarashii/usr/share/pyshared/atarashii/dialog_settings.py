@@ -147,6 +147,7 @@ class SettingsDialog(Dialog):
         self.sync_editbox = self.get('synceditbox')
         self.sync_entrybox = self.get('syncentrybox')
         
+        self.get('syncenterlabel').set_label(lang.sync_key_enter)
         self.sync_new.set_label(lang.sync_new)
         self.sync_change.set_label(lang.sync_change)
         self.sync_ok.set_label(lang.sync_ok)
@@ -155,9 +156,10 @@ class SettingsDialog(Dialog):
         self.sync_box.set_active(self.settings.is_true('syncing', False))
         sync_toggle()
         
-        self.sync_label = self.get('synclabel')
         self.sync_box.set_sensitive(False)
         self.get('syncoptions').set_sensitive(False)
+        
+        self.sync_label = self.get('synclabel')
         self.sync_desc.set_label(lang.sync_key_loading)
         self.sync_label.set_label('')
         
@@ -169,6 +171,7 @@ class SettingsDialog(Dialog):
                     self.sync_desc.set_label(lang.sync_key_error)
                     self.sync_label.set_label(lang.sync_key_failed)
                     self.sync_box.set_sensitive(True)
+                    
                     self.get('syncoptions').set_sensitive(False)
                     self.get('tabs').set_current_page(1)
                     self.get('general_tabs').set_current_page(1)
@@ -206,6 +209,7 @@ class SettingsDialog(Dialog):
                 self.sync_label.set_label(lang.sync_key_label \
                                          % self.syncing_key)
                 
+                self.sync_desc.set_label(lang.sync_key_changed)
                 self.sync_key_user_set = False
                 self.sync_change.set_sensitive(True)
             
@@ -213,6 +217,7 @@ class SettingsDialog(Dialog):
                 self.sync_desc.set_label(lang.sync_key_error)
                 self.sync_label.set_label(lang.sync_key_failed)
             
+            self.sync_new.set_sensitive(False)
             self.dlg.set_sensitive(True)
         
         self.sync_new.connect('clicked', pre_retrieve_key)
@@ -231,9 +236,15 @@ class SettingsDialog(Dialog):
             if len(key) != 22:
                 return False
             
-            self.sync_key_user_set = True
+            if key != self.settings['synckey']:
+                self.sync_desc.set_label(lang.sync_key_changed)
+                self.sync_key_user_set = True
+            
+            elif key == self.settings['synckey']:
+                self.sync_desc.set_label(lang.sync_key_current)
+                self.sync_key_user_set = False
+            
             self.syncing_key = key
-            self.sync_desc.set_label(lang.sync_key_current)
             self.sync_label.set_label(lang.sync_key_label \
                                       % self.syncing_key)
             

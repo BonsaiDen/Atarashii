@@ -96,7 +96,9 @@ class Syncer(object):
                 return True
             
             except IOError:
-                self.main.on_sync_up_fail()
+                if self.settings['syncing']:
+                    self.main.on_sync_up_fail()
+                
                 log_error('Syncing up failed')
                 self.pending = False
                 return False
@@ -117,6 +119,11 @@ class Syncer(object):
                 username = self.main.username
                 data = self.request('get', {'token': self.key,
                                             'user': username})
+                
+                # no userdata was found, sync up!
+                if data == 'Result: Empty':
+                    self.set_ids()
+                    return False
                 
                 tweet, message = data.split(';')
                 first_tweet, last_tweet = tweet.split(',')
@@ -142,7 +149,9 @@ class Syncer(object):
                 return True
             
             except IOError:
-                self.main.on_sync_down_fail()
+                if self.settings['syncing']:
+                    self.main.on_sync_down_fail()
+                
                 log_error('Syncing down failed')
                 return False
         
@@ -222,6 +231,12 @@ class Syncer(object):
         if response.status == 200:
             data = response.read()
             if data.startswith('Error: '):
+                if data == 'Error: Invalid Token':
+                    self.key = None
+                    self.settings['synckey'] = None
+                    self.settings['syncing'] = False
+                    self.main.on_sync_key_fail()
+                
                 raise IOError
             
             else:

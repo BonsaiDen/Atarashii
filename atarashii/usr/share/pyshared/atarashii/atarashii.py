@@ -313,6 +313,10 @@ class Atarashii(AtarashiiActions):
         gobject.idle_add(self.gui.show_sync_warning, lang.sync_button_down,
                          lang.sync_warning_down)
     
+    def on_sync_key_fail(self):
+        gobject.idle_add(self.gui.show_sync_error, lang.sync_button_key,
+                         lang.sync_error_key)
+    
     
     # Helper Functions ---------------------------------------------------------
     # --------------------------------------------------------------------------

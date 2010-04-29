@@ -242,6 +242,7 @@ LANG = {
         # Syncing Dialog
         'sync_checkbutton': 'Synchronisation aktivieren',
         'sync_key_current': '<b>Derzeitiges Sync-Token</b>',
+        'sync_key_changed': '<b>Derzeitiges Sync-Token(geändert)</b>',
         'sync_key_error': '<b>Fehler</b>',
         'sync_key_loading': '<b>Lade Sync-Token...</b>',
         'sync_key_no': '<b>Kein Sync-Token gesetzt.</b>',
@@ -251,6 +252,7 @@ LANG = {
         'sync_cancel': 'Abbrechen',
         'sync_ok': 'OK',
         'sync_change': 'Ändern',
+        'sync_key_enter': 'Vorhandenes Sync-Token eingeben:',
         
         'sync_button_down': 'Synchronisation fehlgeschlagen',
         'sync_warning_down':
@@ -261,6 +263,13 @@ LANG = {
         'sync_warning_up':
             'Atarashii konnte die Synchronisationsdaten nicht <b>senden</b>.\n'
             'Dies ist in den meisten Fällen lediglich ein temporäres Problem.',
+        
+        'sync_button_key': 'Synchronisation fehlgeschlagen',
+        'sync_error_key':
+            'Ihr Sync-Token ist ungültig, bitte rufen Sie die Einstellungen '
+            'auf und generieren sie ein neues.\n\nSync-Tokens verfallen falls '
+            'sie in den ersten 24 Stunden nach Ihrer Generierung nicht benutzt'
+            ' wurden.',
         
         'sync_user_error_title': 'Ungültiges Token',
         'sync_user_error':
@@ -699,6 +708,7 @@ LANG = {
         # Syncing Dialog
         'sync_checkbutton': 'Activate synchronization',
         'sync_key_current': '<b>Current Sync-Token</b>',
+        'sync_key_changed': '<b>Current Sync-Token(changed)</b>',
         'sync_key_loading': '<b>Loading Sync-Token...</b>',
         'sync_key_no': '<b>No Sync-Token set.</b>',
         'sync_key_error': '<b>Error</b>',
@@ -708,6 +718,7 @@ LANG = {
         'sync_cancel': 'Cancel',
         'sync_ok': 'OK',
         'sync_change': 'Change',
+        'sync_key_enter': 'Enter an existing Sync-Token:',
         
         'sync_button_down': 'Synchronization failed',
         'sync_warning_down':
@@ -718,6 +729,13 @@ LANG = {
         'sync_warning_up':
             'Atarashii could not <b>send</b> the synchronization data.\n'
             'In most cases this is just a temporary problem.',
+        
+        'sync_button_key': 'Synchronization failed',
+        'sync_error_key':
+            'Your Sync-Token is invalid, please go to the preferences and '
+            'request a new one.\n\nSync-Tokens do <b>expire</b> when they '
+            'havn\'t been used in the first <b>24 hours</b> after their '
+            'generation.',
         
         'sync_user_error_title': 'Invalid Token',
         'sync_user_error':

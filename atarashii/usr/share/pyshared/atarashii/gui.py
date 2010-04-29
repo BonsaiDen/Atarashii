@@ -635,6 +635,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     def show_sync_warning(self, button, info):
         self.warning_button.show(button, info, sound = True)
     
+    def show_sync_error(self, button, info):
+        self.error_button.show(button, info, sound = True)
+    
     def show_crash_report(self):
         code = self.settings['crash_reason']
         
