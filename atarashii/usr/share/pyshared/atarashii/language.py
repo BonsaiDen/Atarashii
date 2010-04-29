@@ -216,7 +216,7 @@ LANG = {
         'settings_tab_atarashii': 'Atarashii',
         'settings_tab_syncing': 'Synchronisation',
         'settings_notifications_enable': 'Benachrichtigungen Aktivieren',
-        'settings_notifications_overlay': 'Abspielen Filme überlagern',
+        'settings_notifications_overlay': 'Abspielende Filme überlagern',
         'settings_notifications_sound': 'Sounds abspielen',
         'settings_file_tweets': 'Tweets:',
         'settings_file_replies': 'Antworten:',
