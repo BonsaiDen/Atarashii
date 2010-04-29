@@ -23,7 +23,8 @@ import threading
 
 from errors import log_error
 from constants import UNSET_USERNAME, HTML_UNSET_ID
-from constants import SYNC_KEY_CHARS, SYNC_SERVER_HOST, SYNC_SERVER_PORT
+from constants import SYNC_KEY_CHARS, SYNC_SERVER_HOST, SYNC_SERVER_PORT, \
+                      SYNC_MAX_TRIES
 
 
 class Async(threading.Thread):
@@ -88,7 +89,7 @@ class Syncer(object):
                     'last_tweet': self.settings['lasttweet_' + username],
                     'first_message': self.settings['firstmessage_' + username],
                     'last_message': self.settings['lastmessage_' + username]
-                }, timeout = 10)
+                })
                 
                 # Set stuff
                 self.first_tweet = self.settings['firsttweet_' + username]
@@ -231,12 +232,27 @@ class Syncer(object):
     
     # Make HTTP requests -------------------------------------------------------
     # --------------------------------------------------------------------------
-    def request(self, method, data, timeout=2):
-        conn = httplib.HTTPSConnection(SYNC_SERVER_HOST, SYNC_SERVER_PORT,
-                                       timeout = timeout)
+    def request(self, method, data):
+        tries = 1
+        while True:
+            conn = httplib.HTTPSConnection(SYNC_SERVER_HOST, SYNC_SERVER_PORT,
+                                           timeout = 2)
+            
+            try:
+                conn.request('POST',  '/' + method, urllib.urlencode(data))
+                response = conn.getresponse()
+                if response.status == 200:
+                    break
+                
+                raise IOError
+            
+            except IOError:
+                log_error('Syncing request #%d failed' % tries)
+                tries += 1
+                if tries > SYNC_MAX_TRIES:
+                    raise IOError
         
-        conn.request('POST',  '/' + method, urllib.urlencode(data))
-        response = conn.getresponse()
+        # Response check
         if response.status == 200:
             data = response.read()
             if data.startswith('Error: '):
