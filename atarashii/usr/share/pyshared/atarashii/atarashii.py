@@ -14,7 +14,6 @@
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
 # TODO DRY view_profile.py, try to make something happen with the javascript
-# TODO rename view.py to view_base.py
 
 
 # Atarashii --------------------------------------------------------------------

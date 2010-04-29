@@ -494,7 +494,6 @@ class SettingsDialog(Dialog):
             self.file_chooser.close()
         
         if not self.saved:
-            # Set new Username
             if self.get_drop_active() == -1 \
                or not self.oldusername in self.main.settings.get_accounts():
                 
@@ -630,7 +629,7 @@ class SettingsDialog(Dialog):
         self.main.settings['account_' + username] = UNSET_USERNAME
         
         # update menu
-        self.main.gui.tray.update_account_menu()  
+        self.main.gui.tray.update_account_menu()
         self.main.settings.save()
         self.create_drop_list()
         if len(self.user_accounts) == 1:
@@ -654,7 +653,7 @@ class SettingsDialog(Dialog):
             self.main.logout()
         
         # update menu
-        self.main.gui.tray.update_account_menu()  
+        self.main.gui.tray.update_account_menu()
         self.main.settings.save()
         self.create_drop_list()
 

@@ -256,13 +256,15 @@ LANG = {
         
         'sync_button_down': 'Synchronisation fehlgeschlagen',
         'sync_warning_down':
-            'Atarashii konnte die Synchronisationsdaten nicht <b>abrufen</b>.\n'
-            'Dies ist in den meisten Fällen lediglich ein temporäres Problem.',
+            'Atarashii konnte die Synchronisationsdaten nicht <b>abrufen</b>.'
+            '\nDies ist in den meisten Fällen lediglich ein temporäres '
+            'Problem.',
         
         'sync_button_up': 'Synchronisation fehlgeschlagen',
         'sync_warning_up':
             'Atarashii konnte die Synchronisationsdaten nicht <b>senden</b>.\n'
-            'Dies ist in den meisten Fällen lediglich ein temporäres Problem.',
+            'Dies ist in den meisten Fällen lediglich ein temporäres '
+            'Problem.',
         
         'sync_button_key': 'Synchronisation fehlgeschlagen',
         'sync_error_key':

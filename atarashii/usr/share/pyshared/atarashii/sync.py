@@ -52,6 +52,9 @@ class Syncer(object):
         self.first_message = HTML_UNSET_ID
         self.last_message = HTML_UNSET_ID
     
+    
+    # Sync up to the cloud -----------------------------------------------------
+    # --------------------------------------------------------------------------
     def set_ids(self):
         if self.settings['syncing'] is not True:
             return False
@@ -107,6 +110,9 @@ class Syncer(object):
             self.pending = False
             return False
     
+    
+    # Sync down to Atarashii ---------------------------------------------------
+    # --------------------------------------------------------------------------
     def get_ids(self):
         if self.settings['syncing'] is not True:
             return False
@@ -162,7 +168,8 @@ class Syncer(object):
         pass
     
     
-    # Request a new key --------------------------------------------------------
+    # Token requests -----------------------------------------------------------
+    # --------------------------------------------------------------------------
     def new_key(self):
         try:
             self.key = self.request('new', {'coding': 'kittens'})
@@ -191,7 +198,8 @@ class Syncer(object):
             return False
     
     
-    # Get the current key, and retrieve a new one if needed --------------------
+    # Check current token and retrieve a new one if needed ---------------------
+    # --------------------------------------------------------------------------
     def get_key(self):
         key = self.settings['synckey']
         if key is None:
@@ -222,6 +230,7 @@ class Syncer(object):
     
     
     # Make HTTP requests -------------------------------------------------------
+    # --------------------------------------------------------------------------
     def request(self, method, data, timeout=2):
         conn = httplib.HTTPConnection(SYNC_SERVER_HOST, SYNC_SERVER_PORT,
                                       timeout = timeout)
