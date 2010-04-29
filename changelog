@@ -2,12 +2,12 @@ atarashii (0.99.25-1) all;
 
   + Tweets/Messages that are over the 150 character limit will now be split when
     send. After the first 140 characters have been send, the textbox will 
-    contain the leftover part of the Tweet/Message. Retweets wont be split,
+    contain the leftover part of the Tweet/Message. Retweets won't be split,
     you'll need to shorten them accordingly.
   + Completely reworked profile view! The new profile view is now HTML based,
-    displays themost recent Tweets of the user and has buttons for following / 
+    displays the most recent Tweets of the user and has buttons for following / 
     blocking and sending a message.
-  + Atarashii Cloud Sync. Multiple installtions of Atarashii can now be synced
+  + Atarashii Cloud Sync. Multiple installations of Atarashii can now be synced
     via the cloud. When first activating the syncing you will receive your  
     Sync-Token. As soon as you've logged in with one of your accounts after 
     that, you can then enter the same Token in another installtion of Atarashii 
@@ -18,7 +18,7 @@ atarashii (0.99.25-1) all;
   ~ Atarashii will now look in ~./atarashii/themes for additional themes.
   * May bugfixes concerning the user preferences.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 29 Apr 2010 11:46:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 29 Apr 2010 18:06:00 +0200
 
 atarashii (0.99.24-1) all;
 
