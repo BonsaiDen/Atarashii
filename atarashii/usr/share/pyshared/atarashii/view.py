@@ -277,7 +277,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         if remove_item_id != UNSET_ID_NUM:
             self.old_items_changed = True
             self.items.pop(remove_item_id)
-            self.render()
+            self.render(force_render = True)
     
     def favorite(self, item_id, mode):
         for i in self.items:

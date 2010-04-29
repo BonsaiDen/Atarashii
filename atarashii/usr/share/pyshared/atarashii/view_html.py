@@ -60,7 +60,7 @@ class ViewHTML(object):
     def render(self, update_multi=False, force_render=False):
         
         # If item don't have changed just update the times via javascript
-        if not self.old_items_changed:
+        if not self.old_items_changed and not force_render:
             self.update_times()
             self.gui.update_app(True)
             return False
