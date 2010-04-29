@@ -15,7 +15,9 @@ atarashii (0.99.25-1) all;
     that, you can then enter the same Token in another installtion of Atarashii 
     in order to share tweet and messages read status between both installations.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 28 Apr 2010 19:28:00 +0200
+  * May bugfixes concerning the user preferences.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 29 Apr 2010 08:50:00 +0200
 
 atarashii (0.99.24-1) all;
 
