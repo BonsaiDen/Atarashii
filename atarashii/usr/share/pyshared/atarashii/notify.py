@@ -75,9 +75,11 @@ class Notifier(object):
             play_sound(self.main, item[3])
     
     def send(self, item):
+        overlay = self.main.settings.is_true('notify_overlay', True)
+        urgent = dbus.Byte(2) if overlay else dbus.Byte(1)
         return self.notify.Notify('Atarashii', 0, item[2], item[0],
                                   unescape(item[1]),
-                                  (), {'urgency': dbus.Byte(2)}, -1)
+                                  (), {'urgency': urgent}, -1)
     
     # Try to close the last notification, this might get ignored on newer
     # version of the notification dbus thingy

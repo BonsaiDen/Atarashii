@@ -87,6 +87,9 @@ class AtarashiiActions(object):
         self.save_settings(True, True, True)
         self.updater.running = False
         self.gui.hide()
+        if self.gui.settings_dialog is not None:
+            self.gui.settings_dialog.hideall()
+        
         gobject.idle_add(self.real_quit)
     
     def real_quit(self):

@@ -55,6 +55,7 @@ class SettingsDialog(Dialog):
         self.dlg.set_transient_for(parent)
         self.parent = parent
         self.blocked = False
+        self.username_dialog = None
         
         # Check for autostart
         self.main.settings.check_autostart()
@@ -338,11 +339,14 @@ class SettingsDialog(Dialog):
         
         # Notification ---------------------------------------------------------
         notify = self.get('notify')
+        overlay = self.get('notify_overlay')
         sound = self.get('sound')
         notify.set_label(lang.settings_notifications_enable)
+        overlay.set_label(lang.settings_notifications_overlay)
         sound.set_label(lang.settings_notifications_sound)
         
         notify.set_active(self.settings.is_true('notify'))
+        overlay.set_active(self.settings.is_true('notify_overlay', True))
         sound.set_active(self.settings.is_true('sound'))
         notify.set_sensitive(True)
         
@@ -350,6 +354,7 @@ class SettingsDialog(Dialog):
             self.get('soundfiles').set_sensitive(sound.get_active())
         
         def toggle(*args):
+            overlay.set_sensitive(notify.get_active())
             sound.set_sensitive(notify.get_active())
             self.get('soundfiles').set_sensitive(notify.get_active() \
                                                  and sound.get_active())
@@ -429,6 +434,7 @@ class SettingsDialog(Dialog):
                 self.settings['sound_' + k] = v
             
             self.settings['notify'] = notify.get_active()
+            self.settings['notify_overlay'] = overlay.get_active()
             self.settings['sound'] = sound.get_active()
             self.settings['tray'] = tray.get_active()
             self.settings['infosound'] = info_sound.get_active()
@@ -514,6 +520,14 @@ class SettingsDialog(Dialog):
         self.__class__.instance = None
         self.gui.settings_dialog = None
         self.dlg.hide()
+    
+    def hideall(self):
+        self.dlg.hide()
+        if self.file_chooser is not None:
+            self.file_chooser.close()
+            
+        if self.username_dialog is not None:
+            self.username_dialog.on_close()
     
     
     # CSS ----------------------------------------------------------------------
@@ -726,6 +740,7 @@ class AccountDialog(Dialog):
         Dialog.__init__(self, parent.gui, False)
         self.dlg.set_transient_for(parent.dlg)
         self.parent = parent
+        self.parent.username_dialog = self
         self.callback = callback
         self.dlg.set_title(title)
         self.username = username
@@ -763,6 +778,7 @@ class AccountDialog(Dialog):
         self.user.set_text(''.join([i for i in text if i in USERNAME_CHARS]))
     
     def on_close(self, *args):
+        self.parent.username_dialog = None
         self.parent.blocked = False
         self.instance = None
         self.dlg.hide()

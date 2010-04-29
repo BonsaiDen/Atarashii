@@ -4,17 +4,17 @@ atarashii (0.99.25-1) all;
     send. After the first 140 characters have been send, the textbox will 
     contain the leftover part of the Tweet/Message. Retweets wont be split,
     you'll need to shorten them accordingly.
-
   + Completely reworked profile view! The new profile view is now HTML based,
     displays themost recent Tweets of the user and has buttons for following / 
     blocking and sending a message.
-
   + Atarashii Cloud Sync. Multiple installtions of Atarashii can now be synced
     via the cloud. When first activating the syncing you will receive your  
     Sync-Token. As soon as you've logged in with one of your accounts after 
     that, you can then enter the same Token in another installtion of Atarashii 
     in order to share tweet and messages read status between both installations.
-
+  + There is now an option to turn off that notifications overlay playing 
+    movies.
+  ~ Atarashii will now look in ~./atarashii/themes for additional themes.
   * May bugfixes concerning the user preferences.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 29 Apr 2010 08:50:00 +0200
