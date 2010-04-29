@@ -380,6 +380,7 @@ class SettingsDialog(Dialog):
         
         
         # Theme ----------------------------------------------------------------
+        self.settings.load_color_themes()
         self.get('colortheme').set_label(lang.settings_color_theme)
         self.old_color_theme = self.settings.get('color_theme', THEME_DEFAULT)
         self.color_ids = sorted(self.settings.color_themes.keys())

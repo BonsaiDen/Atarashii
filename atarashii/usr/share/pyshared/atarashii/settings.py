@@ -311,7 +311,15 @@ class Settings(object):
     # Load themes --------------------------------------------------------------
     def load_color_themes(self):
         self.color_themes = {}
-        path = os.path.join(self.main.get_resource(''), 'themes')
+        self.scan_theme_folder(os.path.join(self.main.get_resource(''),
+                                            'themes'))
+        
+        self.scan_theme_folder(os.path.join(ATARASHII_DIR,'themes'))
+    
+    def scan_theme_folder(self, path):
+        if not os.path.exists(path):
+            return False
+        
         for theme_name in sorted(os.listdir(path)):
             theme = os.path.join(path, theme_name)
             if os.path.isdir(theme):
