@@ -19,7 +19,7 @@
 import view
 
 from utils import menu_escape
-from language import LANG as lang
+from lang import lang
 
 from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, HTML_UNSET_ID, \
                       HTML_UNSET_TEXT

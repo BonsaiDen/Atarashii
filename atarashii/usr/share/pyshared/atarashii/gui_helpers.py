@@ -22,7 +22,7 @@ import gtk
 import gobject
 
 from utils import escape, strip_tags
-from language import LANG as lang
+from lang import lang
 
 from constants import ST_SEND, ST_CONNECT, ST_LOGIN_SUCCESSFUL, \
                       ST_LOGIN_COMPLETE, ST_UPDATE, ST_NETWORK_FAILED, \

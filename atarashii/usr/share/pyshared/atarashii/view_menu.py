@@ -26,7 +26,7 @@ import urllib2
 import api
 
 from utils import URLExpander, escape, menu_escape
-from language import LANG as lang
+from lang import lang
 
 
 # Watch out Fox! Lots of hacked stuff ahead! -----------------------------------

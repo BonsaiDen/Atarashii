@@ -29,7 +29,7 @@ from updater_tweet import UpdaterTweet
 from updater_profile import UpdaterProfile
 from settings import CACHE_DIR
 from utils import tweepy, TweepError, gmtime
-from language import LANG as lang
+from lang import lang
 
 from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED, \
                       ST_TRAY_WARNING

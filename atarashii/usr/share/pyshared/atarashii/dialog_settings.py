@@ -26,7 +26,7 @@ import os
 from dialog import Dialog, MessageDialog
 from sounds import THEME_SOUNDS, THEME_DIR
 from utils import URLShorter, URLExpander
-from language import LANG as lang, LANG_NAME
+from lang import lang
 
 from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING, SYNC_KEY_CHARS
 from constants import ST_CONNECT, ST_LOGIN_COMPLETE
@@ -404,10 +404,10 @@ class SettingsDialog(Dialog):
         self.color_ids = sorted(self.settings.color_themes.keys())
         self.color_names = []
         for i in self.color_ids:
-            key = 'title_' + LANG_NAME
+            key = 'title_' + lang.code
             name = self.settings.color_themes[i][key] \
                    if key in self.settings.color_themes[i] \
-                   else self.settings.color_themes[i]['title_en_US']
+                   else self.settings.color_themes[i]['title_en']
             
             self.color_names.append(name)
         

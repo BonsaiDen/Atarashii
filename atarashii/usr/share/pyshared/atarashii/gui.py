@@ -34,7 +34,7 @@ import dialog
 from gui_events import GUIEventHandler
 from gui_helpers import GUIHelpers
 from utils import gmtime
-from language import LANG as lang
+from lang import lang
 
 from constants import CRASH_LOG_FILE
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \

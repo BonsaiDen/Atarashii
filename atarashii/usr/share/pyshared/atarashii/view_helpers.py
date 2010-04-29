@@ -25,7 +25,7 @@ import time
 import math
 
 from utils import gmtime, localtime
-from language import LANG as lang
+from lang import lang
 
 
 # Did you ever see faked mouse move events which fixed CSS bugs? ---------------

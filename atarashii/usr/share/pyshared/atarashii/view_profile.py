@@ -19,7 +19,7 @@
 import view_tweet as tweet
 
 from utils import escape
-from language import LANG as lang
+from lang import lang
 
 from constants import UNSET_TEXT, HTML_UNSET_TEXT, HTML_LOADED
 

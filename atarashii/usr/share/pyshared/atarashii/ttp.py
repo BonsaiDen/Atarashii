@@ -20,7 +20,7 @@ import re
 import urllib
 
 from utils import escape
-from language import LANG as lang
+from lang import lang
 
 # Some of this code has been translated from the twitter-text-java library:
 # <http://github.com/mzsanford/twitter-text-java>

@@ -22,7 +22,7 @@ import gtk
 import gobject
 
 from utils import menu_escape
-from language import LANG as lang
+from lang import lang
 
 from constants import UNSET_TOOLTIP, UNSET_USERNAME, ST_TRAY_WARNING
 

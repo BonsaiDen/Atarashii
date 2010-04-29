@@ -33,7 +33,7 @@ import api
 
 from errors import log_error
 from utils import gmtime
-from language import LANG as lang
+from lang import lang
 
 from constants import LOGOUT_FILE
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR, UNSET_USERNAME, \
