@@ -296,10 +296,16 @@ class ViewMenu(object):
     # Run some crazy javascript in order to calculate all the positioning
     def get_sizes(self, event):
         try:
-            self.execute_script('''
-            var items = document.getElementsByClassName('viewitem');
-            var pos = 0;
+            self.menu_javascript('var pos = 0;', event)
+            return self.get_main_frame().get_title()
+        
+        except Exception:
+            return None
+
+    def menu_javascript(self, pos, event):
+        self.execute_script(pos + '''
             var sizes = [pos];
+            var items = document.getElementsByClassName('viewitem');
             for (var i = 0; i < items.length; i++) {
                 var item = items[i];
                 pos += item.offsetHeight;
@@ -314,8 +320,4 @@ class ViewMenu(object):
             (link.href != undefined ? link.href : link.parentNode.href);
             delete link;
             delete sizes;''' % (event.x, event.y))
-            return self.get_main_frame().get_title()
-        
-        except Exception:
-            return None
 

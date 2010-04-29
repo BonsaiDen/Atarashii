@@ -223,25 +223,10 @@ class HTML(tweet.HTML):
     # Run some crazy javascript in order to calculate all the positioning
     def get_sizes(self, event):
         try:
-            self.execute_script('''
-            var sizes = [];
-            var items = document.getElementsByClassName('viewitem');
-            var pos = document.getElementById('header').offsetHeight;
-            var sizes = [pos];
-            for (var i = 0; i < items.length; i++) {
-                var item = items[i];
-                pos += item.offsetHeight;
-                sizes.push([item.getAttribute('id'), pos])
-                pos += 2;
-                delete item;
-            };
-            delete pos;
-            delete items;
-            var link = document.elementFromPoint(%d, %d);
-            document.title = sizes.join(';') + '|' +
-            (link.href != undefined ? link.href : link.parentNode.href);
-            delete link;
-            delete sizes;''' % (event.x, event.y))
+            self.menu_javascript(
+                 'var pos = document.getElementById(\'header\').offsetHeight;',
+                 event)
+            
             return self.get_main_frame().get_title()
         
         except Exception:
