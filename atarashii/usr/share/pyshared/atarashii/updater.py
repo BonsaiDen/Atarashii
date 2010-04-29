@@ -497,19 +497,17 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
             
             self.tweet.update_list.append([i, img_file])
         
-        count = len(notify_tweet_list)
-        if count > 0:
-            notify_tweet_list.reverse()
-            if count > 1:
-                for i in xrange(count):
-                    notify_tweet_list[i][0] = lang.notification_index \
-                                              % (notify_tweet_list[i][0],
-                                                 i + 1, count)
-        
-        
-        
         # Show Notifications
         if self.settings.is_true('notify'):
+            count = len(notify_tweet_list)
+            if count > 0:
+                notify_tweet_list.reverse()
+                if count > 1:
+                    for i in xrange(count):
+                        notify_tweet_list[i][0] = lang.notification_index \
+                                                  % (notify_tweet_list[i][0],
+                                                     i + 1, count)
+            
             self.notifier.add(notify_message_list + notify_tweet_list)
     
     
