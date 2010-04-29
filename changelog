@@ -14,10 +14,11 @@ atarashii (0.99.25-1) all;
     in order to share tweet and messages read status between both installations.
   + There is now an option to turn off that notifications overlay playing 
     movies.
+  + If desired, shortening of urls can now be turned off.
   ~ Atarashii will now look in ~./atarashii/themes for additional themes.
   * May bugfixes concerning the user preferences.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 29 Apr 2010 08:50:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 29 Apr 2010 11:46:00 +0200
 
 atarashii (0.99.24-1) all;
 
