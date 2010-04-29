@@ -32,7 +32,7 @@ from constants import UNSET_USERNAME, UNSET_SOUND, UNSET_SETTING, SYNC_KEY_CHARS
 from constants import ST_CONNECT, ST_LOGIN_COMPLETE
 from constants import MESSAGE_QUESTION, MESSAGE_ERROR
 from constants import SHORTS_LIST, USERNAME_CHARS, FONT_DEFAULT, FONT_SIZES, \
-                      AVATAR_DEFAULT, AVATAR_SIZES, THEME_DEFAULT
+                      AVATAR_DEFAULT, AVATAR_SIZES, THEME_DEFAULT, CONTINUE_LIST
 
 
 # This thing is most likely the worst part of Atarashii ------------------------
@@ -375,6 +375,14 @@ class SettingsDialog(Dialog):
         shorts = self.create_boxlist('shorts', short_names, short_selected)
         
         
+        # Continues ------------------------------------------------------------
+        self.get('continue').set_label(lang.settings_continue)
+        conts = zip(CONTINUE_LIST, lang.settings_continue_names)
+        cont_names = ['%s (%s)' % (i, e) for i, e in conts]
+        continues = self.create_boxlist('continues', cont_names,
+                                        cont_names[self.settings['continue']])
+        
+        
         # Sizes ----------------------------------------------------------------
         self.get('fontsize').set_label(lang.settings_font_size)
         self.old_font_size = self.settings.get('fontsize', FONT_DEFAULT)
@@ -435,6 +443,8 @@ class SettingsDialog(Dialog):
             
             self.saved = True
             
+            
+            # Notifaction and Sounds -------------------------------------------
             for k, v in soundfiles.iteritems():
                 self.settings['sound_' + k] = v
             
@@ -444,6 +454,8 @@ class SettingsDialog(Dialog):
             self.settings['tray'] = tray.get_active()
             self.settings['infosound'] = info_sound.get_active()
             
+            
+            # Shortener --------------------------------------------------------
             old_short = self.settings['shortener']
             selected_short = shorts.get_active()
             if selected_short != 0:
@@ -456,6 +468,12 @@ class SettingsDialog(Dialog):
                 URLShorter.reset()
                 URLExpander.reset()
             
+            
+            # Continue ---------------------------------------------------------
+            self.settings['continue'] = continues.get_active()
+            
+            
+            # Themes -----------------------------------------------------------
             self.settings['fontsize'] = FONT_SIZES[self.fonts.get_active()]
             self.settings['avatarsize'] = AVATAR_SIZES[
                                           self.avatars.get_active()]

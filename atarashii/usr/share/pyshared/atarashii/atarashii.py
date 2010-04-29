@@ -50,7 +50,7 @@ from atarashii_actions import AtarashiiActions
 from utils import gmtime
 from language import LANG as lang
 
-from constants import SHORTS_LIST
+from constants import SHORTS_LIST, CONTINUE_LIST
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_UPDATE, ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, \
                       ST_NONE, ST_SEND, ST_DELETE, ST_LOGIN_COMPLETE, \
@@ -140,6 +140,9 @@ class Atarashii(AtarashiiActions):
         # Check Shortener
         if not self.settings['shortener'] in SHORTS_LIST:
             self.settings['shortener'] = SHORTS_LIST[0]
+        
+        self.settings['continue'] = min(max(0, self.settings['continue'] or 0),
+                                        len(CONTINUE_LIST))
         
         # Create DBUS
         DBUS_INSTANCE.set_main(self)

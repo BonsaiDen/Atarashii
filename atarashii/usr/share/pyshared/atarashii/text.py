@@ -26,7 +26,7 @@ import textwrap
 from utils import URLShorter
 from language import LANG as lang
 
-from constants import MSG_SIGN, AT_SIGNS, CONTINUATION
+from constants import MSG_SIGN, AT_SIGNS, CONTINUE_LIST
 from constants import REPLY_REGEX, MESSAGE_REGEX
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE
@@ -269,18 +269,19 @@ class TextInput(gtk.TextView):
         if len(text) >= 150 + self.message_len \
            and self.main.retweet_user == UNSET_TEXT:
             
+            continuation = CONTINUE_LIST[self.main.settings['continue']]
             parts = textwrap.wrap(text, 140)
-            cur_text = parts[0].strip() + CONTINUATION
+            cur_text = parts[0].strip() + continuation
             if len(cur_text) >= 140 + self.message_len:
-                cur_parts = textwrap.wrap(cur_text, 140 - len(CONTINUATION))
+                cur_parts = textwrap.wrap(cur_text, 140 - len(continuation))
                 ctext = cur_parts[0].strip()
             
             else:
                 ctext = parts[0].strip()
             
-            self.next_text = CONTINUATION + text[len(ctext):].strip()
+            self.next_text = continuation + text[len(ctext):].strip()
             if not ctext.endswith('.'):
-                text = ctext + CONTINUATION
+                text = ctext + continuation
             
             else:
                 text = ctext
