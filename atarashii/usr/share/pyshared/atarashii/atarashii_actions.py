@@ -480,6 +480,10 @@ class AtarashiiActions(object):
                 elif self.status(ST_WAS_SEND) and code == HT_404_NOT_FOUND:
                     code = ERR_USER_NOT_FOUND
         
+        else:
+            log_error('Unkown error code %s' % error_code)
+            code = ERR_NETWORK_FAILED
+        
         # Reset stuff
         self.unset_status(ST_WAS_SEND | ST_WAS_RETWEET | \
                           ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
