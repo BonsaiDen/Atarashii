@@ -346,8 +346,9 @@ class TextInput(gtk.TextView):
     
     def on_insert(self, buf, itr, text, length):
         if self.is_pasting:
-            if text.find('http') != -1 or text.find('www') != -1:
-                URLShorter(text, self)
+            if self.main.settings['shortener'] != 'off':
+                if text.find('http') != -1 or text.find('www') != -1:
+                    URLShorter(text, self)
             
             self.is_pasting = False
     

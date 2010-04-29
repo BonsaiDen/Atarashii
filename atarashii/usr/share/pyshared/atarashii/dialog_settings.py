@@ -35,6 +35,8 @@ from constants import SHORTS_LIST, USERNAME_CHARS, FONT_DEFAULT, FONT_SIZES, \
                       AVATAR_DEFAULT, AVATAR_SIZES, THEME_DEFAULT
 
 
+# This thing is most likely the worst part of Atarashii ------------------------
+# At some point I'll need to spend a whole day cleaning this up ----------------
 class SettingsDialog(Dialog):
     resource = 'settings.glade'
     instance = None
@@ -100,7 +102,6 @@ class SettingsDialog(Dialog):
         drop.connect('cursor-changed', self.drop_changed)
         self.create_drop_list()
         self.drop_changed()
-        
         
         # Edit Action
         def edit_dialog(*args):
@@ -366,8 +367,12 @@ class SettingsDialog(Dialog):
         
         # Shortener ------------------------------------------------------------
         self.get('shortener').set_label(lang.settings_shortener)
-        shorts = self.create_boxlist('shorts', SHORTS_LIST,
-                                     self.settings['shortener'])
+        short_names = [lang.settings_shortener_off] + SHORTS_LIST
+        short_selected = self.settings['shortener']
+        if short_selected == 'off':
+            short_selected = lang.settings_shortener_off
+        
+        shorts = self.create_boxlist('shorts', short_names, short_selected)
         
         
         # Sizes ----------------------------------------------------------------
@@ -440,7 +445,13 @@ class SettingsDialog(Dialog):
             self.settings['infosound'] = info_sound.get_active()
             
             old_short = self.settings['shortener']
-            self.settings['shortener'] = SHORTS_LIST[shorts.get_active()]
+            selected_short = shorts.get_active()
+            if selected_short != 0:
+                self.settings['shortener'] = SHORTS_LIST[selected_short - 1]
+            
+            else:
+                self.settings['shortener'] = 'off'
+            
             if old_short != self.settings['shortener']:
                 URLShorter.reset()
                 URLExpander.reset()
@@ -525,7 +536,7 @@ class SettingsDialog(Dialog):
         self.dlg.hide()
         if self.file_chooser is not None:
             self.file_chooser.close()
-            
+        
         if self.username_dialog is not None:
             self.username_dialog.on_close()
     
