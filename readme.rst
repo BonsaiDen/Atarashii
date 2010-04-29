@@ -10,53 +10,25 @@ Atarashii
 
 It's build using *Python*, *GTK+* and *Webkit*.
 
-
 Installation
 ------------
-There are currently three ways for you to get **Atarashii**.
 
-**#1: Way of the user - Using the pre build Package**
-
-This is most likely the simpelst one is to install the pre build Debian-Package_ 
-from the Downloads section.
-
-The package will automatically setup the repo config and install the public 
-key, so you don't have to check for updates on GitHub, instead just use your
-systems update manager.
-
-**#2: GIT lovers choice - Installation from the repository**  
-
-Open a shell and issue the following commands::
+You can download the Debian-Package_ or clone the repository and build 
+Atarashii yourself by opening a shell and issueing the following commands::
 
     git clone git://github.com/BonsaiDen/Atarashii.git
+    cd Atarashii
     ./make
 
-After that just install the created Debian-Package.
+Now install the Debian-Package that was just created.  
+If you just want to start Atarashii without installing it first just run ``./debug.py``.
 
     You may need to install ``fakeroot`` in order to be able to build the 
-    package.
-    Also there is a rare bug where dpkg-deb fails to open/find the control file.
-    If you encounter this please send me a mail with more details.
-
-
-**#3: For the real Coding Kittens - Running the debug version**
-
-If you want to hack on **Atarashii** you can just clone the repo and then run 
-``./debug`` to start Atarashii.
-
-    Watch out if you clone the ``next`` branch, sometimes changes that get 
-    pushed up their can break stuff.
+    package.  
+    Also there is a rare bug where dpkg-deb fails to open/find the control file.  
+    If you encounter this please send me a mail with more details.  
 
 .. _Debian-Package: http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.25-1_all.deb
-
-
-TODO
-----
-
-- Add more translations ( See Issue6_ )
-- Implement a search view(?)
-
-.. _Issue6: http://github.com/BonsaiDen/Atarashii/issues#issue/6
 
 Contributing
 ------------
