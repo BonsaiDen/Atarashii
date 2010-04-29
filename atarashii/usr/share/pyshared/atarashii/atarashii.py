@@ -48,7 +48,7 @@ import sync
 
 from atarashii_actions import AtarashiiActions
 from utils import gmtime
-from lang import lang
+from lang import LANG as lang
 
 from constants import SHORTS_LIST, CONTINUE_LIST
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \

@@ -333,7 +333,7 @@ class Settings(object):
             try:
                 self.color_themes[name] = json.loads(
                                           ''.join(lines).replace('\'', '"'))
-                                          
+                
                 if not 'title_en' in self.color_themes[name]:
                     del self.color_themes[name]
             

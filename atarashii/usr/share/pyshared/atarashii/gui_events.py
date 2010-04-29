@@ -22,7 +22,7 @@ import gtk
 import gobject
 
 import dialog
-import dialog_settings
+import settings_dialog
 
 from constants import ST_UPDATE
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADING, HTML_LOADED, \
@@ -194,7 +194,7 @@ class GUIEventHandler(object):
     
     def on_settings(self, button, menu):
         if menu and not self.settings_dialog:
-            self.settings_dialog = dialog_settings.SettingsDialog(self)
+            self.settings_dialog = settings_dialog.SettingsDialog(self)
         
         elif menu and self.settings_dialog:
             self.settings_dialog.on_close()

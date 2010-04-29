@@ -47,5 +47,5 @@ class Language(object):
         
         return __import__('lang_en')
 
-lang = Language()
+LANG = Language()
 

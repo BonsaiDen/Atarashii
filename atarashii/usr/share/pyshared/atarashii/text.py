@@ -24,7 +24,7 @@ import gobject
 import textwrap
 
 from utils import URLShorter
-from lang import lang
+from lang import LANG as lang
 
 from constants import MSG_SIGN, AT_SIGNS, CONTINUE_LIST
 from constants import REPLY_REGEX, MESSAGE_REGEX

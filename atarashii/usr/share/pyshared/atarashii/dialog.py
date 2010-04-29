@@ -24,7 +24,7 @@ import gobject
 import time
 
 from sounds import play_sound
-from lang import lang
+from lang import LANG as lang
 
 from constants import MESSAGE_ERROR, MESSAGE_WARNING, MESSAGE_QUESTION, \
                       MESSAGE_INFO, UNSET_TEXT, UNSET_TIMEOUT, UNSET_PASSWORD, \
