@@ -29,7 +29,7 @@ from updater_tweet import UpdaterTweet
 from updater_profile import UpdaterProfile
 from settings import CACHE_DIR
 from utils import tweepy, TweepError, gmtime
-from lang import lang
+from lang import LANG as lang
 
 from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED, \
                       ST_TRAY_WARNING
@@ -445,9 +445,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
     # Notifications ------------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_notifications(self, updates, messages):
-        if not self.settings.is_true('notify'):
-            return False
-        
         username = self.main.username.lower()
         
         # Messages
@@ -509,8 +506,11 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                                               % (notify_tweet_list[i][0],
                                                  i + 1, count)
         
+        
+        
         # Show Notifications
-        self.notifier.add(notify_message_list + notify_tweet_list)
+        if self.settings.is_true('notify'):
+            self.notifier.add(notify_message_list + notify_tweet_list)
     
     
     # Helpers ------------------------------------------------------------------
