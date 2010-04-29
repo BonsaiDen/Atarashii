@@ -232,8 +232,8 @@ class Syncer(object):
     # Make HTTP requests -------------------------------------------------------
     # --------------------------------------------------------------------------
     def request(self, method, data, timeout=2):
-        conn = httplib.HTTPConnection(SYNC_SERVER_HOST, SYNC_SERVER_PORT,
-                                      timeout = timeout)
+        conn = httplib.HTTPSConnection(SYNC_SERVER_HOST, SYNC_SERVER_PORT,
+                                       timeout = timeout)
         
         conn.request('POST',  '/' + method, urllib.urlencode(data))
         response = conn.getresponse()
