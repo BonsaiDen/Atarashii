@@ -5,8 +5,8 @@
 # ONLY user strings in here. No numbers and NEVER(!) python code, or it will
 # break... and the kittens will make you cry! How? Better don't ask...
 {
-    'title_de_DE': 'Fuji Blau(Standard)',
-    'title_en_US': 'Fuji blue(default)',
+    'title_de': 'Fuji Blau(Standard)',
+    'title_en': 'Fuji blue(default)',
     
     'colors':  {
         
