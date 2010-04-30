@@ -301,7 +301,7 @@ class ViewMenu(object):
         
         except Exception:
             return None
-
+    
     def menu_javascript(self, pos, event):
         self.execute_script(pos + '''
             var sizes = [pos];
