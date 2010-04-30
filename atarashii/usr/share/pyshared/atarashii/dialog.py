@@ -271,6 +271,7 @@ class ButtonDialog(object):
         self.time = UNSET_TIMEOUT
         self.timer = None
         
+        self.opened = False
         self.shown = False
         self.is_visible = False
     
@@ -291,6 +292,9 @@ class ButtonDialog(object):
     def hide(self, timeout=UNSET_TIMEOUT):
         if timeout != UNSET_TIMEOUT:
             self.timer = gobject.timeout_add(timeout, self.hide)
+            return False
+        
+        if self.opened:
             return False
         
         self.check_destroy()
@@ -330,12 +334,20 @@ class ButtonDialog(object):
         if not self.gui.is_shown:
             gobject.idle_add(self.gui.show_gui)
     
+    def hide_dialog(self):
+        self.opened = False
+        self.gui.tray.toggle_menu(True)
+        self.hide()
+    
     def show_dialog(self, *args):
         self.check_destroy()
+        self.check_timer()
         if self.information is None:
             self.hide()
             return False
         
+        self.gui.tray.toggle_menu(False)
+        self.opened = True
         info = time.strftime(self.template, time.localtime(self.time)) \
                              + self.information
         
@@ -345,5 +357,5 @@ class ButtonDialog(object):
             'information': (MESSAGE_INFO, self.information)
         }[self.dtype]
         self.dialog = MessageDialog(self.gui, itype, msg, self.title,
-                                    close_callback = self.hide)
+                                    close_callback = self.hide_dialog)
 
