@@ -30,7 +30,6 @@ import tray
 import text
 import dialog
 
-
 from gui_events import GUIEventHandler
 from gui_helpers import GUIHelpers
 from utils import gmtime
@@ -641,8 +640,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     def show_crash_report(self):
         code = self.settings['crash_reason']
         
-        # Python error, link to the traceback file
-        if code == '70': #str(EX_SOFTWARE)
+        # Python error, link to the traceback file, EX_SOFTWARE
+        if code == '70':
             info = lang.error_crashed_python % CRASH_LOG_FILE
             title = lang.error_crashed__python_title
         
@@ -665,7 +664,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             return False
         
         else:
-            # get username
+            
+            # determine which username to use
             if self.main.username == UNSET_USERNAME:
                 username = self.main.last_username
             
@@ -709,6 +709,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Show Error/Warning Boxes -------------------------------------------------
     def show_box(self, code, rate_error, is_visible):
+        
+        # determine which username to use
         if self.main.username == UNSET_USERNAME:
             username = self.main.last_username
         
