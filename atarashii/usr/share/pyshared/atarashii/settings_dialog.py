@@ -41,6 +41,7 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         self.parent = parent
         self.blocked = False
         self.username_dialog = None
+        self.question_dialog = None
         self.saved = False
         self.oldusername = self.main.username
         self.main.settings.check_autostart()
@@ -140,13 +141,20 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
     def unblock(self):
         self.blocked = False
     
-    def hideall(self):
-        self.dlg.hide()
-        if self.file_chooser is not None:
-            self.file_chooser.close()
+    def hideall(self, sub_only = False):
+        if not sub_only:
+            self.gui.settings_dialog = None
+            self.dlg.hide()
+            if self.file_chooser is not None:
+                self.file_chooser.close()
         
         if self.username_dialog is not None:
             self.username_dialog.on_close()
+        
+        if self.question_dialog is not None:
+            self.blocked = False
+            self.question_dialog.destroy()
+            self.question_dialog = None
     
     def update_css(self, *args):
         self.settings.css(FONT_SIZES[self.fonts.get_active()],
