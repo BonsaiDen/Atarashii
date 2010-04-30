@@ -301,7 +301,7 @@ class Profile(SimpleAPICall):
             try:
                 self.tweets = self.main.api.user_timeline(screen_name = name,
                                             count = main.max_profile_init_count)
-    
+            
             except (IOError, TweepError):
                 self.tweets = None
     
