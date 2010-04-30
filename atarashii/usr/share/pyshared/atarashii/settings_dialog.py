@@ -74,7 +74,7 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         self.close_button.connect('clicked', self.on_save)
         
         cancel_button = self.get('cancelbutton')
-        cancel_button.set_label(lang.settings_buttonCancel)
+        cancel_button.set_label(lang.settings_button_cancel)
         cancel_button.connect('clicked', self.on_close)
         gobject.idle_add(self.drop.grab_focus)
         self.dlg.set_size_request(-1, -1)
