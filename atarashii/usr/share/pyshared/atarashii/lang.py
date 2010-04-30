@@ -39,6 +39,13 @@ class Language(object):
         for key, value in lang.LANG.iteritems():
             setattr(self, key, value)
     
+    def name(self, text):
+        if text[-1] in 'xzs':
+            return text + self.name_end_xzs
+            
+        else:
+            return text + self.name_end
+    
     def get_lang(self):
         for i in os.listdir(os.path.dirname(__file__)):
             if i == 'lang_%s.py' % self.code:

@@ -29,8 +29,9 @@ LANG = {
     'tabs_messages': 'Messages',
     'tabs_messages_new': 'Messages <b>(%d)</b>',
     
-    # Username
-    'name': lambda x: x + '\'s' if x[-1:] in 'xs' else x + 's',
+    # Name endings
+    'name_end': 's',
+    'name_end_xzs': '\'s',
     
     # Tweets
     'tweet_hash': '#', # you may use the unicode fullwidth version here
