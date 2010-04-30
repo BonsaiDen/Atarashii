@@ -95,7 +95,7 @@ LANG = {
     'profile_website': '<b>Web:</b> <a href="%s">%s</a>',
     'profile_location': '<b>Location:</b> %s',
     'profile_description': '<b>Bio:</b> %s',
-    'profile_follows_you': '(<b>you too</b>)',
+    'profile_follows_you': '(<b>including you</b>)',
     'profile_protected': '(<b>protected</b>)',
     
     'profile_error':
