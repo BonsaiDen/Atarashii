@@ -383,7 +383,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         # Update Views
         def update_views(updates, messages):
             # this INSERTS the tweets/messages
-            self.show_notifications(updates, messages)
+            self.insert_updates(updates, messages)
             
             if len(updates) > 0:
                 self.tweet.push_updates()
@@ -442,9 +442,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                 return []
     
     
-    # Notifications ------------------------------------------------------------
-    # --------------------------------------------------------------------------
-    def show_notifications(self, updates, messages):
+    # Insert the updates into the views ----------------------------------------
+    def insert_updates(self, updates, messages):
         username = self.main.username.lower()
         
         # Messages
@@ -461,15 +460,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                                         'messages'])
             
             self.message.update_list.append([i, img_file])
-        
-        count = len(notify_message_list)
-        if count > 0:
-            notify_message_list.reverse()
-            if count > 1:
-                for i in xrange(count):
-                    notify_message_list[i][0] = lang.notification_index \
-                                                % (notify_message_list[i][0],
-                                                   i + 1, count)
         
         # Tweets
         notify_tweet_list = []
@@ -497,18 +487,27 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
             
             self.tweet.update_list.append([i, img_file])
         
-        # Show Notifications
+        
         if self.settings.is_true('notify'):
-            count = len(notify_tweet_list)
-            if count > 0:
-                notify_tweet_list.reverse()
-                if count > 1:
-                    for i in xrange(count):
-                        notify_tweet_list[i][0] = lang.notification_index \
-                                                  % (notify_tweet_list[i][0],
-                                                     i + 1, count)
-            
-            self.notifier.add(notify_message_list + notify_tweet_list)
+            self.show_notifications(notify_tweet_list, notify_message_list)
+    
+    
+    # Notifications ------------------------------------------------------------  
+    def show_notifications(self, tweets, messages):
+        tweets = self.prepare_notifications(tweets)
+        messages = self.prepare_notifications(messages)
+        self.notifier.add(messages + tweets)
+    
+    def prepare_notifications(self, notify_list):
+        count = len(notify_list)
+        if count > 0:
+            notify_list.reverse()
+            if count > 1:
+                for i in xrange(count):
+                    notify_list[i][0] = lang.notification_index \
+                                        % (notify_list[i][0], i + 1, count)
+    
+        return notify_list
     
     
     # Helpers ------------------------------------------------------------------
