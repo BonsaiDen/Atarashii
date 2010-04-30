@@ -236,7 +236,7 @@ class Syncer(object):
         tries = 1
         while True:
             conn = httplib.HTTPSConnection(SYNC_SERVER_HOST, SYNC_SERVER_PORT,
-                                           timeout = 2)
+                                           timeout = 4)
             
             try:
                 conn.request('POST',  '/' + method, urllib.urlencode(data))
@@ -246,8 +246,8 @@ class Syncer(object):
                 
                 raise IOError
             
-            except IOError:
-                log_error('Syncing request #%d failed' % tries)
+            except IOError, error:
+                log_error('Syncing request #%d failed %s' % (tries, error))
                 tries += 1
                 if tries > SYNC_MAX_TRIES:
                     raise IOError
