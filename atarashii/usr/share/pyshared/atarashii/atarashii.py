@@ -13,8 +13,6 @@
 #  You should have received a copy of the GNU General Public License along with
 #  Atarashii. If not, see <http://www.gnu.org/licenses/>.
 
-# TODO DRY view_profile.py, try to make something happen with the javascript
-
 
 # Atarashii --------------------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -31,7 +29,9 @@ import bus
 DBUS_INSTANCE = bus.AtarashiiObject()
 if not DBUS_INSTANCE.is_unique:
     gtk.gdk.notify_startup_complete()
-    sys.exit(69) # os.EX_UNAVAILABLE
+    
+    # os.EX_UNAVAILABLE
+    sys.exit(69)
 
 
 # Main Application -------------------------------------------------------------
@@ -54,7 +54,7 @@ from constants import SHORTS_LIST, CONTINUE_LIST
 from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_UPDATE, ST_LOGIN_COMPLETE, ST_RECONNECT, ST_ALL, \
                       ST_NONE, ST_SEND, ST_DELETE, ST_LOGIN_COMPLETE, \
-                      ST_TRAY_WARNING
+                      ST_TRAY_WARNING, ST_LOGIN_ALL
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
                       MODE_TWEETS, MODE_MESSAGES, UNSET_USERNAME, \
@@ -192,9 +192,7 @@ class Atarashii(AtarashiiActions):
         self.gui.set_mode(mode)
         
         # Status
-        self.unset_status(ST_LOGIN_SUCCESSFUL | ST_LOGIN_COMPLETE | ST_SEND | \
-                          ST_RECONNECT | ST_UPDATE | ST_LOGIN_ERROR | \
-                          ST_LOGIN_COMPLETE | ST_LOGIN_ERROR)
+        self.unset_status(ST_LOGIN_ALL | ST_SEND |  ST_RECONNECT | ST_UPDATE)
         
         # Progress
         self.gui.hide_all(False)
