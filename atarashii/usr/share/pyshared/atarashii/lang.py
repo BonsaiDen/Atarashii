@@ -42,7 +42,7 @@ class Language(object):
     def name(self, text):
         if text[-1] in 'xzs':
             return text + self.name_end_xzs
-            
+        
         else:
             return text + self.name_end
     

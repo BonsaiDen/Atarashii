@@ -3,7 +3,6 @@
   <requires lib="gtk+" version="2.16"/>
   <!-- interface-naming-policy project-wide -->
   <object class="GtkWindow" id="dialog">
-    <property name="width_request">320</property>
     <property name="resizable">False</property>
     <property name="window_position">center-on-parent</property>
     <property name="type_hint">dialog</property>
@@ -304,7 +303,7 @@
                                             <child>
                                               <object class="GtkLabel" id="synclabel">
                                                 <property name="visible">True</property>
-                                                <property name="label" translatable="yes">&lt;span size="xx-large"&gt;&lt;b&gt;XXXXXXXXXXXXXXXXXXXXXX&lt;/b&gt;&lt;/span&gt;</property>
+                                                <property name="label" translatable="yes">&lt;span size="large"&gt;&lt;b&gt;XXXXXXXXXXXXXXXXXXXXXX&lt;/b&gt;&lt;/span&gt;</property>
                                                 <property name="use_markup">True</property>
                                                 <property name="selectable">True</property>
                                               </object>

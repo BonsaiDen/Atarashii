@@ -193,10 +193,10 @@ LANG = {
     
     'settings_add': 'Add',
     'settings_edit': 'Edit',
-    'settings_delete': 'Delete', 
+    'settings_delete': 'Delete',
     
     'settings_autostart': 'Start on system startup',
-    'settings_tray': 'Start in system tray',
+    'settings_tray': 'Start minimized',
     'settings_taskbar': 'Show in Taskbar',
     'settings_info_sound': 'Activate info sounds',
     'settings_shortener': 'URL-Shortener:',
@@ -217,7 +217,7 @@ LANG = {
     'settings_file_info': 'Other:',
     'settings_file': 'Select soundfile',
     'settings_file_none': '...',
-    'settings_file_filter': 'Soundfiles', 
+    'settings_file_filter': 'Soundfiles',
     'settings_file_ok': 'OK',
     'settings_file_cancel': 'Cancel',
     

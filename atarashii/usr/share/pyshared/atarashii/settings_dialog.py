@@ -141,7 +141,7 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
     def unblock(self):
         self.blocked = False
     
-    def hideall(self, sub_only = False):
+    def hideall(self, sub_only=False):
         if not sub_only:
             self.gui.settings_dialog = None
             self.dlg.hide()
