@@ -86,7 +86,9 @@ class AtarashiiActions(object):
     def quit(self):
         self.save_settings(True, True, True)
         self.updater.running = False
+        self.dbus.main = None
         self.gui.hide()
+        self.gui.tray.set_property('visible', False)
         if self.gui.settings_dialog is not None:
             self.gui.settings_dialog.hideall()
         

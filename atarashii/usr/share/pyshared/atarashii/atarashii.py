@@ -71,6 +71,9 @@ class Atarashii(AtarashiiActions):
         self.debug = debug
         self.debug_path = debug_path
         
+        # DBUS
+        self.dbus = DBUS_INSTANCE
+        
         # Load Settings
         self.settings = settings.Settings(self)
         
