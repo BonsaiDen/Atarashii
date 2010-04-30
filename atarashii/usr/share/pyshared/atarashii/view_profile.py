@@ -40,6 +40,7 @@ class HTML(tweet.HTML):
         
         self.current_user = None
         self.protected_view = False
+        self.error_view = False
         self.load_state = HTML_LOADED
     
     def render(self, user=None, friend=None, tweets=None, force_render=False):
@@ -54,12 +55,16 @@ class HTML(tweet.HTML):
             self.items = []
         
         if tweets is not None:
+            self.error_view = False
             for i in tweets:
                 img_file = self.main.updater.get_image(i)
                 self.update_list.append([i, img_file])
             
             while len(self.update_list) > 0:
                 self.add(self.update_list.pop(0))
+        
+        else:
+            self.error_view = True
         
         # Init Render
         self.setup_render()
@@ -85,7 +90,6 @@ class HTML(tweet.HTML):
         
         # Render
         self.set_html(self.renderitems, True)
-    
     
     def render_header(self, user, friend):
         img_file = self.main.updater.get_image(None, False, user)
@@ -253,6 +257,13 @@ class HTML(tweet.HTML):
                                   self.items[0][0].id, self.lang_load))
             
             else:
+                if self.error_view:
+                    info = lang.profile_html_tweet_error
+                
+                else:
+                    info = lang.profile_html_protected if self.protected_view \
+                                                       else self.lang_empty
+                
                 self.render_html('''
                     <body class="unloaded" ondragstart="return false">
                         %s
@@ -261,7 +272,5 @@ class HTML(tweet.HTML):
                                 <div class="profile_empty"><b>%s</b></div>
                             </div>
                         </div>
-                    </body>''' % (self.profile_data,
-                                  lang.profile_html_protected \
-                                  if self.protected_view else self.lang_empty))
+                    </body>''' % (self.profile_data, info))
 

@@ -298,8 +298,12 @@ class Profile(SimpleAPICall):
             self.tweets = []
         
         else:
-            self.tweets = self.main.api.user_timeline(screen_name = name,
-                                        count = main.max_profile_init_count)
+            try:
+                self.tweets = self.main.api.user_timeline(screen_name = name,
+                                            count = main.max_profile_init_count)
+    
+            except (IOError, TweepError):
+                self.tweets = None
     
     def on_success(self, main, name, callback):
         gobject.idle_add(callback, self.user, self.friend, self.tweets)

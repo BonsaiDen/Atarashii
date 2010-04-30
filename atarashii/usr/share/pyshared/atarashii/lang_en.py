@@ -115,6 +115,7 @@ LANG = {
     'profile_html_protected': 'Tweets are protected.',
     'profile_html_loading': 'Loading profile...',
     'profile_html_empty': 'No recent Tweets.',
+    'profile_html_tweet_error': 'Tweets could not be loaded.',
     'profile_html_load_more': 'More',
     
     # Messages
