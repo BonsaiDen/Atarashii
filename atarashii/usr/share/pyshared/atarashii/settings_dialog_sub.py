@@ -27,12 +27,12 @@ from dialog import MessageDialog
 from settings_dialog_extra import AccountDialog, SoundChooser
 
 from sounds import THEME_SOUNDS
-from utils import URLShorter, URLExpander
+from utils import URLShorter, URLExpander, filter_chars
 from lang import LANG as lang
 
 from constants import MESSAGE_QUESTION, MESSAGE_ERROR
-from constants import UNSET_SOUND, UNSET_SETTING, SYNC_KEY_CHARS
-from constants import SHORTS_LIST, CONTINUE_LIST
+from constants import SHORTS_LIST, CONTINUE_LIST, SYNC_KEY_CHARS
+from constants import UNSET_SOUND, UNSET_SETTING, UNSET_LABEL, UNSET_USERNAME
 from constants import FONT_DEFAULT, FONT_SIZES, AVATAR_DEFAULT, AVATAR_SIZES, \
                       THEME_DEFAULT
 
@@ -110,7 +110,7 @@ class SettingsPages(object):
         # Setup box
         self.drop = drop = gtk.TreeView()
         drop.get_selection().set_mode(gtk.SELECTION_BROWSE)
-        column = gtk.TreeViewColumn('')
+        column = gtk.TreeViewColumn(UNSET_LABEL)
         drop.set_headers_visible(False)
         drop.append_column(column)
         cell = gtk.CellRendererText()
@@ -135,7 +135,8 @@ class SettingsPages(object):
         # Add Action
         def create_dialog(*args):
             self.blocked = True
-            AccountDialog(self, '', lang.account_create, self.create_account)
+            AccountDialog(self, UNSET_USERNAME, lang.account_create,
+                          self.create_account)
         
         self.add.connect('clicked', create_dialog)
         
@@ -207,7 +208,7 @@ class SettingsPages(object):
         editbox = self.get('synceditbox')
         entrybox = self.get('syncentrybox')
         label = self.get('synclabel')
-        label.set_label('')
+        label.set_label(UNSET_LABEL)
         
         # Labels
         self.sync_box.set_label(lang.sync_checkbutton)
@@ -239,7 +240,7 @@ class SettingsPages(object):
                 
                 else:
                     desc.set_label(lang.sync_key_no)
-                    label.set_label('')
+                    label.set_label(UNSET_LABEL)
                     
                     self.get('syncoptions').set_sensitive(True)
                     self.sync_box.set_sensitive(True)
@@ -310,8 +311,7 @@ class SettingsPages(object):
         
         def sync_entry_change(*args):
             text = entry.get_text().strip()
-            text = (''.join([i for i in text if i in SYNC_KEY_CHARS]))
-            entry.set_text(text)
+            entry.set_text(filter_chars(text, SYNC_KEY_CHARS))
             if len(text) != 22:
                 entry.modify_base(gtk.STATE_NORMAL,
                                 gtk.gdk.Color(255 * 255, 190 * 255, 190 * 255))

@@ -23,6 +23,7 @@ import gobject
 
 from dialog import Dialog
 from sounds import THEME_DIR
+from utils import filter_chars
 from lang import LANG as lang
 
 from constants import USERNAME_CHARS, UNSET_USERNAME
@@ -128,7 +129,7 @@ class AccountDialog(Dialog):
     
     def on_changed(self, *args):
         text = self.user.get_text().strip()
-        self.user.set_text(''.join([i for i in text if i in USERNAME_CHARS]))
+        self.user.set_text(filter_chars(text, USERNAME_CHARS))
     
     def on_close(self, *args):
         self.parent.username_dialog = None
