@@ -192,6 +192,7 @@ class Atarashii(AtarashiiActions):
         self.gui.set_mode(mode)
         
         # Status
+        self.unset_status(ST_TRAY_WARNING)
         self.unset_status(ST_LOGIN_ALL | ST_SEND |  ST_RECONNECT | ST_UPDATE)
         
         # Progress
