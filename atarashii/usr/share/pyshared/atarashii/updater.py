@@ -64,7 +64,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         self.load_history_message_id = HTML_UNSET_ID
         self.ratelimit = 150
         self.message_counter = 0
-        self.finish = False
+        self.finish_update = False
         self.update_id = 0
         
         self.daemon = True
@@ -86,7 +86,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         self.profile = self.gui.profile
         
         # Reset
-        self.finish = False
+        self.finish_update = False
         self.message_counter = 0
         self.do_init = False
         self.started = False
@@ -251,9 +251,12 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                 self.reload_images()
             
             elif self.started:
-                if self.finish:
-                    self.finish = False
-                    self.end_update()
+                if self.finish_update:
+                    self.finish_update = False
+                    gobject.idle_add(self.main.save_settings, True)
+                    self.main.unset_status(ST_UPDATE)
+                    self.main.refresh_time = gmtime()
+                    gobject.idle_add(self.gui.set_multi_button, True)
                 
                 elif self.tweet.load_history_id != HTML_UNSET_ID:
                     self.load_history()
@@ -264,14 +267,27 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                 elif self.profile.load_history_id != HTML_UNSET_ID:
                     self.load_history_profile()
                 
-                elif self.main.refresh_timeout != UNSET_TIMEOUT:
-                    self.check_for_update()
+                elif self.main.refresh_timeout != UNSET_TIMEOUT \
+                     and (gmtime() > self.main.refresh_time + \
+                     self.main.refresh_timeout or self.refresh_now \
+                     or self.refresh_messages):
+                    
+                    self.update_id += 1
+                    self.main.set_status(ST_UPDATE)
+                    gobject.idle_add(self.gui.set_multi_button, False, None,
+                                     True, True)
+                    
+                    self.update(self.update_id)
+                    self.refresh_messages = False
+                    self.refresh_now = False
             
             self.wait.clear()
             gobject.timeout_add(1000, self.unwait)
             self.wait.wait()
     
-    def unwait(self, init=False, tweets=False, messages=False, images=False):
+    def unwait(self, init=False, tweets=False, messages=False, images=False,
+               finish=False):
+        
         if init:
             self.do_init = True
         
@@ -284,37 +300,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         if images:
             self.refresh_images = True
         
+        if finish:
+            self.finish_update = True
+        
         self.wait.set()
-    
-    def check_for_update(self):
-        if self.main.refresh_time == UNSET_TIMEOUT:
-            return False
-        
-        elif gmtime() > self.main.refresh_time + self.main.refresh_timeout \
-             or self.refresh_now or self.refresh_messages:
-            
-            self.update_id += 1
-            self.main.set_status(ST_UPDATE)
-            gobject.idle_add(self.gui.set_multi_button, False, None, True, True)
-            self.update(self.update_id)
-            self.refresh_messages = False
-            self.refresh_now = False
-            return True
-    
-    def end_update(self):
-        gobject.idle_add(self.main.save_settings, True)
-        self.main.unset_status(ST_UPDATE)
-        
-        self.main.refresh_time = gmtime()
-        gobject.idle_add(self.gui.set_multi_button,
-                         not self.main.status(ST_NETWORK_FAILED))
-        
-        # Fix a strange problem where the multi button does not get activated
-        gobject.timeout_add(50, self.gui.set_multi_button,
-                            not self.main.status(ST_NETWORK_FAILED))
-        
-        gobject.timeout_add(100, self.gui.set_multi_button,
-                            not self.main.status(ST_NETWORK_FAILED))
     
     
     # Update -------------------------------------------------------------------
@@ -331,10 +320,13 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
             
             # Something went wrong...
             except (IOError, TweepError), error:
-                self.main.unset_status(ST_UPDATE)
-                gobject.idle_add(self.tweet.render)
-                gobject.idle_add(self.main.handle_error, error)
-                self.main.refresh_time = gmtime()
+                
+                def update_tweet():
+                    self.tweet.render()
+                    self.main.handle_error(error)
+                    self.unwait(finish = True)
+                
+                gobject.idle_add(update_tweet)
                 return False
             
             if len(updates) > 0:
@@ -355,10 +347,13 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
             
             # Something went wrong...
             except (IOError, TweepError), error:
-                self.main.unset_status(ST_UPDATE)
-                gobject.idle_add(self.message.render)
-                gobject.idle_add(self.main.handle_error, error)
-                self.main.refresh_time = gmtime()
+                
+                def update_message():
+                    self.message.render()
+                    self.main.handle_error(error)
+                    self.unwait(finish = True)
+                
+                gobject.idle_add(update_message)
                 return False
             
             if len(messages) > 0:
@@ -382,7 +377,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         
         # Update Views
         def update_views(updates, messages):
-            # this INSERTS the tweets/messages
             self.insert_updates(updates, messages)
             
             if len(updates) > 0:
@@ -402,8 +396,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                 self.profile.render()
             
             # Update GUI
-            self.unwait()
-            self.finish = True
+            self.unwait(finish = True)
         
         # Don't insert updates when logged out
         if self.update_id == uid:
