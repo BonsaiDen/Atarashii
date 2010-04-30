@@ -657,7 +657,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Show Error Dialog --------------------------------------------------------
     # --------------------------------------------------------------------------
-    def show_error(self, code, error_code, error_errno, rate_error):
+    def show_error(self, code, rate_error):
         # Is Atarashii visible?
         is_visible = self.is_shown and self.on_screen()
         
@@ -665,6 +665,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             return False
         
         else:
+            # get username
+            if self.main.username == UNSET_USERNAME:
+                username = self.main.last_username
+            
+            else:
+                username = self.main.username
             
             # Clear already deleted tweets
             if self.main.delete_tweet_id != UNSET_ID_NUM:
@@ -690,8 +696,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 
                 ERR_ALREADY_RETWEETED: lang.error_already_retweeted,
                 ERR_RATE_RECONNECT: rate_error,
-                HT_401_UNAUTHORIZED: lang.error_login % self.main.last_username,
-                HT_404_NOT_FOUND: lang.error_login % self.main.last_username
+                HT_401_UNAUTHORIZED: lang.error_login % username,
+                HT_404_NOT_FOUND: lang.error_login % username
             }[code]
             dialog.MessageDialog(self, MESSAGE_WARNING \
                                  if code == ERR_NETWORK_FAILED \
@@ -703,15 +709,20 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Show Error/Warning Boxes -------------------------------------------------
     def show_box(self, code, rate_error, is_visible):
+        if self.main.username == UNSET_USERNAME:
+            username = self.main.last_username
+        
+        else:
+            username = self.main.username
         
         # Tray icon
         if code in (ERR_NETWORK_FAILED, ERR_NETWORK_TWITTER_FAILED,
                     ERR_RATE_RECONNECT, HT_404_NOT_FOUND, HT_401_UNAUTHORIZED,
                     HT_503_SERVICE_UNAVAILABLE):
             
-            login = lang.tray_logged_in % self.main.last_username \
+            login = lang.tray_logged_in % username \
                     if self.main.status(ST_LOGIN_COMPLETE) \
-                    else lang.tray_error_login % self.main.last_username
+                    else lang.tray_error_login % username
             
             msg = {
                 ERR_NETWORK_FAILED: login + '\n' + lang.tray_warning_network,
@@ -749,7 +760,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         if code in (ERR_NETWORK_TWITTER_FAILED, ERR_NETWORK_FAILED,
                       HT_503_SERVICE_UNAVAILABLE):
             
-            msg = lang.tray_logged_in % self.main.last_username + '\n'
+            msg = lang.tray_logged_in % username + '\n'
             
             # overload warning
             if code == HT_503_SERVICE_UNAVAILABLE:
@@ -786,7 +797,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         elif code in (HT_500_INTERNAL_SERVER_ERROR, HT_502_BAD_GATEWAY,
                       ERR_RATE_LIMIT):
             
-            msg = lang.tray_logged_in % self.main.last_username + '\n'
+            msg = lang.tray_logged_in % username + '\n'
             if code != ERR_RATE_LIMIT:
                 
                 # internal twitter error

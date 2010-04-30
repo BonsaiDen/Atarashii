@@ -489,7 +489,7 @@ class AtarashiiActions(object):
                           ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
         
         # Leave it to the GUI!
-        self.gui.show_error(code, error_code, error_errno, rate_error)
+        self.gui.show_error(code, rate_error)
         
         # Log the error
         if error_errno is None:
