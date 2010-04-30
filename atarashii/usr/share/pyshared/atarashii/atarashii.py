@@ -260,6 +260,7 @@ class Atarashii(AtarashiiActions):
         if error is not None:
             self.set_status(ST_LOGIN_ERROR)
         
+        self.gui.text.reset()
         self.gui.tray.activate_menu(True)
         self.gui.set_multi_button(False, None, False)
         self.gui.update_app()
