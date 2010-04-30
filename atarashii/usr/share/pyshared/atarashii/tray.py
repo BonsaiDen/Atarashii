@@ -240,6 +240,7 @@ class TrayIcon(gtk.StatusIcon):
         else:
             self.set_from_file(self.main.get_image())
         
+        self.tooltip_icon = None
         self.tooltip_changed = True
     
     def set_tooltip_error(self, status, icon):

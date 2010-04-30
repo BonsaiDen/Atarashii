@@ -260,6 +260,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                     self.main.unset_status(ST_UPDATE)
                     self.main.refresh_time = gmtime()
                     gobject.idle_add(self.gui.set_multi_button, True)
+                    gobject.idle_add(self.gui.update_app)
                 
                 elif self.tweet.load_history_id != HTML_UNSET_ID:
                     self.load_history()
