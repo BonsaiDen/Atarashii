@@ -144,11 +144,11 @@ class SettingsPages(object):
         def delete_dialog(*args):
             self.blocked = True
             name = self.user_accounts[self.get_drop_active()]
-            MessageDialog(self.dlg, MESSAGE_QUESTION,
-                                    lang.account_delete_description % name,
-                                    lang.account_delete,
-                                    yes_callback = self.delete_account,
-                                    no_callback = self.unblock)
+            self.question_dialog = MessageDialog(self.dlg, MESSAGE_QUESTION,
+                                       lang.account_delete_description % name,
+                                       lang.account_delete,
+                                       yes_callback = self.delete_account,
+                                       no_callback = self.unblock)
         
         self.delete.connect('clicked', delete_dialog)
     
