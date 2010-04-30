@@ -16,10 +16,15 @@ atarashii (0.99.25-1) all;
     movies.
   + If desired, shortening of urls can now be turned off.
   ~ Atarashii will now look in ~./atarashii/themes for additional themes.
-  * May bugfixes concerning the user preferences.
   * Fix for broken view updating when notifications were turned off.
+  * Fix for a bug were the multibutton would stay disabled in some cases.
+  * The tray menu is now disabled while warning/questen/error dialogs are open.
+  * Warning popups on network erros won't be closed automtically anymore when 
+    they have been openend by the user.
+  * Many bugfixes concerning the user preferences and the closing of its sub 
+    dialogs.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Wed, 29 Apr 2010 23:12:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 30 Apr 2010 17:22:00 +0200
 
 atarashii (0.99.24-1) all;
 
