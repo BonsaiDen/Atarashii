@@ -21,10 +21,12 @@ atarashii (0.99.25-1) all;
   * The tray menu is now disabled while warning/questen/error dialogs are open.
   * Warning popups on network erros won't be closed automtically anymore when 
     they have been openend by the user.
+  * Mentions which have an accompanying reply now get replaced by it correctly.
   * Many bugfixes concerning the user preferences and the closing of its sub 
     dialogs.
+  * Fixed sometimes missing usernames in the tray icon warning tooltips.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 30 Apr 2010 17:22:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 30 Apr 2010 21:10:00 +0200
 
 atarashii (0.99.24-1) all;
 
