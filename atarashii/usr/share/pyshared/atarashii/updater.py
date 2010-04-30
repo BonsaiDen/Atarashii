@@ -487,12 +487,12 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
             
             self.tweet.update_list.append([i, img_file])
         
-        
+        # Notifications
         if self.settings.is_true('notify'):
             self.show_notifications(notify_tweet_list, notify_message_list)
     
     
-    # Notifications ------------------------------------------------------------  
+    # Notifications ------------------------------------------------------------
     def show_notifications(self, tweets, messages):
         tweets = self.prepare_notifications(tweets)
         messages = self.prepare_notifications(messages)
@@ -506,7 +506,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                 for i in xrange(count):
                     notify_list[i][0] = lang.notification_index \
                                         % (notify_list[i][0], i + 1, count)
-    
+        
         return notify_list
     
     
