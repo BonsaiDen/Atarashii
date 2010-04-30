@@ -198,8 +198,15 @@ class TrayIcon(gtk.StatusIcon):
             if pos > 1:
                 item.set_sensitive(mode)
     
+    def toggle_menu(self, mode):
+        for i in self.menu.get_children():
+            i.set_sensitive(mode)
+    
     def on_account_select(self, item, username):
         if username != self.main.username and item.get_active():
+            if self.gui.settings_dialog is not None:
+                self.gui.settings_dialog.hideall(True)
+            
             self.selected_account = item
             self.activate_menu(False)
             self.main.login(username)
