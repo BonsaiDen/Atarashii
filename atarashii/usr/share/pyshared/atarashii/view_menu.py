@@ -80,7 +80,7 @@ class ViewMenu(object):
     
     def set_tooltip(self, user, img):
         self.tooltip_label.set_markup(lang.html_avatar_tooltip \
-                                      % (user.name, user.statuses_count,
+                                      % (escape(user.name), user.statuses_count,
                                       user.followers_count, user.friends_count))
         
         if img != self.tooltip_img_file:
