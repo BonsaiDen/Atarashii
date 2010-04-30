@@ -95,6 +95,27 @@ class UpdaterTweet(object):
         self.update_limit()
         updates = updates + mentions
         updates.sort(key = lambda u: u.id, reverse = True)
+        
+        # find the last mention, why do we do this?
+        # sometimes the mention arrives before the reply
+        # but we want to replace the mention when the accomponing reply comens
+        # in so we need to request from mention.id - 1, instead of the last_id
+        current_mention = self.last_mention_id
+        self.last_mention_id = HTML_UNSET_ID
+        for u in updates:
+            if hasattr(u, 'is_mentioned') and u.is_mentioned \
+               and u.id > current_mention:
+                
+                self.last_mention_id = u.id - 1
+                
+                # and check if a reply exists
+                for i in updates:
+                    if not hasattr(i, 'is_mentioned') and i.id == u.id:
+                        self.last_mention_id = HTML_UNSET_ID
+                        break
+                
+                break
+        
         return updates
     
     # Tweet History

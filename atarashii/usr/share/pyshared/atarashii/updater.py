@@ -98,8 +98,11 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         self.tweet.load_history_id = HTML_UNSET_ID
         self.message.load_history_id = HTML_UNSET_ID
         
+        self.last_mention_id = HTML_UNSET_ID
+        
         self.message.last_id = HTML_UNSET_ID
         self.tweet.last_id = HTML_UNSET_ID
+        
         self.message.load_state = HTML_RESET
         self.tweet.load_state = HTML_RESET
         
@@ -315,8 +318,11 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         updates = []
         if not self.refresh_messages or both:
             try:
-                updates = self.try_get_items(self.get_updates,
-                                             self.tweet.last_id)
+                last_id = self.tweet.last_id
+                if self.last_mention_id != HTML_UNSET_ID:
+                    last_id = self.last_mention_id
+                
+                updates = self.try_get_items(self.get_updates, last_id)
             
             # Something went wrong...
             except (IOError, TweepError), error:
