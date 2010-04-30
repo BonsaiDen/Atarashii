@@ -28,9 +28,11 @@ from constants import ST_SEND, ST_CONNECT, ST_LOGIN_SUCCESSFUL, \
                       ST_LOGIN_COMPLETE, ST_UPDATE, ST_NETWORK_FAILED, \
                       ST_LOGIN_ERROR
 
-from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADED, UNSET_TEXT, \
-                      UNSET_LABEL, MESSAGE_ERROR, UNSET_USERNAME, \
-                      UNSET_TIMEOUT, MODE_PROFILE
+from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADED, MESSAGE_ERROR, \
+                      MODE_PROFILE
+
+from constants import UNSET_TEXT, UNSET_STRING, UNSET_LABEL, UNSET_USERNAME, \
+                      UNSET_TIMEOUT
 
 
 class GUIHelpers(object):
@@ -238,8 +240,9 @@ class GUIHelpers(object):
             col3[i] = int(int((1 - 0.5) * int(col2[i], 16) \
                                           + 0.5 * int(col1[i], 16)))
         
-        col = gtk.gdk.color_parse('#' + ''.join([hex(i)[2:] for i in col3]))
-        self.multi_container.modify_bg(gtk.STATE_NORMAL, col)
+        col = '#' + UNSET_STRING.join([hex(i)[2:] for i in col3])
+        self.multi_container.modify_bg(gtk.STATE_NORMAL,
+                                       gtk.gdk.color_parse(col))
     
     
     # Hacked Helpers -----------------------------------------------------------

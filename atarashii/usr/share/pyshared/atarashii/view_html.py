@@ -219,8 +219,8 @@ class ViewHTML(object):
                         <div class="loadmore">
                         <a href="more:%d"><b>%s</b></a>
                         </div>
-                    </body>''' % (''.join(renderitems),
-                                    self.items[0][0].id, self.lang_load))
+                    </body>''' % (HTML_UNSET_TEXT.join(renderitems),
+                                  self.items[0][0].id, self.lang_load))
             
             else:
                 self.render_html('''

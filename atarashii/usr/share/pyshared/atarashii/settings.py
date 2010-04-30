@@ -23,8 +23,9 @@ import json
 
 from errors import log_error, crash_file
 
-from constants import UNSET_SETTING, UNSET_ID_NUM, FONT_DEFAULT, \
-                      AVATAR_DEFAULT, THEME_DEFAULT
+from constants import FONT_DEFAULT, AVATAR_DEFAULT, THEME_DEFAULT
+from constants import UNSET_SETTING, UNSET_ID_NUM, UNSET_RESOURCE, \
+                      UNSET_USERNAME, UNSET_PATH, UNSET_STRING
 
 from constants import ATARASHII_DIR, CACHE_DIR, CONFIG_FILE, CRASH_FILE, \
                       DESKTOP_FILE, CACHE_TIMEOUT, AUTOSTART_DIR, COPY_FILE, \
@@ -91,7 +92,8 @@ class Settings(object):
         try:
             with open(USERLIST_FILE, 'rb') as f:
                 users = f.read().split(',')
-                self.user_list = [i.strip() for i in users if i.strip() != '']
+                usrs = [i.strip() for i in users if i.strip() != UNSET_USERNAME]
+                self.user_list = usrs
                 self.users_unsorted = True
                 self.sort_users()
         
@@ -283,8 +285,8 @@ class Settings(object):
                 csf.write('/* THIS FILE HAS BEEN AUTOMATICALLY GENERATED '
                          'AND WILL BE OVERRIDEN */\n\n')
                 
-                path = os.path.join(self.main.get_resource(''), 'themes',
-                                    color_theme) + '/'
+                path = self.main.get_resource(UNSET_RESOURCE)
+                path = os.path.join(path, 'themes', color_theme, UNSET_PATH)
                 
                 css_data = css_data.replace('{RESOURCES}', path)
                 
@@ -311,9 +313,8 @@ class Settings(object):
     # Load themes --------------------------------------------------------------
     def load_color_themes(self):
         self.color_themes = {}
-        self.scan_theme_folder(os.path.join(self.main.get_resource(''),
-                                            'themes'))
-        
+        path = self.main.get_resource(UNSET_RESOURCE)
+        self.scan_theme_folder(os.path.join(path, 'themes'))
         self.scan_theme_folder(os.path.join(ATARASHII_DIR,'themes'))
     
     def scan_theme_folder(self, path):
@@ -331,8 +332,8 @@ class Settings(object):
         with open(theme_file, 'rb') as f:
             lines = [e.strip() for e in f if not e.strip().startswith('#')]
             try:
-                self.color_themes[name] = json.loads(
-                                          ''.join(lines).replace('\'', '"'))
+                theme_data = UNSET_STRING.join(lines).replace('\'', '"')
+                self.color_themes[name] = json.loads(theme_data)
                 
                 if not 'title_en' in self.color_themes[name]:
                     del self.color_themes[name]

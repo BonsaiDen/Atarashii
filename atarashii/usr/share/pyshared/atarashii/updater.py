@@ -507,6 +507,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                     notify_list[i][0] = lang.notification_index \
                                         % (notify_list[i][0], i + 1, count)
         
+        # yes we don't need to return, but its clearer this ways
         return notify_list
     
     

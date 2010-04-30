@@ -21,7 +21,8 @@ import view_tweet as tweet
 from utils import escape
 from lang import LANG as lang
 
-from constants import UNSET_TEXT, HTML_UNSET_TEXT, HTML_LOADED
+from constants import UNSET_TEXT, HTML_UNSET_TEXT, UNSET_URL, UNSET_STRING
+from constants import HTML_LOADED
 
 
 class HTML(tweet.HTML):
@@ -91,14 +92,16 @@ class HTML(tweet.HTML):
         
         # Detailed information
         details = []
-        if user.url is not None and user.url.strip() != '':
+        if user.url is not None and user.url.strip() != UNSET_URL:
             details.append(lang.profile_website % (escape(user.url),
                                                    escape(user.url)))
         
-        if user.location is not None and user.location.strip() != '':
+        if user.location is not None and user.location.strip() != UNSET_STRING:
             details.append(lang.profile_location % escape(user.location))
         
-        if user.description is not None and user.description.strip() != '':
+        if user.description is not None \
+           and user.description.strip() != UNSET_STRING:
+            
             details.append(lang.profile_description % escape(user.description))
         
         # Display the protected Info?
@@ -111,7 +114,7 @@ class HTML(tweet.HTML):
         # Profile HTML
         style = 'style="display:none;"' \
                 if user.screen_name.lower() == self.main.username.lower() \
-                else ''
+                else HTML_UNSET_TEXT
         
         self.profile_data = '''
         <div class="profile_header" id="header">
@@ -245,7 +248,8 @@ class HTML(tweet.HTML):
                                 <a href="more:%d"><b>%s</b></a>
                             </div>
                         </div>
-                    </body>''' % (self.profile_data, ''.join(renderitems),
+                    </body>''' % (self.profile_data,
+                                  HTML_UNSET_TEXT.join(renderitems),
                                   self.items[0][0].id, self.lang_load))
             
             else:

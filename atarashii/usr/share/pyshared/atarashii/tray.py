@@ -24,7 +24,8 @@ import gobject
 from utils import menu_escape
 from lang import LANG as lang
 
-from constants import UNSET_TOOLTIP, UNSET_USERNAME, ST_TRAY_WARNING
+from constants import UNSET_TOOLTIP, UNSET_USERNAME, UNSET_LABEL
+from constants import ST_TRAY_WARNING
 
 
 class TrayIcon(gtk.StatusIcon):
@@ -80,7 +81,7 @@ class TrayIcon(gtk.StatusIcon):
         self.new_gtk_version = True
         try:
             menu_item = gtk.ImageMenuItem()
-            menu_item.set_label('')
+            menu_item.set_label(UNSET_LABEL)
         
         except AttributeError:
             self.new_gtk_version = False
