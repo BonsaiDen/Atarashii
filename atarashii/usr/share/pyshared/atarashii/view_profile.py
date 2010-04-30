@@ -166,7 +166,7 @@ class HTML(tweet.HTML):
         
         self.current_user = user
         self.profile_data = self.profile_data % (
-             user.screen_name, img_file, user.screen_name, user.name,
+             user.screen_name, img_file, user.screen_name, escape(user.name),
              user.statuses_count, lang.profile_tweets,
              lang.profile_protected if user.protected \
                                     else HTML_UNSET_TEXT,
