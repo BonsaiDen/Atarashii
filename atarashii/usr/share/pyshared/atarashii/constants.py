@@ -57,7 +57,7 @@ DBUS_PATH = '/org/bonsaiden/Atarashii'
 # ------------------------------------------------------------------------------
 UNSET_TOOLTIP = ''       # Should be ''
 UNSET_PASSWORD = ''      # Must be ''
-UNSET_RESOURCE = ''      # Should be ''
+UNSET_RESOURCE = ''      # Must be ''
 UNSET_SETTING = ''       # Must be ''
 UNSET_USERNAME = ''      # Must be ''
 UNSET_ID_NUM = -1        # Must be lower than 0
@@ -68,6 +68,8 @@ UNSET_ERROR = ''         # Must be ''
 UNSET_SOUND = ''         # Must be ''
 UNSET_HOST = ''          # Must be ''
 UNSET_URL = ''           # Must be ''
+UNSET_PATH = ''          # Must be ''
+UNSET_STRING = ''        # Must be ''
 
 USERNAME_CHARS = 'abcdefghijklmnopqrstuvwxyz' \
                  + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' \
