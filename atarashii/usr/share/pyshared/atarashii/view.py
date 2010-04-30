@@ -31,7 +31,7 @@ from view_helpers import ViewHelpers
 from view_html import ViewHTML
 from utils import unescape
 
-from constants import ST_HISTORY, ST_NETWORK_FAILED
+from constants import ST_HISTORY
 from constants import HTML_UNSET_ID, RETWEET_NEW, RETWEET_OLD, UNSET_TEXT, \
                       UNSET_ID_NUM, HTML_UNSET_TEXT, HTML_LOADED, \
                       MODE_MESSAGES, MODE_TWEETS
@@ -196,7 +196,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.set_item_count(self.get_item_count() - self.history_count)
         self.history_count = 0
         self.history_level = 0
-        self.gui.set_multi_button(not self.main.status(ST_NETWORK_FAILED))
+        self.gui.set_multi_button(True)
         self.old_items_changed = True
         self.render()
     

@@ -21,7 +21,7 @@ import gobject
 from lang import LANG as lang
 
 from constants import HTML_UNSET_ID, HTML_UNSET_TEXT, UNSET_USERNAME, SPACES
-from constants import ST_NETWORK_FAILED, ST_LOGIN_SUCCESSFUL
+from constants import ST_LOGIN_SUCCESSFUL
 
 
 class ViewHTML(object):
@@ -107,7 +107,7 @@ class ViewHTML(object):
         
         # Update multi button
         if update_multi:
-            self.gui.set_multi_button(not self.main.status(ST_NETWORK_FAILED))
+            self.gui.set_multi_button(True)
     
     
     # HTML Helpers -------------------------------------------------------------
