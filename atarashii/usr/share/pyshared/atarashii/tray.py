@@ -46,7 +46,6 @@ class TrayIcon(gtk.StatusIcon):
         self.tooltip_icon = None
         self.tooltip_buf = None
         self.tooltip_markup = UNSET_TOOLTIP
-        self.tooltip_special_icon = False
         
         # Create Tray Icon
         self.fake_window = None
@@ -248,7 +247,6 @@ class TrayIcon(gtk.StatusIcon):
                               % (lang.tray_title, status)
         
         self.tooltip_icon = icon
-        self.tooltip_special_icon = True
         self.set_from_pixbuf(self.render_stock_overlay(icon))
         self.tooltip_changed = True
     
