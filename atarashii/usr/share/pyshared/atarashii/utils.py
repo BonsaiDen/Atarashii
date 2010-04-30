@@ -28,8 +28,8 @@ import httplib
 import threading
 import calendar
 
-from constants import UNSET_HOST, ENTITIES, STRIP, SHORT_REGEX, SHORTS, \
-                      BASE58, UNSET_URL
+from constants import UNSET_STRING, UNSET_HOST, UNSET_URL
+from constants import ENTITIES, STRIP, SHORT_REGEX, SHORTS, BASE58
 
 
 # Tweepy Wrapper ---------------------------------------------------------------
@@ -46,7 +46,7 @@ finally:
 # Escaping stuff ---------------------------------------------------------------
 # ------------------------------------------------------------------------------
 def escape(text):
-    return ''.join(ENTITIES.get(c, c) for c in text)
+    return UNSET_STRING.join(ENTITIES.get(c, c) for c in text)
 
 
 # Credit to Fredrik Lundh
@@ -81,7 +81,10 @@ def menu_escape(text):
     return text.replace('_', '__')
 
 def strip_tags(text):
-    return STRIP.sub('', text)
+    return STRIP.sub(UNSET_STRING, text)
+
+def filter_chars(text, chars):
+    return UNSET_STRING.join([i for i in text if i in chars])
 
 
 # Time stuff -------------------------------------------------------------------
