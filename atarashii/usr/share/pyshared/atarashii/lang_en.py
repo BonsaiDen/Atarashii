@@ -33,8 +33,8 @@ LANG = {
     'name': lambda x: x + '\'s' if x[-1:] in 'xs' else x + 's',
     
     # Tweets
-    'tweet_hash': '#',
-    'tweet_at': '@',
+    'tweet_hash': '#', # you may use the unicode fullwidth version here
+    'tweet_at': '@', # you may use the unicode fullwidth version here
     
     # HTML
     'html_welcome': 'Welcome to Atarashii.',
@@ -198,9 +198,9 @@ LANG = {
     'settings_file': 'Select soundfile',
     'settings_file_none': '...',
     'settings_file_filter': 'Soundfiles',
-    'settings_autostart': 'Launch Atarashii on user login',
-    'settings_tray': 'Start minimized(system tray)',
-    'settings_taskbar': 'Show Atarashii in the Taskbar',
+    'settings_autostart': 'Launch Atarashii on login',
+    'settings_tray': 'Start minimized',
+    'settings_taskbar': 'Show in Taskbar',
     'settings_info_sound': 'Play info sounds',
     'settings_shortener': 'URL-Shortener:',
     'settings_shortener_off': 'Deactivated',
