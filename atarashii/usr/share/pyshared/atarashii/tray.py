@@ -96,7 +96,7 @@ class TrayIcon(gtk.StatusIcon):
         
         # Accounts
         self.account_menu_item = self.add_menu(lang.menu_accounts,
-                                               gtk.STOCK_ABOUT)
+                                               gtk.STOCK_DIALOG_AUTHENTICATION)
         
         self.account_menu = gtk.Menu()
         self.account_menu_item.set_submenu(self.account_menu)
