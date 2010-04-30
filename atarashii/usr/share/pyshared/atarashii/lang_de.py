@@ -87,7 +87,7 @@ LANG = {
     
     # Profile
     'profile_loading': '<b>%s</b> Profil wird geladen...',
-    'profile_close': '<b>%s</b> Profil schliessen',
+    'profile_close': '<b>%s</b> Profil schließen',
     'profile_link': 'Auf Twitter.com',
     'profile_name': '<b>%s</b> (%s)',
     'profile_info':
@@ -166,9 +166,9 @@ LANG = {
     
     'status_load_history': 'Tweets werden geladen...',
     'status_load_message_history': 'Nachrichten werden geladen...',
-    'status_reconnect_seconds': 'Automatischer Reconnect in %d Sekunden.',
-    'status_reconnect_minute': 'Automatischer Reconnect in einer Minute.',
-    'status_reconnect_minutes': 'Automatischer Reconnect in %d Minuten.',
+    'status_reconnect_seconds': 'Verbinde automatisch neu in %d Sekunden.',
+    'status_reconnect_minute': 'Verbinde automatisch neu in einer Minute.',
+    'status_reconnect_minutes': 'Verbinde automatisch neu in %d Minuten.',
     'status_deleting_tweet': 'Lösche Tweet...',
     'status_deleting_message': 'Lösche Nachricht...',
     'status_edit': 'Bearbeite Tweet...',
@@ -200,11 +200,11 @@ LANG = {
     'settings_file_replies': 'Antworten:',
     'settings_file_messages': 'Nachrichten:',
     'settings_file_info': 'Sonstige:',
-    'settings_file': 'Soundatei auswählen',
+    'settings_file': 'Sounddatei auswählen',
     'settings_file_none': '...',
-    'settings_file_filter': 'Soundateien',
-    'settings_autostart': 'Atarashii beim Login starten',
-    'settings_tray': 'Minimiert starten(System Tray)',
+    'settings_file_filter': 'Sounddateien',
+    'settings_autostart': 'Automatisch starten',
+    'settings_tray': 'Minimiert starten',
     'settings_taskbar': 'Atarashii in der Taskleiste anzeigen',
     'settings_info_sound': 'Info Sounds abspielen',
     'settings_shortener': 'URL-Kürzer:',
@@ -219,7 +219,6 @@ LANG = {
     'settings_delete': 'Löschen',
     'settings_file_ok': 'OK',
     'settings_file_cancel': 'Abbrechen',
-    'settings_sync': 'Syncing',
     
     # Syncing Dialog
     'sync_checkbutton': 'Synchronisation aktivieren',
@@ -257,7 +256,7 @@ LANG = {
     
     'sync_user_error_title': 'Ungültiges Token',
     'sync_user_error':
-        'Es wurden keine Synchronisationsdaten für das eingebene '
+        'Es wurden keine Synchronisationsdaten für das eingegebene '
         'Token gefunden, bitte überprüfen Sie ob es korrekt ist.',
     
     # About Dialog
@@ -393,7 +392,7 @@ LANG = {
     'warning_button_rate_limit': 'Requestlimit verringert',
     'warning_rate_limit':
         'Twitter hat das Requestlimit auf %d Requests pro Stunde '
-        'reduziert, das Aktualisierungsinterval wurde '
+        'reduziert, das Aktualisierungsintervall wurde '
         'entsprechend angepasst.',
     
     'warning_button_overload': 'Twitter überlastet',
@@ -433,7 +432,7 @@ LANG = {
     'multi_read_message': 'Alle Nachrichten als gelesen markieren',
     
     # Tray Menu
-    'menu_update': 'Akualisie_ren',
+    'menu_update': 'Alles Aktualisie_ren',
     'menu_read': 'Alle als gelesen _markieren',
     'menu_settings': '_Einstellungen',
     'menu_about': '_Info',
@@ -465,7 +464,7 @@ LANG = {
     
     # Context Menu
     'content_block': '%s blockieren',
-    'content_unfollow': '%s entfolgen',
+    'content_unfollow': '%s unfollowen',
     'context_browser': 'Im _Browser öffnen',
     'context_copy': 'Link _kopieren',
     'context_copy_tweet': 'Tweet _kopieren',

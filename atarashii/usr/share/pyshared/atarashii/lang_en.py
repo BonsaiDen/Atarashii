@@ -205,7 +205,7 @@ LANG = {
     'settings_shortener': 'URL-Shortener:',
     'settings_shortener_off': 'Deactivated',
     'settings_continue': 'Cont. character:',
-    'settings_continue_names': ['Points', 'Hypen', 'Tilde', 'Arrow'],
+    'settings_continue_names': ['Points', 'Hyphen', 'Tilde', 'Arrow'],
     'settings_avatar_size': 'Avatar size:',
     'settings_font_size': 'Font size:',
     'settings_color_theme': 'Color scheme:',
@@ -214,7 +214,6 @@ LANG = {
     'settings_delete': 'Delete',
     'settings_file_ok': 'OK',
     'settings_file_cancel': 'Cancel',
-    'settings_sync': 'Syncing',
     
     # Syncing Dialog
     'sync_checkbutton': 'Activate synchronization',
@@ -245,12 +244,12 @@ LANG = {
     'sync_error_key':
         'Your Sync-Token is invalid, please go to the preferences and '
         'request a new one.\n\nSync-Tokens do <b>expire</b> when they '
-        'havn\'t been used in the first <b>24 hours</b> after their '
+        'haven\'t been used in the first <b>24 hours</b> after their '
         'generation.',
     
     'sync_user_error_title': 'Invalid Token',
     'sync_user_error':
-        'No synchronisation data for the entered Sync-Token was found, '
+        'No synchronization data for the entered Sync-Token was found, '
         'please make sure that you have entered the token correctly.',
     
     # About Dialog
@@ -298,7 +297,7 @@ LANG = {
     'error_block': 'Could not block <b>%s</b>.',
     'error_unblock': 'Could not unblock <b>%s</b>.',
     'block_user_spam':
-        'Do you want to report <b>%s</b> for spam/abuse?',
+        'Do you want to report <b>%s</b> for Spam/Abuse?',
     
     'block_title': 'Block user',
     
@@ -349,8 +348,8 @@ LANG = {
     'error_network_timeout':
         'Atarashii could not establish a connection to Twitter.',
     
-    'error_favorite_on': '<b>%s</b> Tweet couldn\'t be favorited.',
-    'error_favorite_off': '<b>%s</b> Tweet couldn\'t be unfavorited.',
+    'error_favorite_on': '<b>%s</b> Tweet couldn\'t be favored.',
+    'error_favorite_off': '<b>%s</b> Tweet couldn\'t be unfavored.',
     
     'error_ratelimit_reconnect':
          'Twitters limit on requests has been exceeded.\n'
@@ -364,7 +363,7 @@ LANG = {
     'error_down':
         'Could not establish a connection to the Twitter server.',
     
-    'error_button_rate_limit': 'Ratelimit exceeded',
+    'error_button_rate_limit': 'Rate limit exceeded',
     'error_rate_limit':
         'Twitters limit on requests has been exceeded.\n'
         'Automatic refresh in %d minute(s).',
@@ -390,7 +389,7 @@ LANG = {
         'Atarashii couldn\'t establish a connection to the Internet.',
     
     'warning_network_timeout':
-        'Atarashii has lost the conntection to Twitter, in most cases '
+        'Atarashii has lost the connection to Twitter, in most cases '
         'this is just a temporary issue due to Twitter being too '
         'busy at the moment.',
     
@@ -416,7 +415,7 @@ LANG = {
     'multi_read_message': 'Mark all Messages as read',
     
     # Tray Menu
-    'menu_update': '_Refresh',
+    'menu_update': '_Refresh all',
     'menu_read': '_Mark all as read',
     'menu_settings': '_Preferences',
     'menu_about': 'About',
@@ -444,7 +443,7 @@ LANG = {
     'tray_warning_twitter': '<b>Twitter is unavailable.</b>',
     'tray_error_twitter': 'Twitter server error.',
     'tray_error_down': 'Twitter is offline.',
-    'tray_error_rate_limit': 'Ratelimit exceeded.',
+    'tray_error_rate_limit': 'Rate limit exceeded.',
     
     # Context Menu
     'content_block': 'Block %s',
