@@ -90,6 +90,8 @@ class GUIHelpers(object):
             self.info_label.show()
     
     def set_label_text(self, info, label_text, label_extra=None):
+        label_text = label_text.replace('\n', '').replace('\r', '')
+        
         if label_extra:
             self.info_label.set_markup(info % (escape(label_text),
                                                escape(label_extra)))
