@@ -448,7 +448,7 @@ LANG = {
     'multi_read_message': 'Alle Nachrichten als gelesen markieren',
     
     # Tray Menu
-    'menu_update': 'Alles Aktualisie_ren',
+    'menu_update': 'Alles aktualisie_ren',
     'menu_read': 'Alle als gelesen _markieren',
     'menu_settings': '_Einstellungen',
     'menu_about': '_Info',
