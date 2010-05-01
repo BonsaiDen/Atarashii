@@ -454,6 +454,7 @@ LANG = {
     'menu_about': '_Info',
     'menu_accounts': '_Accounts',
     'menu_logout': 'Ausl_oggen',
+    'menu_secure_logout': 'Sicheres ausloggen',
     'menu_quit': '_Beenden',
     
     # Tray Tooltip

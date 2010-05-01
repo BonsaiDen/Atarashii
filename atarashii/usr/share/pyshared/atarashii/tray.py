@@ -155,7 +155,17 @@ class TrayIcon(gtk.StatusIcon):
                                          gtk.ACCEL_VISIBLE)
         
         self.logout_item.connect('activate', self.main.logout)
+        
+        self.secure_logout_item = gtk.MenuItem(lang.menu_secure_logout)
+        self.secure_logout_item.add_accelerator('activate', self.accel, 
+                                ord('o'),
+                                gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK,
+                                gtk.ACCEL_VISIBLE)
+        
+        self.secure_logout_item.connect('activate', self.main.secure_logout)
+        
         self.account_menu.append(self.logout_item)
+        self.account_menu.append(self.secure_logout_item)
         self.account_menu.append(gtk.SeparatorMenuItem())
         
         group = None
@@ -187,8 +197,10 @@ class TrayIcon(gtk.StatusIcon):
             mode = False
         
         self.logout_item.set_sensitive(mode)
+        self.secure_logout_item.set_sensitive(mode)
         if self.main.username == UNSET_USERNAME:
             self.logout_item.set_sensitive(False)
+            self.secure_logout_item.set_sensitive(False)
         
         if self.selected_account is not None:
             self.selected_account.set_active(False)

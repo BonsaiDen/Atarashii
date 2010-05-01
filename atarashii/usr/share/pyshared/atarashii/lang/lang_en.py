@@ -435,7 +435,8 @@ LANG = {
     'menu_settings': '_Preferences',
     'menu_about': 'About',
     'menu_accounts': '_Accounts',
-    'menu_logout': 'L_ogout',
+    'menu_logout': 'L_og out',
+    'menu_secure_logout': 'Secure logout',
     'menu_quit': '_Quit',
     
     # Tray Tooltip

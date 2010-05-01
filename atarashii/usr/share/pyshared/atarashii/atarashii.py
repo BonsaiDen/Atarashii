@@ -57,8 +57,8 @@ from constants import ST_CONNECT, ST_LOGIN_ERROR, ST_LOGIN_SUCCESSFUL, \
                       ST_TRAY_WARNING, ST_LOGIN_ALL
 
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_TIMEOUT, \
-                      MODE_TWEETS, MODE_MESSAGES, UNSET_USERNAME, \
-                      MODE_PROFILE
+                      UNSET_SETTING, UNSET_USERNAME, \
+                      MODE_PROFILE, MODE_TWEETS, MODE_MESSAGES
 
 
 class Atarashii(AtarashiiActions):
@@ -70,9 +70,6 @@ class Atarashii(AtarashiiActions):
         self.kittens = kittens
         self.debug = debug
         self.debug_path = debug_path
-        
-        # DBUS
-        self.dbus = DBUS_INSTANCE
         
         # Load Settings
         self.settings = settings.Settings(self)
@@ -147,8 +144,9 @@ class Atarashii(AtarashiiActions):
         self.settings['continue'] = min(max(0, self.settings['continue'] or 0),
                                         len(CONTINUE_LIST))
         
-        # Create DBUS
-        DBUS_INSTANCE.set_main(self)
+        # DBUS
+        self.dbus = DBUS_INSTANCE
+        self.dbus.set_main(self)
         
         # Start updater thread
         self.updater.start()
@@ -326,6 +324,11 @@ class Atarashii(AtarashiiActions):
         
         self.gui.tray.update_account_menu()
         self.gui.tray.activate_menu(True)
+    
+    def secure_logout(self, menu=None):
+        self.settings['xkey_' + self.username] = UNSET_SETTING
+        self.settings['xsecret_' + self.username] = UNSET_SETTING
+        self.logout()
     
     
     # Syncing errors -----------------------------------------------------------
