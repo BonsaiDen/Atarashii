@@ -28,8 +28,8 @@ from constants import UNSET_SETTING, UNSET_ID_NUM, UNSET_RESOURCE, \
                       UNSET_USERNAME, UNSET_PATH, UNSET_STRING
 
 from constants import ATARASHII_DIR, CACHE_DIR, CONFIG_FILE, CRASH_FILE, \
-                      DESKTOP_FILE, CACHE_TIMEOUT, AUTOSTART_DIR, COPY_FILE, \
-                      USERLIST_FILE
+                      DESKTOP_FILE, CACHE_TIMEOUT, AUTOSTART_DIR, \
+                      COPY_DESKTOP_FILE, USERLIST_FILE
 
 
 class Settings(object):
@@ -351,7 +351,7 @@ class Settings(object):
                 os.mkdir(AUTOSTART_DIR)
             
             # Get contents of the desktop file
-            with open(COPY_FILE, 'rb') as f:
+            with open(COPY_DESKTOP_FILE, 'rb') as f:
                 text = f.read()
             
             # Tweak the file bit

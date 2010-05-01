@@ -29,18 +29,19 @@ import os
 START_TIME = time.time()
 
 HOME_DIR = os.path.expanduser('~')
-DESKTOP_FILE = os.path.join(HOME_DIR, '.config',
-                            'autostart', 'atarashii.desktop')
+CONFIG_DIR = os.path.join(HOME_DIR, '.config')
+COPY_DESKTOP_FILE = '/usr/share/applications/atarashii.desktop'
 
-AUTOSTART_DIR = os.path.join(HOME_DIR, '.config', 'autostart')
+AUTOSTART_DIR = os.path.join(CONFIG_DIR, 'autostart')
+DESKTOP_FILE = os.path.join(AUTOSTART_DIR, 'atarashii.desktop')
 CACHE_DIR = os.path.join(HOME_DIR, '.cache', 'atarashii')
 
 ATARASHII_DIR = os.path.join(HOME_DIR, '.atarashii')
 
 CONFIG_FILE = os.path.join(ATARASHII_DIR, 'atarashii.conf')
 USERLIST_FILE = os.path.join(ATARASHII_DIR, 'usernames.list')
-COPY_FILE = '/usr/share/applications/atarashii.desktop'
-CRASH_FILE = os.path.join(HOME_DIR, '.atarashii', 'crashed')
+
+CRASH_FILE = os.path.join(ATARASHII_DIR, 'crashed')
 CRASH_LOG_FILE = os.path.join(ATARASHII_DIR, 'crash.log')
 ERROR_LOG_FILE = os.path.join(ATARASHII_DIR, 'error.log')
 LOGOUT_FILE = os.path.join(ATARASHII_DIR, 'logout')
