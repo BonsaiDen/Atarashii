@@ -20,6 +20,8 @@ import locale
 import sys
 import os
 
+LANG_DIR = os.path.join(os.path.dirname(__file__), 'lang')
+
 
 class Language(object):
     def __init__(self):
@@ -30,7 +32,7 @@ class Language(object):
             self.code = locale.getdefaultlocale()[0][0:2]
         
         try:
-            sys.path.insert(0, os.path.dirname(__file__))
+            sys.path.insert(0, LANG_DIR)
             lang = self.get_lang()
         
         finally:
@@ -47,7 +49,7 @@ class Language(object):
             return text + self.name_end
     
     def get_lang(self):
-        for i in os.listdir(os.path.dirname(__file__)):
+        for i in os.listdir(LANG_DIR):
             if i == 'lang_%s.py' % self.code:
                 return __import__('lang_%s' % self.code)
         
