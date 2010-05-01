@@ -59,7 +59,7 @@ QUERY_ENDING_CHARS = '[a-z0-9_&=#]'
 URL_REGEX = re.compile('((%s)((https?://|www\\.)(%s)(\/%s*%s?)?(\?%s*%s)?))'
                        % (PRE_CHARS, DOMAIN_CHARS, PATH_CHARS,
                           PATH_ENDING_CHARS, QUERY_CHARS, QUERY_ENDING_CHARS),
-                       re.IGNORECASE)
+                          re.IGNORECASE)
 
 
 # Registered IANA one letter domains
