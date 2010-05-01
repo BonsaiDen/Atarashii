@@ -15,6 +15,7 @@ atarashii (0.99.25-1) all;
   + There is now an option to turn off that notifications overlay playing 
     movies.
   + If desired, shortening of urls can now be turned off.
+  + When the login fails, there's now a new info screen for quick retrying.
   ~ Atarashii will now look in ~./atarashii/themes for additional themes.
   * Fix for broken view updating when notifications were turned off.
   * Fix for a bug were the multibutton would stay disabled in some cases.
@@ -25,8 +26,9 @@ atarashii (0.99.25-1) all;
   * Many bugfixes concerning the user preferences and the closing of its sub 
     dialogs.
   * Fixed sometimes missing usernames in the tray icon warning tooltips.
+  * Many other small fixes.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Fri, 30 Apr 2010 21:10:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 01 May 2010 12:30:00 +0200
 
 atarashii (0.99.24-1) all;
 
