@@ -1,3 +1,11 @@
+atarashii (0.99.25a-1) all;
+
+  + Add a new option for "secure logout" this will delete the saved access 
+    tokens for the account which forces you to enter your password the next time
+    you log in.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 01 May 2010 16:26:00 +0200
+
 atarashii (0.99.25-1) all;
 
   + Tweets/Messages that are over the 150 character limit will now be split when
