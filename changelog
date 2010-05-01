@@ -28,7 +28,7 @@ atarashii (0.99.25-1) all;
   * Fixed sometimes missing usernames in the tray icon warning tooltips.
   * Many other small fixes.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 01 May 2010 12:30:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 01 May 2010 13:04:00 +0200
 
 atarashii (0.99.24-1) all;
 
