@@ -880,14 +880,17 @@ class TextInput(gtk.TextView):
                 if self.main.status(ST_WAS_DELETE):
                     if self.has_typed:
                         self.grab_focus()
+                        self.on_changed()
                 
                 elif not self.main.status(ST_WAS_RETWEET_NEW):
                     self.grab_focus()
+                    self.on_changed()
             
-            if self.has_typed \
-               and self.main.any_status(ST_WAS_RETWEET_NEW, ST_WAS_DELETE):
+            if self.has_typed and self.main.any_status(ST_WAS_RETWEET_NEW,
+                                                       ST_WAS_DELETE):
                 
                 self.grab_focus()
+                self.on_changed()
     
     def resize(self, line_count=5):
         self.gui.set_label()
