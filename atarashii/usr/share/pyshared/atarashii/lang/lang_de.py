@@ -42,7 +42,7 @@ LANG = {
     # HTML
     'html_welcome': 'Willkommen bei Atarashii.',
     'html_loading': 'Tweets werden geladen...',
-
+    
     'html_login_failed':
         'Anmeldung als %s fehlgeschlagen.',
     
