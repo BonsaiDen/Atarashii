@@ -113,7 +113,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
     
     # Initiate a empty timeline ------------------------------------------------
     # --------------------------------------------------------------------------
-    def init(self, splash=False, load=False):
+    def init(self, splash=False, load=False, relog=False):
         # Links and items
         self.items = []
         self.update_list = []
@@ -146,6 +146,9 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         if splash:
             self.splash()
+        
+        elif relog:
+            self.relog()
         
         elif load:
             self.start()
@@ -446,6 +449,10 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         elif uri.startswith('block'):
             user_id, name, mode = uri.split(':')[1:]
             self.main.block(None, long(user_id), name, bool(int(mode)))
+        
+        # Relog
+        elif uri.startswith('relog'):
+            gobject.idle_add(self.main.login, uri.split(':')[1])
         
         # Regular links
         else:

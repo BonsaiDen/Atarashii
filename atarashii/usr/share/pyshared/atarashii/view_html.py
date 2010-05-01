@@ -190,6 +190,25 @@ class ViewHTML(object):
             </body>''' % (self.main.get_image(), lang.html_welcome, acc,
                           acc_info))
     
+    def relog(self):
+        self.scroll.get_vscrollbar().set_value(0)
+        self.offset_count = 0
+        self.render_html('''
+            <body class="unloaded" ondragstart="return false">
+                <div class="loading">
+                <img src="file://%s" /><br/>
+                <b class="loadingtext">%s</b>
+                <div class="infoheader">%s</div>
+                <div class="infotext">%s</div>
+                <input type="button" value="%s" 
+                onclick="window.location = 'relog:%s'" />
+                </div>
+            </body>''' % (
+                    self.main.get_image(), lang.html_welcome,
+                    lang.html_login_failed % self.main.last_username,
+                    lang.html_login_failed_info,
+                    lang.html_login_failed_button, self.main.last_username))
+    
     def render_html(self, html):
         data = '''
         <html>

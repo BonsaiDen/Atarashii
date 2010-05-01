@@ -167,6 +167,15 @@ class Atarashii(AtarashiiActions):
             self.gui.update_app()
             return False
         
+        # Check if the user exists in the config
+        if change_user is not None:
+            if not self.check_login_user(change_user):
+                return False
+        
+        elif self.username != UNSET_USERNAME:
+            if not self.check_login_user(self.username):
+                return False
+        
         # Disable the account menu
         self.gui.tray.activate_menu(False)
         
@@ -187,7 +196,7 @@ class Atarashii(AtarashiiActions):
             self.settings['username'] = change_user
         
         # Set Mode
-        self.stop_profile(blank=True)
+        self.stop_profile(blank = True)
         mode = self.settings['mode_' + self.username]
         if mode == MODE_PROFILE:
             mode = MODE_TWEETS
@@ -225,6 +234,17 @@ class Atarashii(AtarashiiActions):
         self.gui.text.reset()
         self.gui.update_app()
         self.updater.unwait(init = True)
+    
+    def check_login_user(self, name):
+        if not name in self.settings.get_accounts():
+            self.username = UNSET_USERNAME
+            self.settings['username'] = UNSET_USERNAME
+            gobject.timeout_add(50, self.gui.message.init, True)
+            gobject.timeout_add(50, self.gui.tweet.init, True)
+            return False
+        
+        else:
+            return True
     
     def on_login(self):
         self.unset_status(ST_LOGIN_ERROR | ST_CONNECT | ST_DELETE |
@@ -276,8 +296,8 @@ class Atarashii(AtarashiiActions):
         if error:
             self.handle_error(error)
         
-        gobject.idle_add(self.gui.message.init, True)
-        gobject.idle_add(self.gui.tweet.init, True)
+        gobject.idle_add(self.gui.message.init, False, False, True)
+        gobject.idle_add(self.gui.tweet.init, False, False, True)
     
     def on_network_failed(self, error):
         self.on_login_failed(error)

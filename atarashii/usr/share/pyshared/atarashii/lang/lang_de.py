@@ -42,6 +42,15 @@ LANG = {
     # HTML
     'html_welcome': 'Willkommen bei Atarashii.',
     'html_loading': 'Tweets werden geladen...',
+
+    'html_login_failed':
+        'Anmeldung als %s fehlgeschlagen.',
+    
+    'html_login_failed_info':
+        'Entweder ist Twitter derzeit nicht zu erreichen, oder Sie haben '
+        'einen ungültigen Benutzernamen und/oder Passwort verwendet.',
+    
+    'html_login_failed_button': 'Erneut versuchen',
     
     'html_account':
         'Derzeit ist kein Account aktiviert.',
