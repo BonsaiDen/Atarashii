@@ -68,8 +68,8 @@ LANG = {
     'html_at': 'View %s profile',
     'html_reply': 'Reply to %s',
     'html_retweet': 'Retweet %s',
-    'html_favorite': 'Favorite!',
-    'html_unfavorite': 'Normalize',
+    'html_favorite': 'Favorite this Tweet',
+    'html_unfavorite': 'Un-favorite this Tweet',
     'html_time': 'Tweeted at %H:%M:%S',
     'html_time_day': 'Tweeted on %m.%d.%Y at %H:%M:%S',
     'html_time_message': 'Sent at %H:%M:%S',
@@ -450,7 +450,8 @@ LANG = {
     'tray_tweets': '<b>%d</b> unread Tweets',
     'tray_messages': '<b>%d</b> unread Messages',
     
-    # These are shown in the notifications, tags get removed
+    # These are shown in the tray tooltip and the notifications
+    # (tags get removed in the notifications)
     'tray_error_login': 'Login as <b>%s</b> failed.',
     'tray_error_rate': 'Request limit exceeded.',
     'tray_warning_network': '<b>Network error.</b>',

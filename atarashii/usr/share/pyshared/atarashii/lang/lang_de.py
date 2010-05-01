@@ -70,8 +70,8 @@ LANG = {
     'html_at': '%s Profil betrachten',
     'html_reply': '%s antworten',
     'html_retweet': '%s retweeten',
-    'html_favorite': 'Favorisieren!',
-    'html_unfavorite': 'Normalisieren',
+    'html_favorite': 'Favorit hinzufügen',
+    'html_unfavorite': 'Favorit entfernen',
     'html_time': 'Getwittert um %H:%M:%S Uhr',
     'html_time_day': 'Getwittert am %d.%m.%Y um %H:%M:%S Uhr',
     'html_time_message': 'Gesendet um %H:%M:%S Uhr',
@@ -468,7 +468,8 @@ LANG = {
     'tray_tweets': '<b>%d</b> ungelesene Tweets',
     'tray_messages': '<b>%d</b> ungelesene Nachrichten' ,
     
-    # These are shown in the notifications, tags get removed
+    # These are shown in the tray tooltip and the notifications
+    # (tags get removed in the notifications)
     'tray_error_login': 'Anmeldung als <b>%s</b> fehlgeschlagen.',
     'tray_error_rate': 'Requestlimit überschritten.',
     'tray_warning_network': '<b>Netzwerkfehler.</b>',
