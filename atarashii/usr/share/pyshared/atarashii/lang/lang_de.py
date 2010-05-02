@@ -185,6 +185,15 @@ LANG = {
     'status_edit': 'Bearbeite Tweet...',
     'status_edit_reply': 'Bearbeite Antwort an %s...',
     
+    # Progress bar
+    'progress_syncing': 'Sychronisieren',
+    'progress_login': 'Anmeldung bei Twitter',
+    'progress_tweets': 'Tweets laden',
+    'progress_messages': 'Nachrichten laden',
+    
+    'progress_user': 'Benutzer abfragen',
+    'progress_status': 'Status abfragen',
+    
     # Info Label
     'label_reply': '<b>Tweet an %s:</b>',
     'label_reply_text': '<b>Antwort auf:</b> %s',

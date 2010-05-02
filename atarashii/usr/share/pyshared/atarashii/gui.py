@@ -44,7 +44,7 @@ from constants import MODE_MESSAGES, MODE_TWEETS, UNSET_ID_NUM, HTML_LOADING, \
                       UNSET_USERNAME, MESSAGE_WARNING, MESSAGE_QUESTION, \
                       UNSET_TIMEOUT, HTML_UNSET_ID, MESSAGE_ERROR, \
                       MESSAGE_WARNING, BUTTON_REFRESH, BUTTON_READ, \
-                      BUTTON_HISTORY, MODE_PROFILE
+                      BUTTON_HISTORY, MODE_PROFILE, UNSET_LABEL
 
 from constants import ERR_TWEET_NOT_FOUND, ERR_MESSAGE_NOT_FOUND, \
                       ERR_ALREADY_RETWEETED, ERR_TWEET_DUPLICATED, \
@@ -190,6 +190,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.progress_visible = False
         self.progress_state = UNSET_ID_NUM
         self.progress_steps = 0
+        self.progress_labels = []
         
         # Set Message/Tweet Mode
         self.set_mode(self.mode)
@@ -344,13 +345,30 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             interval = 10 if self.progress_state != UNSET_ID_NUM else 100
             gobject.timeout_add(interval, self.progress_activity)
     
-    def progress_init(self, max_steps):
+    def progress_init(self, max_steps, labels=None):
+        if labels is not None:
+            self.progress_labels = labels
+        
+        else:
+            self.progress_labels = None
+        
         self.progress_steps = max_steps
         self.progress_state = 0
+        self.progress_text()
     
     def progress_step(self):
         self.progress_state += 1
         gobject.idle_add(self.progress_activity, True)
+        self.progress_text()
+    
+    def progress_text(self):
+        if self.progress_labels is not None \
+           and self.progress_state < len(self.progress_labels):
+            
+            self.progress.set_text(self.progress_labels[self.progress_state])
+        
+        else:
+            self.progress.set_text(UNSET_LABEL)
     
     def show_progress(self):
         if self.progress_state == UNSET_ID_NUM:

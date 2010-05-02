@@ -180,6 +180,15 @@ LANG = {
     'status_edit': 'Editing Tweet...',
     'status_edit_reply': 'Editing Reply to %s...',
     
+    # Progress bar
+    'progress_syncing': 'Sychronization',
+    'progress_login': 'Login to Twitter',
+    'progress_tweets': 'Loading Tweets',
+    'progress_messages': 'Loading Messages',
+    
+    'progress_user': 'Retrieving user',
+    'progress_status': 'Requesting status',
+    
     # Info Label
     'label_reply': '<b>Tweet to %s:</b>',
     'label_reply_text': '<b>Reply on:</b> %s',

@@ -23,6 +23,7 @@ import gobject
 
 import dialog
 import settings_dialog
+from lang import LANG as lang
 
 from constants import ST_UPDATE
 from constants import MODE_MESSAGES, MODE_TWEETS, HTML_LOADING, HTML_LOADED, \
@@ -181,7 +182,9 @@ class GUIEventHandler(object):
             if self.profile.load_state == HTML_LOADING:
                 self.profile.start()
                 self.show_progress()
-                self.progress_init(3)
+                self.progress_init(3, [lang.progress_user,
+                                      lang.progress_status,
+                                      lang.progress_tweets])
             
             elif self.profile.load_state == HTML_LOADED:
                 self.profile.render()

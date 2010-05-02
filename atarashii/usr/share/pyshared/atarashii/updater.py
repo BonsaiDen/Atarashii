@@ -85,8 +85,17 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         self.message = self.gui.message
         self.profile = self.gui.profile
         
+        # Setup progressbar
+        labels = [lang.progress_syncing, lang.progress_login]
+        if self.gui.mode == MODE_TWEETS:
+            labels.append(lang.progress_tweets)
+        
+        elif self.gui.mode == MODE_MESSAGES:
+            labels.append(lang.progress_messages)
+        
+        self.gui.progress_init(3, labels)
+        
         # Reset
-        self.gui.progress_init(3)
         self.finish_update = False
         self.message_counter = 0
         self.do_init = False
