@@ -133,7 +133,7 @@ class HTML(tweet.HTML):
                 <div><b>%s</b> %s</div>
                 <div>%s <b>%s</b>%s</div>
             </div>
-            <div>
+            <div class="profile_bio">
                 <div>%s</div>
                 <div ''' + style + '''>
                     <input id="follow_button" type="button" value="%s"
