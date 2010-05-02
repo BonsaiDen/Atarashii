@@ -860,6 +860,8 @@ class TextInput(gtk.TextView):
     
     # Content switching --------------------------------------------------------
     def init_change(self):
+        text = self.get_text()
+        typed = self.has_typed
         if self.gui.mode == MODE_PROFILE:
             self.main.stop_profile()
         
@@ -867,8 +869,8 @@ class TextInput(gtk.TextView):
         self.is_changing = True
         self.grab_focus()
         self.has_focus = True
-        text = self.get_text()
-        if not self.has_typed:
+        
+        if not typed:
             text = UNSET_TEXT
         
         return text
