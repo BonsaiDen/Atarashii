@@ -228,7 +228,7 @@ class Parser(object):
     def _shorten_url(self, text):
         '''Shorten a URL and make sure to not cut of html entities.'''
         
-        if len(text) > self._max_url_length:
+        if len(text) > self._max_url_length and self._max_url_length != -1:
             text = text[0:self._max_url_length - 3]
             amp = text.rfind('&')
             close = text.rfind(';')
