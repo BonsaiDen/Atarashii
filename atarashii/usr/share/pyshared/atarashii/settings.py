@@ -105,7 +105,7 @@ class Settings(object):
                 usrs = [i.strip() for i in users if i.strip() != UNSET_USERNAME]
                 self.user_list = usrs
                 
-                if not name in self.user_list:
+                if not name.lower() in [i.lower() for i in self.user_list]:
                     self.user_list.append(name)
                     self.users_changed = True
                 
