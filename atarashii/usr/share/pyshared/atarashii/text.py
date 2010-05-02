@@ -716,7 +716,14 @@ class TextInput(gtk.TextView):
             self.set_text(UNSET_TEXT)
             self.is_changing = False
         
-        elif self.gui.mode == MODE_TWEETS:
+        elif self.gui.mode != MODE_MESSAGES:
+            if self.gui.mode == MODE_PROFILE:
+                if self.main.profile_mode == MODE_TWEETS:
+                    self.main.stop_profile()
+                
+                else:
+                    return False
+            
             self.grab_focus()
     
     def start_message(self, *args):
@@ -727,7 +734,14 @@ class TextInput(gtk.TextView):
             self.set_text(MSG_SIGN + ' ')
             self.is_changing = False
         
-        elif self.gui.mode == MODE_MESSAGES:
+        elif self.gui.mode != MODE_TWEETS:
+            if self.gui.mode == MODE_PROFILE:
+                if self.main.profile_mode == MODE_MESSAGES:
+                    self.main.stop_profile()
+                
+                else:
+                    return False
+            
             self.grab_focus()
     
     

@@ -331,6 +331,8 @@ class AtarashiiActions(object):
             
             self.gui.profile.load_state = HTML_LOADING
             self.gui.profile.start()
+        
+        self.gui.text.check_typing()
     
     # Update the user list with all the users friends
     def update_user_list(self):

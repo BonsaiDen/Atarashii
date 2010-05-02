@@ -12,8 +12,10 @@ atarashii (0.99.25a-1) all;
     clicking the reply icon.
   ~ Atarashii now uses a separate auto completion userlist for each account.
   * Fix for a layout bug concerning the height of the tabs.
+  * Multiple fixes relating the profile view and the mode shortcuts, also fixed
+    an issue with the textbox when closing the profile view.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 13:59:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 15:23:00 +0200
 
 atarashii (0.99.25-1) all;
 
