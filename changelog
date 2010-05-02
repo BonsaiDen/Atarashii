@@ -10,6 +10,8 @@ atarashii (0.99.25a-1) all;
     holding down ctrl when clicking the reply icon.
   + You can now add more @usernames to a reply by holding down shift when 
     clicking the reply icon.
+  ~ The progressbar now displays the actual progress of the login and the 
+    loading state of a profile.
   ~ Atarashii now uses a separate auto completion userlist for each account.
   * Fix for a layout bug concerning the height of the tabs.
   * Multiple fixes relating the profile view and the mode shortcuts, also fixed
@@ -17,7 +19,7 @@ atarashii (0.99.25a-1) all;
   * Fixes to the link shortener, no longer breaks @replies and others.
   * Fixes for the overload warnings, they now do behave like the network ones.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 16:56:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 18:26:00 +0200
 
 atarashii (0.99.25-1) all;
 
