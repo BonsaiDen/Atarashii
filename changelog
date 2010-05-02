@@ -1,9 +1,9 @@
-atarashii (0.99.25a-1) all;
+atarashii (0.99.26-1) all;
 
-  + Add a new option for "secure logout" this will delete the saved access 
+  + Added a new option for "secure logout" this will delete the saved access 
     tokens for the account which forces you to enter your password the next time
     you log in.
-  + Users which you send a reply or a message to now get automatically added to
+  + Users which you send a reply or a message to are now automatically added to
     the list of auto completed usernames.
   + You can now place a dot infront of any @reply in order to make it appear to
     everyone that is following you. You can trigger an automatic "dot-reply" by
@@ -11,7 +11,8 @@ atarashii (0.99.25a-1) all;
   + You can now add more @usernames to a reply by holding down shift when 
     clicking the reply icon.
   ~ The progressbar now displays the actual progress of the login and the 
-    loading state of a profile.
+    loading state of a profile, as well as some descriptive text about what is
+    actually going on.
   ~ Atarashii now uses a separate auto completion userlist for each account.
   * Fix for a layout bug concerning the height of the tabs.
   * Multiple fixes relating the profile view and the mode shortcuts, also fixed
@@ -19,7 +20,7 @@ atarashii (0.99.25a-1) all;
   * Fixes to the link shortener, no longer breaks @replies and others.
   * Fixes for the overload warnings, they now do behave like the network ones.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 18:26:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 18:52:00 +0200
 
 atarashii (0.99.25-1) all;
 
