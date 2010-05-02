@@ -225,10 +225,12 @@ MSG_SIGN = 'd'
 AT_SIGNS = u'@\uFF20'
 CONTINUE_LIST = ['…', '–', '~', '>']
 
+MESSAGE_REGEX = re.compile(MSG_SIGN + '\s([a-z0-9_]{1,20})\s.*', re.IGNORECASE)
 REPLY_REGEX = re.compile(ur'^\.?[%s]([a-z0-9_]{1,20})\s.*' % AT_SIGNS,
                          re.UNICODE | re.IGNORECASE)
 
-MESSAGE_REGEX = re.compile(MSG_SIGN + '\s([a-z0-9_]{1,20})\s.*', re.IGNORECASE)
+USERS_REGEX = re.compile(ur'[%s]([a-z0-9_]{1,20})' % AT_SIGNS,
+                         re.UNICODE | re.IGNORECASE)
 
 
 # Cloudsync --------------------------------------------------------------------

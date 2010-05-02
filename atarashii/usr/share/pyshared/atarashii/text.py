@@ -27,7 +27,7 @@ from utils import URLShorter
 from lang import LANG as lang
 
 from constants import MSG_SIGN, AT_SIGNS, CONTINUE_LIST
-from constants import REPLY_REGEX, MESSAGE_REGEX
+from constants import REPLY_REGEX, MESSAGE_REGEX, USERS_REGEX
 from constants import UNSET_TEXT, UNSET_ID_NUM, UNSET_USERNAME
 from constants import MODE_MESSAGES, MODE_TWEETS, MODE_PROFILE
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
@@ -652,6 +652,24 @@ class TextInput(gtk.TextView):
         
         self.end_change(text)
     
+    # Add users to a reply
+    def add_reply(self, user):
+        if self.main.reply_user == UNSET_USERNAME:
+            return False
+        
+        text = self.init_change()
+        if not user.lower() in [i.lower() for i in USERS_REGEX.findall(text)]:
+            space = text.find(' ')
+            if space == -1:
+                space = len(text)
+                text += ' '
+            
+            text = text[0:space] + ' ' + lang.tweet_at + user + text[space:]
+        
+        self.end_change(text)
+        return True
+    
+    # Tweet
     def more(self):
         text = self.init_change()
         text = self.next_text

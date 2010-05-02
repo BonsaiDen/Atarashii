@@ -100,7 +100,8 @@ class ViewMenu(object):
     
     # Create our own menu, kitten style!
     def on_button(self, view, event, *args):
-        self.shift_down = event.state & gtk.gdk.SHIFT_MASK == gtk.gdk.SHIFT_MASK
+        self.shift = event.state & gtk.gdk.SHIFT_MASK == gtk.gdk.SHIFT_MASK
+        self.ctrl = event.state & gtk.gdk.CONTROL_MASK == gtk.gdk.CONTROL_MASK
         self.give_text_focus = self.text.has_focus
         if event.button == 3 and not self.popup_open:
             self.menu_no_fake_move = True

@@ -92,7 +92,8 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.parser = ttp.Parser()
         self.item_count = HTML_UNSET_ID
         self.profile_mode = False
-        self.shift_down = False
+        self.shift = False
+        self.ctrl = False
         
         self.lang_loading = HTML_UNSET_TEXT
         self.lang_load = HTML_UNSET_TEXT
@@ -325,10 +326,16 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Replies
         elif uri.startswith('reply:') or uri.startswith('qreply:'):
-            self.main.reply_user, rid, num = uri.split(':')[1:]
+            user, rid, num = uri.split(':')[1:]
+            
+            # add reply user
+            if self.shift and self.text.add_reply(user):
+                return True
+            
+            # start reply
+            self.main.reply_user = user
             self.main.reply_id = long(rid)
             num = int(num)
-            
             if extra is not None:
                 self.main.reply_text = unescape(self.get_text(extra))
             
@@ -338,7 +345,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             else:
                 self.main.reply_text = UNSET_TEXT
             
-            self.text.reply(dot = self.shift_down)
+            self.text.reply(dot = self.ctrl)
             self.text.html_focus()
         
         # Send a message
