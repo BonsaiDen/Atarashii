@@ -796,8 +796,9 @@ class TextInput(gtk.TextView):
     def shorten_text(self, text):
         if self.is_shortening:
             self.is_shortening = False
-            self.init_change()
-            self.end_change(text)
+            self.is_changing = True
+            self.set_text(text)
+            self.is_changing = False
     
     def reset(self):
         self.set_text(UNSET_TEXT)

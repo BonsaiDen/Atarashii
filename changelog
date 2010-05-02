@@ -14,8 +14,9 @@ atarashii (0.99.25a-1) all;
   * Fix for a layout bug concerning the height of the tabs.
   * Multiple fixes relating the profile view and the mode shortcuts, also fixed
     an issue with the textbox when closing the profile view.
+  * Fixes to the link shortener, no longer breaks @replies and others.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 15:23:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 16:33:00 +0200
 
 atarashii (0.99.25-1) all;
 
