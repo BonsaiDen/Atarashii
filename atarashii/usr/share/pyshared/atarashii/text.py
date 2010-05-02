@@ -261,6 +261,9 @@ class TextInput(gtk.TextView):
     # Events -------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def on_submit(self, textbox, multi=False):
+        if self.is_shortening:
+            return False
+        
         text = self.get_text().lstrip()
         
         # Split the text
@@ -348,7 +351,11 @@ class TextInput(gtk.TextView):
         if self.is_pasting:
             if self.main.settings['shortener'] != 'off':
                 if text.find('http') != -1 or text.find('www') != -1:
-                    URLShorter(text, self)
+                    
+                    def short_it():
+                        URLShorter(text, self)
+                    
+                    gobject.timeout_add(25, short_it)
             
             self.is_pasting = False
     

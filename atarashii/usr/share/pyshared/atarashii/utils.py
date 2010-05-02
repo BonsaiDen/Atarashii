@@ -114,6 +114,8 @@ class URLShorter(threading.Thread):
         self.start()
     
     def run(self):
+        start_time = time.time()
+        
         # Don't make multiple api calls for the same url
         find_urls = SHORT_REGEX.findall(self.text + ' ')
         urls = []
@@ -123,9 +125,7 @@ class URLShorter(threading.Thread):
         
         # Replace them all
         if len(urls) > 0:
-            
-            # Wait a bit, this is better for the user experience!
-            time.sleep(0.2)
+            self.text_box.is_shortening = True
             short_text = self.text_box.get_text()
             for url in urls:
                 short = self.shorten_url(url,
@@ -133,7 +133,11 @@ class URLShorter(threading.Thread):
                 
                 short_text = short_text.replace(url, short)
             
-            self.text_box.is_shortening = True
+            # Wait a bit, this is better for the user experience
+            taken_time = time.time() - start_time
+            if taken_time < 0.2:
+                time.sleep(0.2 - taken_time)
+            
             gobject.idle_add(self.text_box.shorten_text, short_text)
     
     def shorten_url(self, url, api):
