@@ -129,6 +129,9 @@ class GUIEventHandler(object):
                 self.text.has_typed = False
             
             else:
+                if self.text.has_typed:
+                    self.text.grab_focus()
+                
                 self.text.check_typing()
             
             self.message.focus_me()
@@ -150,6 +153,9 @@ class GUIEventHandler(object):
                 self.text.has_typed = False
             
             else:
+                if self.text.has_typed:
+                    self.text.grab_focus()
+                
                 self.text.check_typing()
             
             self.tweet.focus_me()

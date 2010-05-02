@@ -131,7 +131,7 @@ class AtarashiiActions(object):
             self.settings['mode_' + self.username] = self.gui.mode
     
     
-    # Sending ------------------------------------------------------------------
+    # API ----------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def send(self, text, multi=False):
         if self.any_status(ST_SEND, ST_DELETE):
@@ -331,10 +331,7 @@ class AtarashiiActions(object):
             
             self.gui.profile.load_state = HTML_LOADING
             self.gui.profile.start()
-        
-        self.gui.text.check_typing()
     
-    # Update the user list with all the users friends
     def update_user_list(self):
         if not self.settings.userlist_uptodate(self.username):
             api.Friends(self, self.username, self.settings.add_users)

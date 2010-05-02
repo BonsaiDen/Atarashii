@@ -848,8 +848,6 @@ class TextInput(gtk.TextView):
             text = self.get_text()
         
         self.is_typing = len(text) > 0
-        
-        # Status
         if self.is_typing:
             self.has_typed = self.has_focus
             if self.has_focus:
