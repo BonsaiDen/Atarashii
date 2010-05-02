@@ -1,3 +1,10 @@
+atarashii (0.99.26a-1) all;
+
+  * Fix crashing in cases were no sound directory could be found.
+  * Compatability fixes for older version of GTK+.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 19:43:00 +0200
+
 atarashii (0.99.26-1) all;
 
   + Added a new option for "secure logout" this will delete the saved access 
