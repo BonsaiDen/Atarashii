@@ -20,7 +20,7 @@ atarashii (0.99.26-1) all;
   * Fixes to the link shortener, no longer breaks @replies and others.
   * Fixes for the overload warnings, they now do behave like the network ones.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 18:52:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 19:06:00 +0200
 
 atarashii (0.99.25-1) all;
 
