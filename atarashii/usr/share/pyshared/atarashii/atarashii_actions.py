@@ -113,11 +113,12 @@ class AtarashiiActions(object):
             if tweets:
                 self.gui.tweet.save_first()
                 self.gui.tweet.save_last_id()
-                self.syncer.set_ids()
             
-            elif messages:
+            if messages:
                 self.gui.message.save_first()
                 self.gui.message.save_last_id()
+                
+            if tweets or messages:
                 self.syncer.set_ids()
         
         self.settings['position'] = str(self.gui.get_normalized_position())
