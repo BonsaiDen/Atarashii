@@ -1,66 +1,66 @@
 /* General setup ---------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 body {
-	font: {FONT10}px sans-serif;
-	overflow-x: hidden;
-	-webkit-user-select: none; /* Disable user selection of EVERYTHING!!! */
-	cursor: default;
+    font: {FONT10}px sans-serif;
+    overflow-x: hidden;
+    -webkit-user-select: none; /* Disable user selection of EVERYTHING!!! */
+    cursor: default;
 }
 
 body, td, tr, table {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 tr, td, .protected {
-	vertical-align: top;
+    vertical-align: top;
 }
 
 img {
-	border: none;
+    border: none;
 }
 
 a {
-	outline: none; /* Disable selection border */
+    outline: none; /* Disable selection border */
 }
 
 
 /* "More" Link -----------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 .loadmore {
-	padding-top: 4px;
-	border-top: 2px solid #{LOADMORE};
+    padding-top: 4px;
+    border-top: 2px solid #{LOADMORE};
 }
 
 .loadmore, .inner-text, .inner-text-avatar, .avatar {
-	padding-bottom: 4px;
+    padding-bottom: 4px;
 }
 
 .loadmore, .loading {
-	text-align: center;
+    text-align: center;
 }
 
 .loadmore a, .inner-text a, .inner-text-avatar a, .name a, 
 .time a, .reply a, .doreply a, .doreply a:hover, .doretweet a, 
 .doretweet a:hover {
-	text-decoration: none;
+    text-decoration: none;
 }
 
 .loadmore a, .name a {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .loadmore a, .doreply a, .doreply a:hover {
-	font-size: {FONT12}px;
+    font-size: {FONT12}px;
 }
 
 
 /* Loading Screens -------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 .loading {
-	font-size: {FONT14}px;
-	margin-top: 10px;
-	color: #{LOADING};
+    font-size: {FONT14}px;
+    margin-top: 10px;
+    color: #{LOADING};
 }
 
 .loadingtext {
@@ -85,11 +85,11 @@ a {
 }
 
 .unloaded {
-	background: #{BACKGROUND};
+    background: #{BACKGROUND};
 }
 
 .unloaded, .time, .reply {
-	cursor: default;
+    cursor: default;
 }
 
 .unloaded input {
@@ -101,16 +101,16 @@ a {
 /* Links -----------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 a:active, a:hover, a {
-	color: #{LINKS};
+    color: #{LINKS};
 }
 
 a:active, a:hover, a, .protected {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .loadmore a:hover, .name a:hover, .inner-text-avatar a:hover,
 .inner-text a:hover, .time a:hover,.reply a:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 
@@ -120,7 +120,7 @@ a:active, a:hover, a, .protected {
     padding-top: 4px;
     width: {AVATAR48}px;
     float: left;
-	display: block;
+    display: block;
 }
 
 .profile_infos {
@@ -138,10 +138,15 @@ a:active, a:hover, a, .protected {
     top: 0px;
     background: #{PROFILE};
     padding-top: 2px;
-	padding-left: 6px;
-	padding-right: 2px;
-	border-bottom: 2px solid #{SPACER_TWEET_HIGHLIGHT};
-	padding-bottom: 2px;
+    padding-left: 6px;
+    padding-right: 6px;
+    border-bottom: 2px solid #{SPACER_TWEET_HIGHLIGHT};
+    padding-bottom: 2px;
+}
+
+.profile_bio {
+    word-wrap: break-word;
+    padding-right: 6px;
 }
 
 .profile_tweets {
@@ -176,8 +181,8 @@ a:active, a:hover, a, .protected {
 /* Tweet Stuff -----------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 .avatar {
-	padding-top: 6px;
-	float: left;
+    padding-top: 6px;
+    float: left;
 }
 
 .avatarimage {
@@ -185,117 +190,117 @@ a:active, a:hover, a, .protected {
 }
 
 .inner-text, .inner-text-avatar {
-	word-wrap: break-word;
-	padding-top: 5px;
-	margin-right: 20px;
+    word-wrap: break-word;
+    padding-top: 5px;
+    margin-right: 20px;
 }
 
 .inner-text {
-	min-height: 28px;
+    min-height: 28px;
 }
 
 .inner-text-avatar {
-	min-height: {AVATAR34}px;
+    min-height: {AVATAR34}px;
 }
 
 .inner-text, .inner-text-avatar, .text {
-	margin-left: {AVATAR38}px;
+    margin-left: {AVATAR38}px;
 }
 
 .protected {
-	background: url("{RESOURCES}protected.png") no-repeat 0 1px;
-	display: inline-block;
-	margin-right: 3px;
-	width: 7px;
-	height: 10px;
+    background: url("{RESOURCES}protected.png") no-repeat 0 1px;
+    display: inline-block;
+    margin-right: 3px;
+    width: 7px;
+    height: 10px;
 }
 
 .name {
-	margin-right: 3px;
+    margin-right: 3px;
 }
 
 .clearfloat {
-	clear: both;
+    clear: both;
 }
 
 .tweet {
-	background: #{TWEET};
+    background: #{TWEET};
 }
 
 .tweet, .oldtweet, .highlight, .highlightold, .mentioned, .mentionedold,
 .message, .messageold {
-	padding-left: 6px;
-	padding-right: 2px;
+    padding-left: 6px;
+    padding-right: 2px;
 }
 
 .oldtweet {
-	background: #{TWEET_OLD};
+    background: #{TWEET_OLD};
 }
 
 .highlight {
-	background: #{HIGHLIGHT};
+    background: #{HIGHLIGHT};
 }
 
 .highlightold {
-	background: #{HIGHLIGHT_OLD};
+    background: #{HIGHLIGHT_OLD};
 }
 
 .mentioned {
-	background: #{MENTION};
+    background: #{MENTION};
 }
 
 .mentionedold {
-	background: #{MENTION_OLD};
+    background: #{MENTION_OLD};
 }
 
 .message {
-	background: #{MESSAGE};
+    background: #{MESSAGE};
 }
 
 .messageold {
-	background: #{MESSAGE_OLD};
+    background: #{MESSAGE_OLD};
 }
 
 .time, .time a, .time a:hover, .reply, .reply a, .reply a:hover {
-	color: #{TIME};
+    color: #{TIME};
 }
 
 .time, .reply {
-	font-size: {FONT9}px;
+    font-size: {FONT9}px;
 }
 
 .time {
-	padding-top: 1px;
+    padding-top: 1px;
 }
 
 
 /* Actions ---------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 .actions {
-	padding-top: 7px;
-	width: 15px;
-	height: 28px;
-	float: right;
+    padding-top: 7px;
+    width: 15px;
+    height: 28px;
+    float: right;
 }
 
 
 /* Reply Icon ------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 .actions, doreply a, .doretweet a, .dofav a {
-	display: block;
+    display: block;
 }
 
 .highlightold:hover .doreply a, .highlight:hover .doreply a,
 .oldtweet:hover .doreply a, .tweet:hover .doreply a,
 .mentioned:hover .doreply a, .mentionedold:hover .doreply a {
     display: block;
-	background: url("{RESOURCES}reply.png");
+    background: url("{RESOURCES}reply.png");
 }
 
 .highlightold:hover .doreply a:hover, .highlight:hover .doreply a:hover,
 .oldtweet:hover .doreply a:hover, .tweet:hover .doreply a:hover,
 .mentioned:hover .doreply a:hover, .mentionedold:hover .doreply a:hover {
-	background-position: -12px 0;
+    background-position: -12px 0;
 }
 
 
@@ -305,13 +310,13 @@ a:active, a:hover, a, .protected {
 .oldtweet:hover .doretweet a, .tweet:hover .doretweet a,
 .mentioned:hover .doretweet a, .mentionedold:hover .doretweet a {
     display: block;
-	background: url("{RESOURCES}respond.png");
+    background: url("{RESOURCES}respond.png");
 }
 
 .highlightold:hover .doretweet a:hover, .highlight:hover .doretweet a:hover,
 .oldtweet:hover .doretweet a:hover, .tweet:hover .doretweet a:hover,
 .mentioned:hover .doretweet a:hover, .mentionedold:hover .doretweet a:hover {
-	background-position: -12px 0;
+    background-position: -12px 0;
 }
 
 
@@ -321,19 +326,19 @@ a:active, a:hover, a, .protected {
 .oldtweet:hover .dofav a, .tweet:hover .dofav a,
 .mentioned:hover .dofav a, .mentionedold:hover .dofav a {
     display: block;
-	background: url("{RESOURCES}favorite.png");
+    background: url("{RESOURCES}favorite.png");
 }
 
 .highlightold .undofav a, .highlight .undofav a,
 .oldtweet .undofav a, .tweet .undofav a,
 .mentioned .undofav a, .mentionedold .undofav a {
     display: block;
-	background: url("{RESOURCES}favorite.png");
- 	background-position: -12px 0px;
+    background: url("{RESOURCES}favorite.png");
+     background-position: -12px 0px;
 }
 
 .dofav a, .undofav a {
-	margin-top: 4px;
+    margin-top: 4px;
 }
 
 .highlightold:hover .blocker, .highlight:hover .blocker,
@@ -345,25 +350,25 @@ a:active, a:hover, a, .protected {
 
 /* Generic Stuff */
 .doreply a, .doretweet a, .dofav a, .undofav a, .blocker {
-	background: no-repeat;
-	color: transparent;
-	width: 12px;
-	height: 12px;
+    background: no-repeat;
+    color: transparent;
+    width: 12px;
+    height: 12px;
 }
 
 
 /* Sapcers ---------------------------------------------------------------------
 ------------------------------------------------------------------------------*/
 .spacer_foo {
-	border-bottom: 2px solid #ff0000;
+    border-bottom: 2px solid #ff0000;
 }
 
 .spacer_tweet_old {
-	border-bottom: 2px solid #{SPACER_TWEET_OLD};
+    border-bottom: 2px solid #{SPACER_TWEET_OLD};
 }
 
 .spacer_tweet {
-	border-bottom: 2px solid #{SPACER_TWEET};
+    border-bottom: 2px solid #{SPACER_TWEET};
 }
 
 .spacer_tweet_highlight {
@@ -375,11 +380,11 @@ a:active, a:hover, a, .protected {
 }
 
 .spacer_in_tweet_old {
-	border-bottom: 2px solid #{TWEET_OLD};
+    border-bottom: 2px solid #{TWEET_OLD};
 }
 
 .spacer_in_tweet {
-	border-bottom: 2px solid #{TWEET};
+    border-bottom: 2px solid #{TWEET};
 }
 
 .spacer_in_highlight {
@@ -387,7 +392,7 @@ a:active, a:hover, a, .protected {
 }
 
 .spacer_highlight {
-	border-bottom: 2px solid #{SPACER_HIGHLIGHT};
+    border-bottom: 2px solid #{SPACER_HIGHLIGHT};
 }
 
 .spacer_highlight_old {
@@ -395,27 +400,27 @@ a:active, a:hover, a, .protected {
 }
 
 .spacer_in_highlight_old {
-	border-bottom: 2px solid #{HIGHLIGHT_OLD};
+    border-bottom: 2px solid #{HIGHLIGHT_OLD};
 }
 
 .spacer_mention {
-	border-bottom: 2px solid #{MENTION};
+    border-bottom: 2px solid #{MENTION};
 }
 
 .spacer_mention_old {
-	border-bottom: 2px solid #{MENTION_OLD};
+    border-bottom: 2px solid #{MENTION_OLD};
 }
 
 .spacer_spacer_mention {
-	border-bottom: 2px solid #{SPACER_MENTION};
+    border-bottom: 2px solid #{SPACER_MENTION};
 }
 
 .spacer_spacer_mention_old {
-	border-bottom: 2px solid #{SPACER_MENTION_OLD};
+    border-bottom: 2px solid #{SPACER_MENTION_OLD};
 }
 
 .spacer_spacer_mention_new {
-	border-bottom: 2px solid #{SPACER_MENTION_NEW};
+    border-bottom: 2px solid #{SPACER_MENTION_NEW};
 }
 
 .spacer_message {
@@ -427,6 +432,6 @@ a:active, a:hover, a, .protected {
 }
 
 .spacer_spacer_message_new {
-	border-bottom: 2px solid #{SPACER_MESSAGE_NEW};
+    border-bottom: 2px solid #{SPACER_MESSAGE_NEW};
 }
 
