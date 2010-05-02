@@ -298,7 +298,11 @@ class FriendStatus(SimpleAPICall):
 class Profile(SimpleAPICall):
     def call(self, main, name, callback):
         self.user = self.main.api.get_user(screen_name = name)
+        main.gui.progress_step()
+        
         self.friend = self.main.api.show_friendship(target_screen_name = name)
+        main.gui.progress_step()
+        
         if name.lower() != main.username.lower() and self.user.protected \
            and not self.friend[0].following:
             
@@ -311,6 +315,8 @@ class Profile(SimpleAPICall):
             
             except (IOError, TweepError):
                 self.tweets = None
+        
+        main.gui.progress_step()
     
     def on_success(self, main, name, callback):
         gobject.idle_add(callback, self.user, self.friend, self.tweets)

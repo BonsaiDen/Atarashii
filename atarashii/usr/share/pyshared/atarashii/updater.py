@@ -86,6 +86,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         self.profile = self.gui.profile
         
         # Reset
+        self.gui.progress_init(3)
         self.finish_update = False
         self.message_counter = 0
         self.do_init = False
@@ -109,6 +110,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         # Try to sync with the cloud
         self.main.syncer.reset()
         self.main.syncer.get_ids()
+        self.gui.progress_step()
         
         # InitID = the last read tweet
         self.tweet.init_id = self.tweet.get_latest()
@@ -119,6 +121,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         if not auth:
             return False
         
+        self.gui.progress_step()
         self.api = self.main.api = tweepy.API(auth)
         self.init_load()
     

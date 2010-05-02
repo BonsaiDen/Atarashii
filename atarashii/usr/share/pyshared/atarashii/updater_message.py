@@ -30,6 +30,9 @@ class UpdaterMessage(object):
         try:
             messages = self.try_get_items(self.get_messages,
                                           self.message.get_first())
+            
+            if init:
+                self.gui.progress_step()
         
         except (IOError, TweepError), error:
             gobject.idle_add(self.main.on_login_failed, error)

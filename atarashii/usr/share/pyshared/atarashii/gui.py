@@ -188,6 +188,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.minimized = False
         self.is_shown = False
         self.progress_visible = False
+        self.progress_state = UNSET_ID_NUM
+        self.progress_steps = 0
         
         # Set Message/Tweet Mode
         self.set_mode(self.mode)
@@ -268,6 +270,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     # GUI Switchers ------------------------------------------------------------
     # --------------------------------------------------------------------------
     def show_input(self, resize=True, focus=False):
+        self.progress_state = UNSET_ID_NUM
         self.progress.hide()
         self.progress_visible = False
         self.text_scroll.show()
@@ -312,39 +315,58 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         # Fix tab height
         gobject.idle_add(self.fix_tabs_height)
     
-    def progress_activity(self):
-        self.progress.pulse()
+    def progress_activity(self, update=False):
+        if self.progress_state != UNSET_ID_NUM:
+            part = 1.0 / self.progress_steps + 0.01
+            self.progress.set_fraction(min(part * self.progress_state, 1.0))
+        
+        else:
+            self.progress.pulse()
+        
+        active = False
         if self.main.any_status(ST_SEND, ST_DELETE, ST_CONNECT, ST_HISTORY):
-            return True
+            active = True
         
         elif self.mode == MODE_MESSAGES \
              and self.message.load_state == HTML_LOADING:
             
-            return True
+            active = True
         
         elif self.mode == MODE_PROFILE \
              and self.profile.load_state == HTML_LOADING:
             
-            return True
+            active = True
         
         elif self.mode == MODE_TWEETS and self.tweet.load_state == HTML_LOADING:
-            return True
+            active = True
         
-        else:
-            return False
+        if active and not update:
+            interval = 10 if self.progress_state != UNSET_ID_NUM else 100
+            gobject.timeout_add(interval, self.progress_activity)
+    
+    def progress_init(self, max_steps):
+        self.progress_steps = max_steps
+        self.progress_state = 0
+    
+    def progress_step(self):
+        self.progress_state += 1
+        gobject.idle_add(self.progress_activity, True)
     
     def show_progress(self):
-        self.progress.set_fraction(0.0)
+        if self.progress_state == UNSET_ID_NUM:
+            self.progress.set_fraction(0.0)
+        
         self.progress.show()
         self.info_label.hide()
         self.text_scroll.hide()
         if not self.progress_visible:
-            gobject.timeout_add(100, self.progress_activity)
+            gobject.idle_add(self.progress_activity)
         
         self.progress_visible = True
     
     def hide_all(self, progress=True):
         if progress:
+            self.progress_state = UNSET_ID_NUM
             self.progress.hide()
             self.progress_visible = False
         

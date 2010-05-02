@@ -181,6 +181,7 @@ class GUIEventHandler(object):
             if self.profile.load_state == HTML_LOADING:
                 self.profile.start()
                 self.show_progress()
+                self.progress_init(3)
             
             elif self.profile.load_state == HTML_LOADED:
                 self.profile.render()

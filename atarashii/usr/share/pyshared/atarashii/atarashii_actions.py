@@ -117,7 +117,7 @@ class AtarashiiActions(object):
             if messages:
                 self.gui.message.save_first()
                 self.gui.message.save_last_id()
-                
+            
             if tweets or messages:
                 self.syncer.set_ids()
         
@@ -318,7 +318,7 @@ class AtarashiiActions(object):
         self.gui.profile.load_state = HTML_LOADED
         self.gui.profile.history_level = 0
         self.gui.profile.render(user, friend, tweets)
-        self.gui.show_input()
+        gobject.idle_add(self.gui.show_input)
     
     def stop_profile(self, blank=False):
         self.profile_pending = False
