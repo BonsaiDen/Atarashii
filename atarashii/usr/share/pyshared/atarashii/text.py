@@ -791,13 +791,13 @@ class TextInput(gtk.TextView):
         if len(text.strip()) == pos:
             pos = len(text)
         
-        self.buffer.place_cursor(
-                          self.get_offset(pos))
+        self.buffer.place_cursor(self.get_offset(pos))
     
     def shorten_text(self, text):
         if self.is_shortening:
             self.is_shortening = False
-            self.set_text(text)
+            self.init_change()
+            self.end_change(text)
     
     def reset(self):
         self.set_text(UNSET_TEXT)
