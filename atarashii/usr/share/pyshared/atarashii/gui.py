@@ -768,10 +768,17 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             
             # overload warning
             if code == HT_503_SERVICE_UNAVAILABLE:
-                info = lang.warning_overload
-                button = lang.warning_button_overload
-                self.notifcation(MESSAGE_WARNING, lang.tray_warning_overload)
-                self.warning_button.show(button, info)
+                if not self.main.status(ST_NETWORK_FAILED):
+                    self.notifcation(MESSAGE_WARNING,
+                                     lang.tray_warning_overload)
+                    
+                    self.main.set_status(ST_NETWORK_FAILED)
+                
+                # Don't override send errors and other stuff with 'unimportant'
+                # network warnings
+                if not self.warning_button.is_visible:
+                    self.warning_button.show(lang.warning_button_overload,
+                                             lang.warning_overload)
             
             # twitter lost / network lost / network failed
             else:
@@ -785,7 +792,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 elif code == ERR_NETWORK_FAILED:
                     info = lang.warning_network
                 
-                button = lang.warning_button_network
                 if not self.main.status(ST_NETWORK_FAILED):
                     self.notifcation(MESSAGE_WARNING, lang.tray_warning_network)
                     self.main.set_status(ST_NETWORK_FAILED)
@@ -793,7 +799,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                 # Don't override send errors and other stuff with 'unimportant'
                 # network warnings
                 if not self.warning_button.is_visible:
-                    self.warning_button.show(button, info)
+                    self.warning_button.show(lang.warning_button_network, info)
             
             return True
         
