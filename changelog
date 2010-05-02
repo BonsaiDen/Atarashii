@@ -15,8 +15,9 @@ atarashii (0.99.25a-1) all;
   * Multiple fixes relating the profile view and the mode shortcuts, also fixed
     an issue with the textbox when closing the profile view.
   * Fixes to the link shortener, no longer breaks @replies and others.
+  * Fixes for the overload warnings, they now do behave like the network ones.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 16:33:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 16:56:00 +0200
 
 atarashii (0.99.25-1) all;
 
