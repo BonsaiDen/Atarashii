@@ -37,8 +37,7 @@ from lang import LANG as lang
 
 from constants import LOGOUT_FILE
 from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR, UNSET_USERNAME, \
-                      USERLIST_TIMEOUT, HTML_LOADING, MODE_PROFILE, \
-                      HTML_LOADED, MODE_PROFILE
+                      HTML_LOADING, MODE_PROFILE, HTML_LOADED, MODE_PROFILE
 
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
@@ -335,11 +334,7 @@ class AtarashiiActions(object):
     
     # Update the user list with all the users friends
     def update_user_list(self):
-        if self.username != UNSET_USERNAME and gmtime() - \
-           (self.settings['userlist_time_' + self.username] or 0) \
-           > USERLIST_TIMEOUT:
-            
-            self.settings['userlist_time_' + self.username] = gmtime()
+        if not self.settings.userlist_uptodate(self.username):
             api.Friends(self, self.username, self.settings.add_users)
     
     

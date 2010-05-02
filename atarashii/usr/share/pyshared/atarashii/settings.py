@@ -22,14 +22,15 @@ import time
 import json
 
 from errors import log_error, crash_file
+from utils import gmtime
 
 from constants import FONT_DEFAULT, AVATAR_DEFAULT, THEME_DEFAULT
 from constants import UNSET_SETTING, UNSET_ID_NUM, UNSET_RESOURCE, \
-                      UNSET_USERNAME, UNSET_PATH, UNSET_STRING
+                      UNSET_USERNAME, UNSET_PATH, UNSET_STRING, USERLIST_TIMEOUT
 
 from constants import ATARASHII_DIR, CACHE_DIR, CONFIG_FILE, CRASH_FILE, \
                       DESKTOP_FILE, CACHE_TIMEOUT, AUTOSTART_DIR, \
-                      COPY_DESKTOP_FILE, USERLIST_FILE
+                      COPY_DESKTOP_FILE
 
 
 class Settings(object):
@@ -48,6 +49,7 @@ class Settings(object):
         self.load()
         self.save_count = 0
         self.users_changed = False
+        self.userlist_name = UNSET_USERNAME
         self.users_unsorted = False
         self.has_changed = False
         
@@ -88,30 +90,66 @@ class Settings(object):
         except IOError:
             self.values = {}
         
-        # Users
-        try:
-            with open(USERLIST_FILE, 'rb') as f:
-                users = f.read().split(',')
-                usrs = [i.strip() for i in users if i.strip() != UNSET_USERNAME]
-                self.user_list = usrs
-                self.users_unsorted = True
-                self.sort_users()
-        
-        except IOError:
-            self.user_list = []
-        
         # Check crash
         self.check_crash()
         crash_file(False)
     
     
-    # Save ---------------------------------------------------------------------
-    def save(self):
-        if self.users_changed:
-            with open(USERLIST_FILE, 'wb') as f:
-                f.write(','.join(self.user_list))
+    # Userlist -----------------------------------------------------------------
+    def load_userlist(self, name):
+        try:
+            self.userlist_name = name
+            userfile = os.path.join(ATARASHII_DIR, 'usernames_%s.list' % name)
+            with open(userfile, 'rb') as f:
+                users = f.read().split(',')
+                usrs = [i.strip() for i in users if i.strip() != UNSET_USERNAME]
+                self.user_list = usrs
+                
+                if not name in self.user_list:
+                    self.user_list.append(name)
+                    self.users_changed = True
+                
+                else:
+                    self.users_changed = False
+                
+                self.user_list_lower = []
+                self.users_unsorted = True
+                self.sort_users()
+        
+        except IOError:
+            self.user_list = []
+    
+    def save_userlist(self, name):
+        if self.users_changed and name != UNSET_USERNAME:
+            userfile = os.path.join(ATARASHII_DIR, 'usernames_%s.list' % name)
+            try:
+                with open(userfile, 'wb') as f:
+                    f.write(','.join(self.user_list))
+            
+            except IOError:
+                log_error('Could not save userlist')
             
             self.users_changed = False
+    
+    def userlist_uptodate(self, name):
+        if name == UNSET_USERNAME:
+            return True
+        
+        userfile = os.path.join(ATARASHII_DIR, 'usernames_%s.list' % name)
+        if not os.path.exists(userfile):
+            self['userlist_time_' + name] = gmtime()
+            return False
+        
+        if gmtime() - (self['userlist_time_' + name] or 0) > USERLIST_TIMEOUT:
+            self['userlist_time_' + name] = gmtime()
+            return False
+        
+        return True
+    
+    
+    # Save ---------------------------------------------------------------------
+    def save(self):
+        self.save_userlist(self.userlist_name)
         
         if not self.has_changed:
             return False

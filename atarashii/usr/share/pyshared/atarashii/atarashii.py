@@ -229,6 +229,10 @@ class Atarashii(AtarashiiActions):
         if self.gui.mode == MODE_TWEETS:
             self.gui.message.start()
         
+        # Userlist
+        self.settings.load_userlist(self.username)
+        
+        # GUI
         self.gui.text.reset()
         self.gui.update_app()
         self.updater.unwait(init = True)
