@@ -246,6 +246,15 @@ class GUIHelpers(object):
         self.multi_container.modify_bg(gtk.STATE_NORMAL,
                                        gtk.gdk.color_parse(col))
     
+    def fix_tabs_height(self):
+        if self.mode == MODE_MESSAGES:
+            tab_height = self.tab_messages.get_allocation()[3]
+        
+        else:
+            tab_height = self.tab_tweets.get_allocation()[3]
+        
+        self.tabs.set_size_request(-1, tab_height + 9)
+    
     
     # Hacked Helpers -----------------------------------------------------------
     def force_present(self):

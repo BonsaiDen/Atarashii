@@ -226,8 +226,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.show_all()
         
         # Fix tabs
-        tab_height = self.tab_tweets.get_allocation()[3]
-        self.tabs.set_size_request(-1, tab_height + 9)
+        self.fix_tabs_height()
         
         # Multi Button
         self.on_multi_move(None, None)
@@ -309,6 +308,9 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         elif self.text.has_typed:
             self.text.focus()
             gobject.idle_add(self.text.grab_focus)
+        
+        # Fix tab height
+        gobject.idle_add(self.fix_tabs_height)
     
     def progress_activity(self):
         self.progress.pulse()

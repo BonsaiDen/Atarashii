@@ -11,6 +11,7 @@ atarashii (0.99.25a-1) all;
   + You can now add more @usernames to a reply by holding down shift when 
     clicking the reply icon.
   ~ Atarashii now uses a separate auto completion userlist for each account.
+  * Fix for a layout bug concerning the height of the tabs.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 13:59:00 +0200
 
