@@ -160,7 +160,7 @@ class Atarashii(AtarashiiActions):
     def login(self, change_user=None):
         # We need a username!
         if self.username == UNSET_USERNAME \
-           and (change_user is None or change_user == UNSET_TEXT):
+           and (change_user is None or change_user == UNSET_USERNAME):
             
             self.gui.update_app()
             return False
@@ -426,21 +426,21 @@ class Atarashii(AtarashiiActions):
         for key in args:
             if key == 'reply':
                 self.reply_text = UNSET_TEXT
-                self.reply_user = UNSET_TEXT
+                self.reply_user = UNSET_USERNAME
                 self.reply_id = UNSET_ID_NUM
             
             elif key == 'retweet':
                 self.retweet_text = UNSET_TEXT
-                self.retweet_user = UNSET_TEXT
+                self.retweet_user = UNSET_USERNAME
             
             elif key == 'edit':
                 self.edit_id = UNSET_ID_NUM
                 self.edit_text = UNSET_TEXT
                 self.edit_reply_id = UNSET_ID_NUM
-                self.edit_reply_user = UNSET_TEXT
+                self.edit_reply_user = UNSET_USERNAME
             
             elif key == 'message':
-                self.message_user = UNSET_TEXT
+                self.message_user = UNSET_USERNAME
                 self.message_user_id = UNSET_ID_NUM
                 self.message_text = UNSET_TEXT
 

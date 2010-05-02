@@ -147,7 +147,7 @@ class AtarashiiActions(object):
         # Statusbar
         edit = False
         if self.edit_text != UNSET_TEXT:
-            if self.edit_reply_user != UNSET_TEXT:
+            if self.edit_reply_user != UNSET_USERNAME:
                 self.gui.set_status(lang.status_edit_reply \
                                     % self.edit_reply_user)
             
@@ -156,16 +156,16 @@ class AtarashiiActions(object):
             
             edit = True
         
-        elif self.reply_user != UNSET_TEXT:
+        elif self.reply_user != UNSET_USERNAME:
             self.gui.set_status(lang.status_reply % self.reply_user)
         
-        elif self.retweet_user != UNSET_TEXT:
+        elif self.retweet_user != UNSET_USERNAME:
             self.gui.set_status(lang.status_retweet % self.retweet_user)
         
         elif self.message_text != UNSET_TEXT:
             self.gui.set_status(lang.status_message_reply % self.message_user)
         
-        elif self.message_user != UNSET_TEXT:
+        elif self.message_user != UNSET_USERNAME:
             self.gui.set_status(lang.status_message % self.message_user)
         
         else:

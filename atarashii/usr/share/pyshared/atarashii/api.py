@@ -21,7 +21,8 @@ import threading
 
 from utils import TweepError
 
-from constants import MODE_TWEETS, MODE_MESSAGES, UNSET_TEXT, UNSET_ID_NUM
+from constants import MODE_TWEETS, MODE_MESSAGES
+from constants import UNSET_USERNAME, UNSET_TEXT, UNSET_ID_NUM
 from constants import ST_SEND, ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE, \
                       ST_DELETE, ST_NETWORK_FAILED
 
@@ -50,11 +51,11 @@ class APICall(threading.Thread):
                     gobject.idle_add(self.gui.text.set_text, UNSET_TEXT)
                     gobject.idle_add(self.gui.show_input, False, True)
                 
-                elif self.main.reply_user != UNSET_TEXT:
+                elif self.main.reply_user != UNSET_USERNAME:
                     gobject.idle_add(self.gui.show_input, False, True)
                     gobject.idle_add(self.gui.text.reply, True)
                 
-                elif self.main.message_user != UNSET_TEXT:
+                elif self.main.message_user != UNSET_USERNAME:
                     gobject.idle_add(self.gui.show_input, False, True)
                     gobject.idle_add(self.gui.text.message, True)
                 
@@ -85,7 +86,7 @@ class APICall(threading.Thread):
         else:
             update = self.main.api.update_status(text)
         
-        if self.main.reply_user != UNSET_TEXT:
+        if self.main.reply_user != UNSET_USERNAME:
             self.main.settings.add_username(self.main.reply_user)
         
         self.after_send()
@@ -120,7 +121,7 @@ class Send(APICall):
             message = self.main.api.send_direct_message(text = text,
                                     screen_name = self.main.message_user)
         
-        if self.main.message_user != UNSET_TEXT:
+        if self.main.message_user != UNSET_USERNAME:
             self.main.settings.add_username(self.main.message_user)
         
         self.gui.message.set_newest()

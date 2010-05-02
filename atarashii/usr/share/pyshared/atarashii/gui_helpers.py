@@ -46,9 +46,9 @@ class GUIHelpers(object):
             self.info_label.hide()
         
         # Unset
-        elif self.main.reply_user == UNSET_TEXT \
-           and self.main.retweet_user == UNSET_TEXT \
-           and self.main.message_user == UNSET_TEXT \
+        elif self.main.reply_user == UNSET_USERNAME \
+           and self.main.retweet_user == UNSET_USERNAME \
+           and self.main.message_user == UNSET_USERNAME \
            and self.main.edit_text == UNSET_TEXT:
             
             self.info_label.set_markup(UNSET_LABEL)
@@ -56,7 +56,7 @@ class GUIHelpers(object):
         
         # Edit
         elif self.main.edit_text != UNSET_TEXT:
-            if self.main.edit_reply_user != UNSET_TEXT:
+            if self.main.edit_reply_user != UNSET_USERNAME:
                 self.set_label_text(lang.label_edit_reply,
                                     self.main.edit_reply_user,
                                     self.main.edit_text)
@@ -67,7 +67,7 @@ class GUIHelpers(object):
             self.info_label.show()
         
         # RT
-        elif self.main.retweet_user != UNSET_TEXT:
+        elif self.main.retweet_user != UNSET_USERNAME:
             self.set_label_text(lang.label_retweet, self.main.retweet_user)
             self.info_label.show()
         
@@ -76,7 +76,7 @@ class GUIHelpers(object):
             self.set_label_text(lang.label_reply_text, self.main.reply_text)
             self.info_label.show()
         
-        elif self.main.reply_user != UNSET_TEXT:
+        elif self.main.reply_user != UNSET_USERNAME:
             self.set_label_text(lang.label_reply, self.main.reply_user)
             self.info_label.show()
         
@@ -85,7 +85,7 @@ class GUIHelpers(object):
             self.set_label_text(lang.label_message_text, self.main.message_text)
             self.info_label.show()
         
-        elif self.main.message_user != UNSET_TEXT:
+        elif self.main.message_user != UNSET_USERNAME:
             self.set_label_text(lang.label_message, self.main.message_user)
             self.info_label.show()
     
