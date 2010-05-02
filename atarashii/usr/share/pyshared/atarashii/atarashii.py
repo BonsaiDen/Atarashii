@@ -298,8 +298,8 @@ class Atarashii(AtarashiiActions):
         if error:
             self.handle_error(error)
         
-        gobject.idle_add(self.gui.message.init, False, False, True)
-        gobject.idle_add(self.gui.tweet.init, False, False, True)
+        gobject.idle_add(self.gui.message.init, False, False, error != None)
+        gobject.idle_add(self.gui.tweet.init, False, False, error != None)
     
     def on_network_failed(self, error):
         self.on_login_failed(error)
