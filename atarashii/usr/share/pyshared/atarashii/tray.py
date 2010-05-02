@@ -157,7 +157,7 @@ class TrayIcon(gtk.StatusIcon):
         self.logout_item.connect('activate', self.main.logout)
         
         self.secure_logout_item = gtk.MenuItem(lang.menu_secure_logout)
-        self.secure_logout_item.add_accelerator('activate', self.accel, 
+        self.secure_logout_item.add_accelerator('activate', self.accel,
                                 ord('o'),
                                 gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK,
                                 gtk.ACCEL_VISIBLE)
