@@ -73,6 +73,9 @@ def get_sound_dirs():
         else:
             break
     
+    if len(dirs) == 0:
+        dirs.append('/usr/share/sounds')
+    
     return dirs
 
 def get_sound_files():
@@ -80,9 +83,10 @@ def get_sound_files():
     for cur_dir in get_sound_dirs():
         files = os.listdir(cur_dir)
         for i in files:
-            name, ext = i.lower().split('.')
-            if not ext == 'disabled':
-                sound_files[name] = os.path.join(cur_dir, i)
+            if i.find('.') != -1:
+                name, ext = i.lower().split('.')
+                if not ext == 'disabled':
+                    sound_files[name] = os.path.join(cur_dir, i)
     
     return sound_files
 
