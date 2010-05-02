@@ -459,10 +459,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         # Check for message/tweet switch
         if self.is_ready():
             if self.text.message_to_send is not None:
-                self.set_mode(MODE_MESSAGES)
+                gobject.idle_add(self.set_mode, MODE_MESSAGES)
             
             elif self.text.tweet_to_send is not None:
-                self.set_mode(MODE_TWEETS)
+                gobject.idle_add(self.set_mode, MODE_TWEETS)
     
     
     # Statusbar ----------------------------------------------------------------
