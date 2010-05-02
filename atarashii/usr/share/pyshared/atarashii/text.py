@@ -617,7 +617,7 @@ class TextInput(gtk.TextView):
     
     # Reply / Retweet / Message / Edit -----------------------------------------
     # --------------------------------------------------------------------------
-    def reply(self, multi=False):
+    def reply(self, multi=False, dot=False):
         text = self.init_change()
         
         # Cancel Retweet
@@ -631,6 +631,9 @@ class TextInput(gtk.TextView):
             text = UNSET_TEXT
         
         # Check for already existing reply
+        if text[0:1] == '.':
+            text = text[1:]
+        
         if text[0:1] in AT_SIGNS:
             space = text.find(' ')
             if space == -1:
@@ -643,6 +646,9 @@ class TextInput(gtk.TextView):
         
         else:
             text = ('%s%s ' % (lang.tweet_at, self.main.reply_user)) + text
+        
+        if dot:
+            text = '.' + text
         
         self.end_change(text)
     

@@ -92,6 +92,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         self.parser = ttp.Parser()
         self.item_count = HTML_UNSET_ID
         self.profile_mode = False
+        self.shift_down = False
         
         self.lang_loading = HTML_UNSET_TEXT
         self.lang_load = HTML_UNSET_TEXT
@@ -337,7 +338,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             else:
                 self.main.reply_text = UNSET_TEXT
             
-            self.text.reply()
+            self.text.reply(dot = self.shift_down)
             self.text.html_focus()
         
         # Send a message

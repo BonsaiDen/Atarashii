@@ -3,8 +3,11 @@ atarashii (0.99.25a-1) all;
   + Add a new option for "secure logout" this will delete the saved access 
     tokens for the account which forces you to enter your password the next time
     you log in.
+  + You can now place a dot infront of any @reply in order to make it appear to
+    everyone that is following you. You can trigger an automatic "dot-reply" by
+    holding down shift when clicking the reply icon.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sat, 01 May 2010 16:26:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 13:09:00 +0200
 
 atarashii (0.99.25-1) all;
 

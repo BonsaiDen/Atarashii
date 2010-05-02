@@ -228,8 +228,7 @@ CONTINUE_LIST = ['…', '–', '~', '>']
 REPLY_REGEX = re.compile(ur'^\.?[%s]([a-z0-9_]{1,20})\s.*' % AT_SIGNS,
                          re.UNICODE | re.IGNORECASE)
 
-MESSAGE_REGEX = re.compile(MSG_SIGN + '\s([a-z0-9_]{1,20})\s.*',
-                            re.UNICODE | re.IGNORECASE)
+MESSAGE_REGEX = re.compile(MSG_SIGN + '\s([a-z0-9_]{1,20})\s.*', re.IGNORECASE)
 
 
 # Cloudsync --------------------------------------------------------------------
