@@ -85,6 +85,9 @@ class APICall(threading.Thread):
         else:
             update = self.main.api.update_status(text)
         
+        if self.main.reply_user != UNSET_TEXT:
+            self.main.settings.add_username(self.main.reply_user)
+        
         self.after_send()
         self.gui.tweet.set_newest()
         
@@ -116,6 +119,9 @@ class Send(APICall):
         else:
             message = self.main.api.send_direct_message(text = text,
                                     screen_name = self.main.message_user)
+        
+        if self.main.message_user != UNSET_TEXT:
+            self.main.settings.add_username(self.main.message_user)
         
         self.gui.message.set_newest()
         imgfile = self.main.updater.get_image(message, True)
