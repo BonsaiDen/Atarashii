@@ -30,7 +30,7 @@ LANG = {
     'tabs_messages_new': 'Messages <b>(%d)</b>',
     
     # Name endings
-    'name_end': 's',
+    'name_end': '\'s',
     'name_end_xzs': '\'s',
     
     # Tweets
