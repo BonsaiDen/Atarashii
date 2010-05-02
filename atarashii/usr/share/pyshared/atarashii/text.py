@@ -28,11 +28,10 @@ from lang import LANG as lang
 
 from constants import MSG_SIGN, AT_SIGNS, CONTINUE_LIST
 from constants import REPLY_REGEX, MESSAGE_REGEX
+from constants import UNSET_TEXT, UNSET_ID_NUM, UNSET_USERNAME
+from constants import MODE_MESSAGES, MODE_TWEETS, MODE_PROFILE
 from constants import ST_CONNECT, ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE
-
-from constants import UNSET_TEXT, UNSET_ID_NUM, MODE_MESSAGES, MODE_TWEETS, \
-                      MODE_PROFILE
 
 
 class TextInput(gtk.TextView):
@@ -214,8 +213,8 @@ class TextInput(gtk.TextView):
             return True
         
         # Shift + Return will start a new tweet/message right after submission
-        if (self.main.reply_user != UNSET_TEXT \
-           or self.main.message_user != UNSET_TEXT \
+        if (self.main.reply_user != UNSET_USERNAME \
+           or self.main.message_user != UNSET_USERNAME \
            or self.gui.mode == MODE_TWEETS) \
            and event.keyval == gtk.keysyms.Return \
            and event.state & gtk.gdk.SHIFT_MASK == gtk.gdk.SHIFT_MASK:
@@ -223,7 +222,7 @@ class TextInput(gtk.TextView):
             self.on_submit(self, True)
             return True
         
-        if self.main.message_user == UNSET_TEXT \
+        if self.main.message_user == UNSET_USERNAME \
            and self.gui.mode == MODE_MESSAGES \
            and event.keyval == gtk.keysyms.Return \
            and event.state & gtk.gdk.SHIFT_MASK == gtk.gdk.SHIFT_MASK:
@@ -267,7 +266,7 @@ class TextInput(gtk.TextView):
         # Split the text
         self.next_text = UNSET_TEXT
         if len(text) >= 150 + self.message_len \
-           and self.main.retweet_user == UNSET_TEXT:
+           and self.main.retweet_user == UNSET_USERNAME:
             
             continuation = CONTINUE_LIST[self.main.settings['continue']]
             parts = textwrap.wrap(text, 140)
@@ -297,14 +296,14 @@ class TextInput(gtk.TextView):
                 ctext = text.strip()
                 if ctext[0:1] == MSG_SIGN:
                     if ctext[2:].find(' ') == -1 \
-                       or self.main.message_user == UNSET_TEXT:
+                       or self.main.message_user == UNSET_USERNAME:
                         
                         self.is_changing = True
                         self.set_text(text.lstrip())
                         self.is_changing = False
                         return False
                 
-                if self.main.message_user == UNSET_TEXT:
+                if self.main.message_user == UNSET_USERNAME:
                     return False
                 
                 ctext = ctext[2:]
@@ -329,7 +328,7 @@ class TextInput(gtk.TextView):
                 # Prevent @reply to be send without text
                 if ctext[0:1] in AT_SIGNS:
                     if ctext.find(' ') == -1 \
-                       or self.main.reply_user == UNSET_TEXT:
+                       or self.main.reply_user == UNSET_USERNAME:
                         
                         self.is_changing = True
                         self.set_text(text.lstrip())
@@ -399,9 +398,7 @@ class TextInput(gtk.TextView):
                                      (self.message_len + length) - 1)
             
             elif self.main.message_user_id == UNSET_ID_NUM:
-                self.main.message_user = UNSET_TEXT
-            
-            
+                self.main.message_user = UNSET_USERNAME
             
             # check for '@user' and switch to tweeting
             at_user = REPLY_REGEX.match(text)
@@ -418,7 +415,11 @@ class TextInput(gtk.TextView):
             self.message_len = 0
             
             # Cancel reply mode
-            if not text.strip()[0:1] in AT_SIGNS and not self.is_changing:
+            at_offset = 1 if text.strip()[0:1] == '.' else 0
+            if len(text.strip()) > at_offset \
+               and not text.strip()[at_offset] in AT_SIGNS \
+               and not self.is_changing:
+                
                 self.main.unset('reply')
             
             # Remove spaces only
@@ -434,6 +435,7 @@ class TextInput(gtk.TextView):
             at_user = REPLY_REGEX.match(text)
             if at_user is not None:
                 at_len = len('%s%s ' % (lang.tweet_at, at_user.group(1)))
+                at_len += at_offset
                 
                 if self.main.reply_id == UNSET_ID_NUM:
                     self.main.reply_user = at_user.group(1)
@@ -452,7 +454,7 @@ class TextInput(gtk.TextView):
                                      (at_len + length) - 1)
             
             elif self.main.reply_id == UNSET_ID_NUM:
-                self.main.reply_user = UNSET_TEXT
+                self.main.reply_user = UNSET_USERNAME
             
             # check for 'd user' and switch to messaging
             msg = MESSAGE_REGEX.match(text)
@@ -772,7 +774,7 @@ class TextInput(gtk.TextView):
         if len(text) <= max_length:
             self.gui.set_status(lang.status_left % (max_length - len(text)))
         
-        elif self.main.retweet_user != UNSET_TEXT:
+        elif self.main.retweet_user != UNSET_USERNAME:
             self.gui.set_status(lang.status_more % (len(text) - max_length))
         
         elif len(text) < max_length + 10:
@@ -791,7 +793,7 @@ class TextInput(gtk.TextView):
     
     def check_color(self, count):
         if count >= 150 + self.message_len \
-           and self.main.retweet_user == UNSET_TEXT:
+           and self.main.retweet_user == UNSET_USERNAME:
             
             self.modify_base(gtk.STATE_NORMAL,
                              gtk.gdk.Color(200 * 255, 200 * 255, 255 * 255))
@@ -874,7 +876,7 @@ class TextInput(gtk.TextView):
             
             if not self.main.status(ST_WAS_RETWEET) \
                or (self.main.retweet_text != UNSET_TEXT \
-               or self.main.reply_user != UNSET_TEXT \
+               or self.main.reply_user != UNSET_USERNAME \
                or self.main.reply_id != UNSET_ID_NUM):
                 
                 if self.main.status(ST_WAS_DELETE):
