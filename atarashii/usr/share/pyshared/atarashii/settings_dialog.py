@@ -289,6 +289,7 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         del self.main.settings['lastmessage_' + name]
         del self.main.settings['xkey_' + name]
         del self.main.settings['xsecret_' + name]
+        self.settings.delete_userlist(name)
         
         # Delete active account?
         if self.main.username == name:

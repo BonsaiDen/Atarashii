@@ -117,6 +117,7 @@ class Settings(object):
                 self.sort_users()
         
         except IOError:
+            log_error('Could not load userlist for %s' % name)
             self.user_list = []
     
     def save_userlist(self, name):
@@ -127,9 +128,18 @@ class Settings(object):
                     f.write(','.join(self.user_list))
             
             except IOError:
-                log_error('Could not save userlist')
+                log_error('Could not save userlist for %s' % name)
             
             self.users_changed = False
+    
+    def delete_userlist(self, name):
+        userfile = os.path.join(ATARASHII_DIR, 'usernames_%s.list' % name)
+        if os.path.exists(userfile):
+            try:
+                os.unlink(userfile)
+            
+            except OSError:
+                log_error('Could not delete userlist for %s' % name)
     
     def userlist_uptodate(self, name):
         if name == UNSET_USERNAME:
