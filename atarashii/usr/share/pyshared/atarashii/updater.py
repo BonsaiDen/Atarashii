@@ -86,7 +86,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         self.profile = self.gui.profile
         
         # Setup progressbar
-        labels = [lang.progress_syncing, lang.progress_login]
+        labels = [lang.progress_login, lang.progress_syncing]
         if self.gui.mode == MODE_TWEETS:
             labels.append(lang.progress_tweets)
         
@@ -115,6 +115,13 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         
         self.message.load_state = HTML_RESET
         self.tweet.load_state = HTML_RESET
+                
+        # Try to Login
+        auth = self.login()
+        if not auth:
+            return False
+        
+        self.gui.progress_step()
         
         # Try to sync with the cloud
         self.main.syncer.reset()
@@ -125,12 +132,6 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         self.tweet.init_id = self.tweet.get_latest()
         self.message.init_id = self.message.get_latest()
         
-        # Try to Login
-        auth = self.login()
-        if not auth:
-            return False
-        
-        self.gui.progress_step()
         self.api = self.main.api = tweepy.API(auth)
         self.init_load()
     
@@ -186,7 +187,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
                     self.settings[secret_name] = token.secret
                 
                 else:
-                    gobject.idle_add(self.main.on_login_failed)
+                    gobject.idle_add(self.main.on_login_failed, None)
                     self.main.api_temp_password = None
                     return False
         
