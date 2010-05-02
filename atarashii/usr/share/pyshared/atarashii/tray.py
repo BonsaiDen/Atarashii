@@ -58,13 +58,18 @@ class TrayIcon(gtk.StatusIcon):
             self.set_has_tooltip(True)
         
         # Try something else...
-        except Exception:
+        except AttributeError:
             try:
-                self.set_tooltip_text('...')
+                self.set_tooltip('...')
             
             # Didn't work either, last chance...
-            except Exception:
-                self.set_tooltip_text('WTF!')
+            except AttributeError:
+                try:
+                    self.set_tooltip_text('WTF!')
+                
+                # OK no tooltips...
+                except AttributeError:
+                    pass
         
         self.connect('activate', self.on_activate)
         self.connect('query-tooltip', self.on_tooltip)
@@ -73,17 +78,6 @@ class TrayIcon(gtk.StatusIcon):
         self.accel = gtk.AccelGroup()
         self.gui.add_accel_group(self.accel)
         self.menu = gtk.Menu()
-        
-        # Do we have a recent version of gtk?
-        # This fixes a crash for version of gtk that don't have
-        # gtk.ImageMenuItem.set_label()
-        self.new_gtk_version = True
-        try:
-            menu_item = gtk.ImageMenuItem()
-            menu_item.set_label(UNSET_LABEL)
-        
-        except AttributeError:
-            self.new_gtk_version = False
         
         # Refresh
         self.refresh_menu = self.add_menu(lang.menu_update, gtk.STOCK_REFRESH,
@@ -127,12 +121,12 @@ class TrayIcon(gtk.StatusIcon):
     # Menus --------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def add_menu(self, text, image, accel_key=None, callback=None):
-        if self.new_gtk_version:
+        try:
             item = gtk.ImageMenuItem(image)
             item.set_label(text)
         
-        else:
-            item = gtk.MenuItem(text, self.accel)
+        except AttributeError:
+            item = gtk.MenuItem(text)
         
         # Add accelerator
         if accel_key is not None:
