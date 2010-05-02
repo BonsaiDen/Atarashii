@@ -10,8 +10,9 @@ atarashii (0.99.25a-1) all;
     holding down ctrl when clicking the reply icon.
   + You can now add more @usernames to a reply by holding down shift when 
     clicking the reply icon.
+  ~ Atarashii now uses a seperate auto completion userlist for each account.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 13:09:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Sun, 02 May 2010 13:59:00 +0200
 
 atarashii (0.99.25-1) all;
 
