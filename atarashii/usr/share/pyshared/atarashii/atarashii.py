@@ -193,6 +193,10 @@ class Atarashii(AtarashiiActions):
             self.username = change_user
             self.settings['username'] = change_user
         
+        # Update the menu
+        self.gui.tray.update_account_menu()
+        self.gui.tray.activate_menu(False)
+        
         # Set Mode
         self.stop_profile(blank = True)
         mode = self.settings['mode_' + self.username]
