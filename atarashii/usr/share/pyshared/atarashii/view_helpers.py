@@ -91,6 +91,7 @@ class ViewHelpers(object):
         # Offset
         if len(self.items) > 0 and self.has_newitems \
            and not self.load_history:
+            
             offset = self.get_offset()
         
         else:
@@ -107,7 +108,7 @@ class ViewHelpers(object):
         
         # scroll to first new tweet
         elif self.first_load or (offset > 0 and self.position == 0):
-            self.fix_scroll()
+            self.fix_scroll(move = True)
         
         self.after_loaded()
         self.load_history = False
@@ -123,9 +124,9 @@ class ViewHelpers(object):
         gobject.timeout_add(10, self.fake_move, self.mouse_position)
     
     # Fix scrolling on load in order to jump to the first unread item
-    def fix_scroll(self, check=False):
+    def fix_scroll(self, check=False, move=False):
         if not check:
-            if self.first_load:
+            if self.first_load or move:
                 self.last_scroll_pos = -1
                 gobject.timeout_add(10, self.fix_scroll, True)
             
