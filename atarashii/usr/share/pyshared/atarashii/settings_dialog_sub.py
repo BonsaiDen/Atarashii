@@ -91,6 +91,7 @@ class SettingsSaves(object):
         
         settings['notify'] = self.notify.get_active()
         settings['notify_overlay'] = self.overlay.get_active()
+        settings['notify_network'] = self.notify_network.get_active()
         settings['sound'] = self.sound.get_active()
 
 
@@ -420,14 +421,17 @@ class SettingsPages(object):
         
         # Notification
         self.notify = self.get('notify')
+        self.notify_network = self.get('notify_network')
         self.overlay = self.get('notify_overlay')
         self.sound = self.get('sound')
         self.notify.set_label(lang.settings_notifications_enable)
+        self.notify_network.set_label(lang.settings_notifications_network)
         self.overlay.set_label(lang.settings_notifications_overlay)
         self.sound.set_label(lang.settings_notifications_sound)
         
         self.notify.set_active(settings.is_true('notify'))
         self.overlay.set_active(settings.is_true('notify_overlay', True))
+        self.notify_network.set_active(settings.is_true('notify_network', True))
         self.sound.set_active(settings.is_true('sound'))
         self.notify.set_sensitive(True)
         
@@ -435,6 +439,7 @@ class SettingsPages(object):
             self.get('soundfiles').set_sensitive(self.sound.get_active())
         
         def toggle(*args):
+            self.notify_network.set_sensitive(self.notify.get_active())
             self.overlay.set_sensitive(self.notify.get_active())
             self.sound.set_sensitive(self.notify.get_active())
             self.get('soundfiles').set_sensitive(self.notify.get_active() \

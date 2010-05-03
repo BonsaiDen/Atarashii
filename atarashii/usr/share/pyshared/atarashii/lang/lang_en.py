@@ -229,6 +229,7 @@ LANG = {
     'settings_color_theme': 'Color scheme:',
     
     'settings_notifications_enable': 'Enable notifications',
+    'settings_notifications_network': 'Notify on network errors',
     'settings_notifications_overlay': 'Overlay playing movies',
     'settings_notifications_sound': 'Activate sounds',
     'settings_file_tweets': 'Tweets:',

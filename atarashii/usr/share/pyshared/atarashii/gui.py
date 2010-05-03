@@ -816,8 +816,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
             # overload warning
             if code == HT_503_SERVICE_UNAVAILABLE:
                 if not self.main.status(ST_NETWORK_FAILED):
-                    self.notifcation(MESSAGE_WARNING,
-                                     lang.tray_warning_overload)
+                    if self.settings.is_true('notify_network', True) \
+                       or not self.main.status(ST_LOGIN_COMPLETE):
+                        
+                        self.notifcation(MESSAGE_WARNING,
+                                         lang.tray_warning_overload)
                     
                     self.main.set_status(ST_NETWORK_FAILED)
                 
@@ -840,7 +843,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                     info = lang.warning_network
                 
                 if not self.main.status(ST_NETWORK_FAILED):
-                    self.notifcation(MESSAGE_WARNING, lang.tray_warning_network)
+                    if self.settings.is_true('notify_network', True) \
+                       or not self.main.status(ST_LOGIN_COMPLETE):
+                        
+                        self.notifcation(MESSAGE_WARNING,
+                                         lang.tray_warning_network)
+                    
                     self.main.set_status(ST_NETWORK_FAILED)
                 
                 # Don't override send errors and other stuff with 'unimportant'

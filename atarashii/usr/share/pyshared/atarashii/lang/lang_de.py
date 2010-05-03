@@ -235,6 +235,7 @@ LANG = {
     'settings_color_theme': 'Farbschema:',
     
     'settings_notifications_enable': 'Benachrichtigungen aktivieren',
+    'settings_notifications_network': 'Über Netzwerkfehler benachrichtigen',
     'settings_notifications_overlay': 'Abspielende Filme überlagern',
     'settings_notifications_sound': 'Sounds aktivieren',
     'settings_file_tweets': 'Tweets:',
