@@ -115,7 +115,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         
         self.message.load_state = HTML_RESET
         self.tweet.load_state = HTML_RESET
-                
+        
         # Try to Login
         auth = self.login()
         if not auth:
