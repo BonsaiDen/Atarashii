@@ -31,6 +31,7 @@ from settings import CACHE_DIR
 from utils import tweepy, TweepError, gmtime
 from lang import LANG as lang
 
+from constants import CONSUMER_KEY, CONSUMER_SECRET
 from constants import ST_WARNING_RATE, ST_UPDATE, ST_NETWORK_FAILED, \
                       ST_TRAY_WARNING
 
@@ -147,13 +148,7 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
     # Login --------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def login(self):
-        # xAuth Login, yes the app stuff is here, where else should it go?
-        # Why should anyone else use the Atarashii App for posting from HIS
-        # client? :D
-        auth = tweepy.OAuthHandler('PYuZHIEoIGnNNSJb7nIY0Q',
-                                   'Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg',
-                                   secure = True)
-        
+        auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET, secure = True)
         try:
             # Try using an old token
             token_ok = False
