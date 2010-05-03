@@ -76,7 +76,7 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         cancel_button = self.get('cancelbutton')
         cancel_button.set_label(lang.settings_button_cancel)
         cancel_button.connect('clicked', self.on_close)
-        gobject.idle_add(self.drop.grab_focus)
+        gobject.idle_add(self.accounts.grab_focus)
         self.dlg.set_size_request(-1, -1)
     
     def on_save(self, *args):
@@ -104,7 +104,7 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
             self.file_chooser.close()
         
         if not self.saved:
-            if self.get_drop_active() == -1 \
+            if self.get_active_account() == -1 \
                or not self.oldusername in self.settings.get_accounts():
                 
                 self.main.logout()
@@ -128,11 +128,11 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
     # Helpers ------------------------------------------------------------------
     # --------------------------------------------------------------------------
     def activate(self, mode):
-        if self.drop is not None:
-            self.drop.set_sensitive(mode)
+        if self.accounts is not None:
+            self.accounts.set_sensitive(mode)
             self.add.set_sensitive(mode)
             if mode:
-                self.drop_changed()
+                self.account_changed()
             
             else:
                 self.edit.set_sensitive(mode)
@@ -190,37 +190,37 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
     
     # Users --------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    def get_drop_active(self):
-        i = self.drop.get_selection().get_selected_rows()[1]
+    def get_active_account(self):
+        i = self.accounts.get_selection().get_selected_rows()[1]
         if i is None or len(i) == 0:
             return -1
         
         return i[0][0]
     
-    def select_drop(self, num):
-        self.drop.get_selection().select_path((num,))
-        self.drop_changed()
+    def select_account(self, num):
+        self.accounts.get_selection().select_path((num,))
+        self.account_changed()
     
-    def create_drop_list(self, name=None):
+    def create_account_list(self, name=None):
         self.user_accounts = self.settings.get_accounts()
         self.accounts_list = gtk.ListStore(str, str, str, str)
         selected = -1
         for num, user in enumerate(self.user_accounts):
-            self.accounts_list.append(self.get_drop_entry(user))
+            self.accounts_list.append(self.get_account_entry(user))
             if user == name:
                 selected = num
             
             elif name is None and user == self.main.username:
                 selected = num
         
-        self.drop.set_model(self.accounts_list)
+        self.accounts.set_model(self.accounts_list)
         if selected != -1:
-            self.select_drop(selected)
+            self.select_account(selected)
         
         else:
-            self.drop_changed()
+            self.account_changed()
     
-    def get_drop_entry(self, name):
+    def get_account_entry(self, name):
         tweets = self.settings['count_tweets_' + name]
         follower = self.settings['count_followers_' + name]
         following = self.settings['count_friends_' + name]
@@ -237,15 +237,15 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         return [name, str(tweets), str(follower), str(following)]
     
      # Setup Account List
-    def drop_changed(self, *args):
-        i = self.get_drop_active()
+    def account_changed(self, *args):
+        i = self.get_active_account()
         self.edit.set_sensitive(i != -1)
         self.delete.set_sensitive(i != -1)
     
     
     # Editing ------------------------------------------------------------------
     def edit_account(self, username):
-        name = self.user_accounts[self.get_drop_active()]
+        name = self.user_accounts[self.get_active_account()]
         if name != username:
             ft_tmp = self.settings['firsttweet_' + name]
             lt_tmp = self.settings['lasttweet_' + name]
@@ -288,7 +288,7 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
             # update menu
             self.main.gui.tray.update_account_menu()
             self.settings.save()
-            self.create_drop_list(username)
+            self.create_account_list(username)
     
     
     # Create -------------------------------------------------------------------
@@ -298,15 +298,15 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         # update menu
         self.main.gui.tray.update_account_menu()
         self.settings.save()
-        self.create_drop_list()
+        self.create_account_list()
         if len(self.user_accounts) == 1:
-            self.select_drop(0)
+            self.select_account(0)
     
     
     # Delete -------------------------------------------------------------------
     def delete_account(self):
         self.blocked = False
-        name = self.user_accounts[self.get_drop_active()]
+        name = self.user_accounts[self.get_active_account()]
         del self.settings['mode_' + name]
         del self.settings['account_' + name]
         del self.settings['firsttweet_' + name]
@@ -329,5 +329,5 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         # update menu
         self.main.gui.tray.update_account_menu()
         self.settings.save()
-        self.create_drop_list()
+        self.create_account_list()
 

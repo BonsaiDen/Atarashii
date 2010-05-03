@@ -109,8 +109,8 @@ class SettingsPages(object):
         self.accounts_list = None
         
         # Setup box
-        self.drop = drop = gtk.TreeView()
-        drop.get_selection().set_mode(gtk.SELECTION_BROWSE)
+        self.accounts = gtk.TreeView()
+        self.accounts.get_selection().set_mode(gtk.SELECTION_BROWSE)
         
         def column(title, pos, expand=False):
             column = gtk.TreeViewColumn(UNSET_LABEL)
@@ -121,22 +121,22 @@ class SettingsPages(object):
             column.add_attribute(cell, 'text', pos)
             return column
         
-        drop.append_column(column(lang.settings_account_name, 0, True))
-        drop.append_column(column(lang.settings_account_tweets, 1))
-        drop.append_column(column(lang.settings_account_follower, 2))
-        drop.append_column(column(lang.settings_account_friends, 3))
-        self.get('treewindow').add(drop)
-        drop.show()
+        self.accounts.append_column(column(lang.settings_account_name, 0, True))
+        self.accounts.append_column(column(lang.settings_account_tweets, 1))
+        self.accounts.append_column(column(lang.settings_account_follower, 2))
+        self.accounts.append_column(column(lang.settings_account_friends, 3))
+        self.get('treewindow').add(self.accounts)
+        self.accounts.show()
         
         # Init contents
-        drop.connect('cursor-changed', self.drop_changed)
-        self.create_drop_list()
-        self.drop_changed()
+        self.accounts.connect('cursor-changed', self.account_changed)
+        self.create_account_list()
+        self.account_changed()
         
         # Edit Action
         def edit_dialog(*args):
             self.blocked = True
-            name = self.user_accounts[self.get_drop_active()]
+            name = self.user_accounts[self.get_active_account()]
             AccountDialog(self, name, lang.account_edit, self.edit_account)
         
         self.edit.connect('clicked', edit_dialog)
@@ -152,7 +152,7 @@ class SettingsPages(object):
         # Delete Action
         def delete_dialog(*args):
             self.blocked = True
-            name = self.user_accounts[self.get_drop_active()]
+            name = self.user_accounts[self.get_active_account()]
             self.question_dialog = MessageDialog(self.dlg, MESSAGE_QUESTION,
                                        lang.account_delete_description % name,
                                        lang.account_delete,
