@@ -1,3 +1,12 @@
+atarashii (0.99.27cd-1) all;
+
+  * More scrolling fixes.
+  * The remaining character count no longer includes trailing whitespace.
+  * Fixed a couple of issues with the auto completion and the character count.
+  * Fix for malformed gifs crashing the avatar tooltip.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 04 May 2010 00:32:00 +0200
+
 atarashii (0.99.27c-1) all;
 
   * Fix a scrolling bug in the views.
