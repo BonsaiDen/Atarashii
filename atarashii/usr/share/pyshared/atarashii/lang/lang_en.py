@@ -214,6 +214,10 @@ LANG = {
     'settings_add': 'Add',
     'settings_edit': 'Edit',
     'settings_delete': 'Delete',
+    'settings_account_name': 'Name',
+    'settings_account_tweets': 'Tweets',
+    'settings_account_follower': 'Followers',
+    'settings_account_friends': 'Following',
     
     'settings_autostart': 'Start on system startup',
     'settings_tray': 'Start minimized',

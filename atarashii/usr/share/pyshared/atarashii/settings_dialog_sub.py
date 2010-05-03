@@ -121,10 +121,10 @@ class SettingsPages(object):
             column.add_attribute(cell, 'text', pos)
             return column
         
-        drop.append_column(column('Name', 0, True))
-        drop.append_column(column('Tweets', 1))
-        drop.append_column(column('Follower', 2))
-        drop.append_column(column('Following', 3))
+        drop.append_column(column(lang.settings_account_name, 0, True))
+        drop.append_column(column(lang.settings_account_tweets, 1))
+        drop.append_column(column(lang.settings_account_follower, 2))
+        drop.append_column(column(lang.settings_account_friends, 3))
         self.get('treewindow').add(drop)
         drop.show()
         

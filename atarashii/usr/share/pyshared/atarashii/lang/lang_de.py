@@ -220,6 +220,10 @@ LANG = {
     'settings_add': 'Erstellen',
     'settings_edit': 'Bearbeiten',
     'settings_delete': 'Löschen',
+    'settings_account_name': 'Name',
+    'settings_account_tweets': 'Tweets',
+    'settings_account_follower': 'Follower',
+    'settings_account_friends': 'Following',
     
     'settings_autostart': 'Automatisch starten',
     'settings_tray': 'Minimiert starten',
