@@ -1,3 +1,10 @@
+atarashii (0.99.27b-1) all;
+
+  * Fixed the selection of accounts in the accounts list.
+  * More fixes to the dialogs.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 03 May 2010 21:37:00 +0200
+
 atarashii (0.99.27a-1) all;
 
   * Fix for wrongly positioned dialogs.
