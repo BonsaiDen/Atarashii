@@ -86,14 +86,17 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         self.profile = self.gui.profile
         
         # Setup progressbar
-        labels = [lang.progress_login, lang.progress_syncing]
+        labels = [lang.progress_login]
+        if self.settings['syncing'] is True:
+            labels.append(lang.progress_syncing)
+        
         if self.gui.mode == MODE_TWEETS:
             labels.append(lang.progress_tweets)
         
         elif self.gui.mode == MODE_MESSAGES:
             labels.append(lang.progress_messages)
         
-        self.gui.progress_init(3, labels)
+        self.gui.progress_init(len(labels), labels)
         
         # Reset
         self.finish_update = False
@@ -126,7 +129,8 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         # Try to sync with the cloud
         self.main.syncer.reset()
         self.main.syncer.get_ids()
-        self.gui.progress_step()
+        if self.settings['syncing'] is True:
+            self.gui.progress_step()
         
         # InitID = the last read tweet
         self.tweet.init_id = self.tweet.get_latest()
