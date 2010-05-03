@@ -91,6 +91,9 @@ class AtarashiiActions(object):
         if self.gui.settings_dialog is not None:
             self.gui.settings_dialog.hideall()
         
+        if self.gui.about_dialog is not None:
+            self.gui.about_dialog.on_close()
+        
         gobject.idle_add(self.real_quit)
     
     def real_quit(self):

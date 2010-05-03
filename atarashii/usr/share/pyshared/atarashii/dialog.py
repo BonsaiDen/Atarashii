@@ -155,6 +155,9 @@ class AboutDialog(Dialog):
     resource = 'about.glade'
     instance = None
     
+    def __init__(self, parent):
+        Dialog.__init__(self, parent, True, True, True)
+    
     def on_init(self):
         self.dlg.set_title(lang.about_title)
         self.close_button.set_label(lang.about_okbutton)
