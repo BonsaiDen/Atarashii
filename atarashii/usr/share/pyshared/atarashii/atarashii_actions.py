@@ -345,6 +345,9 @@ class AtarashiiActions(object):
         if not self.settings.userlist_uptodate(self.username):
             api.Friends(self, self.username, self.settings.add_users)
     
+    def update_user_stats(self):
+        api.User(self, self.username, self.settings.update_user_stats_user)
+    
     
     # Reconnect ----------------------------------------------------------------
     # --------------------------------------------------------------------------

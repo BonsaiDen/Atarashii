@@ -25,7 +25,7 @@ from dialog import Dialog
 from settings_dialog_sub import SettingsPages, SettingsSaves
 from lang import LANG as lang
 
-from constants import UNSET_USERNAME, FONT_SIZES, AVATAR_SIZES
+from constants import UNSET_USERNAME, UNSET_COLUMN, FONT_SIZES, AVATAR_SIZES
 from constants import ST_CONNECT, ST_LOGIN_COMPLETE
 
 
@@ -44,7 +44,7 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         self.question_dialog = None
         self.saved = False
         self.oldusername = self.main.username
-        self.main.settings.check_autostart()
+        self.settings.check_autostart()
         self.dlg.set_title(lang.settings_title)
         
         # Tabs
@@ -105,7 +105,7 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         
         if not self.saved:
             if self.get_drop_active() == -1 \
-               or not self.oldusername in self.main.settings.get_accounts():
+               or not self.oldusername in self.settings.get_accounts():
                 
                 self.main.logout()
             
@@ -202,11 +202,11 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         self.drop_changed()
     
     def create_drop_list(self, name=None):
-        self.user_accounts = self.main.settings.get_accounts()
-        self.accounts_list = gtk.ListStore(str)
+        self.user_accounts = self.settings.get_accounts()
+        self.accounts_list = gtk.ListStore(str, str, str, str)
         selected = -1
         for num, user in enumerate(self.user_accounts):
-            self.accounts_list.append([user])
+            self.accounts_list.append(self.get_drop_entry(user))
             if user == name:
                 selected = num
             
@@ -220,6 +220,22 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         else:
             self.drop_changed()
     
+    def get_drop_entry(self, name):
+        tweets = self.settings['count_tweets_' + name]
+        follower = self.settings['count_followers_' + name]
+        following = self.settings['count_friends_' + name]
+        
+        if str(tweets) in ('', 'None'):
+            tweets = UNSET_COLUMN
+        
+        if str(follower) in ('', 'None'):
+            follower = UNSET_COLUMN
+        
+        if str(following) in ('', 'None'):
+            following = UNSET_COLUMN
+        
+        return [name, str(tweets), str(follower), str(following)]
+    
      # Setup Account List
     def drop_changed(self, *args):
         i = self.get_drop_active()
@@ -231,27 +247,37 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
     def edit_account(self, username):
         name = self.user_accounts[self.get_drop_active()]
         if name != username:
-            ft_tmp = self.main.settings['firsttweet_' + name]
-            lt_tmp = self.main.settings['lasttweet_' + name]
-            fm_tmp = self.main.settings['firstmessage_' + name]
-            lm_tmp = self.main.settings['lastmessage_' + name]
-            lo_tmp = self.main.settings['mode_' + name]
+            ft_tmp = self.settings['firsttweet_' + name]
+            lt_tmp = self.settings['lasttweet_' + name]
+            fm_tmp = self.settings['firstmessage_' + name]
+            lm_tmp = self.settings['lastmessage_' + name]
+            lo_tmp = self.settings['mode_' + name]
             
-            del self.main.settings['mode_' + name]
-            del self.main.settings['account_' + name]
-            del self.main.settings['firsttweet_' + name]
-            del self.main.settings['lasttweet_' + name]
-            del self.main.settings['firstmessage_' + name]
-            del self.main.settings['lastmessage_' + name]
-            del self.main.settings['xkey_' + name]
-            del self.main.settings['xsecret_' + name]
+            at_tmp = self.settings['count_tweets_' + name]
+            af_tmp = self.settings['count_followers_' + name]
+            ag_tmp = self.settings['count_friends_' + name]
             
-            self.main.settings['mode_' + username] = lo_tmp
-            self.main.settings['account_' + username] = UNSET_USERNAME
-            self.main.settings['firsttweet_' + username] = ft_tmp
-            self.main.settings['lasttweet_' + username] = lt_tmp
-            self.main.settings['firstmessage_' + username] = fm_tmp
-            self.main.settings['lastmessage_' + username] = lm_tmp
+            del self.settings['mode_' + name]
+            del self.settings['account_' + name]
+            del self.settings['firsttweet_' + name]
+            del self.settings['lasttweet_' + name]
+            del self.settings['firstmessage_' + name]
+            del self.settings['lastmessage_' + name]
+            del self.settings['xkey_' + name]
+            del self.settings['xsecret_' + name]
+            del self.settings['count_tweets_' + name]
+            del self.settings['count_followers_' + name]
+            del self.settings['count_friends_' + name]
+            
+            self.settings['mode_' + username] = lo_tmp
+            self.settings['account_' + username] = UNSET_USERNAME
+            self.settings['firsttweet_' + username] = ft_tmp
+            self.settings['lasttweet_' + username] = lt_tmp
+            self.settings['firstmessage_' + username] = fm_tmp
+            self.settings['lastmessage_' + username] = lm_tmp
+            self.settings['count_tweets_' + username] = at_tmp
+            self.settings['count_followers_' + username] = af_tmp
+            self.settings['count_friends_' + username] = ag_tmp
             
             # Edit active account?
             if self.main.username == name:
@@ -261,17 +287,17 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
             
             # update menu
             self.main.gui.tray.update_account_menu()
-            self.main.settings.save()
+            self.settings.save()
             self.create_drop_list(username)
     
     
     # Create -------------------------------------------------------------------
     def create_account(self, username):
-        self.main.settings['account_' + username] = UNSET_USERNAME
+        self.settings['account_' + username] = UNSET_USERNAME
         
         # update menu
         self.main.gui.tray.update_account_menu()
-        self.main.settings.save()
+        self.settings.save()
         self.create_drop_list()
         if len(self.user_accounts) == 1:
             self.select_drop(0)
@@ -281,14 +307,18 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
     def delete_account(self):
         self.blocked = False
         name = self.user_accounts[self.get_drop_active()]
-        del self.main.settings['mode_' + name]
-        del self.main.settings['account_' + name]
-        del self.main.settings['firsttweet_' + name]
-        del self.main.settings['lasttweet_' + name]
-        del self.main.settings['firstmessage_' + name]
-        del self.main.settings['lastmessage_' + name]
-        del self.main.settings['xkey_' + name]
-        del self.main.settings['xsecret_' + name]
+        del self.settings['mode_' + name]
+        del self.settings['account_' + name]
+        del self.settings['firsttweet_' + name]
+        del self.settings['lasttweet_' + name]
+        del self.settings['firstmessage_' + name]
+        del self.settings['lastmessage_' + name]
+        del self.settings['xkey_' + name]
+        del self.settings['xsecret_' + name]
+        del self.settings['count_tweets_' + name]
+        del self.settings['count_followers_' + name]
+        del self.settings['count_friends_' + name]
+        
         self.settings.delete_userlist(name)
         
         # Delete active account?
@@ -298,6 +328,6 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         
         # update menu
         self.main.gui.tray.update_account_menu()
-        self.main.settings.save()
+        self.settings.save()
         self.create_drop_list()
 

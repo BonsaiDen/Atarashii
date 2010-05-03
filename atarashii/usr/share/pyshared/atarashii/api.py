@@ -409,3 +409,16 @@ class Friends(SimpleAPICall):
     def on_error(self, main, user, callback):
         pass
 
+
+# User -------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+class User(SimpleAPICall):
+    def call(self, main, user, callback):
+        self.user = self.main.api.get_user(screen_name = user)
+    
+    def on_success(self, main, user, callback):
+        gobject.idle_add(callback, self.user)
+    
+    def on_error(self, main, user, callback):
+        pass
+

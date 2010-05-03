@@ -111,12 +111,20 @@ class SettingsPages(object):
         # Setup box
         self.drop = drop = gtk.TreeView()
         drop.get_selection().set_mode(gtk.SELECTION_BROWSE)
-        column = gtk.TreeViewColumn(UNSET_LABEL)
-        drop.set_headers_visible(False)
-        drop.append_column(column)
-        cell = gtk.CellRendererText()
-        column.pack_start(cell, True)
-        column.add_attribute(cell, 'text', 0)
+        
+        def column(title, pos, expand=False):
+            column = gtk.TreeViewColumn(UNSET_LABEL)
+            column.set_title(title)
+            column.set_property('expand', expand)
+            cell = gtk.CellRendererText()
+            column.pack_start(cell, True)
+            column.add_attribute(cell, 'text', pos)
+            return column
+        
+        drop.append_column(column('Name', 0, True))
+        drop.append_column(column('Tweets', 1))
+        drop.append_column(column('Follower', 2))
+        drop.append_column(column('Following', 3))
         self.get('treewindow').add(drop)
         drop.show()
         

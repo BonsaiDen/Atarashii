@@ -77,6 +77,7 @@ UNSET_HOST = ''          # Must be ''
 UNSET_URL = ''           # Must be ''
 UNSET_PATH = ''          # Must be ''
 UNSET_STRING = ''        # Must be ''
+UNSET_COLUMN = '-'       # Can be anything
 
 USERNAME_CHARS = 'abcdefghijklmnopqrstuvwxyz' \
                  + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' \

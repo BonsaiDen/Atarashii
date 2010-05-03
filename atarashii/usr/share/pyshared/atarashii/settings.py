@@ -296,6 +296,17 @@ class Settings(object):
         
         return name
     
+    # Update the user stats in the preferences dialog
+    def update_user_stats(self, tweets, followers, friends):
+        self['count_tweets_' + self.main.username] = tweets
+        self['count_followers_' + self.main.username] = followers
+        self['count_friends_' + self.main.username] = friends
+    
+    def update_user_stats_user(self, user):
+        if user.screen_name.lower() == self.main.username.lower():
+            self.update_user_stats(user.statuses_count, user.followers_count,
+                                   user.friends_count)
+    
     
     # CSS ----------------------------------------------------------------------
     def css(self, font=None, avatar=None, color_theme=None):

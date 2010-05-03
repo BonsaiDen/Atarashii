@@ -235,9 +235,16 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
             self.add(self.history_list.pop(0), True)
         
         self.render(force_render = force_render)
-        self.main.settings.sort_users()
     
     def add(self, item, append=False):
+        # Update the stats of the current user
+        if self.mode_type == MODE_TWEETS:
+            user = self.get_user(item[0])
+            if user.screen_name.lower() == self.main.username.lower():
+                self.main.settings.update_user_stats(user.statuses_count,
+                                                     user.followers_count,
+                                                     user.friends_count)
+        
         # Replace mentions by replies, sometimes the timeline might lag behind
         # so we have to handle this
         found = False

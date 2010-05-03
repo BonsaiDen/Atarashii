@@ -1,11 +1,15 @@
 atarashii (0.99.26b-1) all;
 
+  + Added new columns to the account list in the preferences showing 
+    tweet, follower and friend count.
   + Added an option to turn off notifications on network errors.
   ~ "Refresh all" in the tray menu is now always active(except during updates).
   * Reworked the view scrolling, should now always scroll correctly.
   * Fix for the account not getting selected in the tray menu after hitting the 
     "retry" button.
   * Improved error dialogs in case a profile fails to load.
+  * Fix for the rare case were the user was notified about a tweet or message a
+    second time.
 
  -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 03 May 2010 17:20:00 +0200
 

@@ -261,6 +261,7 @@ class Atarashii(AtarashiiActions):
         self.gui.update_status()
         self.gui.show_input()
         self.update_user_list()
+        self.update_user_stats()
     
     def on_login_complete(self):
         self.set_status(ST_LOGIN_COMPLETE)
