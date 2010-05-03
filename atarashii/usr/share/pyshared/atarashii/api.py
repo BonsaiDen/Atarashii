@@ -323,8 +323,8 @@ class Profile(SimpleAPICall):
     
     def on_error(self, main, name, callback):
         gobject.idle_add(main.gui.show_input)
-        gobject.idle_add(main.stop_profile)
-        gobject.idle_add(main.gui.show_profile_error, name)
+        gobject.idle_add(main.stop_profile, False, name,
+                         str(self.error).lower() == 'not found')
 
 
 # Follow -----------------------------------------------------------------------

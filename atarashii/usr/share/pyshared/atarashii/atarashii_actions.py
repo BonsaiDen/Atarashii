@@ -320,18 +320,26 @@ class AtarashiiActions(object):
         self.gui.profile.render(user, friend, tweets)
         gobject.idle_add(self.gui.show_input)
     
-    def stop_profile(self, blank=False):
-        self.profile_pending = False
-        self.profile_current_user = UNSET_USERNAME
-        self.gui.load_button.hide()
-        
-        if blank is not True:
-            if self.gui.mode == MODE_PROFILE:
-                self.gui.mode = self.profile_mode
-                self.gui.on_mode(no_check = True, from_profile = True)
+    def stop_profile(self, blank=False, name=UNSET_USERNAME, not_found=False):
+        if name == UNSET_USERNAME or name == self.profile_current_user:
+            if name == self.profile_current_user and name != UNSET_USERNAME:
+                if not_found:
+                    gobject.idle_add(self.gui.show_profile_error, name)
+                
+                else:
+                    gobject.idle_add(self.gui.show_profile_warning, name)
             
-            self.gui.profile.load_state = HTML_LOADING
-            self.gui.profile.start()
+            self.profile_pending = False
+            self.profile_current_user = UNSET_USERNAME
+            self.gui.load_button.hide()
+            
+            if blank is not True:
+                if self.gui.mode == MODE_PROFILE:
+                    self.gui.mode = self.profile_mode
+                    self.gui.on_mode(no_check = True, from_profile = True)
+                
+                self.gui.profile.load_state = HTML_LOADING
+                self.gui.profile.start()
     
     def update_user_list(self):
         if not self.settings.userlist_uptodate(self.username):

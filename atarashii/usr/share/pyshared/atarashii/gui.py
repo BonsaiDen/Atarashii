@@ -650,6 +650,11 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                              lang.profile_error % lang.name(name),
                              lang.error_title)
     
+    def show_profile_warning(self, name):
+        dialog.MessageDialog(self, MESSAGE_WARNING,
+                             lang.profile_warning % lang.name(name),
+                             lang.warning_title)
+    
     def ask_for_block_spam(self, user, yes, noo):
         dialog.MessageDialog(self, MESSAGE_QUESTION,
                         lang.block_user_spam % user,

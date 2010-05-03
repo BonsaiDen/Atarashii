@@ -109,8 +109,10 @@ LANG = {
     'profile_protected': '(<b>protected</b>)',
     
     'profile_error':
-        'Could not load <b>%s</b> profile, either the user does not exist '
-        'or Twitter is currently unavailable.',
+        'Could not load <b>%s</b> profile, the user does not exist.',
+    
+    'profile_warning':
+        'Could not load <b>%s</b> profile, Twitter is currently unavailable.',
     
     'profile_tweets': 'Tweets',
     'profile_followers': 'Followers',

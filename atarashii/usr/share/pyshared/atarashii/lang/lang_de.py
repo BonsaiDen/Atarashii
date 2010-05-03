@@ -112,8 +112,11 @@ LANG = {
     
     'profile_error':
         '<b>%s</b> Profil konnte nicht geladen werden, der Benutzer '
-        'existiert entweder nicht oder Twitter ist gerade nicht '
-        'erreichbar.',
+        'existiert nicht.',
+    
+    'profile_warning':
+        '<b>%s</b> Profil konnte nicht geladen werden Twitter ist gerade '
+        'nicht erreichbar.',
     
     'profile_tweets': 'Tweets',
     'profile_followers': 'Follower',
