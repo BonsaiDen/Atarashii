@@ -1,3 +1,10 @@
+atarashii (0.99.27a-1) all;
+
+  * Fix for wrongly positioned dialogs.
+  * Fix for scrolling issues in profiles.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 03 May 2010 21:18:00 +0200
+
 atarashii (0.99.27-1) all;
 
   + Added new columns to the account list in the preferences showing 
