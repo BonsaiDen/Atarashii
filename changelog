@@ -1,3 +1,9 @@
+atarashii (0.99.27c-1) all;
+
+  * Fix a scrolling bug in the views.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 03 May 2010 22:17:00 +0200
+
 atarashii (0.99.27b-1) all;
 
   * Fixed the selection of accounts in the accounts list.
