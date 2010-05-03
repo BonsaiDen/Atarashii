@@ -35,7 +35,7 @@ class Dialog(object):
     resource = UNSET_RESOURCE
     instance = None
     
-    def __init__(self, gui, close=True, init=True):
+    def __init__(self, gui, close=True, init=True, on_gui=False):
         self.gui = gui
         self.main = gui.main
         self.settings = gui.main.settings
@@ -47,6 +47,9 @@ class Dialog(object):
             
             self.dlg = self.get('dialog')
             self.dlg.set_property('skip-taskbar-hint', True)
+            if on_gui:
+                self.dlg.set_transient_for(gui)
+            
             self.dlg.set_position(gtk.WIN_POS_CENTER_ON_PARENT)
             
             self.dlg.connect('delete_event', self.on_close)

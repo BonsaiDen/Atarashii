@@ -36,8 +36,7 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
     instance = None
     
     def __init__(self, parent):
-        Dialog.__init__(self, parent, False, False)
-        self.dlg.set_transient_for(parent)
+        Dialog.__init__(self, parent, False, False, True)
         self.parent = parent
         self.blocked = False
         self.username_dialog = None
