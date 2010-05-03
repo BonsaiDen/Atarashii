@@ -27,6 +27,8 @@ import math
 from utils import gmtime, localtime
 from lang import LANG as lang
 
+from constants import MODE_PROFILE
+
 
 # Did you ever see faked mouse move events which fixed CSS bugs? ---------------
 # No? Then see down below ------------------------------------------------------
@@ -109,6 +111,10 @@ class ViewHelpers(object):
         # scroll to first new tweet
         elif self.first_load or (offset > 0 and self.position == 0):
             self.fix_scroll(move = True)
+        
+        # always reset scrolling in profiles
+        if self.mode_type == MODE_PROFILE:
+            self.scroll.get_vscrollbar().set_value(0.0)
         
         self.after_loaded()
         self.load_history = False
