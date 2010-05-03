@@ -24,7 +24,7 @@ import gobject
 from utils import menu_escape
 from lang import LANG as lang
 
-from constants import UNSET_TOOLTIP, UNSET_USERNAME, UNSET_LABEL
+from constants import UNSET_TOOLTIP, UNSET_USERNAME
 from constants import ST_TRAY_WARNING
 
 
