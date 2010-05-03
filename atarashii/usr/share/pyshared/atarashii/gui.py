@@ -434,6 +434,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         if not self.is_ready() or read_mode or history_info is not None:
             mode = False
         
+        # disable everything while updates etc. are pending or when we are in
+        # a profile
         if self.main.status(ST_UPDATE) or no_read \
            or self.main.status(ST_HISTORY) or self.mode == MODE_PROFILE:
             
@@ -443,7 +445,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Sensitivity
         self.tray.read_menu.set_sensitive(read_mode)
-        self.tray.refresh_menu.set_sensitive(mode)
+        self.tray.refresh_menu.set_sensitive(mode or history_mode)
         
         # Icon
         if history_info is not None:
