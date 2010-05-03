@@ -52,6 +52,7 @@ class UpdaterTweet(object):
         updates.reverse()
         for i in updates:
             if i is not None:
+                self.notified_tweets.append(i.id)
                 self.tweet.update_list.append([i, self.get_image(i)])
         
         gobject.idle_add(self.do_render, self.tweet, init, last)

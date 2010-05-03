@@ -80,6 +80,10 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         # Unset removed user list
         self.settings.removed_list = []
         
+        # notify lists
+        self.notified_tweets = []
+        self.notified_messages = []
+        
         # Init Views
         self.tweet = self.gui.tweet
         self.message = self.gui.message
@@ -465,12 +469,11 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         
         # Messages
         notify_message_list = []
-        message_ids = []
-        message_view_ids = [i[0].id for i in self.message.items]
         for i in messages:
             img_file = self.get_image(i, True)
-            if not i.id in message_ids and not i.id in message_view_ids:
-                message_ids.append(i.id)
+            if not i.id in self.notified_messages:
+                self.notified_messages.append(i.id)
+                
                 if i.sender.screen_name.lower() != username:
                     notify_message_list.append([lang.notification_message % \
                                         i.sender.screen_name, i.text, img_file,
@@ -480,12 +483,11 @@ class Updater(threading.Thread, UpdaterMessage, UpdaterTweet, UpdaterProfile):
         
         # Tweets
         notify_tweet_list = []
-        update_ids = []
-        tweet_view_ids = [i[0].id for i in self.tweet.items]
         for i in updates:
             img_file = self.get_image(i)
-            if not i.id in update_ids and not i.id in tweet_view_ids:
-                update_ids.append(i.id)
+            if not i.id in self.notified_tweets:
+                self.notified_tweets.append(i.id)
+                
                 if i.user.screen_name.lower() != username:
                     if hasattr(i, 'retweeted_status'):
                         name = 'RT %s' % i.retweeted_status.user.screen_name
