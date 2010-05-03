@@ -1,9 +1,11 @@
 atarashii (0.99.26b-1) all;
 
+  ~ "Refresh all" in the tray menu is now always active(except during updates).
+  * Reworked the view scrolling, should now always scroll correctly.
   * Fix for the account not getting selected in the tray menu after hitting the 
     "retry" button.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 03 May 2010 12:11:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 03 May 2010 16:26:00 +0200
 
 atarashii (0.99.26a-1) all;
 
