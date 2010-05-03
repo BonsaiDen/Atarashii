@@ -175,6 +175,7 @@ class GUIEventHandler(object):
             self.profile_scroll.show()
             self.tweet_scroll.hide()
             self.profile.focus_me()
+            self.profile.check_scroll(0.0)
             self.set_multi_button(False)
             self.tabs.set_sensitive(False)
             no_check = True
