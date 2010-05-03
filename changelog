@@ -1,12 +1,13 @@
 atarashii (0.99.26b-1) all;
 
+  + Added an option to turn off notifications on network errors.
   ~ "Refresh all" in the tray menu is now always active(except during updates).
   * Reworked the view scrolling, should now always scroll correctly.
   * Fix for the account not getting selected in the tray menu after hitting the 
     "retry" button.
   * Improved error dialogs in case a profile fails to load.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 03 May 2010 16:58:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Mon, 03 May 2010 17:20:00 +0200
 
 atarashii (0.99.26a-1) all;
 
