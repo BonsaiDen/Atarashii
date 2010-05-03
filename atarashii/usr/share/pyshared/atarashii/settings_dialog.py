@@ -211,6 +211,9 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
             
             elif name is None and user == self.main.username:
                 selected = num
+                
+            elif self.main.username == UNSET_USERNAME and selected == -1:
+                selected = num
         
         self.accounts.set_model(self.accounts_list)
         if selected != -1:
@@ -297,7 +300,7 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
         # update menu
         self.main.gui.tray.update_account_menu()
         self.settings.save()
-        self.create_account_list()
+        self.create_account_list(username)
         if len(self.user_accounts) == 1:
             self.select_account(0)
     
