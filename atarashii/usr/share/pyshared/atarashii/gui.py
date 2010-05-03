@@ -445,7 +445,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Sensitivity
         self.tray.read_menu.set_sensitive(read_mode)
-        self.tray.refresh_menu.set_sensitive(mode or history_mode)
+        self.tray.refresh_menu.set_sensitive(mode or history_mode or read_mode)
         
         # Icon
         if history_info is not None:
