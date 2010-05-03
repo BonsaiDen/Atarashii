@@ -264,7 +264,7 @@ class TextInput(gtk.TextView):
         if self.is_shortening:
             return False
         
-        text = self.get_text().lstrip()
+        text = self.get_text().strip()
         
         # Split the text
         self.next_text = UNSET_TEXT
@@ -574,7 +574,9 @@ class TextInput(gtk.TextView):
                 # Set text
                 self.is_changing = True
                 pre = all_text[0:offset] + name
-                self.set_text(pre + ' ' + all_text[off:].lstrip())
+                text = pre + ' ' + all_text[off:].lstrip()
+                self.set_text(text)
+                gobject.idle_add(self.check_typing, text)
                 self.user_offset = len(pre) + 1
                 self.is_changing = False
                 
@@ -610,7 +612,9 @@ class TextInput(gtk.TextView):
             pos = (self.user_offset - len(self.auto_complete_name)) - 1
             pre = text[:pos] + self.auto_typed
             dec = 1 if self.backspace else 0
-            self.set_text(pre + text[self.user_offset - dec:])
+            text = pre + text[self.user_offset - dec:]
+            self.set_text(text)
+            gobject.idle_add(self.check_typing, text)
             
             # Move cursor
             self.set_cursor(self.get_offset(len(pre)))
@@ -815,7 +819,7 @@ class TextInput(gtk.TextView):
         if self.gui.mode == MODE_PROFILE:
             return False
         
-        text = self.get_text().lstrip()
+        text = self.get_text().strip()
         max_length = 140 + self.message_len
         if len(text) <= max_length:
             self.gui.set_status(lang.status_left % (max_length - len(text)))
