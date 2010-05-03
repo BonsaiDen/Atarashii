@@ -79,14 +79,20 @@ class ViewMenu(object):
                     URLExpander(link, self.expand_link)
     
     def set_tooltip(self, user, img):
+        self.tooltip_img.show()
         self.tooltip_label.set_markup(lang.html_avatar_tooltip \
                                       % (escape(user.name), user.statuses_count,
                                       user.followers_count, user.friends_count))
         
+        # Watch out for malformatted gifs, I'm looking at you @defunkt!
         if img != self.tooltip_img_file:
-            buf = gtk.gdk.pixbuf_new_from_file_at_size(img, 48, 48)
-            self.tooltip_img.set_from_pixbuf(buf)
-            self.tooltip_img_file = img
+            try:
+                buf = gtk.gdk.pixbuf_new_from_file_at_size(img, 48, 48)
+                self.tooltip_img.set_from_pixbuf(buf)
+                self.tooltip_img_file = img
+            
+            except:
+                self.tooltip_img.hide()
     
     
     # Menu Events --------------------------------------------------------------
