@@ -102,19 +102,12 @@ class ViewHelpers(object):
         
         # Re-scroll
         if not self.first_load and self.position > 0:
-            pos = self.position + offset
-            self.check_scroll(pos)
-            gobject.timeout_add(25, self.check_scroll, pos)
+            self.on_scroll(None, None)
+            self.check_scroll(self.position + offset)
         
         # scroll to first new tweet
         elif self.first_load or (offset > 0 and self.position == 0):
-            height = self.gui.get_view_height()
-            if offset > height:
-                self.scroll_to = offset - height
-                self.fix_scroll()
-        
-        if len(self.items) > 0:
-            self.first_load = False
+            self.fix_scroll()
         
         self.after_loaded()
         self.load_history = False
@@ -126,32 +119,46 @@ class ViewHelpers(object):
         pass
     
     def on_scroll(self, view, event):
-        # FIXME sometimes this still doesn't remove the menu
         self.current_scroll = self.scroll.get_vscrollbar().get_value()
         gobject.timeout_add(10, self.fake_move, self.mouse_position)
     
-    def fix_scroll(self):
-        if self.scroll_to != -1 and self.gui.mode == self.mode_type:
-            self.scroll.get_vscrollbar().set_value(self.scroll_to)
-            gobject.timeout_add(25, self.check_offset)
-            self.scroll_to = -1
-    
-    def on_draw(self, *args):
-        if self.is_rendering_history:
-            if self.scroll.get_vscrollbar().get_value() == 0.0:
-                if self.scroll.get_vscrollbar().get_adjustment().get_upper() \
-                  > self.gui.get_view_height():
-                    
-                    return True
-                
-                else:
-                    self.is_rendering_history = False
-                    return False
+    # Fix scrolling on load in order to jump to the first unread item
+    def fix_scroll(self, check=False):
+        if not check:
+            if self.first_load:
+                self.last_scroll_pos = -1
+                gobject.timeout_add(10, self.fix_scroll, True)
+            
+            return False
+        
+        if self.gui.mode == self.mode_type:
+            height = self.gui.get_view_height()
+            if len(self.items) > 0:
+                offset = self.get_offset()
             
             else:
-                self.is_rendering_history = False
-                gobject.timeout_add(10, self.scroll.queue_draw)
+                offset = 0
+            
+            pos = offset - height
+            if pos != self.last_scroll_pos and pos >= 0.0:
+                self.last_scroll_pos = pos
+                self.scroll.get_vscrollbar().set_value(pos)
+                self.on_scroll(None, None)
                 return True
+            
+            else:
+                if len(self.items) > 0:
+                    self.first_load = False
+                
+                return False
+    
+    # rescroll when new items come in, so that the view stays at the "same"
+    # position for the viewer
+    def check_scroll(self, pos):
+        if self.current_scroll != pos:
+            self.scroll.get_vscrollbar().set_value(pos)
+            self.on_scroll(None, None)
+            gobject.timeout_add(10, self.check_scroll, pos)
     
     # Fakeman! Roger Buster!
     # This fixes an issue where the reply/favorite links wouldn't disapear if
@@ -195,15 +202,23 @@ class ViewHelpers(object):
             
             self.on_scroll(None, None)
     
-    # Double check for some stupid scrolling bugs with webkit
-    def check_scroll(self, pos):
-        self.scroll.get_vscrollbar().set_value(pos)
-    
-    def check_offset(self):
-        offset = self.get_offset()
-        height = self.gui.get_view_height()
-        if offset > height:
-            self.check_scroll(offset - height)
+    # Fix scroll flickering when loading the history
+    def on_draw(self, *args):
+        if self.is_rendering_history:
+            if self.scroll.get_vscrollbar().get_value() == 0.0:
+                if self.scroll.get_vscrollbar().get_adjustment().get_upper() \
+                  > self.gui.get_view_height():
+                    
+                    return True
+                
+                else:
+                    self.is_rendering_history = False
+                    return False
+            
+            else:
+                self.is_rendering_history = False
+                gobject.timeout_add(10, self.scroll.queue_draw)
+                return True
     
     
     # Time ---------------------------------------------------------------------
@@ -257,6 +272,7 @@ class ViewHelpers(object):
     # --------------------------------------------------------------------------
     def is_new_timeline(self, item):
         self.new_timeline = item.id > self.new_items_id
+        
         if self.new_timeline:
             self.count += 1
         
