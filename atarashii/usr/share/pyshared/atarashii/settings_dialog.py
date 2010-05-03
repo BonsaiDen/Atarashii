@@ -211,7 +211,7 @@ class SettingsDialog(Dialog, SettingsPages, SettingsSaves):
             
             elif name is None and user == self.main.username:
                 selected = num
-                
+            
             elif self.main.username == UNSET_USERNAME and selected == -1:
                 selected = num
         
