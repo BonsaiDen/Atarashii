@@ -103,18 +103,19 @@ class ViewHelpers(object):
         # has scrolled since the rendering was started
         self.position += self.current_scroll - self.position
         
+        
+        # always reset scrolling in profiles
+        if self.mode_type == MODE_PROFILE:
+            pass
+        
         # Re-scroll
-        if not self.first_load and self.position > 0:
+        elif not self.first_load and self.position > 0:
             self.on_scroll(None, None)
             self.check_scroll(self.position + offset)
         
         # scroll to first new tweet
         elif self.first_load or (offset > 0 and self.position == 0):
             self.fix_scroll(move = True)
-        
-        # always reset scrolling in profiles
-        if self.mode_type == MODE_PROFILE:
-            self.scroll.get_vscrollbar().set_value(0.0)
         
         self.after_loaded()
         self.load_history = False

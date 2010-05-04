@@ -146,7 +146,7 @@ a:active, a:hover, a, .protected {
 
 .profile_bio {
     word-wrap: break-word;
-    padding-right: 6px;
+    padding-right: 12px;
 }
 
 .profile_tweets {
@@ -175,6 +175,13 @@ a:active, a:hover, a, .protected {
 
 .profile_header a:hover {
     text-decoration: underline;
+}
+
+.profile_bio input {
+    font-size: {FONT10}px;
+    margin: 0px;
+    margin-right: 2px;
+    float: left;
 }
 
 
