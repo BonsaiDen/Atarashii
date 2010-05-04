@@ -20,6 +20,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 import gobject
+from glib import GError as GLIBError
 
 import urllib2
 
@@ -91,7 +92,7 @@ class ViewMenu(object):
                 self.tooltip_img.set_from_pixbuf(buf)
                 self.tooltip_img_file = img
             
-            except:
+            except GLIBError:
                 self.tooltip_img.hide()
     
     
