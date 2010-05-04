@@ -114,7 +114,14 @@ class ViewHelpers(object):
         # Re-scroll
         elif not self.first_load and self.position > 0:
             self.on_scroll(None, None)
-            self.check_scroll(self.position + offset)
+            epos = offset - self.gui.get_view_height()
+            if epos >= 0.0:
+                pos = epos
+            
+            else:
+                pos = math.floor(self.position + offset)
+            
+            self.check_scroll(pos)
         
         # scroll to first new tweet
         elif self.first_load or (offset > 0 and self.position == 0):
