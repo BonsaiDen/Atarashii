@@ -132,6 +132,7 @@
                                     <property name="label" translatable="yes">Start Atarashii on login</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
+                                    <property name="has_focus">True</property>
                                     <property name="receives_default">False</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
@@ -269,6 +270,7 @@
                                     <property name="label" translatable="yes">Synchronize</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">True</property>
+                                    <property name="has_focus">True</property>
                                     <property name="receives_default">False</property>
                                     <property name="draw_indicator">True</property>
                                   </object>
@@ -527,6 +529,7 @@
                             <child>
                               <object class="GtkComboBox" id="colorthemebox">
                                 <property name="visible">True</property>
+                                <property name="has_focus">True</property>
                               </object>
                               <packing>
                                 <property name="position">0</property>
@@ -655,6 +658,7 @@
                             <property name="label" translatable="yes">Enable</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="has_focus">True</property>
                             <property name="receives_default">False</property>
                             <property name="draw_indicator">True</property>
                           </object>
