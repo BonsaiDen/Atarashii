@@ -230,6 +230,8 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         # Fix tabs
         self.fix_tabs_height()
+        if not self.main.status(ST_LOGIN_SUCCESSFUL):
+            self.tabsbox.hide()
         
         # Multi Button
         self.on_multi_move(None, None)
