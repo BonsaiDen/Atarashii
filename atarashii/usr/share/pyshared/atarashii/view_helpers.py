@@ -103,7 +103,6 @@ class ViewHelpers(object):
         # has scrolled since the rendering was started
         self.position += self.current_scroll - self.position
         
-        
         # always reset scrolling in profiles
         if self.mode_type == MODE_PROFILE:
             pass
