@@ -2,10 +2,10 @@ atarashii (0.99.27e-1) all;
 
   * Uniformed the buttons in the profile view and fixed another scrolling issue
     with it.
-  * Fixed frozen scrolling when starting in tray.
+  * Fixed frozen scrolling when starting in tray or on startup.
   * Tabs are now correctly hidden during login if Atarashii started in tray.
 
- -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 04 May 2010 15:40:00 +0200
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 04 May 2010 16:55:00 +0200
 
 atarashii (0.99.27d-1) all;
 
