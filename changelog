@@ -1,4 +1,11 @@
-atarashii (0.99.27cd-1) all;
+atarashii (0.99.27e-1) all;
+
+  * Uniformed the buttons in the profile view and fixed another scrolling issue
+    with it.
+
+ -- Ivo Wetzel <ivo.wetzel@googlemail.com>  Tue, 04 May 2010 15:57:00 +0200
+
+atarashii (0.99.27d-1) all;
 
   * More scrolling fixes.
   * The remaining character count no longer includes trailing whitespace.
