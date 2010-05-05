@@ -232,6 +232,7 @@ class SettingsPages(object):
         self.sync_box.set_active(settings.is_true('syncing', False))
         self.sync_box.set_sensitive(False)
         self.get('syncoptions').set_sensitive(False)
+        self.syncing_key = None
         
         # Setup syncing GUI
         def init_sync():
@@ -254,14 +255,19 @@ class SettingsPages(object):
                     self.get('syncoptions').set_sensitive(True)
                     self.sync_box.set_sensitive(True)
                 
-                sync_toggle()
+                sync_toggle(click=False)
                 settings['syncing'] = False
                 self.sync_box.set_active(False)
             
             else:
-                self.get('syncoptions').set_sensitive(True)
-                self.sync_box.set_sensitive(True)
                 self.syncing_key = settings['synckey']
+                if settings.is_true('syncing', False):
+                    self.get('syncoptions').set_sensitive(True)
+                
+                else:
+                    self.get('syncoptions').set_sensitive(False)
+                
+                self.sync_box.set_sensitive(True)
                 desc.set_label(lang.sync_key_current)
                 label.set_label(lang.sync_key_label % self.syncing_key)
         
@@ -270,7 +276,7 @@ class SettingsPages(object):
             self.dlg.queue_draw()
             gobject.idle_add(retrieve_key)
         
-        def retrieve_key():
+        def retrieve_key(auto=False):
             key = self.main.syncer.retrieve_new_key()
             if key is not None:
                 self.syncing_key = key
@@ -281,6 +287,8 @@ class SettingsPages(object):
                 desc.set_label(lang.sync_key_changed)
                 
                 change.set_sensitive(True)
+                if auto:
+                    self.sync_box.set_active(True)
             
             else:
                 desc.set_label(lang.sync_key_error)
@@ -328,17 +336,20 @@ class SettingsPages(object):
             else:
                 entry.modify_base(gtk.STATE_NORMAL, self.gui.text.default_bg)
         
-        def sync_toggle(*args):
+        def sync_toggle(widget = None, click=True):
             editbox.set_property('visible', True)
             entrybox.set_property('visible', False)
             self.get('syncoptions').set_sensitive(self.sync_box.get_active())
+            
+            if click and self.sync_box.get_active() and self.syncing_key is None:
+                retrieve_key(True)
         
         self.sync_box.connect('toggled', sync_toggle)
         entry.connect('changed', sync_entry_change)
         change.connect('clicked', sync_change)
         cancel.connect('clicked', sync_cancel_key)
         ook.connect('clicked', sync_ok_key)
-        sync_toggle()
+        sync_toggle(click=False)
         gobject.timeout_add(100, init_sync)
     
     
