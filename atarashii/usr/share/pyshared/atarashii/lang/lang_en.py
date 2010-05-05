@@ -274,9 +274,7 @@ LANG = {
     'sync_button_key': 'Synchronization failed',
     'sync_error_key':
         'Your Sync-Token is invalid, please go to the preferences and '
-        'request a new one.\n\nSync-Tokens do <b>expire</b> when they '
-        'haven\'t been used in the first <b>24 hours</b> after their '
-        'generation.',
+        'request a new one.',
     
     'sync_user_error_title': 'Invalid Token',
     'sync_user_error':

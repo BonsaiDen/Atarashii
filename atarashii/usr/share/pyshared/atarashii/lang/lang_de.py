@@ -283,9 +283,7 @@ LANG = {
     'sync_button_key': 'Synchronisation fehlgeschlagen',
     'sync_error_key':
         'Ihr Sync-Token ist ungültig, bitte rufen Sie die Einstellungen '
-        'auf und generieren sie ein neues.\n\nSync-Tokens verfallen falls '
-        'sie in den ersten 24 Stunden nach Ihrer Generierung nicht benutzt'
-        ' wurden.',
+        'auf und generieren sie ein neues.',
     
     'sync_user_error_title': 'Ungültiges Token',
     'sync_user_error':
