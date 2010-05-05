@@ -219,6 +219,12 @@ class Settings(object):
     def get_accounts(self):
         return sorted([i[8:] for i in self.values if i.startswith('account_')])
     
+    def get_ids(self, name):
+        return (self['firsttweet_' + name],
+                self['lasttweet_' + name],
+                self['firstmessage_' + name],
+                self['lastmessage_' + name])
+    
     
     # Usernames ----------------------------------------------------------------
     def add_users(self, users):

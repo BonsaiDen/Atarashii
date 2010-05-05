@@ -48,10 +48,8 @@ class Syncer(object):
         self.reset()
     
     def reset(self):
-        self.first_tweet = HTML_UNSET_ID
-        self.last_tweet = HTML_UNSET_ID
-        self.first_message = HTML_UNSET_ID
-        self.last_message = HTML_UNSET_ID
+        self.last_ids = (HTML_UNSET_ID, HTML_UNSET_ID,
+                         HTML_UNSET_ID, HTML_UNSET_ID)
     
     
     # Sync up to the cloud -----------------------------------------------------
@@ -63,39 +61,24 @@ class Syncer(object):
         if self.main.username == UNSET_USERNAME:
             return False
         
-        # Check for change
-        username = self.main.username
-        if self.first_tweet < self.settings['firsttweet_' + username] \
-           or self.last_tweet < self.settings['lasttweet_' + username] \
-           or self.first_message < self.settings['firstmessage_' + username] \
-           or self.last_message < self.settings['lastmessage_' + username]:
-            
-            pass
-        
-        else:
-            return False
-        
-        # Start async
-        Async(self.async_set_ids, username)
+        ids = self.settings.get_ids(self.main.username)
+        for i, v in enumerate(self.last_ids):
+            if v < ids[i]:
+                Async(self.async_set_ids, self.main.username)
+                break
     
     def async_set_ids(self, username):
         self.pending = True
         if self.get_key():
             try:
+                ids = self.settings.get_ids(username)
                 self.request('set', {
-                    'token': self.key,
-                    'user': username,
-                    'first_tweet': self.settings['firsttweet_' + username],
-                    'last_tweet': self.settings['lasttweet_' + username],
-                    'first_message': self.settings['firstmessage_' + username],
-                    'last_message': self.settings['lastmessage_' + username]
+                    'token': self.key, 'user': username,
+                    'first_tweet': ids[0], 'last_tweet': ids[1],
+                    'first_message': ids[2], 'last_message': ids[3]
                 })
                 
-                # Set stuff
-                self.first_tweet = self.settings['firsttweet_' + username]
-                self.last_tweet = self.settings['lasttweet_' + username]
-                self.first_message = self.settings['firstmessage_' + username]
-                self.last_message = self.settings['lastmessage_' + username]
+                self.last_ids = ids
                 self.pending = False
                 return True
             
@@ -137,22 +120,10 @@ class Syncer(object):
                 first_message, last_message = message.split(',')
                 
                 # Set the IDs
-                first_tweet = long(first_tweet)
-                if first_tweet > self.settings['firsttweet_' + username]:
-                    self.settings['firsttweet_' + username] = first_tweet
-                
-                last_tweet = long(last_tweet)
-                if last_tweet > self.settings['lasttweet_' + username]:
-                    self.settings['lasttweet_' + username] = last_tweet
-                
-                first_message = long(first_message)
-                if first_message > self.settings['firstmessage_' + username]:
-                    self.settings['firstmessage_' + username] = first_message
-                
-                last_message = long(last_message)
-                if last_message > self.settings['lastmessage_' + username]:
-                    self.settings['lastmessage_' + username] = last_message
-                
+                self.update_bigger(first_tweet, 'firsttweet_', username)
+                self.update_bigger(last_tweet, 'lasttweet_', username)
+                self.update_bigger(first_message, 'firstmessage_', username)
+                self.update_bigger(last_message, 'lastmessage_', username)
                 return True
             
             except IOError:
@@ -165,8 +136,10 @@ class Syncer(object):
         else:
             return False
     
-    def set_key(self):
-        pass
+    def update_bigger(self, uid, setting, username):
+        uid = long(uid)
+        if uid > self.settings[setting + username]:
+            self.settings[setting + username] = uid
     
     
     # Token requests -----------------------------------------------------------
@@ -203,20 +176,11 @@ class Syncer(object):
     # --------------------------------------------------------------------------
     def get_key(self):
         key = self.settings['synckey']
-        if key is None:
-            pass
-        
-        elif key in ('', 'None'):
+        if key is None or key in ('', 'None'):
             key = None
         
-        elif len(key) != 22:
+        elif len(key) != 22 or not set(key).issubset(set(SYNC_KEY_CHARS)):
             key = None
-        
-        else:
-            for i in key:
-                if not i in SYNC_KEY_CHARS:
-                    key = None
-                    break
         
         # new key
         if key is None:
