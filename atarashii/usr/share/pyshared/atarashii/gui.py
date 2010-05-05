@@ -65,7 +65,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         # Setup
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
         self.hide_on_delete()
-        self.set_border_width(2)
         self.set_size_request(280, 400)
         self.set_icon_from_file(main.get_image())
         
