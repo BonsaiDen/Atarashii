@@ -27,6 +27,7 @@ class Notifier(object):
     def __init__(self, main):
         self.main = main
         self.last_id = -1
+        self.pending = 0
         self.items = []
         self.init_dbus()
     
@@ -50,15 +51,16 @@ class Notifier(object):
         if self.notify and len(items) > 0:
             
             # Add items and save old count
-            pending = len(self.items)
+            print self.pending
             self.items += items
             
             # If there were no pending items show the first new one
-            if pending == 0:
+            if self.pending == 0:
                 self.last_id = -1
                 self.show(-1)
     
     def show(self, item_id, *args):
+        self.pending = len(self.items)
         if (item_id == -1 or item_id == self.last_id) and len(self.items) > 0:
             item = self.items.pop(0)
             try:
