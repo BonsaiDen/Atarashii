@@ -64,6 +64,11 @@ class APICall(threading.Thread):
                     gobject.idle_add(self.gui.text.grab_focus)
                 
                 self.main.unset_status(ST_WAS_SEND)
+                
+                # Hide the Network Error Warning
+                if self.main.status(ST_NETWORK_FAILED):
+                    gobject.idle_add(self.gui.warning_button.hide, 5000) 
+                
                 self.main.unset_status(ST_NETWORK_FAILED)
             
             except (IOError, TweepError), error:
