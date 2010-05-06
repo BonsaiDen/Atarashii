@@ -40,7 +40,6 @@ class APICall(threading.Thread):
         self.start()
     
     def run(self):
-        self.main.unset_status(ST_NETWORK_FAILED)
         if self.before():
             try:
                 self.call()
@@ -65,6 +64,7 @@ class APICall(threading.Thread):
                     gobject.idle_add(self.gui.text.grab_focus)
                 
                 self.main.unset_status(ST_WAS_SEND)
+                self.main.unset_status(ST_NETWORK_FAILED)
             
             except (IOError, TweepError), error:
                 self.on_error()
