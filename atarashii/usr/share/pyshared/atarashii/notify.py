@@ -51,7 +51,6 @@ class Notifier(object):
         if self.notify and len(items) > 0:
             
             # Add items and save old count
-            print self.pending
             self.items += items
             
             # If there were no pending items show the first new one
