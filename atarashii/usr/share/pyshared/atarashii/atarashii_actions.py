@@ -41,7 +41,7 @@ from constants import UNSET_ID_NUM, UNSET_TEXT, UNSET_ERROR, UNSET_USERNAME, \
 
 from constants import ST_LOGIN_SUCCESSFUL, ST_WAS_RETWEET_NEW, \
                       ST_RECONNECT, ST_SEND, ST_DELETE, ST_WAS_SEND, \
-                      ST_WAS_RETWEET, ST_WAS_DELETE, \
+                      ST_WAS_RETWEET, ST_WAS_DELETE, ST_LOGIN_ERROR, \
                       ST_CONNECT, ST_LOGIN_COMPLETE
 
 from constants import ERR_TWEET_NOT_FOUND, ERR_MESSAGE_NOT_FOUND, \
@@ -496,11 +496,15 @@ class AtarashiiActions(object):
             code = ERR_NETWORK_FAILED
         
         # Reset stuff
-        self.unset_status(ST_WAS_SEND | ST_WAS_RETWEET | \
-                          ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
+        user_action = self.any_status(ST_WAS_SEND, ST_WAS_RETWEET, \
+                                      ST_WAS_RETWEET_NEW, ST_WAS_DELETE, \
+                                      ST_LOGIN_ERROR)
+        
+        self.unset_status(ST_WAS_SEND | ST_WAS_RETWEET \
+                          | ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
         
         # Leave it to the GUI!
-        self.gui.show_error(code, rate_error)
+        self.gui.show_error(code, rate_error, user_action)
         
         # Log the error
         if error_errno is None:

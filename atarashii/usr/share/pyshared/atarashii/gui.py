@@ -706,21 +706,19 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
     
     # Show Error Dialog --------------------------------------------------------
     # --------------------------------------------------------------------------
-    def show_error(self, code, rate_error):
-        # Is Atarashii visible?
-        is_visible = self.is_shown and self.on_screen()
+    def show_error(self, code, rate_error, user_action):
+        if self.main.username == UNSET_USERNAME:
+            username = self.main.last_username
         
-        if self.show_box(code, rate_error, is_visible):
+        else:
+            username = self.main.username
+        
+        self.show_tray(code, username)
+        
+        if self.show_box(code, rate_error, user_action):
             return False
         
         else:
-            
-            # determine which username to use
-            if self.main.username == UNSET_USERNAME:
-                username = self.main.last_username
-            
-            else:
-                username = self.main.username
             
             # Clear already deleted tweets
             if self.main.delete_tweet_id != UNSET_ID_NUM:
@@ -757,20 +755,12 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         self.update_status()
     
     
-    # Show Error/Warning Boxes -------------------------------------------------
-    def show_box(self, code, rate_error, is_visible):
-        
-        # determine which username to use
-        if self.main.username == UNSET_USERNAME:
-            username = self.main.last_username
-        
-        else:
-            username = self.main.username
-        
-        # Tray icon
+    # Set Tray icon ------------------------------------------------------------
+    def show_tray(self, code, username):
         if code in (ERR_NETWORK_FAILED, ERR_NETWORK_TWITTER_FAILED,
                     ERR_RATE_RECONNECT, HT_404_NOT_FOUND, HT_401_UNAUTHORIZED,
-                    HT_503_SERVICE_UNAVAILABLE):
+                    HT_503_SERVICE_UNAVAILABLE, HT_500_INTERNAL_SERVER_ERROR,
+                    HT_502_BAD_GATEWAY, ERR_RATE_LIMIT):
             
             login = lang.tray_logged_in % username \
                     if self.main.status(ST_LOGIN_COMPLETE) \
@@ -785,6 +775,7 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                     else login + '\n' + lang.tray_warning_twitter,
                 
                 ERR_RATE_RECONNECT: login + '\n' + lang.tray_error_rate,
+                
                 HT_404_NOT_FOUND:
                     login,
                 
@@ -792,7 +783,16 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                     login,
                 
                 HT_503_SERVICE_UNAVAILABLE:
-                    login + '\n' + lang.tray_warning_overload
+                    login + '\n' + lang.tray_warning_overload,
+                
+                HT_500_INTERNAL_SERVER_ERROR:
+                    login + '\n' + lang.tray_error_twitter,
+                
+                HT_502_BAD_GATEWAY:
+                    login + '\n' + lang.tray_error_down,
+                
+                ERR_RATE_LIMIT:
+                    login + '\n' + lang.tray_error_rate_limit
             }[code]
             
             # Show GUI if not shown so the user does notices the message
@@ -807,55 +807,42 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
                                             gtk.STOCK_DIALOG_ERROR
             
             gobject.idle_add(self.tray.set_tooltip_error, msg, icon)
+    
+    
+    # Show Error/Warning Boxes -------------------------------------------------
+    def show_box(self, code, rate_error, user_action):
         
         # Warning popups
         if code in (ERR_NETWORK_TWITTER_FAILED, ERR_NETWORK_FAILED,
                       HT_503_SERVICE_UNAVAILABLE):
             
-            msg = lang.tray_logged_in % username + '\n'
+            button = lang.warning_button_network
+            tray = lang.tray_warning_network
+            if code == ERR_NETWORK_TWITTER_FAILED:
+                if self.main.status(ST_LOGIN_COMPLETE):
+                    info = lang.warning_network_timeout
+                
+                else:
+                    info = lang.warning_network_twitter
             
-            # overload warning
-            if code == HT_503_SERVICE_UNAVAILABLE:
-                if not self.main.status(ST_NETWORK_FAILED):
-                    if self.settings.is_true('notify_network', True) \
-                       or not self.main.status(ST_LOGIN_COMPLETE):
-                        
-                        self.notifcation(MESSAGE_WARNING,
-                                         lang.tray_warning_overload)
-                    
-                    self.main.set_status(ST_NETWORK_FAILED)
-                
-                # Don't override send errors and other stuff with 'unimportant'
-                # network warnings
-                if not self.warning_button.is_visible:
-                    self.warning_button.show(lang.warning_button_overload,
-                                             lang.warning_overload)
+            elif code == ERR_NETWORK_FAILED:
+                info = lang.warning_network
             
-            # twitter lost / network lost / network failed
-            else:
-                if code == ERR_NETWORK_TWITTER_FAILED:
-                    if self.main.status(ST_LOGIN_COMPLETE):
-                        info = lang.warning_network_timeout
+            elif code == HT_503_SERVICE_UNAVAILABLE:
+                info = lang.warning_overload
+                button = lang.warning_button_overload
+                tray = lang.tray_warning_overload
+            
+            if not self.main.status(ST_NETWORK_FAILED):
+                if self.settings.is_true('notify_network', True) \
+                   or not self.main.status(ST_LOGIN_COMPLETE):
                     
-                    else:
-                        info = lang.warning_network_twitter
+                    self.notifcation(MESSAGE_WARNING, tray)
                 
-                elif code == ERR_NETWORK_FAILED:
-                    info = lang.warning_network
-                
-                if not self.main.status(ST_NETWORK_FAILED):
-                    if self.settings.is_true('notify_network', True) \
-                       or not self.main.status(ST_LOGIN_COMPLETE):
-                        
-                        self.notifcation(MESSAGE_WARNING,
-                                         lang.tray_warning_network)
-                    
-                    self.main.set_status(ST_NETWORK_FAILED)
-                
-                # Don't override send errors and other stuff with 'unimportant'
-                # network warnings
-                if not self.warning_button.is_visible:
-                    self.warning_button.show(lang.warning_button_network, info)
+                self.main.set_status(ST_NETWORK_FAILED)
+            
+            if not self.warning_button.is_visible and user_action:
+                self.warning_button.show(button, info)
             
             return True
         
@@ -863,7 +850,6 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         elif code in (HT_500_INTERNAL_SERVER_ERROR, HT_502_BAD_GATEWAY,
                       ERR_RATE_LIMIT):
             
-            msg = lang.tray_logged_in % username + '\n'
             if code != ERR_RATE_LIMIT:
                 
                 # internal twitter error
