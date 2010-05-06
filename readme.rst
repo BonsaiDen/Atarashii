@@ -28,7 +28,7 @@ If you just want to start Atarashii without installing it first just run ``./deb
     Also there is a rare bug where dpkg-deb fails to open/find the control file.  
     If you encounter this please send me a mail with more details.  
 
-.. _Debian-Package: http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.27e-1_all.deb
+.. _Debian-Package: http://github.com/downloads/BonsaiDen/Atarashii/atarashii_0.99.28-1_all.deb
 
 Contributing
 ------------
