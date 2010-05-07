@@ -19,10 +19,13 @@
 import gobject
 import threading
 
-from utils import TweepError
+import time
+
+from utils import TweepError, min_time
 
 from constants import MODE_TWEETS, MODE_MESSAGES
 from constants import UNSET_USERNAME, UNSET_TEXT, UNSET_ID_NUM
+from constants import TIME_MIN_SEND
 from constants import ST_SEND, ST_WAS_SEND, ST_WAS_RETWEET, ST_WAS_DELETE, \
                       ST_DELETE, ST_NETWORK_FAILED
 
@@ -40,6 +43,8 @@ class APICall(threading.Thread):
         self.start()
     
     def run(self):
+        self.start = time.time()
+        
         if self.before():
             try:
                 self.call()
@@ -67,21 +72,21 @@ class APICall(threading.Thread):
                 
                 # Hide the Network Error Warning
                 if self.main.status(ST_NETWORK_FAILED):
-                    gobject.idle_add(self.gui.warning_button.hide, 5000) 
+                    gobject.idle_add(self.gui.warning_button.hide, 5000)
                 
                 self.main.unset_status(ST_NETWORK_FAILED)
             
             except (IOError, TweepError), error:
                 self.on_error()
-                gobject.idle_add(self.main.handle_error, error)
+                gobject.idle_add(self.main.handle_error, error, True)
             
             self.main.unset_status(ST_SEND)
     
     def on_error(self):
-        pass
+        min_time(self.start, TIME_MIN_SEND)
     
     def after_send(self):
-        pass
+        min_time(self.start, TIME_MIN_SEND)
     
     def send_tweet(self, text, reply_id):
         if reply_id != UNSET_ID_NUM:
@@ -129,6 +134,7 @@ class Send(APICall):
         if self.main.message_user != UNSET_USERNAME:
             self.main.settings.add_username(self.main.message_user)
         
+        self.after_send()
         self.gui.message.set_newest()
         imgfile = self.main.updater.get_image(message, True)
         self.gui.message.update_list.append([message, imgfile])
@@ -152,9 +158,11 @@ class Edit(APICall):
         self.send_tweet(self.text, self.main.edit_reply_id)
     
     def on_error(self):
+        min_time(self.start, TIME_MIN_SEND)
         gobject.idle_add(self.gui.tweet.remove, self.tweet_id)
     
     def after_send(self):
+        min_time(self.start, TIME_MIN_SEND)
         gobject.idle_add(self.gui.tweet.remove, self.tweet_id)
     
     def delete(self):
@@ -164,7 +172,8 @@ class Edit(APICall):
             self.main.unset_status(ST_WAS_DELETE)
         
         except (IOError, TweepError), error:
-            gobject.idle_add(self.main.handle_error, error)
+            min_time(self.start, TIME_MIN_SEND)
+            gobject.idle_add(self.main.handle_error, error, True)
             return False
         
         self.main.unset_status(ST_DELETE)
@@ -222,7 +231,7 @@ class Retweet(SimpleAPICall):
         gobject.idle_add(main.gui.show_retweet_info, name)
     
     def on_error(self, main, name, tweet_id):
-        gobject.idle_add(main.handle_error, self.error)
+        gobject.idle_add(main.handle_error, self.error, True)
     
     def after(self, main, name, tweet_id):
         main.unset_status(ST_SEND)
@@ -257,7 +266,7 @@ class Delete(SimpleAPICall):
         gobject.idle_add(main.gui.show_delete_info, tweet_id, message_id)
     
     def on_error(self, main, tweet_id, message_id):
-        gobject.idle_add(main.handle_error, self.error)
+        gobject.idle_add(main.handle_error, self.error, True)
     
     def after(self, main, tweet_id, message_id):
         main.unset_status(ST_DELETE)

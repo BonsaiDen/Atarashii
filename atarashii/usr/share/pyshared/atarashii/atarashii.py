@@ -301,7 +301,7 @@ class Atarashii(AtarashiiActions):
         self.gui.info_button.hide()
         
         if error:
-            self.handle_error(error)
+            self.handle_error(error, True)
         
         gobject.idle_add(self.gui.message.init, False, False, error is not None)
         gobject.idle_add(self.gui.tweet.init, False, False, error is not None)

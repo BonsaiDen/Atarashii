@@ -24,10 +24,13 @@ import re
 import os
 
 
-# xAuth ------------------------------------------------------------------------
+# xAuth & API ------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 CONSUMER_KEY = 'PYuZHIEoIGnNNSJb7nIY0Q'
 CONSUMER_SECRET = 'Fw91zqMpMECFMJkdM3SFM7guFBGiFfkDRu0nDOc7tg'
+
+TIME_MIN_SEND = 0.5
+TIME_MIN_SHORTENER = 0.2
 
 
 # Time / Paths / DBUS ----------------------------------------------------------

@@ -30,6 +30,7 @@ import calendar
 
 from constants import UNSET_STRING, UNSET_HOST, UNSET_URL
 from constants import ENTITIES, STRIP, SHORT_REGEX, SHORTS, BASE58
+from constants import TIME_MIN_SHORTENER
 
 
 # Tweepy Wrapper ---------------------------------------------------------------
@@ -99,6 +100,11 @@ def gmtime(value=None):
 def localtime(value=None):
     return time.localtime(gmtime(value))
 
+def min_time(start, min_time):
+    time_taken = time.time() - start
+    if time_taken < min_time:
+        time.sleep(min_time - time_taken)
+
 
 # URL Shortener / Expander------------------------------------------------------
 # ------------------------------------------------------------------------------
@@ -134,10 +140,7 @@ class URLShorter(threading.Thread):
                 short_text = short_text.replace(url, short)
             
             # Wait a bit, this is better for the user experience
-            taken_time = time.time() - start_time
-            if taken_time < 0.2:
-                time.sleep(0.2 - taken_time)
-            
+            min_time(start_time, TIME_MIN_SHORTENER)
             gobject.idle_add(self.text_box.shorten_text, short_text)
     
     def shorten_url(self, url, api):

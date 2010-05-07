@@ -384,7 +384,7 @@ class AtarashiiActions(object):
     
     # Handle Errors and Warnings -----------------------------------------------
     # --------------------------------------------------------------------------
-    def handle_error(self, error):
+    def handle_error(self, error, user_action=False):
         # Do we need to give focus back to the textbox?
         self.gui.text.check_refocus()
         
@@ -496,10 +496,6 @@ class AtarashiiActions(object):
             code = ERR_NETWORK_FAILED
         
         # Reset stuff
-        user_action = self.any_status(ST_WAS_SEND, ST_WAS_RETWEET, \
-                                      ST_WAS_RETWEET_NEW, ST_WAS_DELETE, \
-                                      ST_LOGIN_ERROR)
-        
         self.unset_status(ST_WAS_SEND | ST_WAS_RETWEET \
                           | ST_WAS_RETWEET_NEW | ST_WAS_DELETE)
         
