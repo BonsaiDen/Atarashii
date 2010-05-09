@@ -121,7 +121,7 @@ class ViewHelpers(object):
             else:
                 pos = math.floor(self.position + offset)
             
-            self.check_scroll(pos)
+            self.check_scroll(pos, True)
         
         # scroll to first new tweet
         elif self.first_load or (offset > 0 and self.position == 0):
@@ -172,10 +172,14 @@ class ViewHelpers(object):
     
     # rescroll when new items come in, so that the view stays at the "same"
     # position for the viewer
-    def check_scroll(self, pos):
-        if self.current_scroll != pos:
+    def check_scroll(self, pos, start=False):
+        if start:
+            self.scroll_tries = 0
+        
+        if self.current_scroll != pos and self.scroll_tries < 5:
             self.scroll.get_vscrollbar().set_value(pos)
             self.on_scroll(None, None)
+            self.scroll_tries += 1
             gobject.timeout_add(10, self.check_scroll, pos)
     
     # Fakeman! Roger Buster!

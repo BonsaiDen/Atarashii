@@ -68,6 +68,7 @@ class HTMLView(webkit.WebView, ViewMenu, ViewHelpers, ViewHTML):
         
         # Fix scrolling
         self.scroll = scroll
+        self.scroll_tries = 0
         self.is_rendering_history = False
         self.scroll.connect('expose-event', self.on_draw)
         
