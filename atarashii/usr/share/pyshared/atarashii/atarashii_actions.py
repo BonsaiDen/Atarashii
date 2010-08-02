@@ -145,6 +145,7 @@ class AtarashiiActions(object):
         self.set_status(ST_SEND)
         self.gui.text.set_sensitive(False)
         self.gui.tabs.set_sensitive(False)
+        self.gui.progress_reset()
         self.gui.show_progress()
         
         # Statusbar

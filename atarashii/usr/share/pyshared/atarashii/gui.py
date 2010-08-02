@@ -383,6 +383,10 @@ class GUI(gtk.Window, GUIEventHandler, GUIHelpers):
         
         self.progress_visible = True
     
+    def progress_reset(self):
+        self.progress_state = UNSET_ID_NUM
+        self.progress.set_text(UNSET_LABEL)
+    
     def hide_all(self, progress=True):
         if progress:
             self.progress_state = UNSET_ID_NUM
