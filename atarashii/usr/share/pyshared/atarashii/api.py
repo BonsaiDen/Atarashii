@@ -310,8 +310,18 @@ class FriendStatus(SimpleAPICall):
 # Profile ----------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class Profile(SimpleAPICall):
+    cache = {}
+    
     def call(self, main, name, callback):
-        self.user = self.main.api.get_user(screen_name = name)
+        if name in self.cache and time.time() - self.cache[name][0] < 30:
+            self.user = self.cache[name][1]
+          #  print 'cache hit profile'
+        
+        else:
+            self.user = self.main.api.get_user(screen_name = name)
+            self.cache[name] = (time.time(), self.user)
+          #  print 'load profile'
+        
         main.gui.progress_step()
         
         self.friend = self.main.api.show_friendship(target_screen_name = name)
@@ -427,12 +437,21 @@ class Friends(SimpleAPICall):
 # User -------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 class User(SimpleAPICall):
-    def call(self, main, user, callback):
-        self.user = self.main.api.get_user(screen_name = user)
+    cache = {}
     
-    def on_success(self, main, user, callback):
+    def call(self, main, name, callback):
+        if name in self.cache and time.time() - self.cache[name][0] < 30:
+            self.user = self.cache[name][1]
+          #  print 'cache hit user'
+        
+        else:
+            self.user = self.main.api.get_user(screen_name = name)
+            self.cache[name] = (time.time(), self.user)
+         #   print 'load user'
+    
+    def on_success(self, main, name, callback):
         gobject.idle_add(callback, self.user)
     
-    def on_error(self, main, user, callback):
+    def on_error(self, main, name, callback):
         pass
 
