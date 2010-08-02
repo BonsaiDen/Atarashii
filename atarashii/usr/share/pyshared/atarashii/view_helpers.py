@@ -176,7 +176,7 @@ class ViewHelpers(object):
         if start:
             self.scroll_tries = 0
         
-        if self.current_scroll != pos and self.scroll_tries < 5:
+        if self.current_scroll != pos and self.scroll_tries < 7:
             self.scroll.get_vscrollbar().set_value(pos)
             self.on_scroll(None, None)
             self.scroll_tries += 1
