@@ -253,8 +253,8 @@ class URLExpander(threading.Thread):
                         # Who the hell would return something like that?
                         # Flickr does with 'flic.kr' links
                         # Wordpress does this too
-                        if not current_url.startswith('http:'):
-                            if not last_host.startswith('http'):
+                        if not current_url.startswith('http:') and not current_url.startswith('https:'):
+                            if not last_host.startswith('http') and not last_host.startswith('https'):
                                 last_host = 'http://' + last_host
                             
                             current_url = last_host.rstrip('/') \
